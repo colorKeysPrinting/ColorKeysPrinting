@@ -5,7 +5,7 @@ cache:
   directories:
     - node_modules
     - client/node_modules
-    - client/apps/hello_world/node_modules
+    - client/apps/sibi/node_modules
 
 branches:
   only:

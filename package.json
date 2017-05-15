@@ -1,8 +1,8 @@
 {
   "name": "react_client_starter_app",
   "version": "0.1.0",
-  "description": "Client only React Starter App",
-  "author": "atomicjolt",
+  "description": "SIBI",
+  "author": "BuiltByHQ",
   "license": "MIT",
   "homepage": "https://github.com/atomicjolt/react_client_starter_app",
   "scripts": {

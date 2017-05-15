@@ -1,14 +1,21 @@
-#React Client Starter App [![Build Status](https://travis-ci.org/atomicjolt/react_client_starter_app.svg?branch=master)](https://travis-ci.org/atomicjolt/react_client_starter_app) [![Coverage Status](https://coveralls.io/repos/github/atomicjolt/react_client_starter_app/badge.svg?branch=coveralls)](https://coveralls.io/github/atomicjolt/react_client_starter_app?branch=coveralls)
+<!--#SIBI App [![Build Status](https://travis-ci.org/atomicjolt/react_client_starter_app.svg?branch=master)](https://travis-ci.org/atomicjolt/react_client_starter_app) [![Coverage Status](https://coveralls.io/repos/github/atomicjolt/react_client_starter_app/badge.svg?branch=coveralls)](https://coveralls.io/github/atomicjolt/react_client_starter_app?branch=coveralls)
 -----------------------
 There are many starter kits that will help you get started with React and Redux.
 This is the one created by, maintained by and used by [Atomic Jolt](http://www.atomicjolt.com).
 Atomic Jolt uses this as application as a starting place for our
 [Ruby on Rails and React starter application](https://github.com/atomicjolt/react_rails_starter_app)
-and our [Firebase React starter appliction](https://github.com/atomicjolt/react_firebase_starter_app).
+and our [Firebase React starter appliction](https://github.com/atomicjolt/react_firebase_starter_app).-->
 
-#Demo:
+<!--#Demo:
 -----------------------
-[React Client Starter App Demo](http://reactclientstarterapp.com.s3-website-us-east-1.amazonaws.com)
+[SIBI App Demo](http://reactclientstarterapp.com.s3-website-us-east-1.amazonaws.com)-->
+
+# Getting Started Docker:
+-----------------------
+
+1. docker build -t sibi-app .
+
+2. docker run -d -p 8443:8443 sibi-app
 
 #Getting Started:
 -----------------------
@@ -33,15 +40,15 @@ each new application that is started.
 
 If you have multiple applications you can run them one at a time with the application name:
 
-  `yarn hot hello_world`
+  `yarn hot sibi`
 
 then `visit http://localhost:8080`
 
 
-# Using the React Client Starter App
+# Using the SIBI App
 -----------------------
 The starter app is setup to serve multiple isolated client applications each with their own package.json. You will find
-an example "hello world" application in client/apps/hello_world
+an example "hello world" application in client/apps/sibi
 Modify html and js files in that directory to build your application or copy paste that directory to build additional
 applications. The build process will automatically add a new webpack entry point for each folder in that directory.
 
@@ -56,7 +63,7 @@ React code can be found in client/js. We use Redux and the React-Router.
 All html files live in client/apps/[app name]/html. The build process will properly process ejs in any html files as well
 as process markdown for files that end in .md. All front matter in .md files will be available to
 the ejs templates and will be used when generating html. For example, you can set a custom layout for the html
-file by setting `layout: custom_layout` in the front matter. See apps/hello_world/html/about.md for an example.
+file by setting `layout: custom_layout` in the front matter. See apps/sibi/html/about.md for an example.
 
 
 ## Assets
