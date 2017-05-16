@@ -1,10 +1,10 @@
 'use strict';
 
 import _                    from 'lodash';
-
+import Immutable            from 'immutable';
 import ActionTypes          from '../constants/action_types';
 
-const initialState = { activeUser: {type: 'sibi', username: ""}, activeTab: '' };
+const initialState = Immutable.fromJS({ activeUser: {type: 'sibi', username: 'JohnDoe'}, activeTab: '' });
 
 export default (state = initialState, action)=>{
     switch (action.type) {
@@ -22,6 +22,7 @@ export default (state = initialState, action)=>{
 
         case ActionTypes.LOAD_PAGE:
             console.log(action.key);
+            // TODO: need to change the active page that's being shown
             state = state.set('activeTab', action.key);
             break;
         default:

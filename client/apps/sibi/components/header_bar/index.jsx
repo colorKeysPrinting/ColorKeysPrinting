@@ -6,10 +6,10 @@ import Tabs                     from './tabs';
 import * as HeaderActions       from '../../actions/header';
 import assets                 	from '../../libs/assets';
 
-let select = (state)=>{
+let select = (state, props)=>{
     return {
-        activeUser: state.application['activeUser'],
-        activeTab:  state.application['activeTab']
+        activeUser      : state.application.get('activeUser'),
+        activeTab       : state.application.get('activeTab')
     };
 };
 
@@ -19,24 +19,36 @@ export default class HeaderBar extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {isSearch: false};
+
         this.show = this.show.bind(this);
+        this.search = this.search.bind(this);
     }
 
     show(type) {
-        console.log(type);
-        this.props.showPage((type).toUpperCase());
+        this.props.showPage(type);
+    }
+
+    search(term) {
+        console.log(term);
+        this.props.search(term);
     }
 
     render() {
-        let loginSection = "";
         const sibiImg = assets('./images/sibi.png');
+        let loginSection;
 
         let styles = {
             header: {
-                height: '30px',
+                position: 'absolute',
+                top: '10px',
+                left: '10px',
+                height: '50px',
+                width: '970px',
+                display: 'inline-flex',
                 background: '#FFF',
-                display: 'inline-block',
-                width: '970px'
+                boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)',
+
             },
             login: {
 
@@ -55,12 +67,20 @@ export default class HeaderBar extends React.Component {
                 <div onClick={ ()=>this.props.login('foo','bar') }>Login</div>
                 <div onClick={ ()=>this.props.signUp() }>Sign Up</div>
             </div>;
+        } else {
+            loginSection =  <div>
+                <div /*onHover={ ()=>{console.log('profileDropdown')}}*/><image alt="profilePicture"/></div>
+                <div onClick={ ()=>{console.log('searching...')}}><image alt="search"/></div>
+                <div onClick={ ()=>{console.log('truck')}}><image alt="truck"/></div>
+            </div>;
         }
+
+        // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <image src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
 
         return (
             <div style={styles.header}>
-                <div onClick={ ()=>this.props.goHome() } style={ styles.image }><image src={sibiImg} alt="sibi" /></div>
-                <Tabs type={ this.props.activeUser.type }
+                <div><image src={sibiImg} alt="sibi" style={ styles.image } onClick={ ()=>this.props.goHome() }/></div>
+                <Tabs type={ this.props.activeUser.get('type') }
                       activeTab={ this.props.activeTab }
                       show={ this.show }/>
                 { loginSection }
