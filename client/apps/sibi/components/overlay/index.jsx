@@ -21,15 +21,26 @@ export default class Overlay extends React.Component {
         this.state = {email, password: '', errorEmail: false, errorPassword: false};
 
         // local functions
+        this.changeOverlay = this.changeOverlay.bind(this);
         this.loginClick = this.loginClick.bind(this);
         this.submitClick = this.submitClick.bind(this);
     }
 
 // **** CUSTOM FUNCTIONS
+    changeOverlay() {
+        let email = this.state.email;
+        this.setState({email: '', password: '', errorEmail: false, errorPassword: false});
+
+        this.props.showOverlay('Reset Password', {email})
+    }
+
     loginClick() {
         if(this.state.email !== '' && this.state.password !== '') {
-            this.props.login(this.state.email, this.state.password);
+            let email = this.state.email;
+            let password = this.state.password;
             this.setState({email: '', password: '', errorEmail: false, errorPassword: false});
+
+            this.props.login(email, password);
 
         } else if (this.state.email === '' && this.state.password === '') {
             this.setState({errorEmail: true, errorPassword: true});
@@ -44,8 +55,12 @@ export default class Overlay extends React.Component {
 
     submitClick() {
         if(this.state.email !== '') {
-            this.props.passwordReset(this.state.email);
-            this.setState({email: '', errorEmail: false});
+            let email = this.state.email;
+            this.setState({email: '', password: '', errorEmail: false, errorPassword: false});
+
+            this.props.passwordReset(email);
+            this.props.showOverlay('Login');
+
         } else {
             this.setState({errorEmail: true});
         }
@@ -170,7 +185,7 @@ export default class Overlay extends React.Component {
                             <div id="password-div" style={styles.password}><input type="password" placeholder="Password" onChange={(e)=>{this.setState({password: e.target.value})}} style={styles.inputPassword}/></div>
                         </div>
                         <div style={styles.actionSection}>
-                            <div onClick={()=>this.props.showOverlay('Reset Password', {email: this.state.email})} style={styles.forgotPassword}>Forgot password?</div>
+                            <div onClick={()=>this.changeOverlay()} style={styles.forgotPassword}>Forgot password?</div>
                             <div onClick={()=>this.loginClick()} style={styles.loginBtn}>Login</div>
                         </div>
                     </div>
