@@ -3,6 +3,7 @@ import wrapper  from './wrapper';
 const actionTypes = [
     "HOME",
     "LOGIN",
+    "PASSWORD_RESET",
     "SIGNUP",
     "LOAD_PAGE",
     "SHOW_OVERLAY",

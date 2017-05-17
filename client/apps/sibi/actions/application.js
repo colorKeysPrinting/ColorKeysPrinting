@@ -1,17 +1,18 @@
 'use strict';
 import ActionTypes      from '../constants/action_types';
 
-export function showOverlay(key) {
+export function showOverlay(key, obj) {
     return {
         type: ActionTypes.SHOW_OVERLAY,
-        key
-    }
+        key,
+        obj
+    };
 }
 
 export function closeOverlay() {
     return {
         type: ActionTypes.CLOSE_OVERLAY
-    }
+    };
 }
 
 export function login(username, password) {
@@ -22,6 +23,12 @@ export function login(username, password) {
     };
 }
 
+export function passwordReset(email) {
+    return {
+        type: ActionTypes.PASSWORD_RESET,
+        email
+    };
+}
 
 export function signUp() {
     return {

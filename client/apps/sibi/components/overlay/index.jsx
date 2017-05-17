@@ -1,27 +1,35 @@
 import React                                     from 'react';
 import { connect }                               from 'react-redux';
 
-import { login, showOverlay, closeOverlay }      from '../../actions/application';
+import { login, showOverlay, closeOverlay, passwordReset }      from '../../actions/application';
 import assets                                    from '../../libs/assets';
 
 let select = (state)=>{
     return {
-        activeOverlay: state.application.get('activeOverlay')
+        activeOverlay: state.application.get('activeOverlay'),
+        overlayObj: state.application.get('overlayObj')
     }
 };
 
-@connect(select, { login, showOverlay, closeOverlay }, null, {withRef: true})
+@connect(select, { login, showOverlay, closeOverlay, passwordReset }, null, {withRef: true})
 export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {email: '', password: '', errorEmail: false, errorPassword: false};
+        let email = (this.props.overlayObj.email) ? this.props.overlayObj.email : '';
+        // local state
+        this.state = {email, password: '', errorEmail: false, errorPassword: false};
+
+        // local functions
         this.loginClick = this.loginClick.bind(this);
+        this.submitClick = this.submitClick.bind(this);
     }
 
+// **** CUSTOM FUNCTIONS
     loginClick() {
         if(this.state.email !== '' && this.state.password !== '') {
             this.props.login(this.state.email, this.state.password);
+            this.setState({email: '', password: '', errorEmail: false, errorPassword: false});
 
         } else if (this.state.email === '' && this.state.password === '') {
             this.setState({errorEmail: true, errorPassword: true});
@@ -31,6 +39,15 @@ export default class Overlay extends React.Component {
 
         } else if (this.state.email !== '' && this.state.password === '') {
             this.setState({errorEmail: false, errorPassword: true});
+        }
+    }
+
+    submitClick() {
+        if(this.state.email !== '') {
+            this.props.passwordReset(this.state.email);
+            this.setState({email: '', errorEmail: false});
+        } else {
+            this.setState({errorEmail: true});
         }
     }
 
@@ -76,9 +93,14 @@ export default class Overlay extends React.Component {
                 width: '10%'
             },
             content: {
-                height: '80%',
                 width: '400px',
                 margin: 'auto'
+            },
+            contentLogin: {
+                height: '80%',
+            },
+            contentReset: {
+                height: '60%',
             },
             credentialSection: {
                 display: 'grid',
@@ -91,15 +113,14 @@ export default class Overlay extends React.Component {
                 padding: '10px 0'
             },
             email: {
-                border: (!this.state.errorEmail) ? '' : '4px solid rgba(255, 0, 0, 1)',
                 borderRadius: '10px',
                 marginTop: '50px',
                 height: '59px'
             },
             password: {
-                border:  (!this.state.errorPassword) ? '' : '4px solid rgba(255, 0, 0, 1)',
                 borderRadius: '10px',
-                height: '59px'
+                margin: '20px 0',
+                height: '59px',
             },
             loginBtn: {
                 backgroundColor: 'rgb(47, 205, 237)',
@@ -110,13 +131,30 @@ export default class Overlay extends React.Component {
                 width: '40%',
                 paddingTop: '20px'
             },
+            submitBtn: {
+                backgroundColor: 'rgb(47, 205, 237)',
+                borderRadius: '5px',
+                color: '#FFF',
+                cursor: 'pointer',
+                height: '40px',
+                width: '100%',
+                paddingTop: '20px',
+                marginTop: '70px'
+            },
             forgotPassword: {
                 cursor: 'pointer',
                 paddingTop: '20px',
                 textAlign: 'left',
                 width: '60%'
             },
-            input: {
+            inputEmail: {
+                border: (!this.state.errorEmail) ? '' : '4px solid rgba(255, 0, 0, 1)',
+                borderRadius: '10px',
+                padding: '20px',
+                width: '89%'
+            },
+            inputPassword: {
+                border:  (!this.state.errorPassword) ? '' : '4px solid rgba(255, 0, 0, 1)',
                 borderRadius: '10px',
                 padding: '20px',
                 width: '89%'
@@ -125,14 +163,32 @@ export default class Overlay extends React.Component {
 
         switch(this.props.activeOverlay) {
             case 'Login':
-                overlay = <div style={styles.content}>
-                    <div style={styles.credentialSection}>
-                        <div style={styles.email}><input type="email" placeholder="Email" onChange={(e)=>{this.setState({email: e.target.value})}} style={styles.input}/></div>
-                        <div style={styles.password}><input type="password" placeholder="Password" onChange={(e)=>{this.setState({password: e.target.value})}} style={styles.input}/></div>
+                overlay = <div style={styles.contentLogin}>
+                    <div style={styles.content}>
+                        <div style={styles.credentialSection}>
+                            <div style={styles.email}><input type="email" placeholder="Email" onChange={(e)=>{this.setState({email: e.target.value})}} style={styles.inputEmail}/></div>
+                            <div id="password-div" style={styles.password}><input type="password" placeholder="Password" onChange={(e)=>{this.setState({password: e.target.value})}} style={styles.inputPassword}/></div>
+                        </div>
+                        <div style={styles.actionSection}>
+                            <div onClick={()=>this.props.showOverlay('Reset Password', {email: this.state.email})} style={styles.forgotPassword}>Forgot password?</div>
+                            <div onClick={()=>this.loginClick()} style={styles.loginBtn}>Login</div>
+                        </div>
                     </div>
-                    <div style={styles.actionSection}>
-                        <div onClick={()=>this.props.showOverlay('forgotPassword')} style={styles.forgotPassword}>Forgot password?</div>
-                        <div onClick={()=>this.loginClick()} style={styles.loginBtn}>Login</div>
+                </div>;
+                break;
+
+            case 'Reset Password':
+                overlay = <div style={styles.contentReset}>
+                    <div style={styles.content}>
+                        <div style={styles.credentialSection}>
+                            <div style={styles.email}>
+                                <p>Enter your email to reset your password.</p>
+                                <input type="email" placeholder="Email" onChange={(e)=>{this.setState({email: e.target.value})}} value={this.state.email} style={styles.inputEmail}/>
+                            </div>
+                        </div>
+                        <div style={styles.actionSection}>
+                            <div onClick={()=>this.submitClick()} style={styles.submitBtn}>Submit</div>
+                        </div>
                     </div>
                 </div>;
                 break;
