@@ -4,8 +4,9 @@ const actionTypes = [
     "HOME",
     "LOGIN",
     "SIGNUP",
-    "LOAD_PAGE"
-
+    "LOAD_PAGE",
+    "SHOW_OVERLAY",
+    "CLOSE_OVERLAY"
 ];
 
 // These types will receive a _DONE

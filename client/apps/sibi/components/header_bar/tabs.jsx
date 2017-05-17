@@ -4,32 +4,36 @@ export default (props)=>{
 
     const styles = {
         header: {
-            height: '40px',
-            background: '#FFF',
-            display: 'inline-flex',
-            width: '970px'
+            display: 'inline-flex'
+        },
+        tabSection: {
+            width: '400px',
+            margin: 'auto'
         },
         tabs: {
-            padding: '10px'
+            padding: '15px',
+            height: '17px',
+            cursor: 'pointer'
         },
         active: {
-            padding: '10px',
-            borderBottom: '3px solid blue'
+            padding: '15px',
+            height: '17px',
+            borderBottom: '3px solid #0091CE'
         }
     };
 
     const tabs = {
-        products:       <div onClick={ (e)=>{ props.show('products') } }     style={(props.activeTab === 'products') ? styles.active : styles.tabs} >Products</div>,
-        features:       <div onClick={ (e)=>{ props.show('features') } }     style={(props.activeTab === 'features') ? styles.active : styles.tabs} >Features</div>,
-        support:        <div onClick={ (e)=>{ props.show('support') } }      style={(props.activeTab === 'support') ? styles.active : styles.tabs} >Support</div>,
-        orderHistory:   <div onClick={ (e)=>{ props.show('orderHistory') } } style={(props.activeTab === 'orderHistory') ? styles.active : styles.tabs} >Order History</div>,
-        warranties:     <div onClick={ (e)=>{ props.show('warranties') } }   style={(props.activeTab === 'warranties') ? styles.active : styles.tabs} >Warranties</div>,
-        reports:        <div onClick={ (e)=>{ props.show('reports') } }      style={(props.activeTab === 'reports') ? styles.active : styles.tabs} >Reports</div>,
+        products:       <div className="header-tab" onClick={ (e)=>{ props.showPage('products')}}     style={(props.activeTab === 'products') ? styles.active : styles.tabs} >Products</div>,
+        features:       <div className="header-tab" onClick={ (e)=>{ props.showPage('features')}}     style={(props.activeTab === 'features') ? styles.active : styles.tabs} >Features</div>,
+        support:        <div className="header-tab" onClick={ (e)=>{ props.showPage('support')}}      style={(props.activeTab === 'support') ? styles.active : styles.tabs} >Support</div>,
+        orderHistory:   <div className="header-tab" onClick={ (e)=>{ props.showPage('orderHistory')}} style={(props.activeTab === 'orderHistory') ? styles.active : styles.tabs} >Order History</div>,
+        warranties:     <div className="header-tab" onClick={ (e)=>{ props.showPage('warranties')}}   style={(props.activeTab === 'warranties') ? styles.active : styles.tabs} >Warranties</div>,
+        reports:        <div className="header-tab" onClick={ (e)=>{ props.showPage('reports')}}      style={(props.activeTab === 'reports') ? styles.active : styles.tabs} >Reports</div>,
 
-        dashboard:      <div onClick={ (e)=>{ props.show('dashboard') } }    style={(props.activeTab === 'dashboard') ? styles.active : styles.tabs} >Dashboard</div>,
-        rebates:        <div onClick={ (e)=>{ props.show('rebates') } }      style={(props.activeTab === 'rebates') ? styles.active : styles.tabs} >Rebates</div>,
-        dealers:        <div onClick={ (e)=>{ props.show('dealers') } }      style={(props.activeTab === 'dealers') ? styles.active : styles.tabs} >Dealers</div>,
-        funds:          <div onClick={ (e)=>{ props.show('funds') } }        style={(props.activeTab === 'funds') ? styles.active : styles.tabs} >Funds</div>
+        dashboard:      <div className="header-tab" onClick={ (e)=>{ props.showPage('dashboard')}}    style={(props.activeTab === 'dashboard') ? styles.active : styles.tabs} >Dashboard</div>,
+        rebates:        <div className="header-tab" onClick={ (e)=>{ props.showPage('rebates')}}      style={(props.activeTab === 'rebates') ? styles.active : styles.tabs} >Rebates</div>,
+        dealers:        <div className="header-tab" onClick={ (e)=>{ props.showPage('dealers')}}      style={(props.activeTab === 'dealers') ? styles.active : styles.tabs} >Dealers</div>,
+        funds:          <div className="header-tab" onClick={ (e)=>{ props.showPage('funds')}}        style={(props.activeTab === 'funds') ? styles.active : styles.tabs} >Funds</div>
     };
 
     let activeTabs;
@@ -70,7 +74,7 @@ export default (props)=>{
     }
 
     return (
-        <div>
+        <div id="header-tab-section" style={styles.tabSection}>
             { activeTabs }
         </div>
     );

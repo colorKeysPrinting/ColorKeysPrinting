@@ -4,7 +4,7 @@ import _                    from 'lodash';
 import Immutable            from 'immutable';
 import ActionTypes          from '../constants/action_types';
 
-const initialState = Immutable.fromJS({ activeUser: {type: 'sibi', username: 'JohnDoe'}, activeTab: '' });
+const initialState = Immutable.fromJS({ activeUser: {type: '', username: 'JohnDoe'}, activeTab: '', activeOverlay: '' });
 
 export default (state = initialState, action)=>{
     switch (action.type) {
@@ -14,6 +14,7 @@ export default (state = initialState, action)=>{
 
         case ActionTypes.LOGIN:
             console.log('login', action.username, action.password);
+            state = state.set('activeOverlay', '');
             break;
 
         case ActionTypes.SIGNUP:
@@ -22,9 +23,22 @@ export default (state = initialState, action)=>{
 
         case ActionTypes.LOAD_PAGE:
             console.log(action.key);
+            let type = (action.key === 'truck') ? '' : action.key;
+
+            state = state.set('activeTab', type);
             // TODO: need to change the active page that's being shown
-            state = state.set('activeTab', action.key);
             break;
+
+        case ActionTypes.SHOW_OVERLAY:
+            console.log('show overlay', action.key);
+            state = state.set('activeOverlay', action.key);
+            break;
+
+        case ActionTypes.CLOSE_OVERLAY:
+            console.log('close overlay');
+            state = state.set('activeOverlay', '');
+            break;
+
         default:
     }
 

@@ -4,7 +4,8 @@ import _                        from 'lodash';
 
 import Tabs                     from './tabs';
 import * as HeaderActions       from '../../actions/header';
-import assets                 	from '../../libs/assets';
+import { showOverlay }          from '../../actions/application';
+import assets                   from '../../libs/assets';
 
 let select = (state, props)=>{
     return {
@@ -13,20 +14,14 @@ let select = (state, props)=>{
     };
 };
 
-@connect(select, HeaderActions, null, {withRef: true})
+@connect(select, {...HeaderActions, showOverlay}, null, {withRef: true})
 export default class HeaderBar extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {isSearch: false};
-
-        this.show = this.show.bind(this);
         this.search = this.search.bind(this);
-    }
-
-    show(type) {
-        this.props.showPage(type);
     }
 
     search(term) {
@@ -35,54 +30,66 @@ export default class HeaderBar extends React.Component {
     }
 
     render() {
-        const sibiImg = assets('./images/sibi.png');
+        const sibiLogo = assets('./images/blue_sibi_logo.png');
         let loginSection;
 
         let styles = {
             header: {
                 position: 'absolute',
-                top: '10px',
+                top: '0px',
                 left: '10px',
                 height: '50px',
-                width: '970px',
+                width: '97%',
+                margin: '0 5px',
                 display: 'inline-flex',
                 background: '#FFF',
-                boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)',
-
+                boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)'
+            },
+            loginSection: {
+                display: 'inline-flex',
+                margin: '7px'
+            },
+            profileSection: {
+                display: 'inline-flex'
             },
             login: {
-
+                padding: '11px',
+                cursor: 'pointer'
             },
             signUp: {
-
+                padding: '11px',
+                color: 'rgb(47, 205, 237)',
+                border: '1px solid #C0C0C0',
+                borderRadius: '10px',
+                cursor: 'pointer'
             },
-            image: {
-                height: '40px',
-                width: '60px'
+            sibiLogo: {
+                width: '160px',
+                cursor: 'pointer'
             }
         };
 
-        if(!this.props.activeUser.type) {
-            loginSection =  <div>
-                <div onClick={ ()=>this.props.login('foo','bar') }>Login</div>
-                <div onClick={ ()=>this.props.signUp() }>Sign Up</div>
+        if(!this.props.activeUser.get('type')) {
+            loginSection = <div style={styles.loginSection}>
+                <div onClick={ ()=>this.props.showOverlay('Login') } style={styles.login}>Login</div>
+                <div onClick={ ()=>this.props.showPage('signUp') } style={styles.signUp}>Sign Up</div>
             </div>;
         } else {
-            loginSection =  <div>
-                <div /*onHover={ ()=>{console.log('profileDropdown')}}*/><image alt="profilePicture"/></div>
-                <div onClick={ ()=>{console.log('searching...')}}><image alt="search"/></div>
-                <div onClick={ ()=>{console.log('truck')}}><image alt="truck"/></div>
+            loginSection = <div style={styles.profileSection}>
+                <div /*onHover={ ()=>{console.log('profileDropdown')}}*/><image src={''} alt="profilePicture"/>picture</div>
+                <div onClick={ ()=>{console.log('searching...')}}><image src={''} alt="search"/>search</div>
+                <div onClick={ ()=>this.props.showPage('truck')}><image src={''} alt="truck"/>truck</div>
             </div>;
         }
 
         // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <image src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
 
         return (
-            <div style={styles.header}>
-                <div><image src={sibiImg} alt="sibi" style={ styles.image } onClick={ ()=>this.props.goHome() }/></div>
+            <div id="header-bar" style={styles.header}>
+                <img src={sibiLogo} alt="sibi logo" onClick={ ()=>this.props.goHome() } style={styles.sibiLogo}/>
                 <Tabs type={ this.props.activeUser.get('type') }
                       activeTab={ this.props.activeTab }
-                      show={ this.show }/>
+                      showPage={ this.props.showPage }/>
                 { loginSection }
             </div>
         );
