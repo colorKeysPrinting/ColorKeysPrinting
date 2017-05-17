@@ -15,7 +15,23 @@ export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {email: '', password: ''};
+        this.state = {email: '', password: '', errorEmail: false, errorPassword: false};
+        this.loginClick = this.loginClick.bind(this);
+    }
+
+    loginClick() {
+        if(this.state.email !== '' && this.state.password !== '') {
+            this.props.login(this.state.email, this.state.password);
+
+        } else if (this.state.email === '' && this.state.password === '') {
+            this.setState({errorEmail: true, errorPassword: true});
+
+        } else if (this.state.email === ''&& this.state.password !== '') {
+            this.setState({errorEmail: true, errorPassword: false});
+
+        } else if (this.state.email !== '' && this.state.password === '') {
+            this.setState({errorEmail: false, errorPassword: true});
+        }
     }
 
     render() {
@@ -75,10 +91,15 @@ export default class Overlay extends React.Component {
                 padding: '10px 0'
             },
             email: {
-                marginTop: '50px'
+                border: (!this.state.errorEmail) ? '' : '4px solid rgba(255, 0, 0, 1)',
+                borderRadius: '10px',
+                marginTop: '50px',
+                height: '59px'
             },
             password: {
-                margin: ''
+                border:  (!this.state.errorPassword) ? '' : '4px solid rgba(255, 0, 0, 1)',
+                borderRadius: '10px',
+                height: '59px'
             },
             loginBtn: {
                 backgroundColor: 'rgb(47, 205, 237)',
@@ -96,8 +117,7 @@ export default class Overlay extends React.Component {
                 width: '60%'
             },
             input: {
-                border: '1px solid rgba(50, 50, 50, 0.4)',
-                borderRadius: '5px',
+                borderRadius: '10px',
                 padding: '20px',
                 width: '89%'
             }
@@ -107,12 +127,12 @@ export default class Overlay extends React.Component {
             case 'Login':
                 overlay = <div style={styles.content}>
                     <div style={styles.credentialSection}>
-                        <div style={styles.email}><input type="email" placeholder="Email" onChange={(e)=>{this.setState({'email': e.target.value})}} style={styles.input}/></div>
-                        <div style={styles.password}><input type="password" placeholder="Password" onChange={(e)=>{this.setState({'password': e.target.value})}} style={styles.input}/></div>
+                        <div style={styles.email}><input type="email" placeholder="Email" onChange={(e)=>{this.setState({email: e.target.value})}} style={styles.input}/></div>
+                        <div style={styles.password}><input type="password" placeholder="Password" onChange={(e)=>{this.setState({password: e.target.value})}} style={styles.input}/></div>
                     </div>
                     <div style={styles.actionSection}>
                         <div onClick={()=>this.props.showOverlay('forgotPassword')} style={styles.forgotPassword}>Forgot password?</div>
-                        <div onClick={()=>this.props.login(this.state.email, this.state.password)} style={styles.loginBtn}>Login</div>
+                        <div onClick={()=>this.loginClick()} style={styles.loginBtn}>Login</div>
                     </div>
                 </div>;
                 break;
