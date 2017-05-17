@@ -30,8 +30,3 @@ export function passwordReset(email) {
     };
 }
 
-export function signUp() {
-    return {
-        type: ActionTypes.SIGNUP
-    };
-}

@@ -12,12 +12,9 @@ export default (state = initialState, action)=>{
             console.log('home');
             break;
 
-        case ActionTypes.LOAD_PAGE:
+        case ActionTypes.ACTIVATE_TAB:
             console.log(action.key);
-            let type = (action.key === 'truck') ? '' : action.key;
-
-            state = state.set('activeTab', type);
-            // TODO: need to change the active page that's being shown
+            state = state.set('activeTab', action.key);
             break;
 
 // **** LOGIN/CREATE USER SECTION
@@ -36,6 +33,11 @@ export default (state = initialState, action)=>{
             console.log('signup');
             break;
 
+        case ActionTypes.SIGN_UP_PAGE:
+            console.log('signuppage');
+            state = state.setIn(['activeUser', 'type'], 'signUp');
+            debugger
+            break;
 
 // **** OVERLAY SECTION
         case ActionTypes.SHOW_OVERLAY:

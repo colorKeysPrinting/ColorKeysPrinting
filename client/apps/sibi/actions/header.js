@@ -7,9 +7,15 @@ export function goHome() {
     };
 }
 
-export function showPage(key) {
+export function activateTab(key) {
     return {
-        type: ActionTypes.LOAD_PAGE,
+        type: ActionTypes.ACTIVATE_TAB,
         key
-    }
+    };
+}
+
+export function signUpPage() {
+    return {
+        type: ActionTypes.SIGN_UP_PAGE
+    };
 }

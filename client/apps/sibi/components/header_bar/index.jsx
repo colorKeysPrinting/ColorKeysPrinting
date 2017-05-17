@@ -1,11 +1,12 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
+import { Link }                 from 'react-router';
 import _                        from 'lodash';
+import assets                   from '../../libs/assets';
 
 import Tabs                     from './tabs';
 import * as HeaderActions       from '../../actions/header';
 import { showOverlay }          from '../../actions/application';
-import assets                   from '../../libs/assets';
 
 let select = (state, props)=>{
     return {
@@ -57,11 +58,13 @@ export default class HeaderBar extends React.Component {
                 cursor: 'pointer'
             },
             signUp: {
-                padding: '11px',
-                color: 'rgb(47, 205, 237)',
                 border: '1px solid #C0C0C0',
                 borderRadius: '10px',
-                cursor: 'pointer'
+                color: 'rgb(47, 205, 237)',
+                cursor: 'pointer',
+                outline: 'none',
+                padding: '11px',
+                textDecoration: 'none',
             },
             sibiLogo: {
                 width: '160px',
@@ -69,16 +72,17 @@ export default class HeaderBar extends React.Component {
             }
         };
 
-        if(!this.props.activeUser.get('type')) {
+        if(!this.props.activeUser.get('type') || this.props.activeUser.get('type') === 'signUp') {
             loginSection = <div style={styles.loginSection}>
                 <div onClick={ ()=>this.props.showOverlay('Login') } style={styles.login}>Login</div>
-                <div onClick={ ()=>this.props.showPage('signUp') } style={styles.signUp}>Sign Up</div>
+                <Link to={`/signup`} style={styles.signUp} onClick={()=>this.props.signUpPage()}>Sign Up</Link>
             </div>;
+
         } else {
             loginSection = <div style={styles.profileSection}>
                 <div /*onHover={ ()=>{console.log('profileDropdown')}}*/><image src={''} alt="profilePicture"/>picture</div>
-                <div onClick={ ()=>{console.log('searching...')}}><image src={''} alt="search"/>search</div>
-                <div onClick={ ()=>this.props.showPage('truck')}><image src={''} alt="truck"/>truck</div>
+                <div onClick={ ()=>{console.log('TODO: activate search window')}}><image src={''} alt="search"/>search</div>
+                <Link to={`/truck`}><image src={''} alt="truck"/>truck</Link>
             </div>;
         }
 
@@ -89,7 +93,7 @@ export default class HeaderBar extends React.Component {
                 <img src={sibiLogo} alt="sibi logo" onClick={ ()=>this.props.goHome() } style={styles.sibiLogo}/>
                 <Tabs type={ this.props.activeUser.get('type') }
                       activeTab={ this.props.activeTab }
-                      showPage={ this.props.showPage }/>
+                      activateTab={ this.props.activateTab }/>
                 { loginSection }
             </div>
         );
