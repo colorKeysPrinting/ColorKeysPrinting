@@ -182,7 +182,7 @@ export default class Overlay extends React.Component {
                     <div style={styles.content}>
                         <div style={styles.credentialSection}>
                             <div style={styles.email}><input type="email" placeholder="Email" onChange={(e)=>{this.setState({email: e.target.value})}} style={styles.inputEmail}/></div>
-                            <div id="password-div" style={styles.password}><input type="password" placeholder="Password" onChange={(e)=>{this.setState({password: e.target.value})}} style={styles.inputPassword}/></div>
+                            <div style={styles.password}><input type="password" placeholder="Password" onChange={(e)=>{this.setState({password: e.target.value})}} style={styles.inputPassword}/></div>
                         </div>
                         <div style={styles.actionSection}>
                             <div onClick={()=>this.changeOverlay()} style={styles.forgotPassword}>Forgot password?</div>

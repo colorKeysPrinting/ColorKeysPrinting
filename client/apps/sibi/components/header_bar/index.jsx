@@ -8,7 +8,7 @@ import Tabs                     from './tabs';
 import * as HeaderActions       from '../../actions/header';
 import { showOverlay }          from '../../actions/application';
 
-let select = (state, props)=>{
+let select = (state)=>{
     return {
         activeUser      : state.application.get('activeUser'),
         activeTab       : state.application.get('activeTab')

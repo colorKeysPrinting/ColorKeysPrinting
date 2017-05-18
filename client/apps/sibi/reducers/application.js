@@ -4,7 +4,10 @@ import _                    from 'lodash';
 import Immutable            from 'immutable';
 import ActionTypes          from '../constants/action_types';
 
-const initialState = Immutable.fromJS({ activeUser: {type: '', username: 'JohnDoe'}, activeTab: '', activeOverlay: '', overlayObj: false });
+const initialState = Immutable.fromJS({ activeUser: {type: '', username: 'JohnDoe'}, activeTab: '', activeOverlay: '', overlayObj: false,
+    fundsList: ['Associated fund', 'value fund', 'foo fund', 'Jolly fund'], locationList: ['petes place', 'lower towers', 'twin terrace'],
+    tradeList: ['engineer', 'carpenter', 'fur trade'], entityList: ['business', 'apartment', '4 plex', 'douplex']
+});
 
 export default (state = initialState, action)=>{
     switch (action.type) {
