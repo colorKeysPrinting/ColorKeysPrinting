@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import HeaderBar    from '../header_bar';
+import Overlay      from '../overlay';
+
 export default class Index extends React.Component {
 
   static propTypes = {
@@ -19,7 +22,9 @@ export default class Index extends React.Component {
   render() {
     return (
       <div>
+        <HeaderBar />
         {this.props.children}
+        <Overlay/>
       </div>
     );
   }

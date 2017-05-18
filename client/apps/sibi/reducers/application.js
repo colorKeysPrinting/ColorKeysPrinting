@@ -36,7 +36,6 @@ export default (state = initialState, action)=>{
         case ActionTypes.SIGN_UP_PAGE:
             console.log('signuppage');
             state = state.setIn(['activeUser', 'type'], 'signUp');
-            debugger
             break;
 
 // **** OVERLAY SECTION
