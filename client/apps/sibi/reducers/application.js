@@ -4,9 +4,9 @@ import _                    from 'lodash';
 import Immutable            from 'immutable';
 import ActionTypes          from '../constants/action_types';
 
-const initialState = Immutable.fromJS({ activeUser: {type: '', username: 'JohnDoe'}, activeTab: '', activeOverlay: '', overlayObj: false,
+const initialState = Immutable.fromJS({ currLanguage: 'English', activeUser: {type: '', username: 'JohnDoe'}, activeTab: '', activeOverlay: '', overlayObj: false,
     fundsList: ['Associated fund', 'value fund', 'foo fund', 'Jolly fund'], locationList: ['petes place', 'lower towers', 'twin terrace'],
-    tradeList: ['engineer', 'carpenter', 'fur trade'], entityList: ['business', 'apartment', '4 plex', 'douplex']
+    tradeList: ['engineer', 'carpenter', 'fur trade'], entityList: ['business', 'apartment', '4 plex', 'douplex'], languageList: ['English', 'Spanish', 'German']
 });
 
 export default (state = initialState, action)=>{
@@ -55,6 +55,11 @@ export default (state = initialState, action)=>{
             console.log('close overlay');
             state = state.set('activeOverlay', '');
             break;
+
+        case ActionTypes.CHANGE_LANGUAGE:
+            console.log('change language: ', action.language);
+            state = state.set('currLanguage', action.language);
+
         default:
     }
 

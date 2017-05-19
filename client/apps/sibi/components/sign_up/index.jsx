@@ -3,8 +3,12 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 import assets                   from '../../libs/assets';
 
+import {changeLanguage, showOverlay}         from '../../actions/application';
+
 let select = (state)=>{
     return {
+        currLang    : state.application.get('currLanguage'),
+        languages   : state.application.get('languageList').toJS(),
         funds       : state.application.get('fundsList').toJS(),
         locations   : state.application.get('locationList').toJS(),
         trades      : state.application.get('tradeList').toJS(),
@@ -13,13 +17,13 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {}, null, {withRef: true})
+@connect(select, {changeLanguage, showOverlay}, null, {withRef: true})
 export default class SignUp extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {currentStep: 1, buttonText: 'Create Account',
+        this.state = {currentStep: 3, buttonText: 'Create Account',
             email: '', password: '', firstName: '', lastName: '', fund:'', location: '', trade: '',
             companyName: '', street: '', city: '', state: '', phone: '', fax: '', entityType: '',
             taxPIN: '', requestRate: '', approvedRate: '', dealerAccountNum: '', docWorkerComp: '',
@@ -28,8 +32,13 @@ export default class SignUp extends React.Component {
             billState: '', zip: ''
         };
 
+        this.update = this.update.bind(this);
         this.sendInfo = this.sendInfo.bind(this);
         this.nextAction = this.nextAction.bind(this);
+    }
+
+    update(type, value) {
+        this.setState({[type]: value});
     }
 
     sendInfo() {
@@ -96,13 +105,32 @@ export default class SignUp extends React.Component {
                 padding: '30px',
                 width: '90%'
             },
+            language: {
+                cursor: 'pointer',
+                textAlign: 'right',
+                padding: '30px',
+                width: '30%'
+            },
+            steps: {
+                color: 'green',
+                cursor: 'pointer',
+                textAlign: 'right',
+                padding: '30px',
+                width: '30%'
+            },
             content: {
                 width: '89%',
                 margin: '0px auto',
                 marginTop: '40px',
                 textAlign: 'left'
             },
-
+            contentUpload: {
+                width: '89%',
+                margin: '0px auto',
+                marginTop: '40px',
+                textAlign: 'left',
+                display: 'grid'
+            },
             submitBtn: {
                 backgroundColor: 'rgb(47, 205, 237)',
                 borderRadius: '5px',
@@ -124,19 +152,23 @@ export default class SignUp extends React.Component {
                     return (<option key={ key } value={ language }>{ language }</option>);
                 });
 
+                let languageSelect =    <select value={ this.props.currLang } onChange={ (e)=>this.props.changeLanguage(e.target.value) } style={styles.width100}>
+                                            <option disabled value='select'>Language</option>
+                                            {languages}
+                                        </select>;
 
-                title = <div id="sign-up-title" style={ styles.titleBar }><div style={ styles.title}>Sign Up</div><div>English</div></div>;
+                title = <div id="sign-up-title" style={ styles.titleBar }><div style={ styles.title}>Sign Up</div><div style={styles.language}>{languageSelect}</div></div>;
                 content = <form onSubmit={this.nextAction}>
                     <div style={styles.content}>
-                        <input type="email" placeholder="Email" onChange={ (e)=>this.setState({email: e.target.value}) } style={styles.width100}/>
-                        <input type="password" placeholder="Password" onChange={ (e)=>this.setState({password: e.target.value}) } style={styles.width100}/>
+                        <input type="email" placeholder="Email" value={this.state.email} onChange={ (e)=>this.update('email', e.target.value) } style={styles.width100}/>
+                        <input type="password" placeholder="Password" value={this.state.password} onChange={ (e)=>this.update('password', e.target.value) } style={styles.width100}/>
                     </div>
 
                     <input type="submit" value="Create Account" style={ styles.submitBtn }/>
                 </form>;
                 break;
             case 2:
-                title = <div id="sign-up-title" style={ styles.titleBar}><div style={ styles.title }>Account Details</div><div>step 2 of 4</div></div>;
+                title = <div id="sign-up-title" style={ styles.titleBar}><div style={ styles.title }>Account Details</div><div style={styles.steps}>step 2 of 4</div></div>;
 
                 let funds = _.map(this.props.funds, (fund, key)=>{
                     return (<option key={ key } value={ fund }>{ fund }</option>);
@@ -161,50 +193,67 @@ export default class SignUp extends React.Component {
                 content = <form onSubmit={ this.nextAction}>
                     <div style={styles.content}>
                         <div style={{columnCount: 2, display: 'inline-flex', width: '540px'}}>
-                            <input type="text" placeholder="First name" value={ this.state.firstName } onChange={ (e)=>this.setState({firstName: e.target.value})} style={styles.width100}/>
-                            <input type="text" placeholder="Last name" value={ this.state.lastName } onChange={ (e)=>this.setState({lastName: e.target.value})} style={styles.width100}/>
+                            <input type="text" placeholder="First name" value={ this.state.firstName } onChange={ (e)=>this.update('firstName', e.target.value)} style={styles.width100}/>
+                            <input type="text" placeholder="Last name" value={ this.state.lastName } onChange={ (e)=>this.update('lastName', e.target.value)} style={styles.width100}/>
                         </div>
                         <div style={{columnCount: 2}}>
-                            <select value={ this.state.fund } onChange={ (e)=>this.setState({fund: e.target.value}) } style={styles.width100}>
+                            <select value={ this.state.fund } onChange={ (e)=>this.update('fund', e.target.value) } style={styles.width100}>
                                 <option disabled value='select'>Associated fund</option>
                                 {funds}
                             </select>
-                            <select value={ this.state.trade } onChange={ (e)=>this.setState({trade: e.target.value}) } style={styles.width100}>
+                            <select value={ this.state.trade } onChange={ (e)=>this.update('trade', e.target.value) } style={styles.width100}>
                                 <option disabled value='select'>Trade</option>
                                 {trades}
                             </select>
-                            <select value={ this.state.location } onChange={ (e)=>this.setState({location: e.target.value}) } style={styles.width100}>
+                            <select value={ this.state.location } onChange={ (e)=>this.update('location', e.target.value) } style={styles.width100}>
                                 <option disabled value='select'>Location</option>
                                 {locations}
                             </select>
                         </div>
                         <hr/>
                         <div style={{}}>
-                            <input type="text" placeholder="Your company's name" value={ this.state.companyName } onChange={ (e)=>this.setState({companyName: e.target.value})} style={styles.width100}/>
-                            <input type="text" placeholder="Address" value={ this.state.street } onChange={ (e)=>this.setState({street: e.target.value})} style={styles.width100}/>
+                            <input type="text" placeholder="Your company's name" value={ this.state.companyName } onChange={ (e)=>this.update('companyName', e.target.value)} style={styles.width100}/>
+                            <input type="text" placeholder="Address" value={ this.state.street } onChange={ (e)=>this.update('street', e.target.value)} style={styles.width100}/>
                         </div>
                         <div style={{columnCount: 2}}>
-                            <input type="text" placeholder="City" value={ this.state.city } onChange={ (e)=>this.setState({city: e.target.value})} style={styles.width100}/>
-                            <input type="number" placeholder="Phone" value={ this.state.phone } onChange={ (e)=>this.setState({phone: e.target.value})} style={styles.width100}/>
-                            <select value={ this.state.entityType } onChange={ (e)=>this.setState({entityType: e.target.value}) } style={styles.width100}>
+                            <input type="text" placeholder="City" value={ this.state.city } onChange={ (e)=>this.update('city', e.target.value)} style={styles.width100}/>
+                            <input type="number" placeholder="Phone" value={ this.state.phone } onChange={ (e)=>this.update('phone', e.target.value)} style={styles.width100}/>
+                            <select value={ this.state.entityType } onChange={ (e)=>this.update('entityType', e.target.value) } style={styles.width100}>
                                 <option disabled value='select'>Entity type</option>
                                 {entities}
                             </select>
-                            <input type="number" placeholder="Requested labor rate" value={ this.state.requestRate } onChange={ (e)=>this.setState({requestRate: e.target.value})} style={styles.width100}/>
-                            <input type="number" placeholder="Dealer account number" value={ this.state.dealerAccountNum } onChange={ (e)=>this.setState({dealerAccountNum: e.target.value})} style={styles.width100}/>
+                            <input type="number" placeholder="Requested labor rate" value={ this.state.requestRate } onChange={ (e)=>this.update('requestRate', e.target.value)} style={styles.width100}/>
+                            <input type="number" placeholder="Dealer account number" value={ this.state.dealerAccountNum } onChange={ (e)=>this.update('dealerAccountNum', e.target.value)} style={styles.width100}/>
 
-                            <select value={ this.state.state } onChange={ (e)=>this.setState({state: e.target.value}) } style={styles.width100}>
+                            <select value={ this.state.state } onChange={ (e)=>this.update('state', e.target.value) } style={styles.width100}>
                                 <option disabled value='select'>State</option>
                                 {states}
                             </select>
-                            <input type="number" placeholder="Fax" value={ this.state.fax } onChange={ (e)=>this.setState({fax: e.target.value})} style={styles.width100}/>
-                            <input type="number" placeholder="Federal tax PIN" value={ this.state.taxPIN } onChange={ (e)=>this.setState({taxPIN: e.target.value})} style={styles.width100}/>
-                            <input type="number" placeholder="Approved labor rate" value={ this.state.approvedRate } onChange={ (e)=>this.setState({approvedRate: e.target.value})} style={styles.width100}/>
+                            <input type="number" placeholder="Fax" value={ this.state.fax } onChange={ (e)=>this.update('fax', e.target.value)} style={styles.width100}/>
+                            <input type="number" placeholder="Federal tax PIN" value={ this.state.taxPIN } onChange={ (e)=>this.update('taxPIN', e.target.value)} style={styles.width100}/>
+                            <input type="number" placeholder="Approved labor rate" value={ this.state.approvedRate } onChange={ (e)=>this.update('approvedRate', e.target.value)} style={styles.width100}/>
                         </div>
                     </div>
 
-                    <input type="submit" value="Next" style={ styles.submitBtn}/>
+                    <input type="submit" value="Next" style={ styles.submitBtn }/>
                 </form>;
+                break;
+
+            case 3:
+                title = <div id="sign-up-title" style={ styles.titleBar}><div style={ styles.title }>Compliance</div><div style={styles.steps}>step 3 of 4</div></div>;
+                content = <form onSubmit={this.nextAction}>
+                    <div style={styles.contentUpload}>
+                        <span onClick={()=>{this.props.showOverlay('docWorkerComp')}} ><img src={''} alt="workersCompImg" />Add worker's comp</span>
+                        <span onClick={()=>{this.props.showOverlay('docW9')}} ><img src={''} alt="w9Img" />Add w9</span>
+                        <span onClick={()=>{this.props.showOverlay('docInsurance')}} ><img src={''} alt="insuranceImg" />Add proof of insurance</span>
+
+                        <span onClick={()=>{this.props.showOverlay('contractGoodman')}} ><img src={''} alt="insuranceImg" />Agree to Goodman contract</span>
+                        <span onClick={()=>{this.props.showOverlay('contractAsure')}} ><img src={''} alt="insuranceImg" />Agree to Asure contact</span>
+                    </div>
+
+                    <input type="submit" value="Finish" style={ styles.submitBtn }/>
+                </form>;
+
                 break;
             default:
         }

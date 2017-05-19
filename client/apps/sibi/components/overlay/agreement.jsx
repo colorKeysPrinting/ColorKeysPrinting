@@ -3,7 +3,7 @@ import { connect }                               from 'react-redux';
 
 import assets                                    from '../../libs/assets';
 
-export default function LoginOverlay(props) {
+export default function agreementOverlay(props) {
     let inputs, actionSection, close;
 
     let styles = {
@@ -68,47 +68,30 @@ export default function LoginOverlay(props) {
         }
     };
 
-    switch(props.type) {
-        case 'login':
-            close = <div onClick={props.close} style={styles.close}>X</div>;
-            inputs = <div>
-                <input type="email" placeholder="Email" value={props.email.email} onChange={(e)=>{props.update('email', e.target.value)}} style={styles.width100}/>
-                <input type="password" placeholder="Password" value={props.password.password} onChange={(e)=>{props.update('password', e.target.value)}} style={styles.width100}/>
-            </div>;
-
-            actionSection = <div style={{columnCount: 2, display: 'inline-flex', width: '310px'}}>
-                <div onClick={()=>props.changeOverlay('reset')} style={styles.resetBtn}>Forgot password?</div>
-                <input type="submit" value="Login" style={ styles.submitBtn }/>
-            </div>
-            break;
-
-        case 'reset':
-            close = <div onClick={()=>props.changeOverlay('login')} style={styles.close}>X</div>;
-
-            inputs = <div>
-                <div style={styles.text}>Enter your email to reset your password.</div>
-                <input type="email" placeholder="Email" value={props.email.email} onChange={(e)=>{props.update('email', e.target.value)}} style={styles.width100}/>
-            </div>
-
-            actionSection = <input type="submit" value="Submit" style={ styles.submitBtn }/>;
-            break;
-        default:
-    }
-
-    let title = <div style={ styles.titleBar }>
-        <div style={styles.title}>{(props.type === 'login') ? 'Login': 'Reset password'}</div>
-        {close}
-    </div>;
+    let title;
+    // switch(props.type) {
+    //     case 'docWorkerComp':
+    //         title = 'worker\'s comp';
+    //         break;
+    //     case 'docW9':
+    //         title = 'w9';
+    //         break;
+    //     case 'docInsurance':
+    //         title = 'proof of insurance';
+    //         break;
+    //     default:
+    // }
 
     return (
         <div style={styles.container}>
-            {title}
+            <div style={ styles.titleBar }>
+                <div style={styles.title}>Add {title}</div>
+                <div onClick={props.close} style={styles.close}>X</div>
+            </div>
             <form onSubmit={()=>props.submitBtn(props.type)}>
                 <div style={styles.content}>
-                    {inputs}
+                    <p>put content here</p>
                 </div>
-
-                {actionSection}
             </form>
         </div>
     );

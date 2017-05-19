@@ -8,7 +8,8 @@ const actionTypes = [
     "SIGN_UP_PAGE",
     "ACTIVATE_TAB",
     "SHOW_OVERLAY",
-    "CLOSE_OVERLAY"
+    "CLOSE_OVERLAY",
+    "CHANGE_LANGUAGE"
 ];
 
 // These types will receive a _DONE

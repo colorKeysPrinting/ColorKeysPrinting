@@ -4,6 +4,8 @@ import { connect }              from 'react-redux';
 import { login, closeOverlay, passwordReset }      from '../../actions/application';
 
 import Login                    from './login';
+import FileUploader             from './file_uploader';
+import Agreement                from './agreement';
 
 let select = (state)=>{
     return {
@@ -16,7 +18,7 @@ export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeOverlay: this.props.activeOverlay, email: '', password: '', errorEmail: false, errorPassword: false};
+        this.state = {activeOverlay: this.props.activeOverlay, email: '', password: '', errorEmail: false, errorPassword: false, docWorkerComp: '', docW9: '', docInsurance: ''};
 
         this.changeOverlay = this.changeOverlay.bind(this);
         this.update = this.update.bind(this);
@@ -49,7 +51,7 @@ export default class Overlay extends React.Component {
     submitBtn(type) {
         console.log('submit clicked', 'TODO: run validation checks');
         switch(type) {
-            case 'Login':
+            case 'login':
                 let isValid = true;
 
                 if (this.state.email === '' && this.state.password === '') {
@@ -70,13 +72,12 @@ export default class Overlay extends React.Component {
                     this.setState({email: '', password: '', errorEmail: false, errorPassword: false});
                 }
                 break;
-            case 'Reset password':
+            case 'reset':
                 isValid = true;
 
                 if (this.state.email === '') {
                     isValid = false;
                     this.setState({errorEmail: true});
-
                 }
 
                 if(isValid) {
@@ -107,7 +108,7 @@ export default class Overlay extends React.Component {
             case 'login':
             case 'reset':
                 overlay = <Login
-                                type={(this.state.activeOverlay === 'login') ? 'Login': 'Reset password'}
+                                type={this.state.activeOverlay}
                                 email={{email:this.state.email, error: this.state.errorEmail}}
                                 password={{password: this.state.password, error: this.state.errorPassword}}
                                 update={this.update}
@@ -115,6 +116,18 @@ export default class Overlay extends React.Component {
                                 close={this.close}
                                 submitBtn={this.submitBtn} />
                 break;
+            case 'docWorkerComp':
+            case 'docW9':
+            case 'docInsurance':
+                overlay = <FileUploader
+                                type={this.state.activeOverlay}
+                                update={this.update}
+                                close={this.close}
+                                submitBtn={this.submitBtn} />
+                break;
+            case 'contractGoodman':
+            case 'contractAsure':
+                overlay = <Agreement />
             default:
         }
 

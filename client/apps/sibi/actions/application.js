@@ -30,3 +30,10 @@ export function passwordReset(email) {
     };
 }
 
+export function changeLanguage(language) {
+    return {
+        type: ActionTypes.CHANGE_LANGUAGE,
+        language
+    }
+}
+
