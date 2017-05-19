@@ -74,7 +74,7 @@ export default class HeaderBar extends React.Component {
 
         if(!this.props.activeUser.get('type') || this.props.activeUser.get('type') === 'signUp') {
             loginSection = <div style={styles.loginSection}>
-                <div onClick={ ()=>this.props.showOverlay('Login') } style={styles.login}>Login</div>
+                <div onClick={ ()=>this.props.showOverlay('login') } style={styles.login}>Login</div>
                 <Link to={`/signup`} style={styles.signUp} onClick={()=>this.props.signUpPage()}>Sign Up</Link>
             </div>;
 
