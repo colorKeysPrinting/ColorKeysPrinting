@@ -88,11 +88,13 @@ export default function fileUploaderOverlay(props) {
             </div>
             <div>
                 <div style={styles.content}>
-                    <div style={styles.uploadContainer}>
+                    <div style={styles.uploadContainer}
+                         onDrop={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}}
+                         onDragOver={(e)=>{e.preventDefault(); e.dropEffect='copy'}}>
                         <label htmlFor="file">Drag and drop a document or</label>
-                        <input id="file" type="file" value="Choose file" onChange={(e)=>{props.update(props.type, e.target.value)}} style={styles.width100}/>
+                        <input id="file" type="file" value="Choose file" onChange={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}} style={styles.width100}/>
                     </div>
-                    <p style={styles.text}>Choose a PDF,.WORD, PNG or JPG,</p>
+                    <p style={styles.text}>Choose a PDF, .WORD, PNG or JPG,</p>
                     <p style={styles.text}>no larger than 25KB</p>
                 </div>
             </div>

@@ -22,6 +22,7 @@ export default class Overlay extends React.Component {
 
         this.changeOverlay = this.changeOverlay.bind(this);
         this.update = this.update.bind(this);
+        this.fileDrop = this.fileDrop.bind(this);
         this.close = this.close.bind(this);
         this.submitBtn = this.submitBtn.bind(this);
     }
@@ -40,6 +41,14 @@ export default class Overlay extends React.Component {
     }
 
     update(type, value) {
+        console.log(type,value);
+        // TODO: validation checks for correct types (email) prevent sql injections,
+        this.setState({[type]: value});
+    }
+
+    fileDrop(type, value) {
+        console.log(value);
+        // TODO: validation checks for file type and size
         this.setState({[type]: value});
     }
 
@@ -121,7 +130,7 @@ export default class Overlay extends React.Component {
             case 'docInsurance':
                 overlay = <FileUploader
                                 type={this.state.activeOverlay}
-                                update={this.update}
+                                fileDrop={this.fileDrop}
                                 close={this.close}
                                 submitBtn={this.submitBtn} />
                 break;
