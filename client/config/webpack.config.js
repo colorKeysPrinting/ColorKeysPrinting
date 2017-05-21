@@ -112,7 +112,7 @@ module.exports = function webpackConfig(app) {
     { test: /\.scss$/i, use: extractCSS.extract(scssLoaders) },
     { test: /\.css$/i, use: extractCSS.extract(cssLoaders) },
     { test: /\.less$/i, use: extractCSS.extract(lessLoaders) },
-    { test: /.*\.(gif|png|jpg|jpeg|svg)$/, use: ['url-loader?limit=5000&hash=sha512&digest=hex&size=16&name=[name]-[hash].[ext]'] },
+    { test: /.*\.(pdf|gif|png|jpg|jpeg|svg)$/, use: ['url-loader?limit=5000&hash=sha512&digest=hex&size=16&name=[name]-[hash].[ext]'] },
     { test: /.*\.(eot|woff2|woff|ttf)$/, use: ['url-loader?limit=5000&hash=sha512&digest=hex&size=16&name=[name]-[hash].[ext]'] }
   ];
 

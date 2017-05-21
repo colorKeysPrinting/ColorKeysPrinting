@@ -13,7 +13,7 @@ export default function agreementOverlay(props) {
             border: '1px solid rgba(50, 50, 50, 0.4)',
             boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
             minHight: '400px',
-            width: '350px',
+            width: '850px',
             margin: '10em auto',
             zIndex: '999',
         },
@@ -23,7 +23,7 @@ export default function agreementOverlay(props) {
             borderTopLeftRadius: '5px',
             borderTopRightRadius: '5px',
             boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-            height: '20%',
+            height: '10%',
             width: '100%'
         },
         title: {
@@ -38,7 +38,8 @@ export default function agreementOverlay(props) {
             width: '10%'
         },
         content: {
-            width: '89%',
+            height: '530px',
+            width: '90%',
             margin: '0px auto',
             marginTop: '40px',
             textAlign: 'left'
@@ -52,16 +53,14 @@ export default function agreementOverlay(props) {
             color: '#FFF',
             cursor: 'pointer',
             height: '40px',
-            width: '86%',
+            width: '40%',
             margin: '20px auto',
-            paddingTop: '10px'
+            paddingTop: '13px',
+            textAlign: 'center'
         },
-        resetBtn: {
-            cursor: 'pointer',
-            height: '40px',
-            width: '97%',
-            margin: '20px auto',
-            paddingTop: '10px'
+        checkbox: {
+            width: '60%',
+            padding: '30px'
         },
         width100: {
             width: '97%'
@@ -69,30 +68,38 @@ export default function agreementOverlay(props) {
     };
 
     let title;
-    // switch(props.type) {
-    //     case 'docWorkerComp':
-    //         title = 'worker\'s comp';
-    //         break;
-    //     case 'docW9':
-    //         title = 'w9';
-    //         break;
-    //     case 'docInsurance':
-    //         title = 'proof of insurance';
-    //         break;
-    //     default:
-    // }
+    switch(props.type) {
+        case 'contractGoodman':
+            title = 'Goodman';
+            break;
+        case 'contractAsure':
+            title = 'Asure';
+            break;
+        default:
+    }
 
     return (
         <div style={styles.container}>
             <div style={ styles.titleBar }>
-                <div style={styles.title}>Add {title}</div>
+                <div style={styles.title}>Agree to {title} contract</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
-            <form onSubmit={()=>props.submitBtn(props.type)}>
-                <div style={styles.content}>
-                    <p>put content here</p>
+            <div style={styles.content}>
+                <object data={assets(props.document)}
+                        type="application/pdf"
+                        width="100%"
+                        height="85%">
+                </object>
+                <div style={{columnCount: 2, display: 'inline-flex', width: '100%'}}>
+                    <div style={styles.checkbox}>
+                        <input  id="checkbox"
+                                type="checkbox"
+                                checked={props.checked} // TODO: need to fix checkbox validation
+                                onClick={(e)=>{ e.preventDefault(); props.update(props.type, (props.checked) ? false : true)}}/>I agree
+                    </div>
+                    <div style={styles.submitBtn} onClick={props.close}>Done</div>
                 </div>
-            </form>
+            </div>
         </div>
     );
 }

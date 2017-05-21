@@ -51,15 +51,17 @@ export default function fileUploaderOverlay(props) {
             borderRadius: '5px',
             color: '#FFF',
             cursor: 'pointer',
-            height: '40px',
-            width: '86%',
+            height: '50px',
+            width: '50%',
             margin: '20px auto',
-            paddingTop: '10px'
+            paddingTop: '10px',
+            padding: '18px'
         },
         uploadContainer: {
             borderRadius: '5px',
             border: '2px dashed rgba(50, 50, 50, 0.4)',
             backgroundColor: '#FFF',
+            display: 'grid',
             height: '185px',
             padding: '45px',
             textAlign: 'center'
@@ -86,17 +88,22 @@ export default function fileUploaderOverlay(props) {
                 <div style={styles.title}>Add {title}</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
-            <div>
-                <div style={styles.content}>
-                    <div style={styles.uploadContainer}
-                         onDrop={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}}
-                         onDragOver={(e)=>{e.preventDefault(); e.dropEffect='copy'}}>
-                        <label htmlFor="file">Drag and drop a document or</label>
-                        <input id="file" type="file" value="Choose file" onChange={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}} style={styles.width100}/>
-                    </div>
-                    <p style={styles.text}>Choose a PDF, .WORD, PNG or JPG,</p>
-                    <p style={styles.text}>no larger than 25KB</p>
+            <div style={styles.content}>
+                <div style={styles.uploadContainer}
+                     onDrop={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}}
+                     onDragOver={(e)=>{e.preventDefault(); e.dropEffect='copy'}}>
+
+                    <label>Drag and drop a document or</label>
+                    <label htmlFor="file" style={styles.submitBtn}>Choose file
+                        <input  id="file"
+                                type="file"
+                                onChange={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}}
+                                accept=".pdf,.word,.png,.jpg"
+                                style={{display: 'none'}}/>
+                    </label>
                 </div>
+                <p style={styles.text}>Choose a PDF, .WORD, PNG or JPG,</p>
+                <p style={styles.text}>no larger than 25KB</p>
             </div>
         </div>
     );

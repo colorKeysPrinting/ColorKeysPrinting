@@ -6,7 +6,8 @@ import ActionTypes          from '../constants/action_types';
 
 const initialState = Immutable.fromJS({ currLanguage: 'English', activeUser: {type: '', username: 'JohnDoe'}, activeTab: '', activeOverlay: '', overlayObj: false,
     fundsList: ['Associated fund', 'value fund', 'foo fund', 'Jolly fund'], locationList: ['petes place', 'lower towers', 'twin terrace'],
-    tradeList: ['engineer', 'carpenter', 'fur trade'], entityList: ['business', 'apartment', '4 plex', 'douplex'], languageList: ['English', 'Spanish', 'German']
+    tradeList: ['engineer', 'carpenter', 'fur trade'], entityList: ['business', 'apartment', '4 plex', 'douplex'], languageList: ['English', 'Spanish', 'German'],
+    contracts: {'goodman': './documents/pdf-test.pdf', 'asure': './documents/pdf-test.pdf'}
 });
 
 export default (state = initialState, action)=>{

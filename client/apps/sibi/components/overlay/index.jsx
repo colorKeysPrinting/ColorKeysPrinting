@@ -9,7 +9,9 @@ import Agreement                from './agreement';
 
 let select = (state)=>{
     return {
-        activeOverlay: state.application.get('activeOverlay')
+        activeOverlay: state.application.get('activeOverlay'),
+        contractGoodman: state.application.getIn(['contracts','goodman']),
+        contractAsure: state.application.getIn(['contracts','asure'])
     }
 };
 
@@ -18,7 +20,8 @@ export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeOverlay: this.props.activeOverlay, email: '', password: '', errorEmail: false, errorPassword: false, docWorkerComp: '', docW9: '', docInsurance: ''};
+        this.state = {activeOverlay: this.props.activeOverlay, email: '', password: '', errorEmail: false, errorPassword: false,
+                      docWorkerComp: '', docW9: '', docInsurance: '', contractGoodman: false, contractAsure: false};
 
         this.changeOverlay = this.changeOverlay.bind(this);
         this.update = this.update.bind(this);
@@ -41,7 +44,7 @@ export default class Overlay extends React.Component {
     }
 
     update(type, value) {
-        console.log(type,value);
+        console.log(type, value);
         // TODO: validation checks for correct types (email) prevent sql injections,
         this.setState({[type]: value});
     }
@@ -136,7 +139,13 @@ export default class Overlay extends React.Component {
                 break;
             case 'contractGoodman':
             case 'contractAsure':
-                overlay = <Agreement />
+                overlay = <Agreement
+                                type={this.state.activeOverlay}
+                                update={this.update}
+                                document={(this.state.activeOverlay === 'contractGoodman') ? this.props.contractGoodman : this.props.contractAsure}
+                                checked={(this.state.activeOverlay === 'contractGoodman') ? this.state.contractGoodman : this.state.contractAsure}
+                                close={this.close}
+                                submitBtn={this.submitBtn}/>
             default:
         }
 
