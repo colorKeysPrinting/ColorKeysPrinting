@@ -23,7 +23,7 @@ export default class SignUp extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {currentStep: 3, buttonText: 'Create Account',
+        this.state = {currentStep: 4, buttonText: 'Create Account',
             email: '', password: '', firstName: '', lastName: '', fund:'', location: '', trade: '',
             companyName: '', street: '', city: '', state: '', phone: '', fax: '', entityType: '',
             taxPIN: '', requestRate: '', approvedRate: '', dealerAccountNum: '', docWorkerComp: '',
@@ -141,6 +141,10 @@ export default class SignUp extends React.Component {
                 margin: '20px auto',
                 paddingTop: '10px'
             },
+            sectionHeader: {
+                textAlign: 'center',
+                margin: '15px auto'
+            },
             width100: {
                 width: '97%'
             }
@@ -168,7 +172,6 @@ export default class SignUp extends React.Component {
                 </form>;
                 break;
             case 2:
-                title = <div id="sign-up-title" style={ styles.titleBar}><div style={ styles.title }>Account Details</div><div style={styles.steps}>step 2 of 4</div></div>;
 
                 let funds = _.map(this.props.funds, (fund, key)=>{
                     return (<option key={ key } value={ fund }>{ fund }</option>);
@@ -189,6 +192,8 @@ export default class SignUp extends React.Component {
                 let entities = _.map(this.props.entities, (entity, key)=>{
                     return (<option key={ key } value={ entity }>{ entity }</option>);
                 });
+
+                title = <div id="sign-up-title" style={ styles.titleBar}><div style={ styles.title }>Account Details</div><div style={styles.steps}>step 2 of 4</div></div>;
 
                 content = <form onSubmit={ this.nextAction}>
                     <div style={styles.content}>
@@ -254,6 +259,40 @@ export default class SignUp extends React.Component {
                     <input type="submit" value="Finish" style={ styles.submitBtn }/>
                 </form>;
 
+                break;
+            case 4:
+                states = _.map(this.props.states, (name, abv)=>{
+                    return (<option key={ abv } value={ abv }>{ name }</option>);
+                });
+
+                title = <div id="sign-up-title" style={ styles.titleBar}><div style={ styles.title }>Billing info</div><div style={styles.steps}>step 4 of 4</div></div>;
+
+                content = <form onSubmit={ this.nextAction}>
+                    <div style={styles.content}>
+                        <h2 style={styles.sectionHeader}>Card info</h2>
+                        <div style={{columnCount: 2}}>
+                            <input type="text" placeholder="Name on card" value={ this.state.city } onChange={ (e)=>this.update('cardName', e.target.value)} style={styles.width100}/>
+                            <input type="date" placeholder="MM / YY" value={ this.state.phone } onChange={ (e)=>this.update('expDate', e.target.value)} pattern="[0-9]{2}-[0-9]{2}" style={styles.width100}/>
+                            <input type="number" placeholder="Card  number" value={ this.state.phone } onChange={ (e)=>this.update('cardNumber', e.target.value)} style={styles.width100}/>
+                            <input type="number" placeholder="CVC" value={ this.state.phone } onChange={ (e)=>this.update('cvc', e.target.value)} style={styles.width100}/>
+                        </div>
+
+                        <h2 style={styles.sectionHeader}>Billing Address</h2>
+                        <div style={{columnCount: 2}}>
+                            <input type="text" placeholder="Name" value={ this.state.city } onChange={ (e)=>this.update('billName', e.target.value)} style={styles.width100}/>
+                            <input type="text" placeholder="Street 2" value={ this.state.city } onChange={ (e)=>this.update('str2', e.target.value)} style={styles.width100}/>
+                            <select value={ this.state.state } onChange={ (e)=>this.update('billState', e.target.value) } style={styles.width100}>
+                                <option disabled value='select'>State</option>
+                                {states}
+                            </select>
+                            <input type="text" placeholder="Street 1" value={ this.state.city } onChange={ (e)=>this.update('str1', e.target.value)} style={styles.width100}/>
+                            <input type="text" placeholder="City" value={ this.state.city } onChange={ (e)=>this.update('billCity', e.target.value)} style={styles.width100}/>
+                            <input type="number" placeholder="Zipcode" value={ this.state.phone } onChange={ (e)=>this.update('zip', e.target.value)} style={styles.width100}/>
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Finish" style={ styles.submitBtn }/>
+                </form>;
                 break;
             default:
         }
