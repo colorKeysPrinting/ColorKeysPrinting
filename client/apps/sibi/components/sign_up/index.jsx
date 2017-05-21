@@ -1,9 +1,10 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
+import { browserHistory }       from 'react-router';
 import _                        from 'lodash';
 import assets                   from '../../libs/assets';
 
-import {changeLanguage, showOverlay}         from '../../actions/application';
+import {changeLanguage, showOverlay, signUp}         from '../../actions/application';
 
 let select = (state)=>{
     return {
@@ -17,13 +18,13 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {changeLanguage, showOverlay}, null, {withRef: true})
+@connect(select, {changeLanguage, showOverlay, signUp}, null, {withRef: true})
 export default class SignUp extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {currentStep: 4, buttonText: 'Create Account',
+        this.state = {currentStep: 1, buttonText: 'Create Account',
             email: '', password: '', firstName: '', lastName: '', fund:'', location: '', trade: '',
             companyName: '', street: '', city: '', state: '', phone: '', fax: '', entityType: '',
             taxPIN: '', requestRate: '', approvedRate: '', dealerAccountNum: '', docWorkerComp: '',
@@ -67,6 +68,9 @@ export default class SignUp extends React.Component {
                 billingAddr: {name: this.state.billName, address}
             }
         };
+
+        this.props.signUp(person);
+        browserHistory.push('/');
     }
 
     nextAction() {
@@ -89,7 +93,17 @@ export default class SignUp extends React.Component {
                 minHight: '400px',
                 width: '600px',
                 margin: '10em auto',
-                zIndex: '999',
+                zIndex: '999'
+            },
+            containerFinish: {
+                backgroundColor: '#F9FAFC',
+                borderRadius: '5px',
+                border: '1px solid rgba(50, 50, 50, 0.4)',
+                boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
+                minHight: '400px',
+                width: '390px',
+                margin: '10em auto',
+                zIndex: '999'
             },
             titleBar: {
                 display: 'inline-flex',
@@ -294,11 +308,25 @@ export default class SignUp extends React.Component {
                     <input type="submit" value="Finish" style={ styles.submitBtn }/>
                 </form>;
                 break;
+            case 5:
+
+                title = <div id="sign-up-title" style={ styles.titleBar}><div style={ styles.title }>All done</div></div>;
+
+                content = <form onSubmit={this.sendInfo}>
+                    <div style={styles.content}>
+                        <p>Your account must be approved. This typically happens within 24 hours.</p><br/>
+
+                        <p>We'll email {this.state.email} when approved.</p>
+                    </div>
+
+                    <input type="submit" value="Got it" style={ styles.submitBtn }/>
+                </form>;
+                break;
             default:
         }
 
         return (
-            <div style={styles.container}>
+            <div style={(this.state.currentStep !== 5) ? styles.container : styles.containerFinish}>
                 {title}
                 {content}
             </div>

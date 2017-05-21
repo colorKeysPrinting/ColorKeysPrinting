@@ -37,3 +37,9 @@ export function changeLanguage(language) {
     }
 }
 
+export function signUp(personDetails) {
+    return {
+        type: ActionTypes.SIGN_UP_PAGE,
+        personDetails
+    }
+}
