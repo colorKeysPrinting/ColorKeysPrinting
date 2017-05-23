@@ -9,6 +9,6 @@ require('./reset.scss');
 
 // APP STYLES (need to include each file one by one)
 // require('./pages/*');
-// require('./partials/*');
+require('./partials/accordion.scss');
 // require('./responsive/*');
 require('./theme/forms.scss');

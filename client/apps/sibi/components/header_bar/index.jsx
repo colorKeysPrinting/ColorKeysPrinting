@@ -39,7 +39,7 @@ export default class HeaderBar extends React.Component {
                 position: 'absolute',
                 top: '0px',
                 left: '10px',
-                height: '50px',
+                height: '85px',
                 width: '97%',
                 margin: '0 5px',
                 display: 'inline-flex',
@@ -90,7 +90,7 @@ export default class HeaderBar extends React.Component {
 
         return (
             <div id="header-bar" style={styles.header}>
-                <img src={sibiLogo} alt="sibi logo" onClick={ ()=>this.props.goHome() } style={styles.sibiLogo}/>
+                <Link to={`/`} onClick={ (e)=>{ this.props.activateTab('products')}} ><img src={sibiLogo} alt="sibi logo" style={styles.sibiLogo}/></Link>
                 <Tabs type={ this.props.activeUser.get('type') }
                       activeTab={ this.props.activeTab }
                       activateTab={ this.props.activateTab }/>

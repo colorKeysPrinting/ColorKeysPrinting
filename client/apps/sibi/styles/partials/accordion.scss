@@ -1,0 +1,38 @@
+.accordion {
+    .headers {
+        border-bottom: 1px solid rgba(50, 50, 50, 0.1);
+        display: inline-flex;
+        text-align: left;
+        width: 100%;
+        padding: 30px;
+        cursor: pointer;
+    }
+
+    .headers-active {
+        color: #FFF;
+        background-color: rgb(47, 205, 237);
+        display: inline-flex;
+        text-align: left;
+        width: 100%;
+        padding: 30px;
+        cursor: pointer;
+    }
+
+    .headers > #title, .headers-active > #title {
+        width: 100%;
+    }
+
+    .options {
+        text-align: left;
+        width: 80%;
+        margin-left: 60px;
+        padding: 10px;
+        cursor: pointer;
+        transition: height 2s;
+    }
+
+    .headers:hover, .options:hover{
+        color: #FFF;
+        background-color: rgb(47, 205, 237);
+    }
+}

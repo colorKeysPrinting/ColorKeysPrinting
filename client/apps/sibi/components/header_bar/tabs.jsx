@@ -9,14 +9,14 @@ export default (props)=>{
         },
         tabSection: {
             width: '400px',
-            margin: 'auto'
+            margin: '0 auto'
         },
         tabs: {
             color: '#000',
             outline: 'none',
             textDecoration: 'none',
             padding: '15px',
-            height: '17px',
+            height: '85px',
             cursor: 'pointer'
         },
         active: {
@@ -24,7 +24,7 @@ export default (props)=>{
             outline: 'none',
             textDecoration: 'none',
             padding: '15px',
-            height: '17px',
+            height: '85px',
             borderBottom: '3px solid #0091CE'
         }
     };
