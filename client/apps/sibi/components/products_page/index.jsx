@@ -7,6 +7,7 @@ import {}         from '../../actions/products';
 
 import InfoBar                  from './info_bar';
 import FilterPanel              from './filter_panel';
+import ContentPanel             from './content_panel';
 
 let select = (state)=>{
     return {
@@ -46,7 +47,8 @@ export default class ProductsPage extends React.Component {
                     <FilterPanel
                         changeContent={this.changeContent}
                         filterPanel={this.props.filterPanel} />
-
+                    <ContentPanel
+                        activePage={this.state.activePage} />
                 </div>
             </div>
         );

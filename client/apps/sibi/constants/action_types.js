@@ -5,7 +5,7 @@ const actionTypes = [
     "LOGIN",
     "PASSWORD_RESET",
     "SIGNUP",
-    "SIGN_UP_PAGE",
+    "SIGNUP_PAGE",
     "ACTIVATE_TAB",
     "SHOW_OVERLAY",
     "CLOSE_OVERLAY",

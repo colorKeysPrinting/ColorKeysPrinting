@@ -5,8 +5,8 @@ import { Router, Route, IndexRoute }  from 'react-router';
 import appHistory                     from './history';
 import Index                          from './components/layout/index';
 import Home                           from './components/home';
-import SignUp                         from './components/sign_up';
-import Products                       from './components/products';
+import SignUpPage                     from './components/signup_page';
+import ProductsPage                   from './components/products_page';
 import NotFound                       from './components/common/not_found';
 
 export default (
@@ -15,10 +15,10 @@ export default (
       <IndexRoute component={Home} />
     </Route>
     <Route path="/signup" component={Index}>
-      <IndexRoute component={SignUp} />
+      <IndexRoute component={SignUpPage} />
     </Route>
     <Route path="/products" component={Index}>
-      <IndexRoute component={Products} />
+      <IndexRoute component={ProductsPage} />
     </Route>
     <Route path="*" component={NotFound} />
   </Router>

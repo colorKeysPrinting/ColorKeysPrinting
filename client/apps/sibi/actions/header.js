@@ -16,6 +16,6 @@ export function activateTab(key) {
 
 export function signUpPage() {
     return {
-        type: ActionTypes.SIGN_UP_PAGE
+        type: ActionTypes.SIGNUP_PAGE
     };
 }

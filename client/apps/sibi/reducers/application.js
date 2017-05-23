@@ -53,6 +53,9 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             },
             'parts & supplies': {}
         }
+    },
+    products: {
+
     }
 });
 
@@ -83,7 +86,7 @@ export default (state = initialState, action)=>{
             console.log('signup');
             break;
 
-        case ActionTypes.SIGN_UP_PAGE:
+        case ActionTypes.SIGNUP_PAGE:
             console.log('signuppage');
             state = state.set('person', action.personDetails);
             break;
