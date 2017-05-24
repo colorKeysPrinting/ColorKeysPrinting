@@ -24,9 +24,9 @@ export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeOverlay: '', overlayObj: '', email: '', password: '', newItem: '', errorEmail: false, errorPassword: false,
-                      docWorkerComp: '', docW9: '', docInsurance: '', contractGoodman: false, contractAsure: false};
+        this.state = {activeOverlay: '', overlayObj: '', email: '', password: '', newItem: '', docWorkerComp: '', docW9: '', docInsurance: '', contractGoodman: false, contractAsure: false};
 
+        this.resetState = this.resetState.bind(this);
         this.changeOverlay = this.changeOverlay.bind(this);
         this.update = this.update.bind(this);
         this.fileDrop = this.fileDrop.bind(this);
@@ -47,15 +47,22 @@ export default class Overlay extends React.Component {
         }
     }
 
+    resetState() {
+        this.setState({activeOverlay: '', overlayObj: '', email: '', password: '', newItem: '', docWorkerComp: '', docW9: '', docInsurance: '', contractGoodman: false, contractAsure: false});
+    }
+
     changeOverlay(activeOverlay) {
-        this.setState({password: '', errorEmail: false, errorPassword: false});
+        this.setState({password: ''});
         this.setState({activeOverlay});
     }
 
     update(type, value) {
-        console.log(type, value);
-        // TODO: validation checks for correct types (email) prevent sql injections,
         this.setState({[type]: value});
+    }
+
+    close() {
+        this.resetState();
+        this.props.closeOverlay();
     }
 
     fileDrop(type, value) {
@@ -64,53 +71,24 @@ export default class Overlay extends React.Component {
         //       close overlay if correct
         //       submit files to store/server
         this.setState({[type]: value});
-    }
-
-    close() {
-        // this.setState(this.getInitialState());
         this.props.closeOverlay();
     }
 
     submitLoginBtn(type) {
-        console.log('submit login clicked', 'TODO: run validation checks');
+        console.log('submit login clicked');
 
         if(type === 'login') {
-            let isValid = true;
+            this.props.login(this.state.email, this.state.password);
+            this.resetState();
 
-            if (this.state.email === '' && this.state.password === '') {
-                isValid = false;
-                this.setState({errorEmail: true, errorPassword: true});
-
-            } else if (this.state.email === ''&& this.state.password !== '') {
-                isValid = false;
-                this.setState({errorEmail: true, errorPassword: false});
-
-            } else if (this.state.email !== '' && this.state.password === '') {
-                isValid = false;
-                this.setState({errorEmail: false, errorPassword: true});
-            }
-
-            if(isValid) {
-                this.props.login(this.state.email, this.state.password);
-                // this.setState(this.getInitialState());
-            }
         } else if (type === 'reset') {
-            isValid = true;
-
-            if (this.state.email === '') {
-                isValid = false;
-                this.setState({errorEmail: true});
-            }
-
-            if(isValid) {
-                this.props.passwordReset(this.state.email);
-                // this.setState(this.getInitialState());
-            }
+            this.props.passwordReset(this.state.email);
+            this.resetState();
         }
     }
 
     submitAddToBtn(type) {
-        console.log('submit Docs clicked', 'TODO: run validation checks');
+        console.log('submit add to clicked');
     }
 
     render() {
