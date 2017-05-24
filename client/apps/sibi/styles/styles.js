@@ -3,9 +3,9 @@ require('./styles.less');
 require('./styles.scss');
 
 // HQ STYLES
-// require('./pure-min.scss');
-// require('./pure-responsive-min.scss');
-// require('./reset.scss');
+require('./pure-min.scss');
+require('./pure-responsive-min.scss');
+require('./reset.scss');
 
 // APP STYLES (need to include each file one by one)
 // require('./pages/*');

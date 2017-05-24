@@ -1,17 +1,24 @@
 import wrapper  from './wrapper';
 
 const actionTypes = [
-    "HOME",
+// application
+    "SHOW_OVERLAY",
+    "SHOW_RADIO_OVERLAY",
+    "CLOSE_OVERLAY",
     "LOGIN",
     "PASSWORD_RESET",
-    "SIGNUP",
-    "SIGNUP_PAGE",
-    "ACTIVATE_TAB",
-    "SHOW_OVERLAY",
-    "CLOSE_OVERLAY",
     "CHANGE_LANGUAGE",
-    "UPDATE_INFO_BAR",
+    "SIGNUP",
+
+// header bar
+    "HOME",
+    "ACTIVATE_TAB",
+    "SIGNUP_PAGE",
+
+// products
     "ACTIVATE_PAGE",
+    "SHOW_RADIO_OVERLAY",
+    "UPDATE_INFO_BAR",
 ];
 
 // These types will receive a _DONE

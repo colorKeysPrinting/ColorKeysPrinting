@@ -65,7 +65,6 @@
     "prop-types": "^15.5.9",
     "protractor": "^5.1.1",
     "psi": "^3.0.0",
-    "purecss": "^0.6.2",
     "react": "^15.5.4",
     "react-hot-loader": "next",
     "redux-devtools": "^3.4.0",

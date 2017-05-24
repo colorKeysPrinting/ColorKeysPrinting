@@ -9,6 +9,14 @@ export function showOverlay(key, obj) {
     };
 }
 
+export function showRadioOverlay(key, listType) {
+    return {
+        type: ActionTypes.SHOW_RADIO_OVERLAY,
+        key,
+        listType
+    };
+}
+
 export function closeOverlay() {
     return {
         type: ActionTypes.CLOSE_OVERLAY
@@ -39,7 +47,7 @@ export function changeLanguage(language) {
 
 export function signUp(personDetails) {
     return {
-        type: ActionTypes.SIGNUP_PAGE,
+        type: ActionTypes.SIGNUP,
         personDetails
     }
 }

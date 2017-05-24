@@ -8,7 +8,8 @@ export default function ContentPanel(props) {
 
     let styles = {
         container: {
-            backgroundColor: '#FFF'
+            backgroundColor: '#FFF',
+            width: '100%'
         },
         element: {
             width: '25%',

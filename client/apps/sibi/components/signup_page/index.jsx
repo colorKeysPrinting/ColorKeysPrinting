@@ -74,9 +74,8 @@ export default class SignUp extends React.Component {
     }
 
     nextAction() {
-        this.setState((prevState)=>({
-            currentStep: prevState.currentStep + 1
-        }));
+        let currentStep = this.state.currentStep + 1;
+        this.setState({currentStep});
 
         console.log(this.state.currentStep, this.state.buttonText);
     }
@@ -160,7 +159,7 @@ export default class SignUp extends React.Component {
                 margin: '15px auto'
             },
             width100: {
-                width: '89%'
+                width: '98%'
             }
         };
 
@@ -170,7 +169,7 @@ export default class SignUp extends React.Component {
                     return (<option key={ key } value={ language }>{ language }</option>);
                 });
 
-                let languageSelect =    <select value={ this.props.currLang } onChange={ (e)=>this.props.changeLanguage(e.target.value) } style={styles.width100}>
+                let languageSelect =    <select value={ this.props.currLang } onChange={ (e)=>this.props.changeLanguage(e.target.value) } style={styles.width100} required>
                                             <option disabled value='select'>Language</option>
                                             {languages}
                                         </select>;
@@ -178,11 +177,11 @@ export default class SignUp extends React.Component {
                 title = <div id="sign-up-title" style={ styles.titleBar }><div style={ styles.title}>Sign Up</div><div style={styles.language}>{languageSelect}</div></div>;
                 content = <form onSubmit={this.nextAction}>
                     <div style={styles.content}>
-                        <input type="email" placeholder="Email" value={this.state.email} onChange={ (e)=>this.update('email', e.target.value) } style={styles.width100}/>
-                        <input type="password" placeholder="Password" value={this.state.password} onChange={ (e)=>this.update('password', e.target.value) } style={styles.width100}/>
+                        <input type="email" placeholder="Email" value={this.state.email} onChange={ (e)=>this.update('email', e.target.value) } style={styles.width100} required/>
+                        <input type="password" placeholder="Password" value={this.state.password} onChange={ (e)=>this.update('password', e.target.value) } style={styles.width100} required/>
                     </div>
 
-                    <input type="submit" value="Create Account" style={ styles.submitBtn }/>
+                    <input type="submit" value="Create Account" style={ styles.submitBtn } required/>
                 </form>;
                 break;
             case 2:
@@ -212,49 +211,49 @@ export default class SignUp extends React.Component {
                 content = <form onSubmit={ this.nextAction}>
                     <div style={styles.content}>
                         <div style={{columnCount: 2, display: 'inline-flex', width: '540px'}}>
-                            <input type="text" placeholder="First name" value={ this.state.firstName } onChange={ (e)=>this.update('firstName', e.target.value)} style={styles.width100}/>
-                            <input type="text" placeholder="Last name" value={ this.state.lastName } onChange={ (e)=>this.update('lastName', e.target.value)} style={styles.width100}/>
+                            <input type="text" placeholder="First name" value={ this.state.firstName } onChange={ (e)=>this.update('firstName', e.target.value)} style={styles.width100} required/>
+                            <input type="text" placeholder="Last name" value={ this.state.lastName } onChange={ (e)=>this.update('lastName', e.target.value)} style={styles.width100} required/>
                         </div>
                         <div style={{columnCount: 2}}>
-                            <select value={ this.state.fund } onChange={ (e)=>this.update('fund', e.target.value) } style={styles.width100}>
+                            <select value={ this.state.fund } onChange={ (e)=>this.update('fund', e.target.value) } style={styles.width100} required>
                                 <option disabled value='select'>Associated fund</option>
                                 {funds}
                             </select>
-                            <select value={ this.state.trade } onChange={ (e)=>this.update('trade', e.target.value) } style={styles.width100}>
+                            <select value={ this.state.trade } onChange={ (e)=>this.update('trade', e.target.value) } style={styles.width100} required>
                                 <option disabled value='select'>Trade</option>
                                 {trades}
                             </select>
-                            <select value={ this.state.location } onChange={ (e)=>this.update('location', e.target.value) } style={styles.width100}>
+                            <select value={ this.state.location } onChange={ (e)=>this.update('location', e.target.value) } style={styles.width100} required>
                                 <option disabled value='select'>Location</option>
                                 {locations}
                             </select>
                         </div>
                         <hr/>
                         <div style={{}}>
-                            <input type="text" placeholder="Your company's name" value={ this.state.companyName } onChange={ (e)=>this.update('companyName', e.target.value)} style={styles.width100}/>
-                            <input type="text" placeholder="Address" value={ this.state.street } onChange={ (e)=>this.update('street', e.target.value)} style={styles.width100}/>
+                            <input type="text" placeholder="Your company's name" value={ this.state.companyName } onChange={ (e)=>this.update('companyName', e.target.value)} style={styles.width100} required/>
+                            <input type="text" placeholder="Address" value={ this.state.street } onChange={ (e)=>this.update('street', e.target.value)} style={styles.width100} required/>
                         </div>
                         <div style={{columnCount: 2}}>
-                            <input type="text" placeholder="City" value={ this.state.city } onChange={ (e)=>this.update('city', e.target.value)} style={styles.width100}/>
-                            <input type="number" placeholder="Phone" value={ this.state.phone } onChange={ (e)=>this.update('phone', e.target.value)} style={styles.width100}/>
-                            <select value={ this.state.entityType } onChange={ (e)=>this.update('entityType', e.target.value) } style={styles.width100}>
+                            <input type="text" placeholder="City" value={ this.state.city } onChange={ (e)=>this.update('city', e.target.value)} style={styles.width100} required/>
+                            <input type="number" placeholder="Phone" value={ this.state.phone } onChange={ (e)=>this.update('phone', e.target.value)} style={styles.width100} required/>
+                            <select value={ this.state.entityType } onChange={ (e)=>this.update('entityType', e.target.value) } style={styles.width100} required>
                                 <option disabled value='select'>Entity type</option>
                                 {entities}
                             </select>
-                            <input type="number" placeholder="Requested labor rate" value={ this.state.requestRate } onChange={ (e)=>this.update('requestRate', e.target.value)} style={styles.width100}/>
-                            <input type="number" placeholder="Dealer account number" value={ this.state.dealerAccountNum } onChange={ (e)=>this.update('dealerAccountNum', e.target.value)} style={styles.width100}/>
+                            <input type="number" placeholder="Requested labor rate" value={ this.state.requestRate } onChange={ (e)=>this.update('requestRate', e.target.value)} style={styles.width100} required/>
+                            <input type="number" placeholder="Dealer account number" value={ this.state.dealerAccountNum } onChange={ (e)=>this.update('dealerAccountNum', e.target.value)} style={styles.width100} required/>
 
-                            <select value={ this.state.state } onChange={ (e)=>this.update('state', e.target.value) } style={styles.width100}>
+                            <select value={ this.state.state } onChange={ (e)=>this.update('state', e.target.value) } style={styles.width100} required>
                                 <option disabled value='select'>State</option>
                                 {states}
                             </select>
-                            <input type="number" placeholder="Fax" value={ this.state.fax } onChange={ (e)=>this.update('fax', e.target.value)} style={styles.width100}/>
-                            <input type="number" placeholder="Federal tax PIN" value={ this.state.taxPIN } onChange={ (e)=>this.update('taxPIN', e.target.value)} style={styles.width100}/>
-                            <input type="number" placeholder="Approved labor rate" value={ this.state.approvedRate } onChange={ (e)=>this.update('approvedRate', e.target.value)} style={styles.width100}/>
+                            <input type="number" placeholder="Fax" value={ this.state.fax } onChange={ (e)=>this.update('fax', e.target.value)} style={styles.width100} />
+                            <input type="number" placeholder="Federal tax PIN" value={ this.state.taxPIN } onChange={ (e)=>this.update('taxPIN', e.target.value)} style={styles.width100} required/>
+                            <input type="number" placeholder="Approved labor rate" value={ this.state.approvedRate } onChange={ (e)=>this.update('approvedRate', e.target.value)} style={styles.width100} required/>
                         </div>
                     </div>
 
-                    <input type="submit" value="Next" style={ styles.submitBtn }/>
+                    <input type="submit" value="Next" style={ styles.submitBtn } required/>
                 </form>;
                 break;
 
@@ -270,7 +269,7 @@ export default class SignUp extends React.Component {
                         <span onClick={()=>{this.props.showOverlay('contractAsure')}} ><img src={''} alt="insuranceImg" />Agree to Asure contact</span>
                     </div>
 
-                    <input type="submit" value="Finish" style={ styles.submitBtn }/>
+                    <input type="submit" value="Finish" style={ styles.submitBtn } required/>
                 </form>;
 
                 break;
@@ -285,27 +284,27 @@ export default class SignUp extends React.Component {
                     <div style={styles.content}>
                         <h2 style={styles.sectionHeader}>Card info</h2>
                         <div style={{columnCount: 2}}>
-                            <input type="text" placeholder="Name on card" value={ this.state.city } onChange={ (e)=>this.update('cardName', e.target.value)} style={styles.width100}/>
-                            <input type="date" placeholder="MM / YY" value={ this.state.phone } onChange={ (e)=>this.update('expDate', e.target.value)} pattern="[0-9]{2}-[0-9]{2}" style={styles.width100}/>
-                            <input type="number" placeholder="Card  number" value={ this.state.phone } onChange={ (e)=>this.update('cardNumber', e.target.value)} style={styles.width100}/>
-                            <input type="number" placeholder="CVC" value={ this.state.phone } onChange={ (e)=>this.update('cvc', e.target.value)} style={styles.width100}/>
+                            <input type="text" placeholder="Name on card" value={ this.state.city } onChange={ (e)=>this.update('cardName', e.target.value)} style={styles.width100} required/>
+                            <input type="date" placeholder="MM / YY" value={ this.state.phone } onChange={ (e)=>this.update('expDate', e.target.value)} pattern="[0-9]{2}-[0-9]{2}" style={styles.width100} required/>
+                            <input type="number" placeholder="Card  number" value={ this.state.phone } onChange={ (e)=>this.update('cardNumber', e.target.value)} style={styles.width100} required/>
+                            <input type="number" placeholder="CVC" value={ this.state.phone } onChange={ (e)=>this.update('cvc', e.target.value)} style={styles.width100} required/>
                         </div>
 
                         <h2 style={styles.sectionHeader}>Billing Address</h2>
                         <div style={{columnCount: 2}}>
-                            <input type="text" placeholder="Name" value={ this.state.city } onChange={ (e)=>this.update('billName', e.target.value)} style={styles.width100}/>
-                            <input type="text" placeholder="Street 2" value={ this.state.city } onChange={ (e)=>this.update('str2', e.target.value)} style={styles.width100}/>
-                            <select value={ this.state.state } onChange={ (e)=>this.update('billState', e.target.value) } style={styles.width100}>
+                            <input type="text" placeholder="Name" value={ this.state.city } onChange={ (e)=>this.update('billName', e.target.value)} style={styles.width100} required/>
+                            <input type="text" placeholder="Street 2" value={ this.state.city } onChange={ (e)=>this.update('str2', e.target.value)} style={styles.width100} required/>
+                            <select value={ this.state.state } onChange={ (e)=>this.update('billState', e.target.value) } style={styles.width100} required>
                                 <option disabled value='select'>State</option>
                                 {states}
                             </select>
-                            <input type="text" placeholder="Street 1" value={ this.state.city } onChange={ (e)=>this.update('str1', e.target.value)} style={styles.width100}/>
-                            <input type="text" placeholder="City" value={ this.state.city } onChange={ (e)=>this.update('billCity', e.target.value)} style={styles.width100}/>
-                            <input type="number" placeholder="Zipcode" value={ this.state.phone } onChange={ (e)=>this.update('zip', e.target.value)} style={styles.width100}/>
+                            <input type="text" placeholder="Street 1" value={ this.state.city } onChange={ (e)=>this.update('str1', e.target.value)} style={styles.width100} required/>
+                            <input type="text" placeholder="City" value={ this.state.city } onChange={ (e)=>this.update('billCity', e.target.value)} style={styles.width100} required/>
+                            <input type="number" placeholder="Zipcode" value={ this.state.phone } onChange={ (e)=>this.update('zip', e.target.value)} style={styles.width100} required/>
                         </div>
                     </div>
 
-                    <input type="submit" value="Finish" style={ styles.submitBtn }/>
+                    <input type="submit" value="Finish" style={ styles.submitBtn } required/>
                 </form>;
                 break;
             case 5:
@@ -319,7 +318,7 @@ export default class SignUp extends React.Component {
                         <p>We'll email {this.state.email} when approved.</p>
                     </div>
 
-                    <input type="submit" value="Got it" style={ styles.submitBtn }/>
+                    <input type="submit" value="Got it" style={ styles.submitBtn } required/>
                 </form>;
                 break;
             default:

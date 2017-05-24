@@ -29,7 +29,37 @@ export default class FilterPanel extends React.Component {
             }
         };
 
-        let accordion = _.map(this.props.filterPanel, (section, key)=>{
+        let parentId;
+
+        let options = _.map(this.props.matchups, (elem, key)=>{
+            if(key === 'Custom Matchups') {
+                return (<div key={key} className="options" onClick={()=>this.props.changeContent('matchups', key)}>{key}</div>);
+            } else {
+                return (<div key={key} className="options" onClick={()=>this.props.changeContent(parentId, key)}>{key}</div>);
+            }
+        });
+
+        let matchups =  <div>
+                            <div className={((this.state.activeSection === 'matchups') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('matchups')}>
+                                <div id="title">MATCHUPS</div>
+                                <div>{(this.state.activeSection === 'matchups') ? '+' : '-'}</div>
+                            </div>
+                            <div style={{display: (this.state.activeSection === 'matchups') ? 'block' : 'none'}}>{options}</div>
+                        </div>;
+
+        options = _.map(this.props.myLists, (elem, key)=>{
+            return (<div key={key} className="options" onClick={()=>this.props.changeContent(parentId, key)}>{key}</div>);
+        });
+
+        let myLists =   <div>
+                            <div className={((this.state.activeSection === 'myLists') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('myLists')}>
+                                <div id="title">MY LISTS</div>
+                                <div>{(this.state.activeSection === 'myLists') ? '+' : '-'}</div>
+                            </div>
+                            <div style={{display: (this.state.activeSection === 'myLists') ? 'block' : 'none'}}>{options}</div>
+                        </div>;
+
+        let filterPanel = _.map(this.props.filterPanel, (section, key)=>{
             let options;
             let isActive = (this.state.activeSection === key);
             let parentId;
@@ -49,13 +79,7 @@ export default class FilterPanel extends React.Component {
                 });
 
             } else {
-                options = _.map(section, (elem, key)=>{
-                    if(key === 'Custom Matchups') {
-                        return (<div key={key} className="options" onClick={()=>this.props.changeContent('matchups', key)}>{key}</div>);
-                    } else {
-                        return (<div key={key} className="options" onClick={()=>this.props.changeContent(parentId, key)}>{key}</div>);
-                    }
-                });
+                return (<div key={key} className="options" onClick={()=>this.props.changeContent(parentId, key)}>{key}</div>);
             }
 
             return (
@@ -71,7 +95,9 @@ export default class FilterPanel extends React.Component {
 
         return (
             <div className="accordion" style={styles.container}>
-                {accordion}
+                {matchups}
+                {myLists}
+                {filterPanel}
             </div>
         );
     }

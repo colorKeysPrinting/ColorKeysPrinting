@@ -15,6 +15,8 @@ let select = (state)=>{
         currLang    : state.application.get('currLanguage'),
         activePage  : state.application.get('activePage'),
         infoBar     : state.application.getIn(['activeUser', 'settings', 'infoBar']).toJS(),
+        matchups    : state.application.getIn(['activeUser', 'matchups']).toJS(),
+        myLists     : state.application.getIn(['activeUser', 'myLists']).toJS(),
         filterPanel : state.application.getIn(['activeUser', 'filterPanel']).toJS(),
     };
 };
@@ -62,6 +64,8 @@ export default class ProductsPage extends React.Component {
                 <div style={{display: 'inline-flex', width: '100%'}}>
                     <FilterPanel
                         changeContent={this.changeContent}
+                        matchups={this.props.matchups}
+                        myLists={this.props.myLists}
                         filterPanel={this.props.filterPanel} />
                     <ContentPanel
                         activePage={this.state.activePage} />

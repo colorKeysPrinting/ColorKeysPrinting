@@ -3,7 +3,7 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
-import {}         from '../../../actions/products';
+import {showOverlay}            from '../../../actions/application';
 
 import Product                  from './product';
 
@@ -14,7 +14,7 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {}, null, {withRef: true})
+@connect(select, {showOverlay}, null, {withRef: true})
 export default class Products extends React.Component {
 
     constructor(props) {
@@ -31,7 +31,6 @@ export default class Products extends React.Component {
         this.sortBy = this.sortBy.bind(this);
         this.productSelected = this.productSelected.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
-        this.showOverlay = this.showOverlay.bind(this);
     }
 
     searchTerm(searchTerm) {
@@ -52,10 +51,6 @@ export default class Products extends React.Component {
         console.log('addToTruck', product);
     }
 
-    showOverlay(type, obj) {
-        console.log(type, obj);
-    }
-
     render() {
         let products;
 
@@ -68,7 +63,6 @@ export default class Products extends React.Component {
             },
             searchSection: {
                 width: '100%',
-                display: 'inline-flex',
                 height: '77px',
                 borderBottom: '1px solid rgba(50, 50, 50, 0.1)'
             },
@@ -105,7 +99,7 @@ export default class Products extends React.Component {
                         product={product}
                         productSelected={this.productSelected}
                         addToTruck={this.addToTruck}
-                        showOverlay={this.showOverlay} />
+                        showOverlay={this.props.showOverlay} />
                 );
             });
         }
@@ -120,7 +114,7 @@ export default class Products extends React.Component {
                     </select>
                 </div>
                 <div>
-                    <div className="pure-g">
+                    <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
                         {products}
                     </div>
                 </div>

@@ -3,10 +3,7 @@ import { connect }                               from 'react-redux';
 
 import assets                                    from '../../libs/assets';
 
-
-// TODO: need to make this a class with a local state to handle checkbox
-export default function agreementOverlay(props) {
-    let inputs, actionSection, close;
+export default function AddNewListOverlay(props) {
 
     let styles = {
         container: {
@@ -15,7 +12,7 @@ export default function agreementOverlay(props) {
             border: '1px solid rgba(50, 50, 50, 0.4)',
             boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
             minHight: '400px',
-            width: '850px',
+            width: '350px',
             margin: '10em auto',
             zIndex: '999',
         },
@@ -25,7 +22,7 @@ export default function agreementOverlay(props) {
             borderTopLeftRadius: '5px',
             borderTopRightRadius: '5px',
             boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-            height: '10%',
+            height: '20%',
             width: '100%'
         },
         title: {
@@ -40,8 +37,7 @@ export default function agreementOverlay(props) {
             width: '10%'
         },
         content: {
-            height: '530px',
-            width: '90%',
+            width: '89%',
             margin: '0px auto',
             marginTop: '40px',
             textAlign: 'left'
@@ -55,27 +51,29 @@ export default function agreementOverlay(props) {
             color: '#FFF',
             cursor: 'pointer',
             height: '40px',
-            width: '40%',
+            width: '86%',
             margin: '20px auto',
-            paddingTop: '13px',
-            textAlign: 'center'
+            paddingTop: '10px'
         },
-        checkbox: {
-            width: '60%',
-            padding: '30px'
+        resetBtn: {
+            cursor: 'pointer',
+            height: '40px',
+            width: '97%',
+            margin: '20px auto',
+            paddingTop: '10px'
         },
         width100: {
-            width: '97%'
+            width: '95%'
         }
     };
 
     let title;
-    switch(props.type) {
-        case 'contractGoodman':
-            title = 'Goodman';
+    switch(props.overlayObj.type) {
+        case 'customMatchups':
+            title = 'Custom Matchup';
             break;
-        case 'contractAsure':
-            title = 'Asure';
+        case 'myLists':
+            title = 'List';
             break;
         default:
     }
@@ -83,25 +81,17 @@ export default function agreementOverlay(props) {
     return (
         <div style={styles.container}>
             <div style={ styles.titleBar }>
-                <div style={styles.title}>Agree to {title} contract</div>
+                <div style={styles.title}>Create New {title}</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
-            <div style={styles.content}>
-                <object data={assets(props.document)}
-                        type="application/pdf"
-                        width="100%"
-                        height="85%">
-                </object>
-                <div style={{columnCount: 2, display: 'inline-flex', width: '100%'}}>
-                    <div style={styles.checkbox}>
-                        <input  id="checkbox"
-                                type="checkbox"
-                                checked={props.checked} // TODO: need to fix checkbox validation
-                                onClick={(e)=>{ e.preventDefault(); props.update(props.type, (props.checked) ? false : true)}}/>I agree
-                    </div>
-                    <div style={styles.submitBtn} onClick={props.close}>Done</div>
+            <form onSubmit={()=>props.submitAddToBtn(props.type)}>
+                <div style={styles.content}>
+                    <div style={{width: '95%', margin: 'auto'}}>Name your new {(title).toLowerCase()}</div>
+                    <input type="text" placeholder="My Favorites" value={props.newItem} onChange={(e)=>{props.update('newItem', e.target.value)}} style={styles.width100} required/>
                 </div>
-            </div>
+
+                <input type="submit" value="Submit" style={ styles.submitBtn }/>
+            </form>
         </div>
     );
 }

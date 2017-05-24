@@ -75,7 +75,7 @@ export default class Product extends React.Component {
                     <div style={styles.plusBtn} onMouseOver={()=>this.onHover(true)} onMouseOut={()=>this.onHover(false)}>
                         <img src={assets('./images/plus_circle.png')}
                              alt="add"
-                             onClick={(e)=>this.props.showOverlay('productAddTo', {mouseX: e.clientX, mouseY: e.clientY, modelNum: product.modelNum})}
+                             onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: product.modelNum, mouseCoord: {mouseX: e.clientX, mouseY: e.clientY}})}
                              style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
                     </div>
                     <div style={styles.image}><img src={product.image} alt="picture" /></div>

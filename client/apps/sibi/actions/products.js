@@ -7,3 +7,19 @@ export function activePage(key) {
         key
     };
 }
+
+export function showRadioOverlay(key,) {
+    return {
+        type: ActionTypes.SHOW_RADIO_OVERLAY,
+        key,
+        modelNum,
+        mouseCoord
+    };
+}
+
+export function updateInfoBar(key) {
+    return {
+        type: ActionTypes.UPDATE_INFO_BAR,
+        key
+    };
+}
