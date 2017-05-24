@@ -8,6 +8,7 @@ export function goHome() {
 }
 
 export function activateTab(key) {
+    // activeTab: products, features, support, orderHistory, warranties, reports, dashboard, rebates, dealers, funds, vendors
     return {
         type: ActionTypes.ACTIVATE_TAB,
         key

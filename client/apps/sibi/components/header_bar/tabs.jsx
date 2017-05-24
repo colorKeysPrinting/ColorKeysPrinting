@@ -24,7 +24,7 @@ export default (props)=>{
             outline: 'none',
             textDecoration: 'none',
             padding: '15px',
-            height: '85px',
+            height: '52px',
             borderBottom: '3px solid #0091CE'
         }
     };

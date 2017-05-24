@@ -10,7 +10,8 @@ const actionTypes = [
     "SHOW_OVERLAY",
     "CLOSE_OVERLAY",
     "CHANGE_LANGUAGE",
-    "UPDATE_INFO_BAR"
+    "UPDATE_INFO_BAR",
+    "ACTIVATE_PAGE",
 ];
 
 // These types will receive a _DONE

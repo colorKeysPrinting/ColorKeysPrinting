@@ -24,13 +24,8 @@ export default class FilterPanel extends React.Component {
         let styles = {
             container: {
                 backgroundColor: '#FFF',
-                width: '300px',
                 borderRight: '1px solid rgba(50, 50, 50, 0.1)',
-            },
-            element: {
-                width: '25%',
-                padding: '2%',
-                borderBottom: '1px solid rgba(50, 50, 50, 0.1)',
+                width: '300px'
             }
         };
 
@@ -65,7 +60,7 @@ export default class FilterPanel extends React.Component {
 
             return (
                 <div key={key}>
-                    <div className={(isActive) ? 'headers-active' : 'headers'} onClick={()=>this.changeActiveSection(key)}>
+                    <div className={((isActive) ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection(key)}>
                         <div id="title">{key.toUpperCase()}</div>
                         <div>{(isActive) ? '+' : '-'}</div>
                     </div>

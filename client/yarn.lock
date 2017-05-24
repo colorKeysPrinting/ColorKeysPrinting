@@ -5754,6 +5754,10 @@ pure-color@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/pure-color/-/pure-color-1.2.0.tgz#702d2f2819dd545b1fde5116fca5f0c2dad2d18d"
 
+purecss@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/purecss/-/purecss-0.6.2.tgz#f0827d227e909543c5138f36d56c8c613f476b8c"
+
 q@1.4.1, q@^1.1.2, q@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.4.1.tgz#55705bcd93c5f3673530c2c2cbc0c2b3addc286e"

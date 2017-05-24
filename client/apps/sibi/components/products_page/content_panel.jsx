@@ -1,15 +1,14 @@
 import React                    from 'react';
 import _                        from 'lodash';
 
-// import Products                 from './content_sections/products';
+import Products                 from './content_sections/products';
 
 export default function ContentPanel(props) {
     let activeSection;
 
     let styles = {
         container: {
-            backgroundColor: '#FFF',
-            width: '100%'
+            backgroundColor: '#FFF'
         },
         element: {
             width: '25%',
@@ -19,7 +18,7 @@ export default function ContentPanel(props) {
     };
 
     // activeSection: products, matchups, equipment, partsSupplies
-    switch(props.activeSection) {
+    switch(props.activePage) {
         case 'products':
             activeSection = <Products />;
             break;
