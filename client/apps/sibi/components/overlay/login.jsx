@@ -64,7 +64,7 @@ export default function LoginOverlay(props) {
             paddingTop: '10px'
         },
         width100: {
-            width: '97%'
+            width: '80%'
         }
     };
 

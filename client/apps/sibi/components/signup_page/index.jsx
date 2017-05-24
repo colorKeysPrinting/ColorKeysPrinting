@@ -160,7 +160,7 @@ export default class SignUp extends React.Component {
                 margin: '15px auto'
             },
             width100: {
-                width: '97%'
+                width: '89%'
             }
         };
 
