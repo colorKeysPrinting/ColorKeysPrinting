@@ -48,7 +48,7 @@ export default class HeaderBar extends React.Component {
             },
             loginSection: {
                 display: 'inline-flex',
-                margin: '7px'
+                margin: '20px'
             },
             profileSection: {
                 display: 'inline-flex'
@@ -65,9 +65,10 @@ export default class HeaderBar extends React.Component {
                 outline: 'none',
                 padding: '11px',
                 textDecoration: 'none',
+                height: '42px'
             },
             sibiLogo: {
-                width: '160px',
+                width: '273px',
                 cursor: 'pointer'
             }
         };

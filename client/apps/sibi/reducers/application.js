@@ -95,8 +95,9 @@ export default (state = initialState, action)=>{
 
 // **** LOGIN/CREATE USER SECTION
         case ActionTypes.LOGIN:
-            console.log('login', action.username, action.password);
+            console.log('login: ', action.username, action.password);
             state = state.set('activeOverlay', '');
+            state = state.setIn(['activeUser', 'type'], 'sibi'); // TODO: REMOVE THIS LINE FOR TESTING ONLY!
             // TODO: call API function
             break;
         case ActionTypes.PASSWORD_RESET:

@@ -2,8 +2,6 @@ import React                    from 'react';
 import { connect }              from 'react-redux';
 import _                        from 'lodash';
 
-import assets                   from '../../libs/assets';
-
 export default class RadioOverlay extends React.Component {
 
     constructor(props) {
