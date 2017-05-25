@@ -2,7 +2,7 @@ import React                    from 'react';
 import { connect }              from 'react-redux';
 
 import { login, showRadioOverlay, closeOverlay, passwordReset }      from '../../actions/application';
-import {  addDocument, acceptAgreement }         from '../../actions/products';
+import { addDocument, acceptAgreement }         from '../../actions/signup';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -51,7 +51,7 @@ export default class Overlay extends React.Component {
     }
 
     resetState() {
-        this.setState({activeOverlay: '', overlayObj: '', email: '', password: '', newItem: '', contractGoodman: false, contractAsure: false});
+        this.setState({activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newItem: '', contractGoodman: false, contractAsure: false});
     }
 
     changeOverlay(activeOverlay) {
@@ -91,6 +91,7 @@ export default class Overlay extends React.Component {
         if(isCorrect) {
 
             this.props.addDocument(type, value);
+            this.resetState();
             this.props.closeOverlay();
             return true;
 

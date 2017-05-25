@@ -104,7 +104,7 @@ export default function fileUploaderOverlay(props) {
                     <label htmlFor="file" style={styles.submitBtn}>Choose file
                         <input  id="file"
                                 type="file"
-                                onChange={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}}
+                                onChange={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.target.files[0])}}
                                 accept=".pdf,.word,.png,.jpg"
                                 style={{display: 'none'}}/>
                     </label>
