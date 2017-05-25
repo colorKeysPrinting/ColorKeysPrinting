@@ -31,3 +31,11 @@ export function addDocument(key, file) {
         file
     };
 }
+
+export function acceptAgreement(key, isChecked) {
+    return {
+        type: ActionTypes.ACCEPT_AGREEMENT,
+        key,
+        isChecked
+    };
+}

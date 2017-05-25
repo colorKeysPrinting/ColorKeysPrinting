@@ -2,7 +2,7 @@ import React                    from 'react';
 import { connect }              from 'react-redux';
 
 import { login, showRadioOverlay, closeOverlay, passwordReset }      from '../../actions/application';
-import {  addDocument }         from '../../actions/products';
+import {  addDocument, acceptAgreement }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -20,7 +20,9 @@ let select = (state)=>{
     }
 };
 
-@connect(select, {login, showRadioOverlay, closeOverlay, passwordReset, addDocument}, null, {withRef: true})
+let actions = {login, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement};
+
+@connect(select, actions, null, {withRef: true})
 export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
@@ -159,9 +161,8 @@ export default class Overlay extends React.Component {
             case 'contractAsure':
                 overlay = <Agreement
                                 type={this.state.activeOverlay}
-                                update={this.update}
                                 document={(this.state.activeOverlay === 'contractGoodman') ? this.props.contractGoodman : this.props.contractAsure}
-                                checked={(this.state.activeOverlay === 'contractGoodman') ? this.state.contractGoodman : this.state.contractAsure}
+                                acceptAgreement={this.props.acceptAgreement}
                                 close={this.close} />
                 break;
             case 'productAddTo':

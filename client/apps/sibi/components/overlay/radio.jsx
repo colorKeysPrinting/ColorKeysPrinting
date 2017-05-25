@@ -2,12 +2,16 @@ import React                    from 'react';
 import { connect }              from 'react-redux';
 import _                        from 'lodash';
 
+
+// TODO: need to fix the submit button becuase it's not sending the connected list
 export default class RadioOverlay extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {activeRadio: Object.keys(this.props.overlayObj.list)[0]};
+
+        this.update = this.update.bind(this);
     }
 
     update(activeRadio) {

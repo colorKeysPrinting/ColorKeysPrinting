@@ -29,7 +29,7 @@ export default class SignUp extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {currentStep: 3, buttonText: 'Create Account',
+        this.state = {currentStep: 3, buttonText: 'Create Account', errorMsg: '',
             email: '', password: '', firstName: '', lastName: '', fund:'', location: '', trade: '',
             companyName: '', street: '', city: '', state: '', phone: '', fax: '', entityType: '',
             taxPIN: '', requestRate: '', approvedRate: '', dealerAccountNum: '', docWorkerComp: '',
@@ -73,8 +73,7 @@ export default class SignUp extends React.Component {
             taxPIN: this.state.taxPIN,
             laborRate: {request: this.state.requestRate, approved: this.state.approvedRate},
             dealerAccountNum: this.state.dealerAccountNum,
-            docs: {workerComp: this.state.docWorkerComp, w9: this.state.docW9, insurance: this.state.docInsurance},
-            contract: {goodman: this.state.contractGoodman, asure: this.state.contractAsure},
+            docs: {workerComp: this.state.docWorkerComp, w9: this.state.docW9, insurance: this.state.docInsurance, goodman: this.state.contractGoodman, asure: this.state.contractAsure},
             payment: {
                 card: {name: this.state.cardName, number: this.state.cardNum, expDate: this.state.expDate, cvc: this.state.cvc},
                 billingAddr: {name: this.state.billName, address}
@@ -85,15 +84,32 @@ export default class SignUp extends React.Component {
         browserHistory.push('/');
     }
 
-    nextAction() {
-        let currentStep = (this.state.currentStep + 1);
-        console.log(currentStep);
+    nextAction(step) {
+        let isComplete = true;
 
-        this.setState({currentStep});
+        if(step === 'step3') {
+            isComplete = (this.state.docWorkerComp)     ? true : false;
+            isComplete = (this.state.docW9)             ? true : false;
+            isComplete = (this.state.docInsurance)      ? true : false;
+            isComplete = (this.state.contractGoodman)   ? true : false;
+            isComplete = (this.state.contractAsure)     ? true : false;
+        }
+
+        if(isComplete) {
+            let currentStep = (this.state.currentStep + 1);
+            console.log('currentStep: ', currentStep);
+
+            this.setState({currentStep});
+        } else {
+            if(step === 'step3') {
+                let errorMsg = "Please complete each document";
+                this.setState({errorMsg});
+            }
+        }
     }
 
     render() {
-        let content, title;
+        let content, title, states;
 
         let styles = {
             container: {
@@ -218,6 +234,7 @@ export default class SignUp extends React.Component {
 
             case 3:
                 content = <Step3
+                                errorMsg={this.state.errorMsg}
                                 docWorkerComp={this.state.docWorkerComp}
                                 docW9={this.state.docW9}
                                 docInsurance={this.state.docInsurance}

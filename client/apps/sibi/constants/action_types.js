@@ -19,7 +19,8 @@ const actionTypes = [
     "ACTIVATE_PAGE",
     "SHOW_RADIO_OVERLAY",
     "UPDATE_INFO_BAR",
-    "UPLOAD_DOCUMENT"
+    "UPLOAD_DOCUMENT",
+    "ACCEPT_AGREEMENT"
 ];
 
 // These types will receive a _DONE
