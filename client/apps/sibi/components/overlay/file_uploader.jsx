@@ -4,7 +4,7 @@ import { connect }                               from 'react-redux';
 import assets                                    from '../../libs/assets';
 
 export default function fileUploaderOverlay(props) {
-    let inputs, actionSection, close;
+    let title, inputs, actionSection, close;
 
     let styles = {
         container: {
@@ -59,16 +59,20 @@ export default function fileUploaderOverlay(props) {
         },
         uploadContainer: {
             borderRadius: '5px',
-            border: '2px dashed rgba(50, 50, 50, 0.4)',
+            border: (props.errorMsg) ? '2px dashed #F00' : '2px dashed rgba(50, 50, 50, 0.4)',
             backgroundColor: '#FFF',
             display: 'grid',
             height: '185px',
             padding: '45px',
             textAlign: 'center'
+        },
+        errorMsg: {
+            color: '#F00',
+            fontSize: '17px',
+            whiteSpace: 'pre-wrap'
         }
     };
 
-    let title;
     switch(props.type) {
         case 'docWorkerComp':
             title = 'worker\'s comp';
@@ -82,6 +86,8 @@ export default function fileUploaderOverlay(props) {
         default:
     }
 
+    let errorMsg = (props.errorMsg) ? <div style={styles.errorMsg}>{props.errorMsg}</div> : '';
+
     return (
         <div style={styles.container}>
             <div style={ styles.titleBar }>
@@ -89,6 +95,7 @@ export default function fileUploaderOverlay(props) {
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
             <div style={styles.content}>
+                {errorMsg}
                 <div style={styles.uploadContainer}
                      onDrop={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}}
                      onDragOver={(e)=>{e.preventDefault(); e.dropEffect='copy'}}>

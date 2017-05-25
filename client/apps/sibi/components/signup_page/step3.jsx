@@ -74,42 +74,69 @@ export default function SignUpStep3(props) {
         },
         notAdded: {
             color: 'rgb(47, 205, 237)',
+            cursor: 'pointer',
             fontSize: '20px',
-            cursor: 'pointer'
+            margin: '20px'
+        },
+        added: {
+            display: 'inline-flex',
+            margin: '5px 20px'
+        },
+        checkmark: {
+            height: '30px',
+            margin: '5px',
+            marginTop: '-6px'
+        },
+        remove: {
+            color: 'rgba(50, 50, 50, 0.4)',
+            fontSize: '16px',
+            margin: '6px'
         }
     };
 
-    let workerCompText = (props.docWorkerComp) ? <div>
-                                                     Worker's comp
-                                                     <img src={''} alt="checkmark" />
-                                                     <div onClick={()=>props.update('docWorkerComp', '')}>Remove</div>
+    // #22D8AF - green
+
+    let workerCompText = (props.docWorkerComp) ? <div style={styles.added}>
+                                                     <div>
+                                                        <h2>Worker's comp</h2>
+                                                        <div onClick={()=>props.update('docWorkerComp', '')} style={styles.remove}>Remove</div>
+                                                     </div>
+                                                     <img src={assets('./images/green_checkmark.png')} alt="checkmark" style={styles.checkmark} />
                                                  </div>
                                                : <div style={styles.notAdded}>Add Worker's Comp</div>;
-    let w9Text = (props.docW9) ? <div>
-                                     w9
-                                     <img src={''} alt="checkmark" />
-                                     <div onClick={()=>props.update('docW9', '')}>Remove</div>
+    let w9Text = (props.docW9) ? <div style={styles.added}>
+                                     <div>
+                                        <h2>w9</h2>
+                                        <div onClick={()=>props.update('docW9', '')} style={styles.remove}>Remove</div>
+                                     </div>
+                                     <img src={assets('./images/green_checkmark.png')} alt="checkmark" style={styles.checkmark} />
                                  </div>
                                : <div style={styles.notAdded}>Add w9</div>;
 
-    let insuranceText = (props.docInsurance) ? <div>
-                                                   proof of insurance
-                                                   <img src={''} alt="checkmark" />
-                                                   <div onClick={()=>props.update('docInsurance', '')}>Remove</div>
+    let insuranceText = (props.docInsurance) ? <div style={styles.added}>
+                                                   <div>
+                                                        <h2>proof of insurance</h2>
+                                                        <div onClick={()=>props.update('docInsurance', '')} style={styles.remove}>Remove</div>
+                                                   </div>
+                                                   <img src={assets('./images/green_checkmark.png')} alt="checkmark" style={styles.checkmark} />
                                                </div>
                                              : <div style={styles.notAdded}>Add proof of insurance</div>;
 
-    let goodmanText = (props.contractGoodman) ? <div>
-                                                    Accepted Goodman contract
-                                                    <img src={''} alt="checkmark" />
-                                                    <div onClick={()=>props.update('contractGoodman', '')}>Remove</div>
+    let goodmanText = (props.contractGoodman) ? <div style={styles.added}>
+                                                    <div>
+                                                        <h2>Accepted Goodman contract</h2>
+                                                        <div onClick={()=>props.update('contractGoodman', '')} style={styles.remove}>Remove</div>
+                                                    </div>
+                                                    <img src={assets('./images/green_checkmark.png')} alt="checkmark" style={styles.checkmark} />
                                                 </div>
                                               : <div style={styles.notAdded}>Agree to Goodman contract</div>;
 
-    let asureText = (props.contractAsure) ? <div>
-                                                Accepted Asure contact
-                                                <img src={''} alt="checkmark" />
-                                                <div onClick={()=>props.update('contractAsure', '')}>Remove</div>
+    let asureText = (props.contractAsure) ? <div style={styles.added}>
+                                                <div>
+                                                    <h2>Accepted Asure contact</h2>
+                                                    <div onClick={()=>props.update('contractAsure', '')} style={styles.remove}>Remove</div>
+                                                </div>
+                                                <img src={assets('./images/green_checkmark.png')} alt="checkmark" style={styles.checkmark} />
                                             </div>
                                           : <div style={styles.notAdded}>Agree to Asure contact</div>;
 
@@ -118,33 +145,23 @@ export default function SignUpStep3(props) {
                         <div style={styles.contentUpload}>
                             <div onClick={()=>{props.showOverlay('docWorkerComp')}} style={styles.element}>
                                 <img src={''} alt="workersCompImg" style={styles.image}/>
-                                <div style={styles.textSection}>
-                                    {workerCompText}
-                                </div>
+                                {workerCompText}
                             </div>
                             <div onClick={()=>{props.showOverlay('docW9')}} style={styles.element}>
                                 <img src={''} alt="w9Img" style={styles.image}/>
-                                <div style={styles.textSection}>
-                                    {w9Text}
-                                </div>
+                                {w9Text}
                             </div>
                             <div onClick={()=>{props.showOverlay('docInsurance')}} style={styles.element}>
                                 <img src={''} alt="insuranceImg" style={styles.image}/>
-                                <div style={styles.textSection}>
-                                    {insuranceText}
-                                </div>
+                                {insuranceText}
                             </div>
                             <div onClick={()=>{props.showOverlay('contractGoodman')}} style={styles.element}>
                                 <img src={''} alt="insuranceImg" style={styles.image}/>
-                                <div style={styles.textSection}>
-                                    {goodmanText}
-                                </div>
+                                {goodmanText}
                             </div>
                             <div onClick={()=>{props.showOverlay('contractAsure')}} style={styles.element}>
                                 <img src={''} alt="insuranceImg" style={styles.image}/>
-                                <div style={styles.textSection}>
-                                    {asureText}
-                                </div>
+                                {asureText}
                             </div>
                         </div>
 

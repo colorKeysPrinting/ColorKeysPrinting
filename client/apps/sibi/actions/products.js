@@ -23,3 +23,11 @@ export function updateInfoBar(key) {
         key
     };
 }
+
+export function addDocument(key, file) {
+    return {
+        type: ActionTypes.UPLOAD_DOCUMENT,
+        key,
+        file
+    };
+}

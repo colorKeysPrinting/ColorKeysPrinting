@@ -19,6 +19,7 @@ let select = (state)=>{
         trades      : state.application.get('tradeList').toJS(),
         entities    : state.application.get('entityList').toJS(),
         states      : state.application.get('states').toJS(),
+        docs        : state.application.getIn(['temp','docs']).toJS()
     };
 };
 
@@ -40,6 +41,14 @@ export default class SignUp extends React.Component {
         this.update = this.update.bind(this);
         this.sendInfo = this.sendInfo.bind(this);
         this.nextAction = this.nextAction.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.docs) {
+            _.each(nextProps.docs, (value, key)=>{
+                this.setState({[key]: value});
+            });
+        }
     }
 
     update(type, value) {
@@ -271,7 +280,6 @@ export default class SignUp extends React.Component {
             default:
         }
 
-        // style={(this.state.currentStep !== 5) ? styles.container : styles.containerFinish}
         return (
             <div>
                 {content}

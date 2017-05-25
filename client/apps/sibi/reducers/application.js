@@ -4,7 +4,7 @@ import _                    from 'lodash';
 import Immutable            from 'immutable';
 import ActionTypes          from '../constants/action_types';
 
-const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', temp: {modelNum: '', listType: '', actualList: ''},
+const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', temp: {modelNum: '', listType: '', actualList: '', docs: {workerComp: '', w9: '', insurance: '', contractGoodman: false,  contractAsure: false}},
 
 // ****** API information starts here ******
     fundsList: ['Associated fund', 'value fund', 'foo fund', 'Jolly fund'], locationList: ['petes place', 'lower towers', 'twin terrace'],
@@ -183,6 +183,11 @@ export default (state = initialState, action)=>{
         case ActionTypes.ACTIVATE_PAGE:
             console.log('activePage: ', action.key);
             state = state.set('activePage', action.key);
+            break;
+
+        case ActionTypes.UPLOAD_DOCUMENT:
+            console.log('uploading document');
+            state = state.setIn(['temp','docs', action.key], action.file);
             break;
 
         default:

@@ -2,6 +2,7 @@ import React                    from 'react';
 import { connect }              from 'react-redux';
 
 import { login, showRadioOverlay, closeOverlay, passwordReset }      from '../../actions/application';
+import {  addDocument }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -19,12 +20,12 @@ let select = (state)=>{
     }
 };
 
-@connect(select, {login, showRadioOverlay, closeOverlay, passwordReset}, null, {withRef: true})
+@connect(select, {login, showRadioOverlay, closeOverlay, passwordReset, addDocument}, null, {withRef: true})
 export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeOverlay: '', overlayObj: '', email: '', password: '', newItem: '', docWorkerComp: '', docW9: '', docInsurance: '', contractGoodman: false, contractAsure: false};
+        this.state = {activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newItem: '', contractGoodman: false, contractAsure: false};
 
         this.resetState = this.resetState.bind(this);
         this.changeOverlay = this.changeOverlay.bind(this);
@@ -48,7 +49,7 @@ export default class Overlay extends React.Component {
     }
 
     resetState() {
-        this.setState({activeOverlay: '', overlayObj: '', email: '', password: '', newItem: '', docWorkerComp: '', docW9: '', docInsurance: '', contractGoodman: false, contractAsure: false});
+        this.setState({activeOverlay: '', overlayObj: '', email: '', password: '', newItem: '', contractGoodman: false, contractAsure: false});
     }
 
     changeOverlay(activeOverlay) {
@@ -66,12 +67,35 @@ export default class Overlay extends React.Component {
     }
 
     fileDrop(type, value) {
-        console.log(value);
-        // TODO: validation checks for file type and size
-        //       close overlay if correct
-        //       submit files to store/server
-        this.setState({[type]: value});
-        this.props.closeOverlay();
+        let isCorrect = true, errorMsg = '';
+
+        console.log(type, value);
+
+        const re = new RegExp('\.(pdf|word|png|jpg|jpeg)', 'i');
+        const maxSize = 25000; // 25KB = bytes
+
+        let result = re.exec(value.name);
+
+        if(!result) {
+            isCorrect = false;
+            errorMsg += "Incorrect file type!\n\tPlease upload a .PDF, .WORD, .PNG or .JPG\n\n"
+        }
+
+        if(value.size > maxSize) {
+            isCorrect = false;
+            errorMsg += "File is too big!\n\tPlease upload a file no larger than 25KB\n\n";
+        }
+
+        if(isCorrect) {
+
+            this.props.addDocument(type, value);
+            this.props.closeOverlay();
+            return true;
+
+        } else {
+            this.setState({errorMsg});
+            return false;
+        }
     }
 
     submitLoginBtn(type) {
@@ -128,7 +152,8 @@ export default class Overlay extends React.Component {
                 overlay = <FileUploader
                                 type={this.state.activeOverlay}
                                 fileDrop={this.fileDrop}
-                                close={this.close} />
+                                close={this.close}
+                                errorMsg={this.state.errorMsg} />
                 break;
             case 'contractGoodman':
             case 'contractAsure':
