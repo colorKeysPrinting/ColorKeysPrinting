@@ -16,3 +16,10 @@ export function acceptAgreement(key, isChecked) {
         isChecked
     };
 }
+
+export function getStripeToken(obj) {
+    return {
+        type: ActionTypes.GET_STRIPE_TOKEN,
+        obj
+    };
+}

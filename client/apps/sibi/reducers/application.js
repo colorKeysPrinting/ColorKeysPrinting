@@ -189,11 +189,16 @@ export default (state = initialState, action)=>{
             console.log('uploading document');
             state = state.setIn(['temp','docs', action.key], action.file);
             break;
+
         case ActionTypes.ACCEPT_AGREEMENT:
             console.log('accept agreement');
             state = state.setIn(['temp','docs', action.key], action.isChecked);
             break;
 
+        case ActionTypes.GET_STRIPE_TOKEN_DONE:
+            console.log('received stripe token');
+            state = state.setIn(['temp','stripeToken', action.key], action.isChecked);
+            break;
         default:
     }
 

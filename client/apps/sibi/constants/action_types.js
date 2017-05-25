@@ -20,11 +20,12 @@ const actionTypes = [
     "SHOW_RADIO_OVERLAY",
     "UPDATE_INFO_BAR",
     "UPLOAD_DOCUMENT",
-    "ACCEPT_AGREEMENT"
+    "ACCEPT_AGREEMENT",
 ];
 
 // These types will receive a _DONE
 const asyncActionTypes = [
+    "GET_STRIPE_TOKEN"
 ];
 
 export default wrapper(actionTypes, asyncActionTypes);

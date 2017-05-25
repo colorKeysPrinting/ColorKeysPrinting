@@ -113,7 +113,7 @@ export default function SignUpStep2(props) {
                             </div>
                             <div style={{columnCount: 2}}>
                                 <input type="text" placeholder="City" value={ props.city } onChange={ (e)=>props.update('city', e.target.value)} style={styles.width100} required/>
-                                <input type="number" placeholder="Phone" value={ props.phone } onChange={ (e)=>props.update('phone', e.target.value)} style={styles.width100} required/>
+                                <input type="tel" placeholder="Phone" value={ props.phone } onChange={ (e)=>props.update('phone', e.target.value)} style={styles.width100} required/>
                                 <select value={ props.entityType } onChange={ (e)=>props.update('entityType', e.target.value) } style={styles.width100} required>
                                     <option disabled value='select'>Entity type</option>
                                     {entities}
@@ -125,13 +125,13 @@ export default function SignUpStep2(props) {
                                     <option disabled value='select'>State</option>
                                     {states}
                                 </select>
-                                <input type="number" placeholder="Fax" value={ props.fax } onChange={ (e)=>props.update('fax', e.target.value)} style={styles.width100} />
+                                <input type="tel" placeholder="Fax" value={ props.fax } onChange={ (e)=>props.update('fax', e.target.value)} style={styles.width100} />
                                 <input type="number" placeholder="Federal tax PIN" value={ props.taxPIN } onChange={ (e)=>props.update('taxPIN', e.target.value)} style={styles.width100} required/>
                                 <input type="number" placeholder="Approved labor rate" value={ props.approvedRate } onChange={ (e)=>props.update('approvedRate', e.target.value)} style={styles.width100} required/>
                             </div>
                         </div>
 
-                        <input type="submit" value="Next" style={ styles.submitBtn } required/>
+                        <input className="button" type="submit" value="Next" style={ styles.submitBtn } required/>
                     </form>;
 
     return (

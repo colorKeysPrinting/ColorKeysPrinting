@@ -4,7 +4,8 @@ import { browserHistory }       from 'react-router';
 import _                        from 'lodash';
 import assets                   from '../../libs/assets';
 
-import {changeLanguage, showOverlay, signUp}         from '../../actions/application';
+import { changeLanguage, showOverlay, signUp }         from '../../actions/application';
+import { getStripeToken }       from '../../actions/signup';
 
 import Step2                    from './step2';
 import Step3                    from './step3';
@@ -19,17 +20,18 @@ let select = (state)=>{
         trades      : state.application.get('tradeList').toJS(),
         entities    : state.application.get('entityList').toJS(),
         states      : state.application.get('states').toJS(),
-        docs        : state.application.getIn(['temp','docs']).toJS()
+        docs        : state.application.getIn(['temp','docs']).toJS(),
+        stripeToken : state.application.getIn(['temp','stripeToken']),
     };
 };
 
-@connect(select, {changeLanguage, showOverlay, signUp}, null, {withRef: true})
+@connect(select, {changeLanguage, showOverlay, signUp, getStripeToken}, null, {withRef: true})
 export default class SignUp extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {currentStep: 3, buttonText: 'Create Account', errorMsg: '',
+        this.state = {currentStep: 4, buttonText: 'Create Account', errorMsg: '',
             email: '', password: '', firstName: '', lastName: '', fund:'', location: '', trade: '',
             companyName: '', street: '', city: '', state: '', phone: '', fax: '', entityType: '',
             taxPIN: '', requestRate: '', approvedRate: '', dealerAccountNum: '', docWorkerComp: '',
@@ -75,7 +77,7 @@ export default class SignUp extends React.Component {
             dealerAccountNum: this.state.dealerAccountNum,
             docs: {workerComp: this.state.docWorkerComp, w9: this.state.docW9, insurance: this.state.docInsurance, goodman: this.state.contractGoodman, asure: this.state.contractAsure},
             payment: {
-                card: {name: this.state.cardName, number: this.state.cardNum, expDate: this.state.expDate, cvc: this.state.cvc},
+                // TODO: make sure to add the stripeToken to this object in the reducer
                 billingAddr: {name: this.state.billName, address}
             }
         };
@@ -100,6 +102,18 @@ export default class SignUp extends React.Component {
             console.log('currentStep: ', currentStep);
 
             this.setState({currentStep});
+
+            if(step === 'step4') {
+                this.props.getStripeToken({
+                    cardName: this.state.cardName,
+                    cardNumber: this.state.cardNumber,
+                    expDate: this.state.expDate,
+                    cvc: this.state.cvc
+                });
+
+                // remove credit card info from state
+                this.setState({cardName: '', cardNumber: '', expDate: '', cvc: ''});
+            }
         } else {
             if(step === 'step3') {
                 let errorMsg = "Please complete each document";

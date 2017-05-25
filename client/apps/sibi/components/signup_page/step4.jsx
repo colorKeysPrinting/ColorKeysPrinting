@@ -11,7 +11,7 @@ export default function SignUpStep4(props) {
             border: '1px solid rgba(50, 50, 50, 0.4)',
             boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
             minHight: '400px',
-            width: '600px',
+            width: '490px',
             margin: '10em auto',
             zIndex: '999'
         },
@@ -36,6 +36,10 @@ export default function SignUpStep4(props) {
             padding: '30px',
             width: '30%'
         },
+        sectionHeader: {
+            textAlign: 'center',
+            margin: '15px auto'
+        },
         content: {
             width: '89%',
             margin: '0px auto',
@@ -43,17 +47,13 @@ export default function SignUpStep4(props) {
             textAlign: 'left'
         },
         submitBtn: {
-            backgroundColor: 'rgb(47, 205, 237)',
             borderRadius: '5px',
-            color: '#FFF',
+
             cursor: 'pointer',
             height: '40px',
             width: '89%',
             margin: '20px auto',
             paddingTop: '10px'
-        },
-        width100: {
-            width: '98%'
         }
     };
 
@@ -66,28 +66,28 @@ export default function SignUpStep4(props) {
     let content =   <form onSubmit={props.nextAction}>
                         <div style={styles.content}>
                             <h2 style={styles.sectionHeader}>Card info</h2>
-                            <div style={{columnCount: 2}}>
-                                <input type="text" placeholder="Name on card" value={ props.cardName } onChange={ (e)=>props.update('cardName', e.target.value)} style={styles.width100} required/>
-                                <input type="number" placeholder="MM / YY" value={ props.expDate } onChange={ (e)=>props.update('expDate', e.target.value)} style={styles.width100} required/>
-                                <input type="number" placeholder="Card  number" value={ props.cardNumber } onChange={ (e)=>props.update('cardNumber', e.target.value)} style={styles.width100} required/>
-                                <input type="number" placeholder="CVC" value={ props.cvc } onChange={ (e)=>props.update('cvc', e.target.value)} style={styles.width100} required/>
+                            <div>
+                                <input type="text" placeholder="Name on card"   value={ props.cardName }                        onChange={ (e)=>props.update('cardName', e.target.value)}   style={styles.width100} required/>
+                                <input type="text" placeholder="Card number"    value={ props.cardNumber }  pattern="\d{12,19}" onChange={ (e)=>props.update('cardNumber', e.target.value)} style={styles.width100} required/>
+                                <input type="text" placeholder="MM / YY"        value={ props.expDate }     pattern="\d{4}"     onChange={ (e)=>props.update('expDate', e.target.value)}    style={styles.width100} required/>
+                                <input type="text" placeholder="CVC"            value={ props.cvc }         pattern="\d{3}"     onChange={ (e)=>props.update('cvc', e.target.value)}        style={styles.width100} required/>
                             </div>
 
                             <h2 style={styles.sectionHeader}>Billing Address</h2>
-                            <div style={{columnCount: 2}}>
-                                <input type="text" placeholder="Name" value={ props.billName } onChange={ (e)=>props.update('billName', e.target.value)} style={styles.width100} required/>
-                                <input type="text" placeholder="Street 2" value={ props.str2 } onChange={ (e)=>props.update('str2', e.target.value)} style={styles.width100} required/>
+                            <div>
+                                <input type="text" placeholder="Name"       value={ props.billName }    onChange={ (e)=>props.update('billName', e.target.value)}   style={styles.width100} required/>
+                                <input type="text" placeholder="Street 1"   value={ props.str1 }        onChange={ (e)=>props.update('str1', e.target.value)}       style={styles.width100} required/>
+                                <input type="text" placeholder="Street 2"   value={ props.str2 }        onChange={ (e)=>props.update('str2', e.target.value)}       style={styles.width100} required/>
+                                <input type="text" placeholder="City"       value={ props.billCity }    onChange={ (e)=>props.update('billCity', e.target.value)}   style={styles.width100} required/>
                                 <select value={ props.billState } onChange={ (e)=>props.update('billState', e.target.value) } style={styles.width100} required>
                                     <option disabled value='select'>State</option>
                                     {states}
                                 </select>
-                                <input type="text" placeholder="Street 1" value={ props.str1 } onChange={ (e)=>props.update('str1', e.target.value)} style={styles.width100} required/>
-                                <input type="text" placeholder="City" value={ props.billCity } onChange={ (e)=>props.update('billCity', e.target.value)} style={styles.width100} required/>
-                                <input type="number" placeholder="Zipcode" value={ props.zip } onChange={ (e)=>props.update('zip', e.target.value)} style={styles.width100} required/>
+                                <input type="text" placeholder="Zipcode" value={ props.zip } pattern="\d{5}-?(\d{4})?" onChange={ (e)=>props.update('zip', e.target.value)} style={styles.width100} required/>
                             </div>
                         </div>
 
-                        <input type="submit" value="Finish" style={ styles.submitBtn } required/>
+                        <input className="button" type="submit" value="Finish" style={ styles.submitBtn } required/>
                     </form>;
 
     return (

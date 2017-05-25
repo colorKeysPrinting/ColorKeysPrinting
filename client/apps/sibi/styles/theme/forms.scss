@@ -2,6 +2,13 @@ form {
     input, select {
         margin: 8px;
         padding: 20px;
+        width: 200px;
+        height: 46px;
+    }
+
+    .button {
+        background-color: #06cfe5;
+        color: #FFF,
     }
 
     span {
