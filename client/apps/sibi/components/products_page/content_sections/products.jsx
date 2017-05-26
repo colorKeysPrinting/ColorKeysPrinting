@@ -40,7 +40,7 @@ export default class Products extends React.Component {
     }
 
     sortBy(sortBy) {
-        console.log(searchTerm);
+        console.log(sortBy);
         this.setState({sortBy});
     }
 
@@ -53,7 +53,7 @@ export default class Products extends React.Component {
     }
 
     render() {
-        let products, mostPurchased;
+        let products, mostPurchased, sortedProducts;
 
         let styles = {
             container: {
@@ -95,7 +95,28 @@ export default class Products extends React.Component {
             return (<option key={key} value={key}>{value}</option>);
         });
 
-        let sortedProducts = _.sortBy(this.state.products, [ (product)=>{ return product[this.state.sortBy] } ]);
+        switch(this.state.sortBy) {
+            case 'lowPrice':
+            case 'highPrice':
+                sortedProducts = _.sortBy(this.state.products, ['price']);
+                sortedProducts = (this.state.sortBy === 'highPrice') ? _.reverse(sortedProducts) : sortedProducts;
+                break;
+            case 'nameA':
+            case 'nameZ':
+                sortedProducts = _.sortBy(this.state.products, ['name']);
+                sortedProducts = (this.state.sortBy === 'nameZ') ? _.reverse(sortedProducts) : sortedProducts;
+                break;
+            // case 'rating':
+            //     sortedProducts = _.sortBy(this.state.products, []);
+            //     break;
+            case 'modelNumber':
+                sortedProducts = _.sortBy(this.state.products, ['modelNum']);
+                break;
+            case 'brand':
+                sortedProducts = _.sortBy(this.state.products, ['brand']);
+                break;
+            default:
+        }
 
         if(this.state.searchTerm) {
 

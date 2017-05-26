@@ -32,7 +32,7 @@ export default class Product extends React.Component {
                 margin: '5px',
                 height: '42px',
                 width: '42px',
-                zIndex: '99'
+                zIndex: '9'
             },
             image: {
                 marginTop: '-52px',

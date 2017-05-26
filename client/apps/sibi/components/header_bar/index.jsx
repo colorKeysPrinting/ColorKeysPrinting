@@ -34,7 +34,7 @@ export default class HeaderBar extends React.Component {
     }
 
     render() {
-        const sibiLogo = assets('./images/blue_sibi_logo.png');
+        const sibiLogo = assets('./images/sibi_logo_white.png');
         let loginSection;
 
         let styles = {
