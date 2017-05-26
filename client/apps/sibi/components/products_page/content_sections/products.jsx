@@ -114,17 +114,6 @@ export default class Products extends React.Component {
                     );
                 }
             });
-
-            products = _.map(sortedProducts, (product, key)=>{
-                return (
-                    <Product
-                        key={key}
-                        product={product}
-                        productSelected={this.productSelected}
-                        addToTruck={this.addToTruck}
-                        showOverlay={this.props.showOverlay} />
-                );
-            });
         }
 
         return (
@@ -140,10 +129,6 @@ export default class Products extends React.Component {
                     <div style={styles.headers}>YOUR MOST ORDERED PRODUCTS ({this.props.mostPurchased.length})</div>
                     <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
                         {mostPurchased}
-                    </div>
-                    <div style={styles.headers}>Product List</div>
-                    <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
-                        {products}
                     </div>
                 </div>
             </div>
