@@ -31,7 +31,7 @@ export default class SignUp extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {currentStep: 4, buttonText: 'Create Account', errorMsg: '',
+        this.state = {currentStep: 1, buttonText: 'Create Account', errorMsg: '',
             email: '', password: '', firstName: '', lastName: '', fund:'', location: '', trade: '',
             companyName: '', street: '', city: '', state: '', phone: '', fax: '', entityType: '',
             taxPIN: '', requestRate: '', approvedRate: '', dealerAccountNum: '', docWorkerComp: '',
@@ -123,7 +123,7 @@ export default class SignUp extends React.Component {
     }
 
     render() {
-        let content, title, states;
+        let content, title;
 
         let styles = {
             container: {
@@ -131,10 +131,8 @@ export default class SignUp extends React.Component {
                 borderRadius: '5px',
                 border: '1px solid rgba(50, 50, 50, 0.4)',
                 boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-                minHight: '400px',
-                width: '600px',
+                width: '490px',
                 margin: '10em auto',
-                zIndex: '999'
             },
             containerFinish: {
                 backgroundColor: '#F9FAFC',
@@ -166,42 +164,19 @@ export default class SignUp extends React.Component {
                 padding: '30px',
                 width: '30%'
             },
-            steps: {
-                color: 'green',
-                cursor: 'pointer',
-                textAlign: 'right',
-                padding: '30px',
-                width: '30%'
-            },
             content: {
-                width: '89%',
-                margin: '0px auto',
-                marginTop: '40px',
-                textAlign: 'left'
-            },
-            contentUpload: {
-                width: '89%',
-                margin: '0px auto',
-                marginTop: '40px',
+                margin: '40px auto 0px',
                 textAlign: 'left',
-                display: 'grid'
+                display: 'inline-grid',
+                width: (this.state.currentStep === 5) ? '89%' : ''
             },
             submitBtn: {
-                backgroundColor: 'rgb(47, 205, 237)',
                 borderRadius: '5px',
-                color: '#FFF',
                 cursor: 'pointer',
                 height: '40px',
                 width: '89%',
                 margin: '20px auto',
                 paddingTop: '10px'
-            },
-            sectionHeader: {
-                textAlign: 'center',
-                margin: '15px auto'
-            },
-            width100: {
-                width: '98%'
             }
         };
 
@@ -211,20 +186,20 @@ export default class SignUp extends React.Component {
                     return (<option key={ key } value={ language }>{ language }</option>);
                 });
 
-                let languageSelect =    <select value={ this.props.currLang } onChange={ (e)=>this.props.changeLanguage(e.target.value) } style={styles.width100} required>
+                let languageSelect =    <select value={ this.props.currLang } onChange={ (e)=>this.props.changeLanguage(e.target.value) } required>
                                             <option disabled value='select'>Language</option>
                                             {languages}
                                         </select>;
 
-                content = <div style={styles.container}>
-                    <div id="sign-up-title" style={ styles.titleBar }><div style={ styles.title}>Sign Up</div><div style={styles.language}>{languageSelect}</div></div>
+                content = <div>
+                    <div style={ styles.titleBar }><div style={ styles.title}>Sign Up</div><div style={styles.language}>{languageSelect}</div></div>
                     <form onSubmit={this.nextAction}>
                         <div style={styles.content}>
-                            <input type="email" placeholder="Email" value={this.state.email} onChange={ (e)=>this.update('email', e.target.value) } style={styles.width100} required/>
-                            <input type="password" placeholder="Password" value={this.state.password} onChange={ (e)=>this.update('password', e.target.value) } style={styles.width100} required/>
+                            <input type="email"     placeholder="Email"     value={this.state.email}    onChange={ (e)=>this.update('email', e.target.value) }      style={{width: '435px'}} required/>
+                            <input type="password"  placeholder="Password"  value={this.state.password} onChange={ (e)=>this.update('password', e.target.value) }   style={{width: '435px'}} required/>
                         </div>
 
-                        <input type="submit" value="Create Account" style={ styles.submitBtn } required/>
+                        <input className="button" type="submit" value="Create Account" style={ styles.submitBtn } required/>
                     </form>
                 </div>;
                 break;
@@ -277,24 +252,22 @@ export default class SignUp extends React.Component {
                                 nextAction={this.nextAction}/>;
                 break;
             case 5:
-
-                title = <div id="sign-up-title" style={ styles.titleBar}><div style={ styles.title }>All done</div></div>;
-
                 content = <form onSubmit={this.sendInfo}>
+                    <div style={ styles.titleBar}><div style={ styles.title }>All done</div></div>
                     <div style={styles.content}>
                         <p>Your account must be approved. This typically happens within 24 hours.</p><br/>
 
                         <p>We'll email {this.state.email} when approved.</p>
                     </div>
 
-                    <input type="submit" value="Got it" style={ styles.submitBtn } required/>
+                    <input className="button" type="submit" value="Got it" style={ styles.submitBtn } required/>
                 </form>;
                 break;
             default:
         }
 
         return (
-            <div>
+            <div style={styles.container}>
                 {content}
             </div>
         );

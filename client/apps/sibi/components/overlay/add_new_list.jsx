@@ -11,10 +11,9 @@ export default function AddNewListOverlay(props) {
             borderRadius: '5px',
             border: '1px solid rgba(50, 50, 50, 0.4)',
             boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-            minHight: '400px',
-            width: '350px',
+            width: '490px',
             margin: '10em auto',
-            zIndex: '999',
+            zIndex: '999'
         },
         titleBar: {
             display: 'inline-flex',
@@ -42,28 +41,13 @@ export default function AddNewListOverlay(props) {
             marginTop: '40px',
             textAlign: 'left'
         },
-        text: {
-            margin: '10px'
-        },
         submitBtn: {
-            backgroundColor: 'rgb(47, 205, 237)',
             borderRadius: '5px',
-            color: '#FFF',
             cursor: 'pointer',
             height: '40px',
             width: '86%',
             margin: '20px auto',
             paddingTop: '10px'
-        },
-        resetBtn: {
-            cursor: 'pointer',
-            height: '40px',
-            width: '97%',
-            margin: '20px auto',
-            paddingTop: '10px'
-        },
-        width100: {
-            width: '95%'
         }
     };
 
@@ -87,10 +71,10 @@ export default function AddNewListOverlay(props) {
             <form onSubmit={()=>props.submitAddToBtn(props.type)}>
                 <div style={styles.content}>
                     <div style={{width: '95%', margin: 'auto'}}>Name your new {(title).toLowerCase()}</div>
-                    <input type="text" placeholder="My Favorites" value={props.newItem} onChange={(e)=>{props.update('newItem', e.target.value)}} style={styles.width100} required/>
+                    <input type="text" placeholder="My Favorites" value={props.newItem} onChange={(e)=>{props.update('newItem', e.target.value)}} style={{width: '420px'}} required/>
                 </div>
 
-                <input type="submit" value="Submit" style={ styles.submitBtn }/>
+                <input className="button" type="submit" value="Submit" style={ styles.submitBtn }/>
             </form>
         </div>
     );

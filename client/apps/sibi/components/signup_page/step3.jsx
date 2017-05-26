@@ -6,16 +6,6 @@ import assets                   from '../../libs/assets';
 export default function SignUpStep3(props) {
 
     let styles = {
-        container: {
-            backgroundColor: '#F9FAFC',
-            borderRadius: '5px',
-            border: '1px solid rgba(50, 50, 50, 0.4)',
-            boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-            minHight: '400px',
-            width: '490px',
-            margin: '10em auto',
-            zIndex: '999'
-        },
         titleBar: {
             display: 'inline-flex',
             backgroundColor: '#FFF',
@@ -44,18 +34,13 @@ export default function SignUpStep3(props) {
             display: 'grid'
         },
         submitBtn: {
-            backgroundColor: 'rgb(47, 205, 237)',
             borderRadius: '5px',
-            color: '#FFF',
             cursor: 'pointer',
             height: '65px',
             width: '70%',
             margin: '20px auto',
             paddingTop: '10px',
             fontSize: '20px'
-        },
-        width100: {
-            width: '98%'
         },
         element: {
             display: 'inline-flex',
@@ -75,9 +60,6 @@ export default function SignUpStep3(props) {
             borderRadius: '5px',
             height: '70px',
             width: '70px'
-        },
-        textSection: {
-            margin: '20px'
         },
         notAdded: {
             color: 'rgb(47, 205, 237)',
@@ -153,7 +135,7 @@ export default function SignUpStep3(props) {
                                             </div>
                                           : <div onClick={()=>{props.showOverlay('contractAsure')}} style={styles.notAdded}>Agree to Asure contact</div>;
 
-    let title = <div id="sign-up-title" style={ styles.titleBar}><div style={styles.title }>Compliance</div><div style={styles.steps}>step 3 of 4</div></div>;
+    let title = <div style={ styles.titleBar}><div style={styles.title }>Compliance</div><div style={styles.steps}>step 3 of 4</div></div>;
     let content =   <form onSubmit={()=>props.nextAction('step3')}>
                         <div style={styles.contentUpload}>
                             <div style={styles.element}>
@@ -178,11 +160,11 @@ export default function SignUpStep3(props) {
                             </div>
                         </div>
 
-                        <input type="submit" value="Finish" style={ styles.submitBtn }/>
+                        <input className="button" type="submit" value="Finish" style={ styles.submitBtn }/>
                     </form>;
 
     return (
-        <div style={styles.container}>
+        <div>
             {title}
             {errorMsg}
             {content}

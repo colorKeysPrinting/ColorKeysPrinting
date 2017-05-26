@@ -1,19 +1,16 @@
 form {
     input, select {
+        font-size: 14px;
         margin: 8px;
-        padding: 20px;
+        padding: 12px;
         width: 200px;
         height: 46px;
     }
 
     .button {
         background-color: #06cfe5;
-        color: #FFF,
-    }
-
-    span {
-        margin: 8px;
-        color: rgb(47, 205, 237);
-        cursor: pointer;
+        color: #FFF;
+        font-size: 14px;
+        font-weight: bold;
     }
 }

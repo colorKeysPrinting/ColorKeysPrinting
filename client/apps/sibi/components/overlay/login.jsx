@@ -12,10 +12,8 @@ export default function LoginOverlay(props) {
             borderRadius: '5px',
             border: '1px solid rgba(50, 50, 50, 0.4)',
             boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-            minHight: '400px',
-            width: '350px',
+            width: '490px',
             margin: '10em auto',
-            zIndex: '999',
         },
         titleBar: {
             display: 'inline-flex',
@@ -38,18 +36,15 @@ export default function LoginOverlay(props) {
             width: '10%'
         },
         content: {
-            width: '89%',
-            margin: '0px auto',
-            marginTop: '40px',
-            textAlign: 'left'
+            margin: '20px auto 0px',
+            textAlign: 'left',
+            display: 'inline-grid',
         },
         text: {
             margin: '10px'
         },
         submitBtn: {
-            backgroundColor: 'rgb(47, 205, 237)',
             borderRadius: '5px',
-            color: '#FFF',
             cursor: 'pointer',
             height: '40px',
             width: '86%',
@@ -62,43 +57,39 @@ export default function LoginOverlay(props) {
             width: '97%',
             margin: '20px auto',
             paddingTop: '10px'
-        },
-        width100: {
-            width: '97%'
         }
     };
 
     switch(props.type) {
         case 'login':
             close = <div onClick={props.close} style={styles.close}>X</div>;
-            inputs = <div>
-                <input type="email" placeholder="Email" value={props.email.email} onChange={(e)=>{props.update('email', e.target.value)}} style={styles.width100} required/>
-                <input type="password" placeholder="Password" value={props.password.password} onChange={(e)=>{props.update('password', e.target.value)}} style={styles.width100} required/>
-            </div>;
+            inputs = <div style={styles.content}>
+                        <input type="email"     placeholder="Email"     value={props.email.email}       onChange={(e)=>{props.update('email', e.target.value)}}     style={{width: '435px'}} required/>
+                        <input type="password"  placeholder="Password"  value={props.password.password} onChange={(e)=>{props.update('password', e.target.value)}}  style={{width: '435px'}} required/>
+                    </div>;
 
-            actionSection = <div style={{columnCount: 2, display: 'inline-flex', width: '310px'}}>
-                <div onClick={()=>props.changeOverlay('reset')} style={styles.resetBtn}>Forgot password?</div>
-                <input type="submit" value="Login" style={ styles.submitBtn }/>
-            </div>
+            actionSection = <div style={{columnCount: 2, display: 'inline-flex', width: '435px', textAlign: 'left'}}>
+                                <div onClick={()=>props.changeOverlay('reset')} style={styles.resetBtn}>Forgot password?</div>
+                                <input className="button" type="submit" value="Login" style={ styles.submitBtn }/>
+                            </div>;
             break;
 
         case 'reset':
             close = <div onClick={()=>props.changeOverlay('login')} style={styles.close}>X</div>;
-
             inputs = <div>
-                <div style={styles.text}>Enter your email to reset your password.</div>
-                <input type="email" placeholder="Email" value={props.email.email} onChange={(e)=>{props.update('email', e.target.value)}} style={styles.width100} required/>
-            </div>
+                        <div style={styles.text}>Enter your email to reset your password.</div>
+                        <input type="email" placeholder="Email" value={props.email.email} onChange={(e)=>{props.update('email', e.target.value)}} style={{width: '435px'}} required/>
+                    </div>;
 
-            actionSection = <input type="submit" value="Submit" style={ styles.submitBtn }/>;
+            actionSection = <input className="button" type="submit" value="Submit" style={ styles.submitBtn }/>;
             break;
         default:
     }
 
     let title = <div style={ styles.titleBar }>
-        <div style={styles.title}>{(props.type === 'login') ? 'Login': 'Reset password'}</div>
-        {close}
-    </div>;
+                    <div style={styles.title}>{(props.type === 'login') ? 'Login': 'Reset password'}</div>
+                    {close}
+                </div>;
 
     return (
         <div style={styles.container}>
@@ -107,7 +98,6 @@ export default function LoginOverlay(props) {
                 <div style={styles.content}>
                     {inputs}
                 </div>
-
                 {actionSection}
             </form>
         </div>
