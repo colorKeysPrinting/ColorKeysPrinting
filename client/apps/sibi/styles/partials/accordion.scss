@@ -5,17 +5,17 @@
         display: inline-flex;
         text-align: left;
         padding: 30px;
-        width: 80%;
+        width: 100%;
     }
 
     .headers-active {
-        background-color: rgb(47, 205, 237);
+        background-color: #06cfe5;
         color: #FFF;
         cursor: pointer;
         display: inline-flex;
         text-align: left;
         padding: 30px;
-        width: 80%;
+        width: 100%;
     }
 
     .headers > #title, .headers-active > #title {
@@ -33,6 +33,6 @@
 
     .headers:hover, .options:hover{
         color: #FFF;
-        background-color: rgb(47, 205, 237);
+        background-color: #06cfe5;
     }
 }

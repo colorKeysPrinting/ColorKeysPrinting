@@ -24,25 +24,29 @@ export default class Product extends React.Component {
                 backgroundColor: '#FBFBFB'
             },
             productThumbnail: {
-                cursor: 'pointer'
+                cursor: 'pointer',
+                display: 'grid'
             },
             plusBtn: {
                 float: 'left',
                 margin: '5px',
                 height: '42px',
-                width: '42px'
+                width: '42px',
+                zIndex: '99'
             },
             image: {
-                maxWidth: '50%',
-                margin: 'auto'
+                marginTop: '-52px',
+                height: '300px',
+                backgroundColor: '#FFF'
             },
             name: {
-                maxWidth: '50%',
-                margin: 'auto',
-
+                margin: '10px auto 0px',
+                textAlign: 'left',
+                fontSize: '20px',
+                width: '85%'
             },
             price: {
-                color: 'rgb(47, 205, 237)',
+                color: '#06cfe5',
                 fontSize: '25px',
                 margin: '2px'
             },
@@ -52,20 +56,18 @@ export default class Product extends React.Component {
                 margin: '2px'
             },
             submitBtn: {
-                backgroundColor: 'rgb(47, 205, 237)',
+                backgroundColor: '#06cfe5',
                 borderRadius: '5px',
                 color: '#FFF',
                 cursor: 'pointer',
-                height: '40px',
-                width: '50%',
+                width: '200px',
+                height: '46px',
                 margin: '20px auto',
-                paddingTop: '13px',
-                textAlign: 'center'
+                paddingTop: '13px'
             },
             prodInfo: {
-                width: '50%',
                 textAlign: 'left',
-                padding: '22px'
+                padding: '20px 26px 0 0'
             }
         };
 
@@ -75,13 +77,13 @@ export default class Product extends React.Component {
                     <div style={styles.plusBtn} onMouseOver={()=>this.onHover(true)} onMouseOut={()=>this.onHover(false)}>
                         <img src={assets('./images/plus_circle.png')}
                              alt="add"
-                             onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: product.modelNum, mouseCoord: {mouseX: e.clientX, mouseY: e.clientY}})}
+                             onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})}
                              style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
                     </div>
-                    <div style={styles.image}><img src={product.image} alt="picture" /></div>
-                    <div style={styles.name}>{product.name}</div>
+                    <div style={styles.image}><img src={product.image} alt="picture" height="100%" width="100%"/></div>
+                    <h2 style={styles.name}>{product.name}</h2>
                 </div>
-                <div style={{columnCount: 2, display: 'inline-flex', width: '50%'}}>
+                <div style={{display: 'inline-flex'}}>
                     <div style={styles.prodInfo}>
                         <div style={styles.price}>${product.price}</div>
                         <div style={styles.modelNum}>#{product.modelNum}</div>

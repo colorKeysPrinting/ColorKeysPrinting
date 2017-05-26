@@ -2,11 +2,10 @@ import wrapper  from './wrapper';
 
 const actionTypes = [
 // application
+    "LOGIN", // TODO: this needs to go to asyncActionTypes so that we can call the server to login
     "SHOW_OVERLAY",
     "SHOW_RADIO_OVERLAY",
     "CLOSE_OVERLAY",
-    "LOGIN",
-    "PASSWORD_RESET",
     "CHANGE_LANGUAGE",
     "SIGNUP",
 
@@ -25,6 +24,9 @@ const actionTypes = [
 
 // These types will receive a _DONE
 const asyncActionTypes = [
+// application
+    "PASSWORD_RESET",
+// products
     "GET_STRIPE_TOKEN"
 ];
 

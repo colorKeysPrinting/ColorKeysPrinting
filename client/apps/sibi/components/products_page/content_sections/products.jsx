@@ -9,8 +9,9 @@ import Product                  from './product';
 
 let select = (state)=>{
     return {
-        currLang    : state.application.get('currLanguage'),
-        products    : state.application.get('products').toJS(),
+        currLang        : state.application.get('currLanguage'),
+        products        : state.application.get('products').toJS(),
+        mostPurchased   : state.application.getIn(['activeUser','products','mostPurchased']).toJS(),
     };
 };
 
@@ -52,7 +53,7 @@ export default class Products extends React.Component {
     }
 
     render() {
-        let products;
+        let products, mostPurchased;
 
         let styles = {
             container: {
@@ -73,13 +74,20 @@ export default class Products extends React.Component {
             },
             dropdown: {
                 position: 'absolute',
-                left: '81%',
-                width: '140px',
+                left: '85%',
+                width: '190px',
                 height: '45px',
                 marginTop: '17px',
                 marginLeft: '15px',
                 border: '1px solid rgba(50, 50, 50, 0.1)',
                 backgroundColor: '#FFF',
+            },
+            headers: {
+                height: '50px',
+                width: '100%',
+                textAlign: 'left',
+                backgroundColor: '#F4F8FB',
+                padding: '20px'
             }
         };
 
@@ -92,6 +100,21 @@ export default class Products extends React.Component {
         if(this.state.searchTerm) {
 
         } else {
+            let purchases = this.props.mostPurchased;
+            mostPurchased = _.map(sortedProducts, (product, key)=>{
+                let isMostPurchased = (_.indexOf(purchases, product.modelNumber)) ? true : false;
+                if(isMostPurchased) {
+                    return (
+                        <Product
+                            key={key + 'mostPurchased'}
+                            product={product}
+                            productSelected={this.productSelected}
+                            addToTruck={this.addToTruck}
+                            showOverlay={this.props.showOverlay} />
+                    );
+                }
+            });
+
             products = _.map(sortedProducts, (product, key)=>{
                 return (
                     <Product
@@ -109,11 +132,16 @@ export default class Products extends React.Component {
                 <div style={styles.searchSection}>
                     <input id="productSearchBox" type="text" value={this.state.searchTerm} placeholder="Search for a product by name, brand, or model number" onChange={(e)=>this.searchTerm(e.target.value)} style={styles.searchBox}/>
                     <select id="productSortByDropdown" value={ this.state.sortBy } onChange={ (e)=>this.sortBy(e.target.value) } style={styles.dropdown}>
-                        <option disabled value='select'>Sort By</option>
+                        <option disabled >Sort By</option>
                         {sortBy}
                     </select>
                 </div>
                 <div>
+                    <div style={styles.headers}>YOUR MOST ORDERED PRODUCTS ({this.props.mostPurchased.length})</div>
+                    <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
+                        {mostPurchased}
+                    </div>
+                    <div style={styles.headers}>Product List</div>
                     <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
                         {products}
                     </div>

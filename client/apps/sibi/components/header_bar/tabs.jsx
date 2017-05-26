@@ -15,8 +15,7 @@ export default (props)=>{
             color: '#000',
             outline: 'none',
             textDecoration: 'none',
-            padding: '15px',
-            paddingTop: '30px',
+            padding: '30px 15px 15px',
             height: '85px',
             cursor: 'pointer',
 
@@ -25,9 +24,8 @@ export default (props)=>{
             color: '#000',
             outline: 'none',
             textDecoration: 'none',
-            padding: '15px',
-            paddingTop: '30px',
-            height: '37px',
+            padding: '30px 15px 15px',
+            height: '85px',
             borderBottom: '3px solid #0091CE'
         }
     };

@@ -61,7 +61,7 @@ export default class ProductsPage extends React.Component {
         } else {
             content = <div>
                 <InfoBar activeInfoBar={this.props.infoBar[this.state.activePage]}/>
-                <div style={{display: 'inline-flex', width: '100%'}}>
+                <div style={{display: 'inline-flex', width: '97%'}}>
                     <FilterPanel
                         changeContent={this.changeContent}
                         matchups={this.props.matchups}
@@ -74,7 +74,7 @@ export default class ProductsPage extends React.Component {
         }
 
         return (
-            <div style={{}}>
+            <div>
                 {content}
             </div>
         );

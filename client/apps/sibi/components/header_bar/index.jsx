@@ -10,7 +10,7 @@ import { showOverlay }          from '../../actions/application';
 
 let select = (state)=>{
     return {
-        activeUser      : state.application.get('activeUser'),
+        activeUserType  : state.application.getIn(['activeUser', 'type']),
         activeTab       : state.application.get('activeTab')
     };
 };
@@ -23,6 +23,9 @@ export default class HeaderBar extends React.Component {
 
         this.state = {isSearch: false};
         this.search = this.search.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
     }
 
     search(term) {
@@ -73,7 +76,7 @@ export default class HeaderBar extends React.Component {
             }
         };
 
-        if(!this.props.activeUser.get('type') || this.props.activeUser.get('type') === 'signUp') {
+        if(!this.props.activeUserType || this.props.activeUserType === 'signUp') {
             loginSection = <div style={styles.loginSection}>
                 <div onClick={ ()=>this.props.showOverlay('login') } style={styles.login}>Login</div>
                 <Link to={`/signup`} style={styles.signUp} onClick={()=>this.props.signUpPage()}>Sign Up</Link>
@@ -88,11 +91,12 @@ export default class HeaderBar extends React.Component {
         }
 
         // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <image src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
+        let to = (this.props.activeUserType && this.props.activeUserType !== 'signUp') ? `/products` : `/`;
 
         return (
             <div id="header-bar" style={styles.header}>
-                <Link to={(this.props.activeUser.get('type')) ? `/products` : `/`} onClick={ (e)=>{ this.props.activateTab('products')}} ><img src={sibiLogo} alt="sibi logo" style={styles.sibiLogo}/></Link>
-                <Tabs type={ this.props.activeUser.get('type') }
+                <Link to={to} onClick={ (e)=>{ this.props.activateTab('products')}} ><img src={sibiLogo} alt="sibi logo" style={styles.sibiLogo}/></Link>
+                <Tabs type={ this.props.activeUserType }
                       activeTab={ this.props.activeTab }
                       activateTab={ this.props.activateTab }/>
                 { loginSection }
