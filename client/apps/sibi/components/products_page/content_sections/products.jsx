@@ -119,7 +119,7 @@ export default class Products extends React.Component {
         }
 
         if(this.state.searchTerm) {
-
+            console.log('TODO: may need to have a call to the server for this to be handled on the backend?');
         } else {
             let purchases = this.props.mostPurchased;
             mostPurchased = _.map(sortedProducts, (product, key)=>{

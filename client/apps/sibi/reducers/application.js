@@ -13,19 +13,25 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
     contracts: {'goodman': './documents/pdf-test.pdf', 'asure': './documents/pdf-test.pdf'},
     states: {'AL':'Alabama','AK':'Alaska','AS':'American Samoa','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'District Of Columbia','FM':'Federated States Of Micronesia','FL':'Florida','GA':'Georgia','GU':'Guam','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MH':'Marshall Islands','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','MP':'Northern Mariana Islands','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PW':'Palau','PA':'Pennsylvania','PR':'Puerto Rico','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VI':'Virgin Islands','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'},
 
+    keyIndicatorTypes: {
+        equipment: {title: 'Equipment Spend', timeFrame: ['YTD']},
+        warranties: {title: 'Warranties Purchased', timeFrame: ['YTD']},
+        goalVolumeRebate: {title: 'Goal to Volume Rebate', timeFrame: ['YTD']},
+        workOrders: {title: 'Work orders in', timeFrame: ['YTD']}
+    },
     activeUser: {
         type: '',
         username: 'JohnDoe',
         JWT: '',
         settings: {
             language: 'English',
-            infoBar: {
-                // the ordering here is the exact order that it will show on the infoBar e.g. {spot1, spot2, spot3, spot4}
+            keyIndicatorBars: {
+                // the ordering here is the exact order that it will show on the keyIndicatorBar e.g. {spot1, spot2, spot3, spot4}
                 // each products page can have there own info bar to show specific things?
-                products: {equipmentSpend: 'YTD', warrantiesPurchased: 'YTD', goalVolumeRebate: 'YTD', workOrders: '3/2017'},
-                matchups: {metric1: 'currWeek', metric2: 'value', metric3: 'value', metric4: 'value'},
-                equipment: {metric1: 'currWeek', metric2: 'value', metric3: 'value', metric4: 'value'},
-                partsSupplies: {metric1: 'currWeek', metric2: 'value', metric3: 'value', metric4: 'value'},
+                products: [{equipment: 'YTD'},{warranties: 'YTD'},{goalVolumeRebate: 'YTD'},{workOrders: '3/2017'}],
+                matchups: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
+                equipment: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
+                partsSupplies: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
             }
         },
         matchups: {

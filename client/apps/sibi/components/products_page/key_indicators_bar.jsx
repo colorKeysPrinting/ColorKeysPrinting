@@ -23,7 +23,7 @@ export default function InfoBar(props) {
         }
     };
 
-    let activeElements = _.map(props.activeInfoBar, (obj, key)=>{
+    let activeElements = _.map(props.activeKeyIndicatorBar, (obj, key)=>{
         return (<div key={key} style={styles.element}>{key}</div>);
     });
 

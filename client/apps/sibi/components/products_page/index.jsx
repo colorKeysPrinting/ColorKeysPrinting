@@ -6,18 +6,19 @@ import assets                   from '../../libs/assets';
 import {}         from '../../actions/products';
 import {activateTab}         from '../../actions/header';
 
-import InfoBar                  from './info_bar';
+import KeyIndicatorsBar         from './key_indicators_bar';
 import FilterPanel              from './filter_panel';
 import ContentPanel             from './content_panel';
 
 let select = (state)=>{
     return {
-        currLang    : state.application.get('currLanguage'),
-        activePage  : state.application.get('activePage'),
-        infoBar     : state.application.getIn(['activeUser', 'settings', 'infoBar']).toJS(),
-        matchups    : state.application.getIn(['activeUser', 'matchups']).toJS(),
-        myLists     : state.application.getIn(['activeUser', 'myLists']).toJS(),
-        filterPanel : state.application.getIn(['activeUser', 'filterPanel']).toJS(),
+        currLang            : state.application.get('currLanguage'),
+        activePage          : state.application.get('activePage'),
+        keyIndicatorBars    : state.application.getIn(['activeUser', 'settings', 'keyIndicatorBars']).toJS(),
+        keyIndicatorTypes   : state.application.get('keyIndicatorTypes'),
+        matchups            : state.application.getIn(['activeUser', 'matchups']).toJS(),
+        myLists             : state.application.getIn(['activeUser', 'myLists']).toJS(),
+        filterPanel         : state.application.getIn(['activeUser', 'filterPanel']).toJS(),
     };
 };
 
@@ -29,7 +30,7 @@ export default class ProductsPage extends React.Component {
 
         // activePage: products, matchups, equipment, partsSupplies, productDetails
         // products is the default to be loaded
-        this.state = {activePage: this.props.activePage};
+        this.state = {activePage: this.props.activePage, keyIndicatorBars: this.props.keyIndicatorBars};
 
         this.changeContent = this.changeContent.bind(this);
 
@@ -50,6 +51,16 @@ export default class ProductsPage extends React.Component {
         this.setState({activePage: type});
     }
 
+    changeSection(type, section, value) {
+        let keyIndicatorBars = this.state.keyIndicatorBars;
+        let indicatorBar = this.state.keyIndicatorBars[type];
+
+        indicatorBar[section] = value;
+
+        keyIndicatorBars[type] = indicatorBar;
+        this.setState({keyIndicatorBars});
+    }
+
     render() {
         let content;
 
@@ -60,7 +71,7 @@ export default class ProductsPage extends React.Component {
             content = <div>content page</div>;
         } else {
             content = <div>
-                <InfoBar activeInfoBar={this.props.infoBar[this.state.activePage]}/>
+                <KeyIndicatorsBar activeKeyIndicatorBar={this.props.keyIndicatorBar[this.state.activePage]}/>
                 <div style={{display: 'inline-flex', width: '97%'}}>
                     <FilterPanel
                         changeContent={this.changeContent}
