@@ -3,7 +3,6 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 import assets                   from '../../libs/assets';
 
-import {}         from '../../actions/products';
 import {activateTab}         from '../../actions/header';
 
 import KeyIndicatorsBar         from './key_indicators_bar';
@@ -16,9 +15,9 @@ let select = (state)=>{
         activePage          : state.application.get('activePage'),
         keyIndicatorBars    : state.application.getIn(['activeUser', 'settings', 'keyIndicatorBars']).toJS(),
         keyIndicatorTypes   : state.application.get('keyIndicatorTypes'),
-        matchups            : state.application.getIn(['activeUser', 'matchups']).toJS(),
+        myMatchups          : state.application.getIn(['activeUser', 'matchups']).toJS(),
         myLists             : state.application.getIn(['activeUser', 'myLists']).toJS(),
-        filterPanel         : state.application.getIn(['activeUser', 'filterPanel']).toJS(),
+        myFilterPanel       : state.application.getIn(['activeUser', 'filterPanel']).toJS(),
     };
 };
 
@@ -28,16 +27,20 @@ export default class ProductsPage extends React.Component {
     constructor(props) {
         super(props);
 
-        // activePage: products, matchups, equipment, partsSupplies, productDetails
+        // activePage: products, matchups, equipment, partsSupplies, productDetails <- TODO: need to update types
+        // content: 'Standard Matchups', 'Custom Matchups'
         // products is the default to be loaded
-        this.state = {activePage: this.props.activePage, keyIndicatorBars: this.props.keyIndicatorBars};
+        this.state = {activePage: this.props.activePage, content: '', keyIndicatorBars: this.props.keyIndicatorBars};
 
         this.changeContent = this.changeContent.bind(this);
 
-        this.props.activateTab('products');
         // TODO: may need to have a server call here to get all products,
         //       or maybe have "most ordered products" load first from the server
         //       and then have a webworker load the rest of the products in the background?
+    }
+
+    componentWillMount() {
+        this.props.activateTab('products');
     }
 
     componentWillReceiveProps(nextProps) {
@@ -46,20 +49,20 @@ export default class ProductsPage extends React.Component {
         }
     }
 
-    changeContent(type, content) {
+    changeContent(type, content) { //matchups, standard/custom
         console.log(type, content);
-        this.setState({activePage: type});
+        this.setState({activePage: type, content});
     }
 
-    changeSection(type, section, value) {
-        let keyIndicatorBars = this.state.keyIndicatorBars;
-        let indicatorBar = this.state.keyIndicatorBars[type];
+    // changeSection(type, section, value) {
+    //     let keyIndicatorBars = this.state.keyIndicatorBars;
+    //     let indicatorBar = this.state.keyIndicatorBars[type];
 
-        indicatorBar[section] = value;
+    //     indicatorBar[section] = value;
 
-        keyIndicatorBars[type] = indicatorBar;
-        this.setState({keyIndicatorBars});
-    }
+    //     keyIndicatorBars[type] = indicatorBar;
+    //     this.setState({keyIndicatorBars});
+    // }
 
     render() {
         let content;
@@ -69,19 +72,21 @@ export default class ProductsPage extends React.Component {
 
         if(this.state.activePage === 'productDetails') {
             content = <div>content page</div>;
+
         } else {
-            content = <div>
-                <KeyIndicatorsBar activeKeyIndicatorBar={this.props.keyIndicatorBar[this.state.activePage]}/>
-                <div style={{display: 'inline-flex', width: '97%'}}>
-                    <FilterPanel
-                        changeContent={this.changeContent}
-                        matchups={this.props.matchups}
-                        myLists={this.props.myLists}
-                        filterPanel={this.props.filterPanel} />
-                    <ContentPanel
-                        activePage={this.state.activePage} />
-                </div>
-            </div>;
+            content =   <div>
+                            <KeyIndicatorsBar activeKeyIndicatorBar={this.props.keyIndicatorBars[this.state.activePage]}/>
+                            <div style={{display: 'inline-flex', width: '97%'}}>
+                                <FilterPanel
+                                    changeContent={this.changeContent}
+                                    myMatchups={this.props.myMatchups}
+                                    myLists={this.props.myLists}
+                                    myFilterPanel={this.props.myFilterPanel} />
+                                <ContentPanel
+                                    activePage={this.state.activePage}
+                                    content={this.state.content} />
+                            </div>
+                        </div>;
         }
 
         return (

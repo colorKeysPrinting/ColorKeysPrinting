@@ -29,12 +29,9 @@ export default class FilterPanel extends React.Component {
             }
         };
 
-        let options = _.map(this.props.matchups, (elem, key)=>{
-            if(key === 'Custom Matchups') {
-                return (<div key={key} className="options" onClick={()=>this.props.changeContent('matchups', key)}>{key}</div>);
-            } else {
-                return (<div key={key} className="options" onClick={()=>this.props.changeContent('products', key)}>{key}</div>);
-            }
+        let options = _.map(this.props.myMatchups, (option, key)=>{ // standard, custom
+            let title = (key === 'standard') ? 'Standard' : 'Custom';
+            return (<div key={key} className="options" onClick={()=>this.props.changeContent('matchups', key)}>{title} Matchups</div>);
         });
 
         let matchups =  <div>
@@ -57,7 +54,7 @@ export default class FilterPanel extends React.Component {
                             <div style={{display: (this.state.activeSection === 'myLists') ? 'block' : 'none'}}>{options}</div>
                         </div>;
 
-        let filterPanel = _.map(this.props.filterPanel, (section, key)=>{
+        let filterPanel = _.map(this.props.myFilterPanel, (section, key)=>{
             let options;
             let isActive = (this.state.activeSection === key);
             let parentId;

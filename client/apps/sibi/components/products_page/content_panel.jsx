@@ -2,6 +2,8 @@ import React                    from 'react';
 import _                        from 'lodash';
 
 import Products                 from './content_sections/products';
+import Matchups                 from './content_sections/matchups';
+import MatchupsCustom           from './content_sections/matchups_custom';
 
 export default function ContentPanel(props) {
     let activeSection;
@@ -23,9 +25,9 @@ export default function ContentPanel(props) {
         case 'products':
             activeSection = <Products />;
             break;
-        // case 'matchups':
-        //     activeSection = <Products />;
-        //     break;
+        case 'matchups':
+            activeSection = (props.content === 'standard') ? <Matchups /> : <MatchupsCustom />;
+            break;
         // case 'equipment':
         //     activeSection = <Products />;
         //     break;
@@ -33,6 +35,7 @@ export default function ContentPanel(props) {
         //     activeSection = <Products />;
         //     break;
         default:
+            activeSection = <Products />;
     }
 
     return (

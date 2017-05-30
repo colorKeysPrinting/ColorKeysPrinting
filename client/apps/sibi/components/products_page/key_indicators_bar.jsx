@@ -3,7 +3,7 @@ import _                        from 'lodash';
 
 import {}         from '../../actions/products';
 
-export default function InfoBar(props) {
+export default function KeyIndicatorsBar(props) {
     // only show upated information when the tab is loaded
     // have an action to edit the elements in the bar
 
@@ -24,7 +24,15 @@ export default function InfoBar(props) {
     };
 
     let activeElements = _.map(props.activeKeyIndicatorBar, (obj, key)=>{
-        return (<div key={key} style={styles.element}>{key}</div>);
+        let type = Object.keys(obj)[key]
+        let time = obj[type];
+
+        return (
+            <div key={key} style={styles.element}>
+                {type}
+                {time}
+            </div>
+        );
     });
 
     return (

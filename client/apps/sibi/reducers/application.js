@@ -14,13 +14,14 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
     states: {'AL':'Alabama','AK':'Alaska','AS':'American Samoa','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'District Of Columbia','FM':'Federated States Of Micronesia','FL':'Florida','GA':'Georgia','GU':'Guam','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MH':'Marshall Islands','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','MP':'Northern Mariana Islands','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PW':'Palau','PA':'Pennsylvania','PR':'Puerto Rico','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VI':'Virgin Islands','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'},
 
     keyIndicatorTypes: {
+        products: {title: 'Equipment Spend', timeFrame: ['YTD']},
         equipment: {title: 'Equipment Spend', timeFrame: ['YTD']},
         warranties: {title: 'Warranties Purchased', timeFrame: ['YTD']},
         goalVolumeRebate: {title: 'Goal to Volume Rebate', timeFrame: ['YTD']},
         workOrders: {title: 'Work orders in', timeFrame: ['YTD']}
     },
     activeUser: {
-        type: '',
+        type: 'sibi',
         username: 'JohnDoe',
         JWT: '',
         settings: {
@@ -35,11 +36,8 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             }
         },
         matchups: {
-            'Standard Matchups': ['DSXC19', 'GMVC9', 'DSXC17, GMVC7, CAPT'],
-            'Custom Matchups': {
-                'Dwight\'s Heat Pump Split-System': ['DSXC19', 'GMVC9'],
-                'Dwight\'s Gas Split-System': ['DSXC17', 'GMVC7', 'CAPT']
-            }
+            standard: 'standard',
+            custom: ['Dwight\'s Heat Pump Split-System', 'Dwight\'s Gas Split-System']
         },
         myLists: {
             'Dwight\'s List': ['DSXC17', 'GMVC7', 'CAPT'],
@@ -70,22 +68,33 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
         },
         myTruck: {}
     },
-    products: [
-        {name: 'Goodman 3.5 Ton 14 Seer Air conditioner condenser w/ R410A refrigerant',    brand: 'Goodman', image: '', price: '709.00', modelNum: 'GSX140421',  types: ['airConditioners'], description: '', completeSys: ['GMS80805CN','CAPF4860C6'],  recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
-        {name: 'Goodman 80% AFUE 80,000 BTU Upflow  Stage Gas Furnace up to 5 Ton',         brand: 'Goodman', image: '', price: '344.00', modelNum: 'GMS80805CN', types: ['furnaces'],        description: '', completeSys: ['GSX140421','CAPF4860C6'],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
-        {name: 'Goodman 4 to 5 ton 21 Inch Width Air Conditioner Evaporator Cased Coil',    brand: 'Goodman', image: '', price: '258.00', modelNum: 'CAPF4860C6', types: ['coils'],           description: '', completeSys: ['GMS80805CN','GSX140421'],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
-        {name: 'Goodman 3 Ton 14 SEER Heat Pump Air Conditioner Condenser',                 brand: 'Goodman', image: '', price: '866.00', modelNum: 'GSZ140361',  types: ['heatPumps', 'airConditioners'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+    products: {
+        GSX140421     : {name: 'Goodman 3.5 Ton 14 Seer Air conditioner condenser w/ R410A refrigerant',            brand: 'Goodman', image: '', price: '709.00', types: ['airConditioners'], description: '', completeSys: ['GMS80805CN','CAPF4860C6'],  recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        GMS80805CN    : {name: 'Goodman 80% AFUE 80,000 BTU Upflow  Stage Gas Furnace up to 5 Ton',                 brand: 'Goodman', image: '', price: '344.00', types: ['furnaces'],        description: '', completeSys: ['GSX140421','CAPF4860C6'],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        CAPF4860C6    : {name: 'Goodman 4 to 5 ton 21 Inch Width Air Conditioner Evaporator Cased Coil',            brand: 'Goodman', image: '', price: '258.00', types: ['coils'],           description: '', completeSys: ['GMS80805CN','GSX140421'],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        GSZ140361     : {name: 'Goodman 3 Ton 14 SEER Heat Pump Air Conditioner Condenser',                         brand: 'Goodman', image: '', price: '866.00', types: ['heatPumps', 'airConditioners'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
 
-        // {name: 'Goodman 3 Ton Air Conditioner Air Handler with Smart Frame Cabinet',        brand: 'Goodman', image: '', price: '380.00', modelNum: 'ARUF37C14',  types: ['airConditioners'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
-        // {name: 'Goodman 10 Kilowatt 34,100 BTU Heater Coil for Smart Frame Air Handler',    brand: 'Goodman', image: '', price: '36.00',  modelNum: 'HKSX10XC',   types: ['coils'],           description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
-        // {name: 'Goodman 5 Ton 14 SEER Heat Pump Air Conditioner Condenser',                 brand: 'Goodman', image: '', price: '1175.00', modelNum: 'GXZ140601', types: ['airConditioners', 'heatPumps'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
-        // {name: 'Goodman 5 Ton Air Conditioner Air Handler with Smart Frame Cabinet',        brand: 'Goodman', image: '', price: '561.00', modelNum: 'ASPT61D14',  types: ['airConditioners'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        ARUF37C14     : {name: 'Goodman 3 Ton Air Conditioner Air Handler with Smart Frame Cabinet',                brand: 'Goodman', image: '', price: '380.00',  types: ['airConditioners'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        HKSX10XC      : {name: 'Goodman 10 Kilowatt 34,100 BTU Heater Coil for Smart Frame Air Handler',            brand: 'Goodman', image: '', price: '36.00',   types: ['coils'],           description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        GXZ140601     : {name: 'Goodman 5 Ton 14 SEER Heat Pump Air Conditioner Condenser',                         brand: 'Goodman', image: '', price: '1175.00', types: ['airConditioners', 'heatPumps'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        ASPT61D14     : {name: 'Goodman 5 Ton Air Conditioner Air Handler with Smart Frame Cabinet',                brand: 'Goodman', image: '', price: '561.00',  types: ['airConditioners'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
 
-        // {name: 'Goodman 15 Kilowatt 51,150 BTU Heater Coil for Smart Fram Air Handler',     brand: 'Goodman', image: '', price: '76.00',  modelNum: 'HKSC15',     types: ['coils'],           description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
-        // {name: 'Goodman 3.5 Ton 14 SEER 80,000 BTU Gas/Electric Package Unit - Multi-Position', brand: 'Goodman', image: '', price: '1606.00',  modelNum: 'GPG1442080M41', types: ['packagedUnits'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
-        // {name: 'Goodman 2.5 Ton 14 SEER Horizontal Heat Pump Package Unit',                 brand: 'Goodman', image: '', price: '1310.00', modelNum: 'GPH1430H41', types: ['packagedUnits', 'heatPumps'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
-        // {name: 'Goodman 5 Ton 14 SEER Horizontal Heat Pump Package Unit',                   brand: 'Goodman', image: '', price: '1799.00', modelNum: 'GPH1460h42',  types: ['airConditioners'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]}
-    ],
+        HKSC15        : {name: 'Goodman 15 Kilowatt 51,150 BTU Heater Coil for Smart Fram Air Handler',             brand: 'Goodman', image: '', price: '76.00',   types: ['coils'],           description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        GPG1442080M41 : {name: 'Goodman 3.5 Ton 14 SEER 80,000 BTU Gas/Electric Package Unit - Multi-Position',     brand: 'Goodman', image: '', price: '1606.00', types: ['packagedUnits'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        GPH1430H41    : {name: 'Goodman 2.5 Ton 14 SEER Horizontal Heat Pump Package Unit',                         brand: 'Goodman', image: '', price: '1310.00', types: ['packagedUnits', 'heatPumps'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
+        GPH1460h42    : {name: 'Goodman 5 Ton 14 SEER Horizontal Heat Pump Package Unit',                           brand: 'Goodman', image: '', price: '1799.00', types: ['airConditioners'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]}
+    },
+    matchups: {
+        standard: ['DSXC19', 'GMVC9', 'DSXC17', 'GMVC7'],
+
+        DSXC19: {name: 'Gas Split-System',          image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: ['GSX140421','GMS80805CN', 'CAPF4860C6']},
+        GMVC9:  {name: 'Heat Pump Split-System',    image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: ['GSZ140361','ARUF37C14', 'HKSX10XC']},
+        DSXC17: {name: 'Package Gas System',        image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: ['GXZ140601','ASPT61D14', 'HKSC15'], applicationType: {multiPosition: 'Multi-Position', singlePosition: 'Single Position'}},
+        GMVC7:  {name: 'Package Heat Pump System',  image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: ['GXZ140601','ASPT61D14', 'HKSC15'], applicationType: {multiPosition: 'Multi-Position', horizontalPosition: 'Horizontal'}},
+
+        'Dwight\'s Heat Pump Split-System': ['DSXC19', 'GMVC9'],
+        'Dwight\'s Gas Split-System': ['DSXC17', 'GMVC7', 'CAPT']
+    },
     truck: {}
 });
 
