@@ -14,13 +14,6 @@ export default function Matchup(props) {
         productThumbnail: {
             display: 'grid'
         },
-        plusBtn: {
-            float: 'left',
-            margin: '5px',
-            height: '42px',
-            width: '42px',
-            zIndex: '9'
-        },
         image: {
             marginTop: '-52px',
             height: '300px',
