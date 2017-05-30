@@ -48,10 +48,13 @@ export default class Matchups extends React.Component {
             productContainer: {
                 width: '86%'
             },
-            searchSection: {
+            titleSection: {
                 width: '100%',
-                height: '77px',
-                borderBottom: '1px solid rgba(50, 50, 50, 0.1)'
+                height: '75px',
+                borderBottom: '1px solid rgba(50, 50, 50, 0.1)',
+                textAlign: 'left',
+                padding: '20px',
+                fontSize: '30px',
             },
             searchBox: {
                 border: '1px solid #FFF',
@@ -93,10 +96,10 @@ export default class Matchups extends React.Component {
 
         return (
             <div style={styles.container}>
-                <div style={styles.searchSection}>
+                <div style={styles.titleSection}>
                     Standard Matchups
                 </div>
-                <div>
+                <div style={{margin: '50px -1px'}}>
                     <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
                         {matchups}
                     </div>
