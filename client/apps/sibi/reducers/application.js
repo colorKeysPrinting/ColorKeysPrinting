@@ -68,6 +68,9 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
         },
         myTruck: {}
     },
+    calculations: {
+        salesTaxRate: 8.25
+    },
     products: {
         GSX140421     : {name: 'Goodman 3.5 Ton 14 Seer Air conditioner condenser w/ R410A refrigerant',            brand: 'Goodman', image: '', price: '709.00', types: ['airConditioners'], description: '', completeSys: ['GMS80805CN','CAPF4860C6'],  recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
         GMS80805CN    : {name: 'Goodman 80% AFUE 80,000 BTU Upflow  Stage Gas Furnace up to 5 Ton',                 brand: 'Goodman', image: '', price: '344.00', types: ['furnaces'],        description: '', completeSys: ['GSX140421','CAPF4860C6'],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]},
