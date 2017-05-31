@@ -10,6 +10,7 @@ import Agreement                from './agreement';
 import ProductAddTo             from './product_add_to'
 import Radio                    from './radio';
 import AddNewList               from './add_new_list';
+import ViewMatchup              from './view_matchup';
 
 let select = (state)=>{
     return {
@@ -36,6 +37,7 @@ export default class Overlay extends React.Component {
         this.close = this.close.bind(this);
         this.submitLoginBtn = this.submitLoginBtn.bind(this);
         this.submitAddToBtn = this.submitAddToBtn.bind(this);
+        this.addToTruck = this.addToTruck.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -118,6 +120,10 @@ export default class Overlay extends React.Component {
         console.log('submit add to clicked');
     }
 
+    addToTruck(items) {
+        console.log('add to truck: ', items);
+    }
+
     render() {
         let overlay, closeSection;
 
@@ -189,6 +195,11 @@ export default class Overlay extends React.Component {
                                 update={this.update}
                                 close={this.close}
                                 submitAddToBtn={this.submitAddToBtn} />;
+                break;
+            case 'customMatchup':
+                overlay = <ViewMatchup
+                                overlayObj={this.state.overlayObj}
+                                close={this.close} />;
                 break;
             default:
         }

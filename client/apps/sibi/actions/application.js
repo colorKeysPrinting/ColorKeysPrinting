@@ -51,3 +51,10 @@ export function signUp(personDetails) {
         personDetails
     }
 }
+
+export function addToTruck(items) {
+    return {
+        type: ActionTypes.ADD_TO_TRUCK,
+        items
+    }
+}

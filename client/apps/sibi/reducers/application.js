@@ -85,15 +85,15 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
         GPH1460h42    : {name: 'Goodman 5 Ton 14 SEER Horizontal Heat Pump Package Unit',                           brand: 'Goodman', image: '', price: '1799.00', types: ['airConditioners'], description: '', completeSys: [],   recommendedParts: [], specs: {}, overview: '', codeCompliance: '', FAQ: [{question: '', answer: ''}]}
     },
     matchups: {
-        standard: ['DSXC19', 'GMVC9', 'DSXC17', 'GMVC7'],
+        standard    : ['DSXC19', 'GMVC9', 'DSXC17', 'GMVC7'],
 
-        DSXC19: {name: 'Gas Split-System',          image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: ['GSX140421','GMS80805CN', 'CAPF4860C6']},
-        GMVC9:  {name: 'Heat Pump Split-System',    image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: ['GSZ140361','ARUF37C14', 'HKSX10XC']},
-        DSXC17: {name: 'Package Gas System',        image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: ['GXZ140601','ASPT61D14', 'HKSC15'], applicationType: {multiPosition: 'Multi-Position', singlePosition: 'Single Position'}},
-        GMVC7:  {name: 'Package Heat Pump System',  image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: ['GXZ140601','ASPT61D14', 'HKSC15'], applicationType: {multiPosition: 'Multi-Position', horizontalPosition: 'Horizontal'}},
+        DSXC19  : {name: 'Gas Split-System',          image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: {'GSX140421': 1, 'GMS80805CN': 1, 'CAPF4860C6': 1}},
+        GMVC9   : {name: 'Heat Pump Split-System',    image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: {'GSZ140361': 3, 'ARUF37C14': 1, 'HKSX10XC': 1}},
+        DSXC17  : {name: 'Package Gas System',        image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: {'GXZ140601': 1, 'ASPT61D14': 2, 'HKSC15': 1}, applicationType: {multiPosition: 'Multi-Position', singlePosition: 'Single Position'}},
+        GMVC7   : {name: 'Package Heat Pump System',  image: '', tonnage: [1.5, 1.8], seer: [14, 15, 12], price: '1458.00', items: {'GXZ140601': 1,'ASPT61D14': 1, 'HKSC15': 5}, applicationType: {multiPosition: 'Multi-Position', horizontalPosition: 'Horizontal'}},
 
-        'Dwight\'s Heat Pump Split-System': ['DSXC19', 'GMVC9'],
-        'Dwight\'s Gas Split-System': ['DSXC17', 'GMVC7', 'CAPT']
+        'Dwight\'s Heat Pump Split-System'  : {price: '2879.03', products: {'GSX140421': 1, 'GMS80805CN': 2}},
+        'Dwight\'s Gas Split-System'        : {price: '2879.03', products: {'ARUF37C14': 1, 'HKSX10XC': 3, 'GXZ140601': 1}}
     },
     truck: {}
 });
@@ -216,6 +216,13 @@ export default (state = initialState, action)=>{
         case ActionTypes.GET_STRIPE_TOKEN_DONE:
             console.log('received stripe token');
             state = state.setIn(['temp','stripeToken', action.key], action.isChecked);
+            break;
+
+        case ActionTypes.ADD_TO_TRUCK:
+            console.log('adding item(s) to truck: ', action.items);
+
+            let items = action.items;
+            state = state.set('truck', {...state.truck, items});
             break;
         default:
     }

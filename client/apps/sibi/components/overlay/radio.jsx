@@ -1,5 +1,4 @@
 import React                    from 'react';
-import { connect }              from 'react-redux';
 import _                        from 'lodash';
 
 // TODO: need to fix the submit button becuase it's not sending the connected list

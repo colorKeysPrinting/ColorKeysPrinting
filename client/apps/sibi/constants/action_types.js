@@ -8,6 +8,7 @@ const actionTypes = [
     "CLOSE_OVERLAY",
     "CHANGE_LANGUAGE",
     "SIGNUP",
+    "ADD_TO_TRUCK",
 
 // header bar
     "HOME",
