@@ -4,6 +4,8 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 import assets                   from '../../libs/assets';
 
+import { addToTruck }           from '../../actions/application';
+
 let select = (state)=>{
     return {
         currLang            : state.application.get('currLanguage'),
@@ -12,7 +14,7 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {}, null, {withRef: true})
+@connect(select, {addToTruck}, null, {withRef: true})
 export default class ViewMatchupOverlay extends React.Component {
 
     constructor(props) {
@@ -20,7 +22,7 @@ export default class ViewMatchupOverlay extends React.Component {
 
         let items = _.map(this.props.overlayObj.products, (matchupQty, modelNum)=>{
 
-            let product = this.props.products[modelNum];
+            let product = _.find(this.props.products, ['modelNum', modelNum]);
             let cost = (parseFloat(product.price * matchupQty));
 
             return {modelNum, ...product, matchupQty, cost};
@@ -34,7 +36,8 @@ export default class ViewMatchupOverlay extends React.Component {
         this.calculate = this.calculate.bind(this);
         this.calcTax = this.calcTax.bind(this);
         this.remove = this.remove.bind(this);
-        this.addToTruck = this.addToTruck.bind(this);
+        this.addItemToTruck = this.addItemToTruck.bind(this);
+        this.addAllToTruck = this.addAllToTruck.bind(this);
         this.share = this.share.bind(this);
     }
 
@@ -79,12 +82,36 @@ export default class ViewMatchupOverlay extends React.Component {
         return parseFloat(result);
     }
 
-    remove(item) {
-        console.log('removing:', item);
+    remove(modelNum) {
+        console.log('removing:', modelNum);
+        let items = _.remove(this.state.items, (obj)=>{return obj.modelNum !== modelNum});
+
+        let calc = this.calculate(items);
+
+        this.setState({items, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total});
     }
 
-    addToTruck(item) {
+    addItemToTruck(item) {
         console.log('addToTruck:', item);
+        let qty = item.matchupQty;
+
+        item['qty'] = qty;
+        delete item.matchupQty;
+
+        this.props.addToTruck(item);
+    }
+
+    addAllToTruck(matchup) {
+        console.log('addToTruck:', matchup);
+
+        let items = {};
+        _.each(matchup, (item)=>{
+            items[item.modelNum] = item.matchupQty;
+        });
+
+        matchup = {matchup: this.state.title, items};
+
+        this.props.addToTruck(matchup);
     }
 
     share(matchup) {
@@ -143,16 +170,20 @@ export default class ViewMatchupOverlay extends React.Component {
                 paddingLeft: '5px'
             },
             submitBtn: {
+                backgroundColor: '#06cfe5',
                 borderRadius: '5px',
+                color: '#FFF',
                 cursor: 'pointer',
-                height: '40px',
-                width: '100%',
-                margin: '20px auto',
-                paddingTop: '10px'
+                width: '200px',
+                height: '46px',
+                margin: '7px auto',
+                textAlign: 'center',
+                fontSize: '18px',
+                paddingTop: '14px'
             },
             table: {
                 col1: {
-                    width: '84%'
+                    width: '80%'
                 },
                 col2: {
                     width: '10%'
@@ -164,6 +195,26 @@ export default class ViewMatchupOverlay extends React.Component {
                     width: 'auto',
                     height: '220px',
                     margin: '10px'
+                },
+                removeBtn: {
+                    marginTop: '100%',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    border: '1px solid rgba(50,50,50,0.1)',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    color: '#06cfe5',
+                    fontWeight: 'bold',
+                },
+                submitBtn: {
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    marginTop: '100%',
+                    paddingTop: '10px',
+                    color: '#FFF',
+                    backgroundColor: '#06cfe5',
+                    padding: '15px',
+                    textAlign: 'center'
                 }
             },
             modelNum: {
@@ -190,21 +241,21 @@ export default class ViewMatchupOverlay extends React.Component {
                     </td>
                     <td style={styles.table.col2}>
                         <label style={{display: 'inline-flex'}} style={{fontSize: '20px', marginRight: '10px'}}>Qty: <input type="number" value={product.matchupQty} onChange={(e)=>this.update(product.modelNum, e.target.value)} style={styles.qtyInput}/></label>
+                        <div onClick={()=>this.remove(product.modelNum)} style={styles.table.removeBtn}>Remove</div>
                     </td>
-                    <td style={styles.table.col3}>${(product.cost).formatMoney(2, '.', ',')} </td>
+                    <td style={styles.table.col3}>
+                        <div>${(product.cost).formatMoney(2, '.', ',')}</div>
+                        <div onClick={()=>this.addItemToTruck(product)} style={styles.table.submitBtn}>Add to Truck</div>
+                    </td>
                 </tr>
             );
         });
-        // <div style={{display: 'inline-flex'}}>
-        //     <div onClick={()=>this.remove(modelNum)}>Remove</div>
-        //     <div onClick={()=>this.addToTruck({[modelNum]: product})} style={styles.submitBtn}>Add to Truck</div>
-        // </div>
 
         return (
             <div style={styles.container}>
                 <div style={styles.titleBar }>
                     <div style={styles.title}>{this.state.title}</div>
-                    <div onClick={()=>this.share()}><img src={''} alt="share" style={styles.actions} /></div>
+                    <div onClick={()=>this.share(this.state.items)}><img src={''} alt="share" style={styles.actions} /></div>
                     <div onClick={this.props.close} style={styles.close}>X</div>
                 </div>
                 <div style={styles.content}>
@@ -227,7 +278,7 @@ export default class ViewMatchupOverlay extends React.Component {
                                 <td style={{width: '20%'}}>SHIPPING: ${(this.state.shipping).formatMoney(2, '.')}</td>
                                 <td style={{width: '20%'}}>SALES TAX: ${(this.state.salesTax).formatMoney(2)}</td>
                                 <td style={{width: '20%'}}>TOTAL: ${(this.state.total).formatMoney(2, '.', ',')}</td>
-                                <td><div style={styles.submitBtn}>Add All Items to Cart</div></td>
+                                <td><div onClick={()=>this.addAllToTruck(this.state.items)} style={styles.submitBtn}>Add All Items to Cart</div></td>
                             </tr>
                         </tbody>
                     </table>

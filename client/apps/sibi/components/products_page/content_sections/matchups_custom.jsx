@@ -94,15 +94,15 @@ export default class MatchupsCustom extends React.Component {
         let matchups = _.map(this.state.matchups, (matchup, key)=>{
             let name = matchup;
 
-            matchup = this.props.matchups[matchup];
-            let products = Object.keys(matchup.products);
-            products = products.join(',');
+            matchup = _.find(this.props.matchups,['matchup', matchup]);
+            let items = Object.keys(matchup.items);
+            items = items.join(',');
 
             return (
                 <tr key={key}>
                     <td>{name}</td>
-                    <td>{products}</td>
-                    <td onClick={()=>this.props.showOverlay('customMatchup', {name, products: matchup.products})} style={styles.blueTxt}>View Products</td>
+                    <td>{items}</td>
+                    <td onClick={()=>this.props.showOverlay('customMatchup', {name, products: matchup.items})} style={styles.blueTxt}>View Products</td>
                     <td>{matchup.price}</td>
                     <td onClick={()=>this.addToTruck({[name]: matchup})} style={styles.blueTxt}>Add to truck</td>
                     <td><div onClick={()=>this.delete(name)} style={styles.delete}><img src={''} alt="delete"/></div></td>

@@ -18,7 +18,7 @@ export default class Matchups extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {matchups: this.props.matchups['standard'], tonnage: '', seer: '', applicationType: ''};
+        this.state = {matchups: _.find(this.props.matchups, ['matchup', 'standard']).items, tonnage: '', seer: '', applicationType: ''};
 
         this.update = this.update.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
@@ -84,7 +84,7 @@ export default class Matchups extends React.Component {
             return (
                 <Matchup
                     key={key}
-                    matchup={this.props.matchups[matchup]}
+                    matchup={_.find(this.props.matchups, ['matchup', matchup])}
                     tonnage={this.state.tonnage}
                     seer={this.state.seer}
                     applicationType={this.state.applicationType}

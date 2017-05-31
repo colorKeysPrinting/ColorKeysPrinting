@@ -52,9 +52,9 @@ export function signUp(personDetails) {
     }
 }
 
-export function addToTruck(items) {
+export function addToTruck(item) {
     return {
         type: ActionTypes.ADD_TO_TRUCK,
-        items
+        item
     }
 }
