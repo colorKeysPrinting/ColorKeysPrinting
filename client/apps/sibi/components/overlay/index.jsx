@@ -3,6 +3,7 @@ import { connect }              from 'react-redux';
 
 import { login, showRadioOverlay, closeOverlay, passwordReset }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
+import { createNewList, addToList }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -21,14 +22,14 @@ let select = (state)=>{
     }
 };
 
-let actions = {login, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement};
+let actions = {login, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewList, addToList};
 
 @connect(select, actions, null, {withRef: true})
 export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newItem: '', contractGoodman: false, contractAsure: false};
+        this.state = {activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '', contractGoodman: false, contractAsure: false};
 
         this.resetState = this.resetState.bind(this);
         this.changeOverlay = this.changeOverlay.bind(this);
@@ -36,6 +37,7 @@ export default class Overlay extends React.Component {
         this.fileDrop = this.fileDrop.bind(this);
         this.close = this.close.bind(this);
         this.submitLoginBtn = this.submitLoginBtn.bind(this);
+        this.submitCreateListBtn = this.submitCreateListBtn.bind(this);
         this.submitAddToBtn = this.submitAddToBtn.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
     }
@@ -53,12 +55,11 @@ export default class Overlay extends React.Component {
     }
 
     resetState() {
-        this.setState({activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newItem: '', contractGoodman: false, contractAsure: false});
+        this.setState({activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '', contractGoodman: false, contractAsure: false});
     }
 
     changeOverlay(activeOverlay) {
-        this.setState({password: ''});
-        this.setState({activeOverlay});
+        this.setState({password: '', activeOverlay});
     }
 
     update(type, value) {
@@ -116,8 +117,24 @@ export default class Overlay extends React.Component {
         }
     }
 
-    submitAddToBtn(type) {
+    submitCreateListBtn(type) {
         console.log('submit add to clicked');
+
+        this.props.createNewList(type, this.state.newList);
+        if(this.state.overlayObj['modelNum']) {
+            this.props.addToList(type, this.state.newList, this.state.overlayObj.modelNum); // TODO: check to make sure this functionality is correct,
+                                                                                            // when you create a new list the product you clicked on will be added to that list
+        }
+        this.resetState();
+        this.props.closeOverlay();
+    }
+
+    submitAddToBtn(type, name) {
+        console.log('submit add to clicked');
+
+        this.props.addToList(type, name, this.state.overlayObj.modelNum);
+        this.resetState();
+        this.props.closeOverlay();
     }
 
     addToTruck(items) {
@@ -190,11 +207,11 @@ export default class Overlay extends React.Component {
                 break;
             case 'addNewList':
                 overlay = <AddNewList
-                                newItem={this.state.newItem}
+                                newList={this.state.newList}
                                 overlayObj={this.state.overlayObj}
                                 update={this.update}
                                 close={this.close}
-                                submitAddToBtn={this.submitAddToBtn} />;
+                                submitCreateListBtn={this.submitCreateListBtn} />;
                 break;
             case 'customMatchup':
                 overlay = <ViewMatchup

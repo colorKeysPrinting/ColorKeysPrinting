@@ -7,10 +7,10 @@ export function goHome() {
     };
 }
 
-export function activateTab(key) {
+export function setActivateTab(key) {
     // activeTab: products, features, support, orderHistory, warranties, reports, dashboard, rebates, dealers, funds, vendors
     return {
-        type: ActionTypes.ACTIVATE_TAB,
+        type: ActionTypes.SET_ACTIVATE_TAB,
         key
     };
 }

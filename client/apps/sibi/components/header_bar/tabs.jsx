@@ -31,17 +31,17 @@ export default (props)=>{
     };
 
     const tabs = {
-        products:       <Link to={`/products`}      onClick={ (e)=>{ props.activateTab('products')}}       style={(props.activeTab === 'products')     ? styles.active : styles.tabs}>Products</Link>,
-        features:       <Link to={`/features`}      onClick={ (e)=>{ props.activateTab('features')}}       style={(props.activeTab === 'features')     ? styles.active : styles.tabs}>Features</Link>,
-        support:        <Link to={`/support`}       onClick={ (e)=>{ props.activateTab('support')}}        style={(props.activeTab === 'support')      ? styles.active : styles.tabs}>Support</Link>,
-        orderHistory:   <Link to={`/orderHistory`}  onClick={ (e)=>{ props.activateTab('orderHistory')}}   style={(props.activeTab === 'orderHistory') ? styles.active : styles.tabs}>Order History</Link>,
-        warranties:     <Link to={`/warranties`}    onClick={ (e)=>{ props.activateTab('warranties')}}     style={(props.activeTab === 'warranties')   ? styles.active : styles.tabs}>Warranties</Link>,
-        reports:        <Link to={`/reports`}       onClick={ (e)=>{ props.activateTab('reports')}}        style={(props.activeTab === 'reports')      ? styles.active : styles.tabs}>Reports</Link>,
-        dashboard:      <Link to={`/dashboard`}     onClick={ (e)=>{ props.activateTab('dashboard')}}      style={(props.activeTab === 'dashboard')    ? styles.active : styles.tabs}>Dashboard</Link>,
-        rebates:        <Link to={`/rebates`}       onClick={ (e)=>{ props.activateTab('rebates')}}        style={(props.activeTab === 'rebates')      ? styles.active : styles.tabs}>Rebates</Link>,
-        dealers:        <Link to={`/dealers`}       onClick={ (e)=>{ props.activateTab('dealers')}}        style={(props.activeTab === 'dealers')      ? styles.active : styles.tabs}>Dealers</Link>,
-        funds:          <Link to={`/funds`}         onClick={ (e)=>{ props.activateTab('funds')}}          style={(props.activeTab === 'funds')        ? styles.active : styles.tabs}>Funds</Link>,
-        vendors:        <Link to={`/vendors`}       onClick={ (e)=>{ props.activateTab('vendors')}}        style={(props.activeTab === 'vendors')      ? styles.active : styles.tabs}>Vendors</Link>
+        products     : <Link to={{pathname: '/products',     state: {activePage: 'products',     activePageContent: ''}}} style={(props.activeTab === 'products')     ? styles.active : styles.tabs} >Products</Link>,
+        features     : <Link to={{pathname: '/features',     state: {activePage: 'features',     activePageContent: ''}}} style={(props.activeTab === 'features')     ? styles.active : styles.tabs} >Features</Link>,
+        support      : <Link to={{pathname: '/support',      state: {activePage: 'support',      activePageContent: ''}}} style={(props.activeTab === 'support')      ? styles.active : styles.tabs} >Support</Link>,
+        orderHistory : <Link to={{pathname: '/orderHistory', state: {activePage: 'orderHistory', activePageContent: ''}}} style={(props.activeTab === 'orderHistory') ? styles.active : styles.tabs} >Order History</Link>,
+        warranties   : <Link to={{pathname: '/warranties',   state: {activePage: 'warranties',   activePageContent: ''}}} style={(props.activeTab === 'warranties')   ? styles.active : styles.tabs} >Warranties</Link>,
+        reports      : <Link to={{pathname: '/reports',      state: {activePage: 'reports',      activePageContent: ''}}} style={(props.activeTab === 'reports')      ? styles.active : styles.tabs} >Reports</Link>,
+        dashboard    : <Link to={{pathname: '/dashboard',    state: {activePage: 'dashboard',    activePageContent: ''}}} style={(props.activeTab === 'dashboard')    ? styles.active : styles.tabs} >Dashboard</Link>,
+        rebates      : <Link to={{pathname: '/rebates',      state: {activePage: 'rebates',      activePageContent: ''}}} style={(props.activeTab === 'rebates')      ? styles.active : styles.tabs} >Rebates</Link>,
+        dealers      : <Link to={{pathname: '/dealers',      state: {activePage: 'dealers',      activePageContent: ''}}} style={(props.activeTab === 'dealers')      ? styles.active : styles.tabs} >Dealers</Link>,
+        funds        : <Link to={{pathname: '/funds',        state: {activePage: 'funds',        activePageContent: ''}}} style={(props.activeTab === 'funds')        ? styles.active : styles.tabs} >Funds</Link>,
+        vendors      : <Link to={{pathname: '/vendors',      state: {activePage: 'vendors',      activePageContent: ''}}} style={(props.activeTab === 'vendors')      ? styles.active : styles.tabs} >Vendors</Link>
     };
 
     let activeTabs;

@@ -9,8 +9,8 @@ export default function addToOverlay(props) {
     let styles = {
         container: {
             position: 'absolute',
-            top: props.overlayObj.mouseY - 104,
-            left: props.overlayObj.mouseX - 106,
+            top: props.overlayObj.mouseCoord.mouseY - 104,
+            left: props.overlayObj.mouseCoord.mouseX - 106,
             backgroundColor: '#3B3A3A',
             color: '#FFF',
             borderRadius: '5px',
@@ -29,8 +29,8 @@ export default function addToOverlay(props) {
 
     return (
         <div style={styles.container}>
-            <div onClick={()=>props.showRadioOverlay('radioList', 'customMatchups')} style={styles.element}>Add to Custom Matchup</div>
-            <div onClick={()=>props.showRadioOverlay('radioList', 'myLists')} style={styles.element}>Add to List</div>
+            <div onClick={()=>props.showRadioOverlay('radioList', 'customMatchups', props.overlayObj.modelNum)} style={styles.element}>Add to Custom Matchup</div>
+            <div onClick={()=>props.showRadioOverlay('radioList', 'myLists', props.overlayObj.modelNum)}        style={styles.element}>Add to List</div>
         </div>
     );
 }

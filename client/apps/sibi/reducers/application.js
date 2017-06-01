@@ -5,7 +5,7 @@ import Immutable                from 'immutable';
 import ActionTypes              from '../constants/action_types';
 import { browserHistory }       from 'react-router';
 
-const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', temp: {modelNum: '', listType: '', actualList: '', docs: {workerComp: '', w9: '', insurance: '', contractGoodman: false,  contractAsure: false}},
+const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', activePageContent: '', temp: {docs: {workerComp: '', w9: '', insurance: '', contractGoodman: false,  contractAsure: false}},
 
 // ****** API information starts here ******
     fundsList: ['Associated fund', 'value fund', 'foo fund', 'Jolly fund'], locationList: ['petes place', 'lower towers', 'twin terrace'],
@@ -35,7 +35,10 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
                 partsSupplies: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
             }
         },
-        matchups: {
+        myProducts: {
+            mostPurchased: ['GSX140421', 'GMS80805CN', 'CAPF4860C6','GSZ140361']
+        },
+        myMatchups: {
             standard: 'standard',
             custom: ['Dwight\'s Heat Pump Split-System', 'Dwight\'s Gas Split-System']
         },
@@ -62,9 +65,6 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
                 }
             },
             'parts & supplies': {}
-        },
-        products: {
-            mostPurchased: ['GSX140421', 'GMS80805CN', 'CAPF4860C6','GSZ140361']
         },
         myTruck: {}
     },
@@ -107,7 +107,7 @@ export default (state = initialState, action)=>{
             console.log('home');
             break;
 
-        case ActionTypes.ACTIVATE_TAB:
+        case ActionTypes.SET_ACTIVATE_TAB:
             console.log('activeTab', action.key);
             state = state.set('activeTab', action.key);
             break;
@@ -144,15 +144,6 @@ export default (state = initialState, action)=>{
             // normal case
             if(action.obj) {
                 state = state.set('overlayObj', action.obj);
-
-                // extra cases
-                if(action.obj.modelNum) {
-                    state = state.setIn(['temp','modelNum'], action.obj.modelNum);
-                }
-
-                if(action.obj.mouseCoord) {
-                    state = state.set('overlayObj', action.obj.mouseCoord);
-                }
             }
 
             break;
@@ -175,11 +166,9 @@ export default (state = initialState, action)=>{
             if(action.listType) {
                 let list;
 
-                state = state.setIn(['temp','listType'], action.listType);
-
                 switch(action.listType) {
                     case 'customMatchups':
-                        list = state.getIn(['activeUser', 'matchups', 'Custom Matchups']).toJS();
+                        list = state.getIn(['activeUser', 'myMatchups', 'custom']).toJS();
                         break;
                     case 'myLists':
                         list = state.getIn(['activeUser', 'myLists']).toJS();
@@ -187,7 +176,7 @@ export default (state = initialState, action)=>{
                     default:
                 }
 
-                state = state.set('overlayObj', { type: action.listType, list});
+                state = state.set('overlayObj', {type: action.listType, modelNum: action.modelNum, list});
             }
             break;
 
@@ -201,9 +190,12 @@ export default (state = initialState, action)=>{
             state = state.set('currLanguage', action.language);
             break;
 
-        case ActionTypes.ACTIVATE_PAGE:
-            console.log('activePage: ', action.key);
+        case ActionTypes.SET_ACTIVE_PAGE:
+            console.log('activePage: ', action.key, action.content);
+            let activePageContent = (action.content) ? action.content : '';
+
             state = state.set('activePage', action.key);
+            state = state.set('activePageContent', activePageContent);
             break;
 
         case ActionTypes.UPLOAD_DOCUMENT:
@@ -240,6 +232,72 @@ export default (state = initialState, action)=>{
 
             state = state.set('truck', newTruck);
             console.log('current Truck:', state.get('truck').toJS());
+            break;
+        case ActionTypes.CREATE_NEW_LIST:
+            console.log('create new: ' + action.key, action.newItem);
+
+            switch(action.key) {
+                case 'customMatchups':
+                    let matchups = state.get('matchups').toJS();
+                    let myMatchups = state.getIn(['activeUser', 'myMatchups','custom']).toJS();
+
+                    matchups.push({matchup: action.newItem, items: {}});
+                    myMatchups.push(action.newItem);
+
+                    matchups = Immutable.fromJS(matchups);
+                    myMatchups = Immutable.fromJS(myMatchups);
+
+                    state = state.update('matchups', value=>matchups);
+                    state = state.updateIn(['activeUser', 'myMatchups','custom'], value=>myMatchups);
+
+                    console.log('current matchups:', state.get('matchups').toJS());
+                    console.log('current myMatchups:', state.getIn(['activeUser', 'myMatchups','custom']).toJS());
+                    break;
+                case 'myLists':
+                    let myLists = state.getIn(['activeUser', 'myLists']).toJS();
+                    myLists[action.newItem] = [];
+
+                    myLists = Immutable.fromJS(myLists);
+
+                    state = state.updateIn(['activeUser', 'myLists'], value=>myLists);
+                    console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
+                    break;
+                default:
+                    console.log('ERROR: no list specified!');
+            }
+
+            break;
+        case ActionTypes.ADD_TO_LIST:
+            let index;
+            console.log('add to ' + action.name, action.newItem);
+
+            switch(action.key) {
+                case 'customMatchups':
+                    let matchups = state.get('matchups').toJS();
+                    index = _.findIndex(matchups, ['matchup', action.name]);
+                    let matchup = matchups[index];
+
+                    if(matchup.items[action.newItem]) {
+                        matchup.items[action.newItem] += 1;
+
+                    } else {
+                        matchup.items[action.newItem] = 1;
+                    }
+
+                    matchups[index] = matchup;
+
+                    state = state.update('matchups', value=>Immutable.fromJS(matchups));
+                    console.log('current matchups:', state.get('matchups').toJS());
+                    break;
+                case 'myLists':
+                    let myLists = state.getIn(['activeUser', 'myLists']).toJS();
+                    myLists[name].push(action.modelNum);
+
+                    state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));
+                    console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
+                    break;
+                default:
+            }
             break;
         default:
     }

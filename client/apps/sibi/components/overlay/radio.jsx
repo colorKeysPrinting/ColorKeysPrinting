@@ -98,11 +98,11 @@ export default class RadioOverlay extends React.Component {
             default:
         }
 
-        let items = _.map(this.props.overlayObj.list, (item, key)=>{
+        let items = _.map(this.props.overlayObj.list, (item)=>{
             return (
-                <div key={key} onClick={()=>{this.setState({activeRadio: key})}} style={styles.options}>
-                    <input type="radio" name={this.props.overlayObj.type} value={key} onChange={()=>this.update(key)} style={styles.radio} checked={this.state.activeRadio === key} />
-                    <div style={{margin: '15px'}}>{key}</div>
+                <div key={item} onClick={()=>{this.setState({activeRadio: item})}} style={styles.options}>
+                    <input type="radio" name={this.props.overlayObj.type} value={item} onChange={()=>this.update(item)} style={styles.radio} checked={this.state.activeRadio === item} />
+                    <div style={{margin: '15px'}}>{item}</div>
                 </div>
             );
         });
@@ -114,7 +114,7 @@ export default class RadioOverlay extends React.Component {
                     <div onClick={this.props.close} style={styles.close}>X</div>
                 </div>
                 <div style={styles.content}>
-                    <form onSubmit={()=>this.props.submitAddToBtn(this.props.overlayObj.type)} style={styles.content}>
+                    <form onSubmit={()=>this.props.submitAddToBtn(this.props.overlayObj.type, this.state.activeRadio)} style={styles.content}>
                         <div>
                             <div style={{textAlign: 'left', padding: '5px'}}>Select list to add item to:</div>
                             {items}

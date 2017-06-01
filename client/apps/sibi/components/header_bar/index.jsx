@@ -95,10 +95,10 @@ export default class HeaderBar extends React.Component {
 
         return (
             <div id="header-bar" style={styles.header}>
-                <Link to={to} onClick={ (e)=>{ this.props.activateTab('products')}} ><img src={sibiLogo} alt="sibi logo" style={styles.sibiLogo}/></Link>
+                <Link to={to} onClick={ (e)=>{ this.props.setActivateTab('products')}} ><img src={sibiLogo} alt="sibi logo" style={styles.sibiLogo}/></Link>
                 <Tabs type={ this.props.activeUserType }
                       activeTab={ this.props.activeTab }
-                      activateTab={ this.props.activateTab }/>
+                      setActivateTab={ this.props.setActivateTab } />
                 { loginSection }
             </div>
         );

@@ -9,11 +9,12 @@ export function showOverlay(key, obj) {
     };
 }
 
-export function showRadioOverlay(key, listType) {
+export function showRadioOverlay(key, listType, modelNum) {
     return {
         type: ActionTypes.SHOW_RADIO_OVERLAY,
         key,
-        listType
+        listType,
+        modelNum
     };
 }
 

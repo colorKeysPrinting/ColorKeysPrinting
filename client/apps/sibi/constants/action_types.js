@@ -12,15 +12,17 @@ const actionTypes = [
 
 // header bar
     "HOME",
-    "ACTIVATE_TAB",
+    "SET_ACTIVATE_TAB",
     "SIGNUP_PAGE",
 
 // products
-    "ACTIVATE_PAGE",
+    "SET_ACTIVE_PAGE",
     "SHOW_RADIO_OVERLAY",
     "UPDATE_INFO_BAR",
     "UPLOAD_DOCUMENT",
     "ACCEPT_AGREEMENT",
+    "CREATE_NEW_LIST",
+    "ADD_TO_LIST",
 ];
 
 // These types will receive a _DONE

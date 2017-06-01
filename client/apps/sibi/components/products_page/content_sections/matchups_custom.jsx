@@ -4,16 +4,17 @@ import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
 import { showOverlay }          from '../../../actions/application';
+import { setActivePage }        from '../../../actions/products';
 
 let select = (state)=>{
     return {
         currLang        : state.application.get('currLanguage'),
         matchups        : state.application.get('matchups').toJS(),
-        myMatchups      : state.application.getIn(['activeUser', 'matchups', 'custom']).toJS()
+        myMatchups      : state.application.getIn(['activeUser', 'myMatchups', 'custom']).toJS()
     };
 };
 
-@connect(select, { showOverlay }, null, {withRef: true})
+@connect(select, { showOverlay, setActivePage }, null, {withRef: true})
 export default class MatchupsCustom extends React.Component {
 
     constructor(props) {
@@ -28,6 +29,12 @@ export default class MatchupsCustom extends React.Component {
         this.download = this.download.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.myMatchups) {
+            this.setState({matchups: nextProps.myMatchups});
+        }
+    }
+
     delete(matchup) {
         console.log('delete: ', matchup);
     }
@@ -38,6 +45,7 @@ export default class MatchupsCustom extends React.Component {
 
     newMatchup(){
         console.log('clicked new matchup');
+
     }
 
     share() {
@@ -92,11 +100,18 @@ export default class MatchupsCustom extends React.Component {
         };
 
         let matchups = _.map(this.state.matchups, (matchup, key)=>{
-            let name = matchup;
+            let name = matchup, items;
 
             matchup = _.find(this.props.matchups,['matchup', matchup]);
-            let items = Object.keys(matchup.items);
-            items = items.join(',');
+
+            if(_.size(matchup.items) > 0) {
+                items = Object.keys(matchup.items);
+                items = items.join(',');
+
+            } else {
+                items = <div onClick={()=>this.props.setActivePage('products', '')} style={styles.blueTxt} >Add Products</div>;
+            }
+
 
             return (
                 <tr key={key}>
@@ -117,7 +132,7 @@ export default class MatchupsCustom extends React.Component {
                     <div style={{display: 'inline-flex', marginLeft: '60%'}}>
                         <div onClick={()=>this.share()}><img src={''} alt="share" style={styles.actions} /></div>
                         <div onClick={()=>this.download()}><img src={''} alt="download" style={styles.actions} /></div>
-                        <div onClick={this.newMatchup} style={styles.submitBtn}>New Custom Matchup</div>
+                        <div onClick={()=>this.props.showOverlay('addNewList', {type: 'customMatchups'})} style={styles.submitBtn}>New Custom Matchup</div>
                     </div>
                 </div>
                 <div>

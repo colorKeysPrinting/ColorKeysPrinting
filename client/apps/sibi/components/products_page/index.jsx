@@ -3,7 +3,8 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 import assets                   from '../../libs/assets';
 
-import {activateTab}         from '../../actions/header';
+import { setActivateTab }       from '../../actions/header';
+import { setActivePage }        from '../../actions/products';
 
 import KeyIndicatorsBar         from './key_indicators_bar';
 import FilterPanel              from './filter_panel';
@@ -13,15 +14,16 @@ let select = (state)=>{
     return {
         currLang            : state.application.get('currLanguage'),
         activePage          : state.application.get('activePage'),
+        activePageContent   : state.application.get('activePageContent'),
         keyIndicatorBars    : state.application.getIn(['activeUser', 'settings', 'keyIndicatorBars']).toJS(),
         keyIndicatorTypes   : state.application.get('keyIndicatorTypes'),
-        myMatchups          : state.application.getIn(['activeUser', 'matchups']).toJS(),
+        myMatchups          : state.application.getIn(['activeUser', 'myMatchups']).toJS(),
         myLists             : state.application.getIn(['activeUser', 'myLists']).toJS(),
         myFilterPanel       : state.application.getIn(['activeUser', 'filterPanel']).toJS(),
     };
 };
 
-@connect(select, {activateTab}, null, {withRef: true})
+@connect(select, {setActivateTab, setActivePage}, null, {withRef: true})
 export default class ProductsPage extends React.Component {
 
     constructor(props) {
@@ -40,18 +42,20 @@ export default class ProductsPage extends React.Component {
     }
 
     componentWillMount() {
-        this.props.activateTab('products');
+        this.props.setActivateTab('products');
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log('productPage nextProps:', nextProps);
         if(nextProps.activePage) {
-            this.setState({activePage: nextProps.activePage});
+            this.setState({activePage: nextProps.activePage, content: nextProps.activePageContent});
         }
     }
 
-    changeContent(type, content) { //matchups, standard/custom
+    changeContent(type, content) { //e.g. (matchups, (standard/custom))
         console.log(type, content);
-        this.setState({activePage: type, content});
+
+        this.props.setActivePage(type, content);
     }
 
     // changeSection(type, section, value) {

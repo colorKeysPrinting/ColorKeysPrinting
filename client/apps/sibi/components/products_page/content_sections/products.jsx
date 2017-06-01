@@ -11,7 +11,7 @@ let select = (state)=>{
     return {
         currLang        : state.application.get('currLanguage'),
         products        : state.application.get('products').toJS(),
-        mostPurchased   : state.application.getIn(['activeUser','products','mostPurchased']).toJS(),
+        mostPurchased   : state.application.getIn(['activeUser','myProducts','mostPurchased']).toJS(),
     };
 };
 
