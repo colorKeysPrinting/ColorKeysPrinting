@@ -103,13 +103,31 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
 
 export default (state = initialState, action)=>{
     switch (action.type) {
-        case ActionTypes.HOME:
-            console.log('home');
+        case ActionTypes.GO_HOME:
+            console.log('going home');
             break;
 
         case ActionTypes.SET_ACTIVATE_TAB:
             console.log('activeTab', action.key);
             state = state.set('activeTab', action.key);
+            break;
+
+        case ActionTypes.CHANGE_LANGUAGE:
+            console.log('change language: ', action.language);
+            state = state.set('currLanguage', action.language);
+            break;
+
+        case ActionTypes.SET_ACTIVE_PAGE:
+            console.log('activePage: ', action.key, action.content);
+            let activePageContent = (action.content) ? action.content : '';
+
+            state = state.set('activePage', action.key);
+            state = state.set('activePageContent', activePageContent);
+            break;
+
+        case ActionTypes.GET_STRIPE_TOKEN_DONE:
+            console.log('received stripe token');
+            state = state.setIn(['temp','stripeToken', action.key], action.isChecked);
             break;
 
 // **** LOGIN/CREATE USER SECTION
@@ -131,9 +149,9 @@ export default (state = initialState, action)=>{
             console.log('signup');
             break;
 
-        case ActionTypes.SIGNUP_PAGE:
-            console.log('signUpPage');
-            state = state.set('person', action.personDetails);
+        case ActionTypes.SUBMIT_SIGNUP:
+            console.log('submitting signUp');
+            // state = state.set('person', action.personDetails);
             break;
 
 // **** OVERLAY SECTION
@@ -185,19 +203,7 @@ export default (state = initialState, action)=>{
             state = state.set('activeOverlay', '');
             break;
 
-        case ActionTypes.CHANGE_LANGUAGE:
-            console.log('change language: ', action.language);
-            state = state.set('currLanguage', action.language);
-            break;
-
-        case ActionTypes.SET_ACTIVE_PAGE:
-            console.log('activePage: ', action.key, action.content);
-            let activePageContent = (action.content) ? action.content : '';
-
-            state = state.set('activePage', action.key);
-            state = state.set('activePageContent', activePageContent);
-            break;
-
+// signup actions
         case ActionTypes.UPLOAD_DOCUMENT:
             console.log('uploading document');
             state = state.setIn(['temp','docs', action.key], action.file);
@@ -208,11 +214,7 @@ export default (state = initialState, action)=>{
             state = state.setIn(['temp','docs', action.key], action.isChecked);
             break;
 
-        case ActionTypes.GET_STRIPE_TOKEN_DONE:
-            console.log('received stripe token');
-            state = state.setIn(['temp','stripeToken', action.key], action.isChecked);
-            break;
-
+// product actions
         case ActionTypes.ADD_TO_TRUCK:
             console.log('adding item(s) to truck: ', action.item);
             let key, item = action.item, truck = state.get('truck').toJS();
@@ -234,7 +236,7 @@ export default (state = initialState, action)=>{
             console.log('current Truck:', state.get('truck').toJS());
             break;
         case ActionTypes.CREATE_NEW_LIST:
-            console.log('create new: ' + action.key, action.newItem);
+            console.log('TODO: ASYNC CALL - create new: ' + action.key, action.newItem);
 
             switch(action.key) {
                 case 'customMatchups':
@@ -269,7 +271,7 @@ export default (state = initialState, action)=>{
             break;
         case ActionTypes.ADD_TO_LIST:
             let index;
-            console.log('add to ' + action.listName, action.modelNum);
+            console.log('TODO: ASYNC CALL - add to ' + action.listName, action.modelNum);
 
             switch(action.key) {
                 case 'customMatchups':
@@ -301,6 +303,9 @@ export default (state = initialState, action)=>{
                     break;
                 default:
             }
+            break;
+        case ActionTypes.DELETE_ITEM:
+            console.log('delete call back');
             break;
         default:
     }

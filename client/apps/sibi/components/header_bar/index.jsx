@@ -79,7 +79,7 @@ export default class HeaderBar extends React.Component {
         if(!this.props.activeUserType || this.props.activeUserType === 'signUp') {
             loginSection = <div style={styles.loginSection}>
                 <div onClick={ ()=>this.props.showOverlay('login') } style={styles.login}>Login</div>
-                <Link to={`/signup`} style={styles.signUp} onClick={()=>this.props.signUpPage()}>Sign Up</Link>
+                <Link to={`/signup`} style={styles.signUp} >Sign Up</Link>
             </div>;
 
         } else {

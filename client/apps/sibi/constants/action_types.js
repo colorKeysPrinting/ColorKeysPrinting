@@ -2,25 +2,23 @@ import wrapper  from './wrapper';
 
 const actionTypes = [
 // application
-    "LOGIN", // TODO: this needs to go to asyncActionTypes so that we can call the server to login
+    "LOGIN", // TODO: change this to async, keep here during initial dev
     "SHOW_OVERLAY",
     "SHOW_RADIO_OVERLAY",
     "CLOSE_OVERLAY",
     "CHANGE_LANGUAGE",
-    "SIGNUP",
     "ADD_TO_TRUCK",
 
 // header bar
-    "HOME",
+    "GO_HOME",
     "SET_ACTIVATE_TAB",
-    "SIGNUP_PAGE",
 
 // products
     "SET_ACTIVE_PAGE",
     "UPDATE_INFO_BAR",
-    "CREATE_NEW_LIST",
-    "ADD_TO_LIST",
-    "REMOVE_PRODUCT",
+    "CREATE_NEW_LIST", // needs to be a async call
+    "ADD_TO_LIST", // needs to be a async call
+
 
 // signup
     "UPLOAD_DOCUMENT",
@@ -31,7 +29,11 @@ const actionTypes = [
 const asyncActionTypes = [
 // application
     "PASSWORD_RESET",
-    "GET_STRIPE_TOKEN"
+    "GET_STRIPE_TOKEN",
+    "SUBMIT_SIGNUP",
+
+// products
+    "REMOVE_PRODUCT",
 ];
 
 export default wrapper(actionTypes, asyncActionTypes);

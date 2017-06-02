@@ -32,24 +32,10 @@ export function login(username, password) {
     };
 }
 
-export function passwordReset(email) {
-    return {
-        type: ActionTypes.PASSWORD_RESET,
-        email
-    };
-}
-
 export function changeLanguage(language) {
     return {
         type: ActionTypes.CHANGE_LANGUAGE,
         language
-    }
-}
-
-export function signUp(personDetails) {
-    return {
-        type: ActionTypes.SIGNUP,
-        personDetails
     }
 }
 
@@ -60,9 +46,28 @@ export function addToTruck(item) {
     }
 }
 
+// /////////////////////////////////////
+//             ASYNC CALLS
+// /////////////////////////////////////
+export function passwordReset(email) {
+    // needs to be a async call
+    return {
+        type: ActionTypes.PASSWORD_RESET,
+        email
+    };
+}
+
 export function getStripeToken(obj) {
+    // needs to be a async call
     return {
         type: ActionTypes.GET_STRIPE_TOKEN,
         obj
     };
+}
+
+export function signUp(personDetails) {
+    return {
+        type: ActionTypes.SUBMIT_SIGNUP,
+        personDetails
+    }
 }

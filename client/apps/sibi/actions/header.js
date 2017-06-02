@@ -3,7 +3,7 @@ import ActionTypes      from '../constants/action_types';
 
 export function goHome() {
     return {
-        type: ActionTypes.HOME
+        type: ActionTypes.GO_HOME
     };
 }
 
@@ -12,11 +12,5 @@ export function setActivateTab(key) {
     return {
         type: ActionTypes.SET_ACTIVATE_TAB,
         key
-    };
-}
-
-export function signUpPage() {
-    return {
-        type: ActionTypes.SIGNUP_PAGE
     };
 }

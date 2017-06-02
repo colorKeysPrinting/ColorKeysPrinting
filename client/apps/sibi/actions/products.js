@@ -9,18 +9,14 @@ export function setActivePage(key, content) {
     };
 }
 
-export function updateInfoBar(key) {
+// /////////////////////////////////////
+//             ASYNC CALLS
+// /////////////////////////////////////
+export function removeProduct(key, product) {
     return {
-        type: ActionTypes.UPDATE_INFO_BAR,
-        key
-    };
-}
-
-export function createNewList(key, newItem) {
-    return {
-        type: ActionTypes.CREATE_NEW_LIST,
+        type: ActionTypes.REMOVE_PRODUCT,
         key,
-        newItem
+        product
     };
 }
 
@@ -33,10 +29,17 @@ export function addToList(key, listName, modelNum) {
     };
 }
 
-export function removeProduct(key, product) {
+export function createNewList(key, newItem) {
     return {
-        type: ActionTypes.REMOVE_PRODUCT,
+        type: ActionTypes.CREATE_NEW_LIST,
         key,
-        product
+        newItem
+    };
+}
+
+export function updateInfoBar(key) {
+    return {
+        type: ActionTypes.UPDATE_INFO_BAR,
+        key
     };
 }
