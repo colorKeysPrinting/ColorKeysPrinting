@@ -114,8 +114,8 @@ export default function Matchup(props) {
                     <div style={styles.price}>${(matchup.price).formatMoney(2, '.', ',')}</div>
                 </div>
                 <div>
-                    <div onClick={()=>{props.addToTruck(matchup)}} style={styles.submitBtn}>Add to truck</div>
-                    <div onClick={()=>{props.viewItems(matchup.items)}} style={styles.viewItem}>view items</div>
+                    <div onClick={()=>props.addToTruck(matchup)} style={styles.submitBtn}>Add to truck</div>
+                    <div onClick={()=>props.showOverlay('customMatchup', {name: matchup.name, products: matchup.items})} style={styles.viewItem}>view items</div>
                 </div>
             </div>
         </div>

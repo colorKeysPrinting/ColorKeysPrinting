@@ -3,7 +3,7 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
-import { addToTruck }           from '../../../actions/application';
+import { addToTruck, showOverlay }           from '../../../actions/application';
 
 import Matchup                  from './matchup';
 
@@ -14,7 +14,7 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {addToTruck}, null, {withRef: true})
+@connect(select, {addToTruck, showOverlay}, null, {withRef: true})
 export default class Matchups extends React.Component {
 
     constructor(props) {
@@ -24,7 +24,6 @@ export default class Matchups extends React.Component {
 
         this.update = this.update.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
-        this.viewItems = this.viewItems.bind(this);
     }
 
     update(type, value) {
@@ -45,10 +44,6 @@ export default class Matchups extends React.Component {
         }
 
         this.props.addToTruck({...matchup, tonnage, seer, applicationType});
-    }
-
-    viewItems(items) {
-        console.log('items: ', items);
     }
 
     render() {
@@ -102,7 +97,7 @@ export default class Matchups extends React.Component {
                     applicationType={this.state.applicationType}
                     update={this.update}
                     addToTruck={this.addToTruck}
-                    viewItems={this.viewItems} />
+                    showOverlay={this.props.showOverlay} />
             );
         });
 

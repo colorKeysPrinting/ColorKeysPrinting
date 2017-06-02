@@ -90,10 +90,10 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
     matchups: [
         {matchup: 'standard', items:['DSXC19', 'GMVC9', 'DSXC17', 'GMVC7']},
 
-        {matchup: 'DSXC19',  name: 'Gas Split-System',          image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 1458.00, items: {'GSX140421': 1, 'GMS80805CN': 1, 'CAPF4860C6': 1}},
-        {matchup: 'GMVC9',   name: 'Heat Pump Split-System',    image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 1458.00, items: {'GSZ140361': 3, 'ARUF37C14': 1, 'HKSX10XC': 1}},
-        {matchup: 'DSXC17',  name: 'Package Gas System',        image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 1458.00, items: {'GXZ140601': 1, 'ASPT61D14': 2, 'HKSC15': 1}, applicationTypeOptions: {multiPosition: 'Multi-Position', singlePosition: 'Single Position'}},
-        {matchup: 'GMVC7',   name: 'Package Heat Pump System',  image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 1458.00, items: {'GXZ140601': 1,'ASPT61D14': 1, 'HKSC15': 5}, applicationTypeOptions: {multiPosition: 'Multi-Position', horizontalPosition: 'Horizontal'}},
+        {matchup: 'DSXC19',  name: 'Gas Split-System',          image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 1419.16, items: {'GSX140421': 1, 'GMS80805CN': 1, 'CAPF4860C6': 1}},
+        {matchup: 'GMVC9',   name: 'Heat Pump Split-System',    image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 3262.66, items: {'GSZ140361': 3, 'ARUF37C14': 1, 'HKSX10XC': 1}},
+        {matchup: 'DSXC17',  name: 'Package Gas System',        image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 2568.77, items: {'GXZ140601': 1, 'ASPT61D14': 2, 'HKSC15': 1}, applicationTypeOptions: {multiPosition: 'Multi-Position', singlePosition: 'Single Position'}},
+        {matchup: 'GMVC7',   name: 'Package Heat Pump System',  image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 2290.57, items: {'GXZ140601': 1,'ASPT61D14': 1, 'HKSC15': 5}, applicationTypeOptions: {multiPosition: 'Multi-Position', horizontalPosition: 'Horizontal'}},
 
         {matchup: 'Dwight\'s Heat Pump Split-System', items: {'GSX140421': 1, 'GMS80805CN': 2}},
         {matchup: 'Dwight\'s Gas Split-System',       items: {'ARUF37C14': 1, 'HKSX10XC': 3, 'GXZ140601': 1}}
