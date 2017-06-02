@@ -1,3 +1,4 @@
+import '../../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
 import { connect }              from 'react-redux';
 import _                        from 'lodash';
@@ -119,13 +120,12 @@ export default class MatchupsCustom extends React.Component {
                 items = <div onClick={()=>this.props.setActivePage('products', '')} style={styles.blueTxt} >Add Products</div>;
             }
 
-
             return (
                 <tr key={key}>
                     <td>{name}</td>
                     <td>{items}</td>
                     <td onClick={()=>this.props.showOverlay('customMatchup', {name, products: matchup.items})} style={styles.blueTxt} >View Products</td>
-                    <td>{matchup.price}</td>
+                    <td>${(matchup.price).formatMoney(2, '.', ',')}</td>
                     <td onClick={()=>this.addToTruck(matchup)} style={styles.blueTxt}>Add to truck</td>
                     <td><div onClick={()=>this.delete(name)} style={styles.delete}><img src={''} alt="delete"/></div></td>
                 </tr>
