@@ -277,7 +277,7 @@ export default class ViewMatchupOverlay extends React.Component {
                                 <td style={{width: '20%'}}>SHIPPING: ${(this.state.shipping).formatMoney(2, '.')}</td>
                                 <td style={{width: '20%'}}>SALES TAX: ${(this.state.salesTax).formatMoney(2)}</td>
                                 <td style={{width: '20%'}}>TOTAL: ${(this.state.total).formatMoney(2, '.', ',')}</td>
-                                <td><div onClick={()=>this.addAllToTruck(this.state.items)} style={styles.submitBtn}>Add All Items to Cart</div></td>
+                                <td><div onClick={()=>this.addAllToTruck(this.state.items)} style={styles.submitBtn}>Add All Items to Truck</div></td>
                             </tr>
                         </tbody>
                     </table>

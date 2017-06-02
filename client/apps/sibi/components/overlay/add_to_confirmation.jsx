@@ -8,7 +8,7 @@ export default function AddToConfirmationOverlay(props) {
             borderRadius: '5px',
             border: '1px solid rgba(50, 50, 50, 0.4)',
             boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-            width: '490px',
+            width: '625px',
             margin: '10em auto',
             zIndex: '999'
         },
@@ -19,18 +19,12 @@ export default function AddToConfirmationOverlay(props) {
             borderTopRightRadius: '5px',
             boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
             height: '20%',
-            width: '100%'
+            width: '100%',
+            padding: '30px',
+            textAlign: 'left',
         },
         title: {
-            textAlign: 'left',
-            padding: '30px',
-            width: '90%'
-        },
-        close: {
-            cursor: 'pointer',
-            textAlign: 'right',
-            padding: '30px',
-            width: '10%'
+            color: '#06cfe5'
         },
         content: {
             width: '89%',
@@ -38,13 +32,36 @@ export default function AddToConfirmationOverlay(props) {
             marginTop: '40px',
             textAlign: 'left'
         },
+        image: {
+            margin: '10px',
+        },
+        text: {
+            color: '#F00',
+            padding: '10px'
+        },
         submitBtn: {
+            backgroundColor: '#06cfe5',
             borderRadius: '5px',
+            color: '#FFF',
             cursor: 'pointer',
-            height: '40px',
-            width: '86%',
-            margin: '20px auto',
-            paddingTop: '10px'
+            width: '200px',
+            height: '46px',
+            margin: '7px auto',
+            textAlign: 'center',
+            fontSize: '18px',
+            paddingTop: '14px'
+        },
+        viewMatchup: {
+            border: '1px solid #C0C0C0',
+            borderRadius: '5px',
+            color: 'rgb(47, 205, 237)',
+            cursor: 'pointer',
+            paddingTop: '14px',
+            width: '200px',
+            height: '46px',
+            fontSize: '18px',
+            margin: '7px auto',
+            textAlign: 'center',
         }
     };
 
@@ -53,20 +70,21 @@ export default function AddToConfirmationOverlay(props) {
     return (
         <div style={styles.container}>
             <div style={ styles.titleBar }>
-                <div style={styles.title}>1 Item Added to <div>{props.addToConfTitle}</div></div>
+                <div>1 Item Added to </div>
+                <div style={styles.title}>{props.title}</div>
             </div>
             <div style={styles.content}>
-                <div>
-                    <div><img src={''} alt={props.product.modelNum} /></div>
+                <div style={{display: 'inline-flex'}}>
+                    <div><img src={''} alt={props.product.modelNum} height="200" width="175" style={styles.image}/></div>
                     <div>
                         <div>{props.product.name}</div>
-                        <div>{props.product.modelNum}</div>
+                        <div>Model # {props.product.modelNum}</div>
                     </div>
                 </div>
-                <div>*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>
-                <div>
-                    <div onClick={()=>props.changeOverlay('customMatchup')}>View Matchup</div>
-                    <div onClick={props.close}>Continue Shopping</div>
+                <div style={styles.text}>*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>
+                <div style={{display: 'inline-flex', width: '100%'}}>
+                    <div onClick={()=>props.changeOverlay('customMatchup')} style={styles.viewMatchup}>View Matchup</div>
+                    <div onClick={props.close} style={styles.submitBtn}>Continue Shopping</div>
                 </div>
             </div>
         </div>

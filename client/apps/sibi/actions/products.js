@@ -33,11 +33,11 @@ export function createNewList(key, newItem) {
     };
 }
 
-export function addToList(key, name, newItem) {
+export function addToList(key, listName, modelNum) {
     return {
         type: ActionTypes.ADD_TO_LIST,
         key,
-        name,
-        newItem
+        listName,
+        modelNum
     };
 }

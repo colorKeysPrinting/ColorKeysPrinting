@@ -31,7 +31,7 @@ export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeOverlay: '', overlayObj: '', addToConfTitle: '', errorMsg: '', email: '', password: '', newList: '', newItem: '', contractGoodman: false, contractAsure: false};
+        this.state = {activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '', contractGoodman: false, contractAsure: false};
 
         this.resetState = this.resetState.bind(this);
         this.changeOverlay = this.changeOverlay.bind(this);
@@ -47,8 +47,6 @@ export default class Overlay extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.activeOverlay) {
             this.setState({activeOverlay: nextProps.activeOverlay});
-        } else {
-            this.setState({activeOverlay: ''});
         }
 
         if(nextProps.overlayObj) {
@@ -129,16 +127,10 @@ export default class Overlay extends React.Component {
         this.close();
     }
 
-    submitAddToBtn(type, name) {
+    submitAddToBtn(type, listName) {
         console.log('submit add to clicked');
 
-        this.props.addToList(type, name, this.state.overlayObj.modelNum);
-
-        this.setState({addToConfTitle: name});
-
-        this.changeOverlay('addToConfirmation');
-        // this.resetState();
-        // this.props.closeOverlay();
+        this.props.addToList(type, listName, this.state.overlayObj.modelNum);
     }
 
     addToTruck(items) {
@@ -211,9 +203,9 @@ export default class Overlay extends React.Component {
                 break;
             case 'addToConfirmation':
                 overlay = <AddToConfirmation
-                                product={_.find(this.props.products, (product)=>{debugger; return product.modelNum === this.state.overlayObj.modelNum})}
-                                addToConfTitle={this.state.addToConfTitle}
-                                changeOverlay={this.changeOverlay}
+                                title={this.state.overlayObj.name}
+                                product={_.find(this.props.products, (product)=>{return product.modelNum === this.state.overlayObj.modelNum})}
+                                changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
                                 close={this.close} />;
                 break;
             case 'addNewList':

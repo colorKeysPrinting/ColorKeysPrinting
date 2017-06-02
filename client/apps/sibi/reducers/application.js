@@ -269,25 +269,28 @@ export default (state = initialState, action)=>{
             break;
         case ActionTypes.ADD_TO_LIST:
             let index;
-            console.log('add to ' + action.name, action.newItem);
+            console.log('add to ' + action.listName, action.modelNum);
 
             switch(action.key) {
                 case 'customMatchups':
                     let matchups = state.get('matchups').toJS();
-                    index = _.findIndex(matchups, ['matchup', action.name]);
+                    index = _.findIndex(matchups, ['matchup', action.listName]);
                     let matchup = matchups[index];
 
-                    if(matchup.items[action.newItem]) {
-                        matchup.items[action.newItem] += 1;
+                    if(matchup.items[action.modelNum]) {
+                        matchup.items[action.modelNum] += 1;
 
                     } else {
-                        matchup.items[action.newItem] = 1;
+                        matchup.items[action.modelNum] = 1;
                     }
 
                     matchups[index] = matchup;
 
                     state = state.update('matchups', value=>Immutable.fromJS(matchups));
                     console.log('current matchups:', state.get('matchups').toJS());
+
+                    state = state.set('activeOverlay', 'addToConfirmation');
+                    state = state.set('overlayObj', {name: action.listName, modelNum: action.modelNum, products: matchup.items});
                     break;
                 case 'myLists':
                     let myLists = state.getIn(['activeUser', 'myLists']).toJS();
