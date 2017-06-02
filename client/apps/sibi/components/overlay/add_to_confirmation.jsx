@@ -1,6 +1,6 @@
 import React    from 'react';
 
-export default function AddNewListOverlay(props) {
+export default function AddToConfirmationOverlay(props) {
 
     let styles = {
         container: {
@@ -49,30 +49,26 @@ export default function AddNewListOverlay(props) {
     };
 
     let title;
-    switch(props.overlayObj.type) {
-        case 'customMatchups':
-            title = 'Custom Matchup';
-            break;
-        case 'myLists':
-            title = 'List';
-            break;
-        default:
-    }
 
     return (
         <div style={styles.container}>
             <div style={ styles.titleBar }>
-                <div style={styles.title}>Create New {title}</div>
-                <div onClick={props.close} style={styles.close}>X</div>
+                <div style={styles.title}>1 Item Added to <div>{props.addToConfTitle}</div></div>
             </div>
-            <form onSubmit={()=>props.submitCreateListBtn(props.overlayObj.type)}>
-                <div style={styles.content}>
-                    <div style={{width: '95%', margin: 'auto'}}>Name your new {(title).toLowerCase()}</div>
-                    <input type="text" placeholder="My Favorites" value={props.newList} onChange={(e)=>{props.update('newList', e.target.value)}} style={{width: '420px'}} required/>
+            <div style={styles.content}>
+                <div>
+                    <div><img src={''} alt={props.product.modelNum} /></div>
+                    <div>
+                        <div>{props.product.name}</div>
+                        <div>{props.product.modelNum}</div>
+                    </div>
                 </div>
-
-                <input className="button" type="submit" value="Submit" style={ styles.submitBtn }/>
-            </form>
+                <div>*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>
+                <div>
+                    <div onClick={()=>props.changeOverlay('customMatchup')}>View Matchup</div>
+                    <div onClick={props.close}>Continue Shopping</div>
+                </div>
+            </div>
         </div>
     );
 }

@@ -9,7 +9,6 @@ import { addToTruck }           from '../../actions/application';
 let select = (state)=>{
     return {
         currLang            : state.application.get('currLanguage'),
-        products            : state.application.get('products').toJS(),
         salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate'])
     };
 };

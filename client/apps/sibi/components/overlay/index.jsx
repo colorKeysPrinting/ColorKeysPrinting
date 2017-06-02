@@ -10,6 +10,7 @@ import FileUploader             from './file_uploader';
 import Agreement                from './agreement';
 import ProductAddTo             from './product_add_to'
 import Radio                    from './radio';
+import AddToConfirmation        from './add_to_confirmation';
 import AddNewList               from './add_new_list';
 import ViewMatchup              from './view_matchup';
 
@@ -17,6 +18,7 @@ let select = (state)=>{
     return {
         activeOverlay       : state.application.get('activeOverlay'),
         overlayObj          : state.application.get('overlayObj'),
+        products            : state.application.get('products').toJS(),
         contractGoodman     : state.application.getIn(['contracts','goodman']),
         contractAsure       : state.application.getIn(['contracts','asure'])
     }
@@ -29,7 +31,7 @@ export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '', contractGoodman: false, contractAsure: false};
+        this.state = {activeOverlay: '', overlayObj: '', addToConfTitle: '', errorMsg: '', email: '', password: '', newList: '', newItem: '', contractGoodman: false, contractAsure: false};
 
         this.resetState = this.resetState.bind(this);
         this.changeOverlay = this.changeOverlay.bind(this);
@@ -94,8 +96,7 @@ export default class Overlay extends React.Component {
         if(isCorrect) {
 
             this.props.addDocument(type, value);
-            this.resetState();
-            this.props.closeOverlay();
+            this.close();
             return true;
 
         } else {
@@ -125,16 +126,19 @@ export default class Overlay extends React.Component {
             this.props.addToList(type, this.state.newList, this.state.overlayObj.modelNum); // TODO: check to make sure this functionality is correct,
                                                                                             // when you create a new list the product you clicked on will be added to that list
         }
-        this.resetState();
-        this.props.closeOverlay();
+        this.close();
     }
 
     submitAddToBtn(type, name) {
         console.log('submit add to clicked');
 
         this.props.addToList(type, name, this.state.overlayObj.modelNum);
-        this.resetState();
-        this.props.closeOverlay();
+
+        this.setState({addToConfTitle: name});
+
+        this.changeOverlay('addToConfirmation');
+        // this.resetState();
+        // this.props.closeOverlay();
     }
 
     addToTruck(items) {
@@ -205,6 +209,13 @@ export default class Overlay extends React.Component {
                                 close={this.close}
                                 submitAddToBtn={this.submitAddToBtn} />;
                 break;
+            case 'addToConfirmation':
+                overlay = <AddToConfirmation
+                                product={_.find(this.props.products, (product)=>{debugger; return product.modelNum === this.state.overlayObj.modelNum})}
+                                addToConfTitle={this.state.addToConfTitle}
+                                changeOverlay={this.changeOverlay}
+                                close={this.close} />;
+                break;
             case 'addNewList':
                 overlay = <AddNewList
                                 newList={this.state.newList}
@@ -216,6 +227,7 @@ export default class Overlay extends React.Component {
             case 'customMatchup':
                 overlay = <ViewMatchup
                                 overlayObj={this.state.overlayObj}
+                                products={this.props.products}
                                 close={this.close} />;
                 break;
             default:
