@@ -59,3 +59,10 @@ export function addToTruck(item) {
         item
     }
 }
+
+export function getStripeToken(obj) {
+    return {
+        type: ActionTypes.GET_STRIPE_TOKEN,
+        obj
+    };
+}

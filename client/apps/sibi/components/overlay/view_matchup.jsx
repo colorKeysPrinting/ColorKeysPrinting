@@ -88,6 +88,7 @@ export default class ViewMatchupOverlay extends React.Component {
         let calc = this.calculate(items);
 
         this.setState({items, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total});
+        // TODO: this will eventually need to go to the store to be removed or make a server call
     }
 
     addItemToTruck(item) {

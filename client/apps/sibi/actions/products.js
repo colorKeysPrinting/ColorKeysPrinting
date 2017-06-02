@@ -9,15 +9,6 @@ export function setActivePage(key, content) {
     };
 }
 
-export function showRadioOverlay(key,) {
-    return {
-        type: ActionTypes.SHOW_RADIO_OVERLAY,
-        key,
-        modelNum,
-        mouseCoord
-    };
-}
-
 export function updateInfoBar(key) {
     return {
         type: ActionTypes.UPDATE_INFO_BAR,
@@ -39,5 +30,13 @@ export function addToList(key, listName, modelNum) {
         key,
         listName,
         modelNum
+    };
+}
+
+export function removeProduct(key, product) {
+    return {
+        type: ActionTypes.REMOVE_PRODUCT,
+        key,
+        product
     };
 }

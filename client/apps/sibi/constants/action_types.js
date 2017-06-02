@@ -17,19 +17,20 @@ const actionTypes = [
 
 // products
     "SET_ACTIVE_PAGE",
-    "SHOW_RADIO_OVERLAY",
     "UPDATE_INFO_BAR",
-    "UPLOAD_DOCUMENT",
-    "ACCEPT_AGREEMENT",
     "CREATE_NEW_LIST",
     "ADD_TO_LIST",
+    "REMOVE_PRODUCT",
+
+// signup
+    "UPLOAD_DOCUMENT",
+    "ACCEPT_AGREEMENT",
 ];
 
 // These types will receive a _DONE
 const asyncActionTypes = [
 // application
     "PASSWORD_RESET",
-// products
     "GET_STRIPE_TOKEN"
 ];
 

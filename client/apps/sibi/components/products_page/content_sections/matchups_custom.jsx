@@ -37,6 +37,11 @@ export default class MatchupsCustom extends React.Component {
 
     delete(matchup) {
         console.log('delete: ', matchup);
+
+        let matchups = _.remove(this.state.matchups, (obj)=>{return obj !== matchup});
+
+        this.setState({matchups});
+        // TODO: this will eventually need to go to the store to be removed or make a server call
     }
 
     addToTruck(matchup) {
