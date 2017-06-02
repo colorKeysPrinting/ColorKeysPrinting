@@ -1,3 +1,4 @@
+import '../../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
@@ -85,7 +86,7 @@ export default class Product extends React.Component {
                 </div>
                 <div style={{display: 'inline-flex'}}>
                     <div style={styles.prodInfo}>
-                        <div style={styles.price}>${product.price}</div>
+                        <div style={styles.price}>${(product.price).formatMoney(2, '.', ',')}</div>
                         <div style={styles.modelNum}>#{product.modelNum}</div>
                     </div>
                     <div onClick={()=>{this.props.addToTruck(product)}} style={styles.submitBtn}>Add to truck</div>

@@ -3,7 +3,7 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
-import { showOverlay }          from '../../../actions/application';
+import { showOverlay, addToTruck }          from '../../../actions/application';
 import { setActivePage }        from '../../../actions/products';
 
 let select = (state)=>{
@@ -14,13 +14,13 @@ let select = (state)=>{
     };
 };
 
-@connect(select, { showOverlay, setActivePage }, null, {withRef: true})
+@connect(select, { showOverlay, setActivePage, addToTruck }, null, {withRef: true})
 export default class MatchupsCustom extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {matchups: this.props.myMatchups, tonnage: '', seer: '', applicationType: ''};
+        this.state = {matchups: this.props.myMatchups};
 
         this.delete = this.delete.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
@@ -41,6 +41,8 @@ export default class MatchupsCustom extends React.Component {
 
     addToTruck(matchup) {
         console.log('addToTruck: ', matchup);
+
+        this.props.addToTruck(matchup);
     }
 
     newMatchup(){
@@ -117,9 +119,9 @@ export default class MatchupsCustom extends React.Component {
                 <tr key={key}>
                     <td>{name}</td>
                     <td>{items}</td>
-                    <td onClick={()=>this.props.showOverlay('customMatchup', {name, products: matchup.items})} style={styles.blueTxt}>View Products</td>
+                    <td onClick={()=>this.props.showOverlay('customMatchup', {name, products: matchup.items})} style={styles.blueTxt} >View Products</td>
                     <td>{matchup.price}</td>
-                    <td onClick={()=>this.addToTruck({[name]: matchup})} style={styles.blueTxt}>Add to truck</td>
+                    <td onClick={()=>this.addToTruck(matchup)} style={styles.blueTxt}>Add to truck</td>
                     <td><div onClick={()=>this.delete(name)} style={styles.delete}><img src={''} alt="delete"/></div></td>
                 </tr>
             );

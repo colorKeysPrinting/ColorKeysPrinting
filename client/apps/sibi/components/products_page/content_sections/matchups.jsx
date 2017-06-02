@@ -3,6 +3,8 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
+import { addToTruck }           from '../../../actions/application';
+
 import Matchup                  from './matchup';
 
 let select = (state)=>{
@@ -12,7 +14,7 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {}, null, {withRef: true})
+@connect(select, {addToTruck}, null, {withRef: true})
 export default class Matchups extends React.Component {
 
     constructor(props) {
@@ -33,6 +35,16 @@ export default class Matchups extends React.Component {
 
     addToTruck(matchup) {
         console.log('matchup: ', matchup);
+        let tonnage, seer, applicationType;
+
+        tonnage = (this.state.tonnage) ? this.state.tonnage : matchup.tonnageOptions[0];
+        seer = (this.state.seer) ? this.state.seer : matchup.seerOptions[0];
+
+        if(matchup.applicationTypeOptions) {
+            applicationType = (this.state.applicationType) ? this.state.applicationType : matchup.applicationTypeOptions[0];
+        }
+
+        this.props.addToTruck({...matchup, tonnage, seer, applicationType});
     }
 
     viewItems(items) {

@@ -1,10 +1,11 @@
+import '../../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
 export default function Matchup(props) {
 
-    let tonnageSelect = '', seerSelect = '', applicationTypeSelect= '';
+    let tonnageSelect, seerSelect, applicationTypeSelect;
 
     let styles = {
         container: {
@@ -62,34 +63,30 @@ export default function Matchup(props) {
 
     let matchup = props.matchup;
 
-    if(matchup.tonnage) {
-        let optionsTon = _.map(matchup.tonnage, (value, key)=>{
-            return (<option key={key+'tonnage'} value={value}>{value} Tons</option>);
-        });
+    let optionsTon = _.map(matchup.tonnageOptions, (value, key)=>{
+        return (<option key={key+'tonnage'} value={value}>{value} Tons</option>);
+    });
 
-        tonnageSelect = <div>
-                            <h3 style={styles.label}>Tonnage</h3>
-                            <select value={props.tonnage} onChange={ (e)=>props.update('tonnage', e.target.value) } style={styles.dropdown}>
-                                {optionsTon}
-                            </select>
-                        </div>;
-    }
-
-    if(matchup.seer) {
-        let optionsSeer = _.map(matchup.seer, (value, key)=>{
-            return (<option key={key+'seer'} value={value}>{value} SEER</option>);
-        });
-
-        seerSelect = <div>
-                        <h3 style={styles.label}>SEER Rating</h3>
-                        <select value={props.seer} onChange={ (e)=>props.update('seer', e.target.value) } style={styles.dropdown}>
-                            {optionsSeer}
+    tonnageSelect = <div>
+                        <h3 style={styles.label}>Tonnage</h3>
+                        <select value={props.tonnage} onChange={ (e)=>props.update('tonnage', e.target.value) } style={styles.dropdown}>
+                            {optionsTon}
                         </select>
-                     </div>;
-    }
+                    </div>;
 
-    if(matchup.applicationType) {
-        let optionsApplicationType = _.map(matchup.applicationType, (value, key)=>{
+    let optionsSeer = _.map(matchup.seerOptions, (value, key)=>{
+        return (<option key={key+'seer'} value={value}>{value} SEER</option>);
+    });
+
+    seerSelect = <div>
+                    <h3 style={styles.label}>SEER Rating</h3>
+                    <select value={props.seer} onChange={ (e)=>props.update('seer', e.target.value) } style={styles.dropdown}>
+                        {optionsSeer}
+                    </select>
+                 </div>;
+
+    if(matchup.applicationTypeOptions) {
+        let optionsApplicationType = _.map(matchup.applicationTypeOptions, (value, key)=>{
             return (<option key={key+'applicationType'} value={value}>{value}</option>);
         });
 
@@ -108,13 +105,13 @@ export default function Matchup(props) {
                 <h2 style={styles.name}>{matchup.name}</h2>
             </div>
             {applicationTypeSelect}
-            <div style={{display: (matchup.applicationType) ? 'inline-flex': ''}}>
+            <div style={{display: (matchup.applicationType) ? 'inline-flex' : ''}}>
                 {tonnageSelect}
                 {seerSelect}
             </div>
             <div style={{display: 'inline-flex'}}>
                 <div style={styles.prodInfo}>
-                    <div style={styles.price}>${matchup.price}</div>
+                    <div style={styles.price}>${(matchup.price).formatMoney(2, '.', ',')}</div>
                 </div>
                 <div>
                     <div onClick={()=>{props.addToTruck(matchup)}} style={styles.submitBtn}>Add to truck</div>
