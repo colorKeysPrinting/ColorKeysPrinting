@@ -4,13 +4,15 @@ import { Link }                 from 'react-router';
 import _                        from 'lodash';
 import assets                   from '../../libs/assets';
 
-import Tabs                     from './tabs';
 import * as HeaderActions       from '../../actions/header';
 import { showOverlay }          from '../../actions/application';
+
+import Tabs                     from './tabs';
 
 let select = (state)=>{
     return {
         activeUserType  : state.application.getIn(['activeUser', 'type']),
+        profilePic      : state.application.getIn(['activeUser', 'profilePic']),
         activeTab       : state.application.get('activeTab')
     };
 };
@@ -34,7 +36,6 @@ export default class HeaderBar extends React.Component {
     }
 
     render() {
-        const sibiLogo = assets('./images/sibi_logo_white.png');
         let loginSection;
 
         let styles = {
@@ -54,7 +55,21 @@ export default class HeaderBar extends React.Component {
                 margin: '20px'
             },
             profileSection: {
-                display: 'inline-flex'
+                display: 'inline-flex',
+
+                profilePic: {
+                    borderRadius: '40px',
+                    margin: '20px 10px',
+                    cursor: 'pointer'
+                },
+                search: {
+                    margin: '28px 10px',
+                    cursor: 'pointer'
+                },
+                truck: {
+                    margin: '28px 10px',
+                    cursor: 'pointer'
+                }
             },
             login: {
                 padding: '11px',
@@ -78,24 +93,24 @@ export default class HeaderBar extends React.Component {
 
         if(!this.props.activeUserType || this.props.activeUserType === 'signUp') {
             loginSection = <div style={styles.loginSection}>
-                <div onClick={ ()=>this.props.showOverlay('login') } style={styles.login}>Login</div>
+                <div onClick={()=>this.props.showOverlay('login') } style={styles.login}>Login</div>
                 <Link to={`/signup`} style={styles.signUp} >Sign Up</Link>
             </div>;
 
         } else {
             loginSection = <div style={styles.profileSection}>
-                <div /*onHover={ ()=>{console.log('profileDropdown')}}*/><image src={''} alt="profilePicture"/>picture</div>
-                <div onClick={ ()=>{console.log('TODO: activate search window')}}><image src={''} alt="search"/>search</div>
-                <Link to={`/truck`}><image src={''} alt="truck"/>truck</Link>
+                <div onClick={()=>this.props.showOverlay('profile')}><img src={assets(this.props.profilePic)} alt="profilePicture" width="40px" height="40px" style={styles.profileSection.profilePic}/></div>
+                <div onClick={()=>{console.log('TODO: activate search window')}}><img src={assets('./images/icons-search-large.png')} alt="search" width="25px" height="25px" style={styles.profileSection.search}/></div>
+                <Link to={`/truck`}><img src={assets('./images/icons-truck.png')} alt="truck" height="25px" style={styles.profileSection.truck}/></Link>
             </div>;
         }
 
-        // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <image src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
+        // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <img src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
         let to = (this.props.activeUserType && this.props.activeUserType !== 'signUp') ? `/products` : `/`;
 
         return (
             <div id="header-bar" style={styles.header}>
-                <Link to={to} onClick={ (e)=>{ this.props.setActivateTab('products')}} ><img src={sibiLogo} alt="sibi logo" style={styles.sibiLogo}/></Link>
+                <Link to={to} onClick={ (e)=>this.props.setActivateTab('products')} ><img src={assets('./images/sibi_logo_white.png')} alt="sibi logo" style={styles.sibiLogo}/></Link>
                 <Tabs type={ this.props.activeUserType }
                       activeTab={ this.props.activeTab }
                       setActivateTab={ this.props.setActivateTab } />

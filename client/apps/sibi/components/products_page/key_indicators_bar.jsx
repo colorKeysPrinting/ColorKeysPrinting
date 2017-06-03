@@ -1,9 +1,8 @@
 import React                    from 'react';
 import _                        from 'lodash';
 
-import {}         from '../../actions/products';
-
 export default function KeyIndicatorsBar(props) {
+
     // only show upated information when the tab is loaded
     // have an action to edit the elements in the bar
 

@@ -23,6 +23,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
     activeUser: {
         type: 'sibi',
         username: 'JohnDoe',
+        profilePic: './images/profile_pic.jpg',
         JWT: '',
         settings: {
             language: 'English',
@@ -136,9 +137,14 @@ export default (state = initialState, action)=>{
             state = state.set('activeOverlay', '');
             state = state.setIn(['activeUser', 'type'], 'sibi'); // TODO: REMOVE THIS LINE FOR TESTING ONLY!
             // TODO: call API function
-            // browserHistory.push('/#/products');  //need to get this to go to the products route
-
             break;
+
+        case ActionTypes.LOGOUT:
+            console.log('logging out user:', action.username);
+            state = state.set('activeOverlay', '');
+            state = state.set('activeUser', {type: '',username: '',profilePic: '',JWT: '',settings: {language: '',keyIndicatorBars: {}},myProducts: {mostPurchased: []},myMatchups: {},myLists: {},filterPanel:{},myTruck: {}});
+            break;
+
         case ActionTypes.PASSWORD_RESET:
             console.log('password reset', action.email);
             state = state.set('activeOverlay', '');
@@ -177,6 +183,7 @@ export default (state = initialState, action)=>{
                 state = state.setIn(['temp','modelNum'], action.modelNum);
             }
             break;
+
         case ActionTypes.SHOW_RADIO_OVERLAY:
             console.log('show radio overlay', action.key);
             state = state.set('activeOverlay', action.key);
@@ -235,6 +242,7 @@ export default (state = initialState, action)=>{
             state = state.set('truck', newTruck);
             console.log('current Truck:', state.get('truck').toJS());
             break;
+
         case ActionTypes.CREATE_NEW_LIST:
             console.log('TODO: ASYNC CALL - create new: ' + action.key, action.newItem);
 
@@ -267,8 +275,8 @@ export default (state = initialState, action)=>{
                 default:
                     console.log('ERROR: no list specified!');
             }
-
             break;
+
         case ActionTypes.ADD_TO_LIST:
             let index;
             console.log('TODO: ASYNC CALL - add to ' + action.listName, action.modelNum);
@@ -304,9 +312,11 @@ export default (state = initialState, action)=>{
                 default:
             }
             break;
+
         case ActionTypes.DELETE_ITEM:
             console.log('delete call back');
             break;
+
         default:
     }
 

@@ -3,6 +3,7 @@ import wrapper  from './wrapper';
 const actionTypes = [
 // application
     "LOGIN", // TODO: change this to async, keep here during initial dev
+    "LOGOUT", // TODO: change this to async, keep here during initial dev
     "SHOW_OVERLAY",
     "SHOW_RADIO_OVERLAY",
     "CLOSE_OVERLAY",

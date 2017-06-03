@@ -1,6 +1,4 @@
 import React                                     from 'react';
-import { connect }                               from 'react-redux';
-
 import assets                                    from '../../libs/assets';
 
 export default function LoginOverlay(props) {

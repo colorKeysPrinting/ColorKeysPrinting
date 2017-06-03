@@ -1,7 +1,7 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
 
-import { login, showRadioOverlay, closeOverlay, passwordReset }      from '../../actions/application';
+import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
 import { createNewList, addToList }         from '../../actions/products';
 
@@ -13,18 +13,21 @@ import Radio                    from './radio';
 import AddToConfirmation        from './add_to_confirmation';
 import AddNewList               from './add_new_list';
 import ViewMatchup              from './view_matchup';
+import Profile                  from './profile';
 
 let select = (state)=>{
     return {
         activeOverlay       : state.application.get('activeOverlay'),
         overlayObj          : state.application.get('overlayObj'),
+        username            : state.application.getIn(['activeUser', 'username']),
+        profilePic          : state.application.getIn(['activeUser', 'profilePic']),
         products            : state.application.get('products').toJS(),
         contractGoodman     : state.application.getIn(['contracts','goodman']),
         contractAsure       : state.application.getIn(['contracts','asure'])
     }
 };
 
-let actions = {login, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewList, addToList};
+let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewList, addToList, changeLanguage};
 
 @connect(select, actions, null, {withRef: true})
 export default class Overlay extends React.Component {
@@ -144,7 +147,7 @@ export default class Overlay extends React.Component {
             overlayBackground: {
                 display: (this.state.activeOverlay !== '') ? 'block' : 'none',
                 position: 'absolute',
-                backgroundColor: (this.state.activeOverlay !== 'productAddTo') ? 'rgba(50, 50, 50, 0.4)' : '',
+                backgroundColor: (this.state.activeOverlay !== 'productAddTo' && this.state.activeOverlay !== 'profile') ? 'rgba(50, 50, 50, 0.4)' : '',
                 height: '100%',
                 width: '100%',
                 top: '0',
@@ -169,6 +172,17 @@ export default class Overlay extends React.Component {
                                 close={this.close}
                                 submitLoginBtn={this.submitLoginBtn} />
                 break;
+
+            case 'profile':
+                overlay = <Profile
+                                profilePic={this.props.profilePic}
+                                username={this.props.username}
+                                changeLanguage={this.props.changeLanguage}
+                                logout={this.props.logout} />;
+
+                closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
+                break;
+
             case 'docWorkerComp':
             case 'docW9':
             case 'docInsurance':
@@ -178,6 +192,7 @@ export default class Overlay extends React.Component {
                                 close={this.close}
                                 errorMsg={this.state.errorMsg} />
                 break;
+
             case 'contractGoodman':
             case 'contractAsure':
                 overlay = <Agreement
@@ -186,6 +201,7 @@ export default class Overlay extends React.Component {
                                 acceptAgreement={this.props.acceptAgreement}
                                 close={this.close} />
                 break;
+
             case 'productAddTo':
                 overlay = <ProductAddTo
                                 showRadioOverlay={this.props.showRadioOverlay} // to reducer func
@@ -194,6 +210,7 @@ export default class Overlay extends React.Component {
 
                 closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
                 break;
+
             case 'radioList':
                 overlay = <Radio
                                 overlayObj={this.state.overlayObj} // list of selected list elements
@@ -201,6 +218,7 @@ export default class Overlay extends React.Component {
                                 close={this.close}
                                 submitAddToBtn={this.submitAddToBtn} />;
                 break;
+
             case 'addToConfirmation':
                 overlay = <AddToConfirmation
                                 title={this.state.overlayObj.name}
@@ -208,6 +226,7 @@ export default class Overlay extends React.Component {
                                 changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
                                 close={this.close} />;
                 break;
+
             case 'addNewList':
                 overlay = <AddNewList
                                 newList={this.state.newList}
@@ -216,12 +235,14 @@ export default class Overlay extends React.Component {
                                 close={this.close}
                                 submitCreateListBtn={this.submitCreateListBtn} />;
                 break;
+
             case 'customMatchup':
                 overlay = <ViewMatchup
                                 overlayObj={this.state.overlayObj}
                                 products={this.props.products}
                                 close={this.close} />;
                 break;
+
             default:
         }
 

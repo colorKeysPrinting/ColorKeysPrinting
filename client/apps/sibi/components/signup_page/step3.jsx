@@ -1,7 +1,5 @@
 import React                    from 'react';
-import { connect }              from 'react-redux';
 import assets                   from '../../libs/assets';
-
 
 export default function SignUpStep3(props) {
 

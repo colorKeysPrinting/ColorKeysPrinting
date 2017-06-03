@@ -24,14 +24,6 @@ export function closeOverlay() {
     };
 }
 
-export function login(username, password) {
-    return {
-        type: ActionTypes.LOGIN,
-        username,
-        password
-    };
-}
-
 export function changeLanguage(language) {
     return {
         type: ActionTypes.CHANGE_LANGUAGE,
@@ -49,6 +41,21 @@ export function addToTruck(item) {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
+export function login(username, password) {
+    return {
+        type: ActionTypes.LOGIN,
+        username,
+        password
+    };
+}
+
+export function logout(username) {
+    return {
+        type: ActionTypes.LOGOUT,
+        username
+    };
+}
+
 export function passwordReset(email) {
     // needs to be a async call
     return {
