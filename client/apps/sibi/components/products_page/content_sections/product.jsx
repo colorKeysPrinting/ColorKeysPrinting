@@ -74,7 +74,7 @@ export default class Product extends React.Component {
 
         return (
             <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>
-                <div onClick={()=>{this.props.productSelected(product)}} style={styles.productThumbnail}>
+                <div onClick={()=>{this.props.showSelectedProject(product)}} style={styles.productThumbnail}>
                     <div style={styles.plusBtn} onMouseOver={()=>this.onHover(true)} onMouseOut={()=>this.onHover(false)}>
                         <img src={assets('./images/plus_circle.png')}
                              alt="add"

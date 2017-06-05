@@ -9,6 +9,13 @@ export function setActivePage(key, content) {
     };
 }
 
+export function showSelectedProject(product) {
+    return {
+        type: ActionTypes.SHOW_SELECTED_PROJECT,
+        product
+    };
+}
+
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
@@ -42,4 +49,11 @@ export function updateInfoBar(key) {
         type: ActionTypes.UPDATE_INFO_BAR,
         key
     };
+}
+
+export function showProductDetails(product) {
+    return {
+        type: ActionTypes.SHOW_PRODUCT_DETAILS,
+        product
+    }
 }

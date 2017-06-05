@@ -7,6 +7,7 @@ import Index                          from './components/layout/index';
 import Home                           from './components/home';
 import SignUpPage                     from './components/signup_page';
 import ProductsPage                   from './components/products_page';
+import ProductDetails                 from './components/product_details';
 import NotFound                       from './components/common/not_found';
 
 export default (
@@ -19,6 +20,9 @@ export default (
     </Route>
     <Route path="/products" component={Index}>
       <IndexRoute component={ProductsPage} />
+    </Route>
+    <Route path="/product-details" component={Index}>
+      <IndexRoute component={ProductDetails} />
     </Route>
     <Route path="*" component={NotFound} />
   </Router>

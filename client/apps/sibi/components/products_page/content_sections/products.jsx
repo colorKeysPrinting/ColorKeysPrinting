@@ -3,7 +3,8 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
-import {showOverlay}            from '../../../actions/application';
+import { showOverlay }          from '../../../actions/application';
+import { showSelectedProject }  from '../../../actions/products';
 
 import Product                  from './product';
 
@@ -15,7 +16,7 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {showOverlay}, null, {withRef: true})
+@connect(select, {showOverlay, showSelectedProject}, null, {withRef: true})
 export default class Products extends React.Component {
 
     constructor(props) {
@@ -30,7 +31,6 @@ export default class Products extends React.Component {
 
         this.searchTerm = this.searchTerm.bind(this);
         this.sortBy = this.sortBy.bind(this);
-        this.productSelected = this.productSelected.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
     }
 
@@ -42,10 +42,6 @@ export default class Products extends React.Component {
     sortBy(sortBy) {
         console.log(sortBy);
         this.setState({sortBy});
-    }
-
-    productSelected(product) {
-        console.log('productSelected', product);
     }
 
     addToTruck(product) {
@@ -132,7 +128,7 @@ export default class Products extends React.Component {
                         <Product
                             key={key + 'mostPurchased'}
                             product={product}
-                            productSelected={this.productSelected}
+                            showSelectedProject={this.props.showSelectedProject}
                             addToTruck={this.addToTruck}
                             showOverlay={this.props.showOverlay} />
                     );

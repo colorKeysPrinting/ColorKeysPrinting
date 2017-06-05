@@ -4,6 +4,7 @@ const actionTypes = [
 // application
     "LOGIN", // TODO: change this to async, keep here during initial dev
     "LOGOUT", // TODO: change this to async, keep here during initial dev
+    "SHOW_PRODUCT_DETAILS", // TODO: change this to async, keep here during initial dev
     "SHOW_OVERLAY",
     "SHOW_RADIO_OVERLAY",
     "CLOSE_OVERLAY",
@@ -17,6 +18,7 @@ const actionTypes = [
 // products
     "SET_ACTIVE_PAGE",
     "UPDATE_INFO_BAR",
+    "SHOW_SELECTED_PROJECT",
     "CREATE_NEW_LIST", // needs to be a async call
     "ADD_TO_LIST", // needs to be a async call
 
