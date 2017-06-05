@@ -39,10 +39,12 @@ export default function ProfileOverlay(props) {
         }
     };
 
+    let profilePic = (props.profilePic) ? assets(props.profilePic) : '';
+
     return (
         <div style={styles.container}>
             <div style={{display: 'inline-flex'}}>
-                <div><img src={assets(props.profilePic)} alt={props.username} height="70px" width="70px" style={styles.profilePic} /></div>
+                <div><img src={profilePic} alt={props.username} height="70px" width="70px" style={styles.profilePic} /></div>
                 <div style={styles.username}>{props.username}</div>
             </div>
             <Link to={`/settings`} style={styles.element} >Settings</Link>

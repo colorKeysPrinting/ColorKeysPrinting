@@ -98,8 +98,10 @@ export default class HeaderBar extends React.Component {
             </div>;
 
         } else {
+            let profilePic = (this.props.profilePic) ? assets(this.props.profilePic) : '';
+
             loginSection = <div style={styles.profileSection}>
-                <div onClick={()=>this.props.showOverlay('profile')}><img src={assets(this.props.profilePic)} alt="profilePicture" width="40px" height="40px" style={styles.profileSection.profilePic}/></div>
+                <div onClick={()=>this.props.showOverlay('profile')}><img src={profilePic} alt="profilePicture" width="40px" height="40px" style={styles.profileSection.profilePic}/></div>
                 <div onClick={()=>{console.log('TODO: activate search window')}}><img src={assets('./images/icons-search-large.png')} alt="search" width="25px" height="25px" style={styles.profileSection.search}/></div>
                 <Link to={`/truck`}><img src={assets('./images/icons-truck.png')} alt="truck" height="25px" style={styles.profileSection.truck}/></Link>
             </div>;

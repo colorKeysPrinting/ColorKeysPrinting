@@ -15,11 +15,11 @@ let select = (state)=>{
         currLang            : state.application.get('currLanguage'),
         activePage          : state.application.get('activePage'),
         activePageContent   : state.application.get('activePageContent'),
-        keyIndicatorBars    : state.application.getIn(['activeUser', 'settings', 'keyIndicatorBars']).toJS(),
+        keyIndicatorBars    : state.application.getIn(['activeUser', 'settings', 'keyIndicatorBars']),
         keyIndicatorTypes   : state.application.get('keyIndicatorTypes'),
-        myMatchups          : state.application.getIn(['activeUser', 'myMatchups']).toJS(),
-        myLists             : state.application.getIn(['activeUser', 'myLists']).toJS(),
-        myFilterPanel       : state.application.getIn(['activeUser', 'filterPanel']).toJS(),
+        myMatchups          : state.application.getIn(['activeUser', 'myMatchups']),
+        myLists             : state.application.getIn(['activeUser', 'myLists']),
+        myFilterPanel       : state.application.getIn(['activeUser', 'filterPanel']),
     };
 };
 
@@ -78,14 +78,19 @@ export default class ProductsPage extends React.Component {
             content = <div>content page</div>;
 
         } else {
+            let activeKeyIndicatorBar   = (this.state.keyIndicatorBars.size > 0) ? this.state.keyIndicatorBars.get(this.state.activePage).toJS() : '';
+            let myMatchups              = (this.props.myMatchups && this.props.myMatchups.size > 0)       ? this.props.myMatchups.toJS() : [];
+            let myLists                 = (this.props.myLists && this.props.myLists.size > 0)             ? this.props.myLists.toJS() : [];
+            let myFilterPanel           = (this.props.myFilterPanel && this.props.myFilterPanel.size > 0) ? this.props.myFilterPanel.toJS() : [];
+
             content =   <div>
-                            <KeyIndicatorsBar activeKeyIndicatorBar={this.props.keyIndicatorBars[this.state.activePage]}/>
+                            <KeyIndicatorsBar activeKeyIndicatorBar={activeKeyIndicatorBar}/>
                             <div style={{display: 'inline-flex', width: '97%'}}>
                                 <FilterPanel
                                     changeContent={this.changeContent}
-                                    myMatchups={this.props.myMatchups}
-                                    myLists={this.props.myLists}
-                                    myFilterPanel={this.props.myFilterPanel} />
+                                    myMatchups={myMatchups}
+                                    myLists={myLists}
+                                    myFilterPanel={myFilterPanel} />
                                 <ContentPanel
                                     activePage={this.state.activePage}
                                     content={this.state.content} />

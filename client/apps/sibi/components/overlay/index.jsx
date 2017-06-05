@@ -50,6 +50,8 @@ export default class Overlay extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.activeOverlay) {
             this.setState({activeOverlay: nextProps.activeOverlay});
+        } else if (nextProps.activeOverlay === '') {
+            this.setState({activeOverlay: ''});
         }
 
         if(nextProps.overlayObj) {

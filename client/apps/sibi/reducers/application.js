@@ -136,13 +136,17 @@ export default (state = initialState, action)=>{
             console.log('login: ', action.username, action.password);
             state = state.set('activeOverlay', '');
             state = state.setIn(['activeUser', 'type'], 'sibi'); // TODO: REMOVE THIS LINE FOR TESTING ONLY!
+            history.pushState(null, '/products');
             // TODO: call API function
             break;
 
         case ActionTypes.LOGOUT:
             console.log('logging out user:', action.username);
+            history.pushState(null, '/');
+
+            let activeUser = Immutable.fromJS({type: '',username: '',profilePic: '',JWT: '',settings: {language: '',keyIndicatorBars: {}},myProducts: {mostPurchased: []},myMatchups: {},myLists: {},filterPanel:{},myTruck: {}});
+            state = state.set('activeUser', activeUser);
             state = state.set('activeOverlay', '');
-            state = state.set('activeUser', {type: '',username: '',profilePic: '',JWT: '',settings: {language: '',keyIndicatorBars: {}},myProducts: {mostPurchased: []},myMatchups: {},myLists: {},filterPanel:{},myTruck: {}});
             break;
 
         case ActionTypes.PASSWORD_RESET:
