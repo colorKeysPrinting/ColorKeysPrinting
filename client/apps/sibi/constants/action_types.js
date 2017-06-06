@@ -21,7 +21,6 @@ const actionTypes = [
     "CREATE_NEW_LIST", // needs to be a async call
     "ADD_TO_LIST", // needs to be a async call
 
-
 // signup
     "UPLOAD_DOCUMENT",
     "ACCEPT_AGREEMENT",

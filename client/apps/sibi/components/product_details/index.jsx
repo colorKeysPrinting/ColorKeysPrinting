@@ -13,7 +13,8 @@ let select = (state)=>{
     return {
         currLang          : state.application.get('currLanguage'),
         products          : state.application.get('products').toJS(),
-        productLocations  : state.application.get('productLocations').toJS()
+        productLocations  : state.application.get('productLocations').toJS(),
+        truck             : state.application.get('truck')
     };
 };
 
@@ -23,14 +24,22 @@ export default class ProductDetails extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {product: _.find(this.props.products, ['modelNum', this.props.params.modelNum]), qty: 1, location: this.props.productLocations[0], warranty: false};
+        this.state = {
+            product: _.find(this.props.products, ['modelNum', this.props.params.modelNum]), qty: 1, location: this.props.productLocations[0], warranty: false,
+            truck: (this.props.truck.size > 0) ? this.props.truck.toJS() : []
+        };
 
         this.update = this.update.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
     }
 
-    update(type, value) {
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.truck) {
+            this.setState({truck: nextProps.truck.toJS()});
+        }
+    }
 
+    update(type, value) {
         this.setState({[type]: value});
     }
 
@@ -139,7 +148,8 @@ export default class ProductDetails extends React.Component {
                         products={this.props.products}
                         addToTruck={this.props.addToTruck} />
                 </div>
-                <YourTruck />
+                <YourTruck
+                    truck={this.state.truck} />
             </div>
         );
     }
