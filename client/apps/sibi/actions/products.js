@@ -9,13 +9,6 @@ export function setActivePage(key, content) {
     };
 }
 
-export function showSelectedProject(product) {
-    return {
-        type: ActionTypes.SHOW_SELECTED_PROJECT,
-        product
-    };
-}
-
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////

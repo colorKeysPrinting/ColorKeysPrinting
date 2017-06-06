@@ -18,7 +18,6 @@ const actionTypes = [
 // products
     "SET_ACTIVE_PAGE",
     "UPDATE_INFO_BAR",
-    "SHOW_SELECTED_PROJECT",
     "CREATE_NEW_LIST", // needs to be a async call
     "ADD_TO_LIST", // needs to be a async call
 

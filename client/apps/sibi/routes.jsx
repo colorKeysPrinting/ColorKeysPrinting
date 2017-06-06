@@ -21,7 +21,7 @@ export default (
     <Route path="/products" component={Index}>
       <IndexRoute component={ProductsPage} />
     </Route>
-    <Route path="/product-details" component={Index}>
+    <Route path="/product-details/:modelNum" component={Index}>
       <IndexRoute component={ProductDetails} />
     </Route>
     <Route path="*" component={NotFound} />

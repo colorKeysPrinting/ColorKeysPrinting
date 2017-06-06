@@ -1,5 +1,6 @@
 import '../../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
+import { Link }                 from 'react-router';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
@@ -74,7 +75,7 @@ export default class Product extends React.Component {
 
         return (
             <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>
-                <div onClick={()=>{this.props.showSelectedProject(product)}} style={styles.productThumbnail}>
+                <Link to={`/product-details/${product.modelNum}`} style={styles.productThumbnail}>
                     <div style={styles.plusBtn} onMouseOver={()=>this.onHover(true)} onMouseOut={()=>this.onHover(false)}>
                         <img src={assets('./images/plus_circle.png')}
                              alt="add"
@@ -83,7 +84,7 @@ export default class Product extends React.Component {
                     </div>
                     <div style={styles.image}><img src={product.image} alt="picture" height="100%" width="100%"/></div>
                     <h2 style={styles.name}>{product.name}</h2>
-                </div>
+                </Link>
                 <div style={{display: 'inline-flex'}}>
                     <div style={styles.prodInfo}>
                         <div style={styles.price}>${(product.price).formatMoney(2, '.', ',')}</div>
