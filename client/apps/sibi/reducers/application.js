@@ -234,20 +234,37 @@ export default (state = initialState, action)=>{
 // product actions
         case ActionTypes.ADD_TO_TRUCK:
             console.log('adding item(s) to truck: ', action.item);
-            let key, item = action.item, truck = state.get('truck').toJS();
+            let item = action.item, truck = state.get('truck').toJS(), products = state.get('products').toJS();
 
             if(item.modelNum) {
-                key = item.modelNum;
+                let modelNum = item.modelNum
+                let index = _.findIndex(truck, ['modelNum', modelNum]);
+
+                if(index >= 0) {
+                    truck[index].qty += 1;
+                } else {
+                    if(!item.qty) {
+                        item['qty'] = 1
+                    }
+                    truck.push(item);
+                }
 
             } else if (item.matchup) {
-                key = item.matchup;
+                _.each(item.items, (qty, modelNum)=>{
+                    let index = _.findIndex(truck, ['modelNum', modelNum]);
 
-            } else {
-                console.log('ERROR: no unique key found');
-                break;
+                    if(index >= 0) {
+                        truck[index].qty += qty;
+                    } else {
+                        let index = _.findIndex(products, ['modelNum', modelNum]);
+                        let product = products[index];
+                        product['qty'] = qty;
+                        truck.push(product);
+                    }
+                });
             }
 
-            let newTruck = Immutable.fromJS({...truck, [key]: action.item});
+            let newTruck = Immutable.fromJS(truck);
 
             state = state.set('truck', newTruck);
             console.log('current Truck:', state.get('truck').toJS());
