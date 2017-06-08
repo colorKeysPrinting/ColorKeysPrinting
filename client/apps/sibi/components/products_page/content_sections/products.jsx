@@ -4,7 +4,6 @@ import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
 import { showOverlay, addToTruck }          from '../../../actions/application';
-import { showSelectedProject }  from '../../../actions/products';
 
 import Product                  from './product';
 
@@ -16,7 +15,7 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {showOverlay, addToTruck, showSelectedProject}, null, {withRef: true})
+@connect(select, {showOverlay, addToTruck}, null, {withRef: true})
 export default class Products extends React.Component {
 
     constructor(props) {
@@ -122,8 +121,8 @@ export default class Products extends React.Component {
                     return (
                         <Product
                             key={key + 'mostPurchased'}
+                            parent="products"
                             product={product}
-                            showSelectedProject={this.props.showSelectedProject}
                             addToTruck={this.props.addToTruck}
                             showOverlay={this.props.showOverlay} />
                     );

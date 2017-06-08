@@ -43,10 +43,3 @@ export function updateInfoBar(key) {
         key
     };
 }
-
-export function showProductDetails(product) {
-    return {
-        type: ActionTypes.SHOW_PRODUCT_DETAILS,
-        product
-    }
-}

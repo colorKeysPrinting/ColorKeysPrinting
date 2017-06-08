@@ -44,8 +44,8 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             {type: 'custom', items: ['Dwight\'s Heat Pump Split-System', 'Dwight\'s Gas Split-System']}
         ],
         myLists: [
-            {name: 'Dwight\'s List', items: ['DSXC17', 'GMVC7', 'CAPT']},
-            {name: 'Saved Trucks', items: ['DSXC19', 'GMVC9']},
+            {name: 'Dwight\'s List', items: ['ASPT61D14', 'GXZ140601', 'GPH1430H41']},
+            {name: 'Saved Trucks', items: ['ARUF37C14', 'GPH1460h42']},
             {name: 'Supplies', items: []}
         ],
         filterPanel:{

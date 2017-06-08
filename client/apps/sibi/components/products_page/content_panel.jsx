@@ -4,6 +4,7 @@ import _                        from 'lodash';
 import Products                 from './content_sections/products';
 import Matchups                 from './content_sections/matchups';
 import MatchupsCustom           from './content_sections/matchups_custom';
+import MyLists                  from './content_sections/my_lists';
 
 export default function ContentPanel(props) {
     let activeSection;
@@ -29,7 +30,8 @@ export default function ContentPanel(props) {
             activeSection = (type[2] === 'standard') ? <Matchups /> : <MatchupsCustom />;
             break;
         case 'myList':
-            console.log(type[2]);
+            activeSection = <MyLists
+                                list={type[2]} />;
             break;
         // case 'equipment':
         //     activeSection = <Products />;

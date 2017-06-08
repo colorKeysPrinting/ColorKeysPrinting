@@ -73,14 +73,20 @@ export default class Product extends React.Component {
             }
         };
 
+        let roundBtn = (this.props.parent === 'products') ? <img  src={assets('./images/plus_circle.png')}
+                                                                  alt="add"
+                                                                  onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})}
+                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
+                                                          : <img  src={assets('./images/minus_circle.png')}
+                                                                  alt="remove"
+                                                                  onClick={(e)=>this.props.showOverlay('removeItem', {modelNum: product.modelNum, listName: this.props.listName})}
+                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
+
         return (
             <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>
                 <div style={styles.productThumbnail}>
                     <div style={styles.plusBtn} onMouseOver={()=>this.onHover(true)} onMouseOut={()=>this.onHover(false)}>
-                        <img src={assets('./images/plus_circle.png')}
-                            alt="add"
-                            onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})}
-                            style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
+                        { roundBtn }
                     </div>
                     <Link to={`/product-details/${product.modelNum}`}>
                         <div style={styles.image}><img src={product.image} alt="picture" height="100%" width="100%"/></div>

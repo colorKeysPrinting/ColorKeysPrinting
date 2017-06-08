@@ -68,7 +68,6 @@ export default class FilterPanel extends React.Component {
                     parentId = 'products';
             }
 
-            // TODO: what determines what info is shown in the info bar for each child element following
             if(key === 'hvac equipment') {
                 options = _.map(section.types, (elem, key)=>{
                     return (<div key={key} className="options" onClick={()=>this.props.changeContent(parentId, key)}>{elem}</div>);

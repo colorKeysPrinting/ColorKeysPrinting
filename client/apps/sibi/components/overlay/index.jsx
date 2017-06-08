@@ -244,6 +244,8 @@ export default class Overlay extends React.Component {
                                 products={this.props.products}
                                 close={this.close} />;
                 break;
+            case 'removeItem' :
+                overlay = <div>Need to create this overlay</div>;
 
             default:
         }
