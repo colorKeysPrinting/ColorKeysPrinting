@@ -13,8 +13,6 @@ import ContentPanel             from './content_panel';
 let select = (state)=>{
     return {
         currLang            : state.application.get('currLanguage'),
-        activePage          : state.application.get('activePage'),
-        activePageContent   : state.application.get('activePageContent'),
         keyIndicatorBars    : state.application.getIn(['activeUser', 'settings', 'keyIndicatorBars']),
         keyIndicatorTypes   : state.application.get('keyIndicatorTypes'),
         myMatchups          : state.application.getIn(['activeUser', 'myMatchups']),
@@ -29,10 +27,7 @@ export default class ProductsPage extends React.Component {
     constructor(props) {
         super(props);
 
-        // activePage: products, matchups, equipment, partsSupplies, productDetails <- TODO: need to update types
-        // content: 'Standard Matchups', 'Custom Matchups'
-        // products is the default to be loaded
-        this.state = {activePage: this.props.activePage, content: '', keyIndicatorBars: this.props.keyIndicatorBars};
+        this.state = {activePage: this.props.params.activePage, keyIndicatorBars: this.props.keyIndicatorBars};
 
         this.changeContent = this.changeContent.bind(this);
 
@@ -41,14 +36,10 @@ export default class ProductsPage extends React.Component {
         //       and then have a webworker load the rest of the products in the background?
     }
 
-    componentWillMount() {
-        this.props.setActivateTab('products');
-    }
-
     componentWillReceiveProps(nextProps) {
-        console.log('productPage nextProps:', nextProps);
-        if(nextProps.activePage) {
-            this.setState({activePage: nextProps.activePage, content: nextProps.activePageContent});
+        // console.log('productPage nextProps:', nextProps);
+        if(nextProps.params.activePage) {
+            this.setState({activePage: nextProps.params.activePage});
         }
     }
 
@@ -58,45 +49,29 @@ export default class ProductsPage extends React.Component {
         this.props.setActivePage(type, content);
     }
 
-    // changeSection(type, section, value) {
-    //     let keyIndicatorBars = this.state.keyIndicatorBars;
-    //     let indicatorBar = this.state.keyIndicatorBars[type];
-
-    //     indicatorBar[section] = value;
-
-    //     keyIndicatorBars[type] = indicatorBar;
-    //     this.setState({keyIndicatorBars});
-    // }
-
     render() {
         let content;
 
         let styles = {
         };
 
-        if(this.state.activePage === 'productDetails') {
-            content = <div>content page</div>;
+        let activeKeyIndicatorBar   = (this.state.keyIndicatorBars.size > 0)                          ? this.state.keyIndicatorBars.get('products').toJS() : '';
+        let myMatchups              = (this.props.myMatchups && this.props.myMatchups.size > 0)       ? this.props.myMatchups.toJS() : [];
+        let myLists                 = (this.props.myLists && this.props.myLists.size > 0)             ? this.props.myLists.toJS() : [];
+        let myFilterPanel           = (this.props.myFilterPanel && this.props.myFilterPanel.size > 0) ? this.props.myFilterPanel.toJS() : [];
 
-        } else {
-            let activeKeyIndicatorBar   = (this.state.keyIndicatorBars.size > 0) ? this.state.keyIndicatorBars.get(this.state.activePage).toJS() : '';
-            let myMatchups              = (this.props.myMatchups && this.props.myMatchups.size > 0)       ? this.props.myMatchups.toJS() : [];
-            let myLists                 = (this.props.myLists && this.props.myLists.size > 0)             ? this.props.myLists.toJS() : [];
-            let myFilterPanel           = (this.props.myFilterPanel && this.props.myFilterPanel.size > 0) ? this.props.myFilterPanel.toJS() : [];
-
-            content =   <div>
-                            <KeyIndicatorsBar activeKeyIndicatorBar={activeKeyIndicatorBar}/>
-                            <div style={{display: 'inline-flex', width: '97%'}}>
-                                <FilterPanel
-                                    changeContent={this.changeContent}
-                                    myMatchups={myMatchups}
-                                    myLists={myLists}
-                                    myFilterPanel={myFilterPanel} />
-                                <ContentPanel
-                                    activePage={this.state.activePage}
-                                    content={this.state.content} />
-                            </div>
-                        </div>;
-        }
+        content = <div>
+                      <KeyIndicatorsBar activeKeyIndicatorBar={activeKeyIndicatorBar}/>
+                      <div style={{display: 'inline-flex', width: '97%'}}>
+                          <FilterPanel
+                              changeContent={this.changeContent}
+                              myMatchups={myMatchups}
+                              myLists={myLists}
+                              myFilterPanel={myFilterPanel} />
+                          <ContentPanel
+                              activePage={this.state.activePage} />
+                      </div>
+                  </div>;
 
         return (
             <div>

@@ -18,7 +18,7 @@ export default (
     <Route path="/signup" component={Index}>
       <IndexRoute component={SignUpPage} />
     </Route>
-    <Route path="/products" component={Index}>
+    <Route path="/products/:activePage" component={Index}>
       <IndexRoute component={ProductsPage} />
     </Route>
     <Route path="/product-details/:modelNum" component={Index}>

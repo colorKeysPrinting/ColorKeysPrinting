@@ -75,16 +75,18 @@ export default class Product extends React.Component {
 
         return (
             <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>
-                <Link to={`/product-details/${product.modelNum}`} style={styles.productThumbnail}>
+                <div style={styles.productThumbnail}>
                     <div style={styles.plusBtn} onMouseOver={()=>this.onHover(true)} onMouseOut={()=>this.onHover(false)}>
                         <img src={assets('./images/plus_circle.png')}
-                             alt="add"
-                             onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})}
-                             style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
+                            alt="add"
+                            onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})}
+                            style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
                     </div>
-                    <div style={styles.image}><img src={product.image} alt="picture" height="100%" width="100%"/></div>
-                    <h2 style={styles.name}>{product.name}</h2>
-                </Link>
+                    <Link to={`/product-details/${product.modelNum}`}>
+                        <div style={styles.image}><img src={product.image} alt="picture" height="100%" width="100%"/></div>
+                        <h2 style={styles.name}>{product.name}</h2>
+                    </Link>
+                </div>
                 <div style={{display: 'inline-flex'}}>
                     <div style={styles.prodInfo}>
                         <div style={styles.price}>${(product.price).formatMoney(2, '.', ',')}</div>

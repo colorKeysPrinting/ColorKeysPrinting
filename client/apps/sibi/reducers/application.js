@@ -39,15 +39,15 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
         myProducts: {
             mostPurchased: ['GSX140421', 'GMS80805CN', 'CAPF4860C6','GSZ140361']
         },
-        myMatchups: {
-            standard: 'standard',
-            custom: ['Dwight\'s Heat Pump Split-System', 'Dwight\'s Gas Split-System']
-        },
-        myLists: {
-            'Dwight\'s List': ['DSXC17', 'GMVC7', 'CAPT'],
-            'Saved Trucks': ['DSXC19', 'GMVC9'],
-            'Supplies':[]
-        },
+        myMatchups: [
+            {type: 'standard'},
+            {type: 'custom', items: ['Dwight\'s Heat Pump Split-System', 'Dwight\'s Gas Split-System']}
+        ],
+        myLists: [
+            {name: 'Dwight\'s List', items: ['DSXC17', 'GMVC7', 'CAPT']},
+            {name: 'Saved Trucks', items: ['DSXC19', 'GMVC9']},
+            {name: 'Supplies', items: []}
+        ],
         filterPanel:{
             'hvac equipment': {
                 types: {
@@ -203,7 +203,9 @@ export default (state = initialState, action)=>{
 
                 switch(action.listType) {
                     case 'customMatchups':
-                        list = state.getIn(['activeUser', 'myMatchups', 'custom']).toJS();
+                        let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS()
+                        let index = _.findIndex(myMatchups, ['type','custom']);
+                        list = myMatchups[index].items;
                         break;
                     case 'myLists':
                         list = state.getIn(['activeUser', 'myLists']).toJS();
@@ -276,19 +278,23 @@ export default (state = initialState, action)=>{
             switch(action.key) {
                 case 'customMatchups':
                     let matchups = state.get('matchups').toJS();
-                    let myMatchups = state.getIn(['activeUser', 'myMatchups','custom']).toJS();
+                    let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
+                    let index = _.findIndex(myMatchups, ['type','custom']);
+                    let customMatchups = myMatchups[index].items;
 
-                    matchups.push({matchup: action.newItem, items: {}});
-                    myMatchups.push(action.newItem);
+                    matchups.push({matchup: action.newItem, price: 0, items: {}});
+                    customMatchups.push(action.newItem);
+
+                    myMatchups[index].items = customMatchups;
 
                     matchups = Immutable.fromJS(matchups);
                     myMatchups = Immutable.fromJS(myMatchups);
 
                     state = state.update('matchups', value=>matchups);
-                    state = state.updateIn(['activeUser', 'myMatchups','custom'], value=>myMatchups);
+                    state = state.updateIn(['activeUser', 'myMatchups'], value=>myMatchups);
 
                     console.log('current matchups:', state.get('matchups').toJS());
-                    console.log('current myMatchups:', state.getIn(['activeUser', 'myMatchups','custom']).toJS());
+                    console.log('current myMatchups:', state.getIn(['activeUser', 'myMatchups']).toJS());
                     break;
                 case 'myLists':
                     let myLists = state.getIn(['activeUser', 'myLists']).toJS();

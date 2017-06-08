@@ -21,12 +21,15 @@ export default function ContentPanel(props) {
     };
 
     // activeSection: products, matchups, equipment, partsSupplies
-    switch(props.activePage) {
-        case 'products':
-            activeSection = <Products />;
+    const re = /(\w{1,})-([\w|\d]{1,})/;
+    const type = re.exec(props.activePage) || ['',''];
+
+    switch(type[1]) {
+        case 'matchup':
+            activeSection = (type[2] === 'standard') ? <Matchups /> : <MatchupsCustom />;
             break;
-        case 'matchups':
-            activeSection = (props.content === 'standard') ? <Matchups /> : <MatchupsCustom />;
+        case 'myList':
+            console.log(type[2]);
             break;
         // case 'equipment':
         //     activeSection = <Products />;

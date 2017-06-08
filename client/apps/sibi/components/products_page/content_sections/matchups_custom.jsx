@@ -1,6 +1,7 @@
 import '../../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
 import { connect }              from 'react-redux';
+import { Link }                 from 'react-router';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
@@ -11,7 +12,7 @@ let select = (state)=>{
     return {
         currLang        : state.application.get('currLanguage'),
         matchups        : state.application.get('matchups').toJS(),
-        myMatchups      : state.application.getIn(['activeUser', 'myMatchups', 'custom']).toJS()
+        myMatchups      : state.application.getIn(['activeUser', 'myMatchups'])
     };
 };
 
@@ -21,7 +22,12 @@ export default class MatchupsCustom extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {matchups: this.props.myMatchups};
+        let matchups = (this.props.myMatchups.size > 0) ? this.props.myMatchups.toJS() : [];
+        let index = _.findIndex(matchups, ['type', 'custom']);
+
+        matchups = (index !== -1) ? matchups[index] : {type:'', items: ''};
+
+        this.state = {matchups};
 
         this.delete = this.delete.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
@@ -32,7 +38,10 @@ export default class MatchupsCustom extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.myMatchups) {
-            this.setState({matchups: nextProps.myMatchups});
+            let matchups = (nextProps.myMatchups.size > 0) ? nextProps.myMatchups.toJS() : [];
+            let index = _.findIndex(matchups, ['type', 'custom']);
+
+            this.setState({matchups: matchups[index]});
         }
     }
 
@@ -107,7 +116,7 @@ export default class MatchupsCustom extends React.Component {
             }
         };
 
-        let matchups = _.map(this.state.matchups, (matchup, key)=>{
+        let matchups = _.map(this.state.matchups.items, (matchup, key)=>{
             let name = matchup, items;
 
             matchup = _.find(this.props.matchups,['matchup', matchup]);
@@ -117,7 +126,7 @@ export default class MatchupsCustom extends React.Component {
                 items = items.join(',');
 
             } else {
-                items = <div onClick={()=>this.props.setActivePage('products', '')} style={styles.blueTxt} >Add Products</div>;
+                items = <Link to={`/products/products`}><div style={styles.blueTxt} >Add Products</div></Link>;
             }
 
             return (

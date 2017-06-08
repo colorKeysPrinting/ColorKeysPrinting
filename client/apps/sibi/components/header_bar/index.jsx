@@ -108,11 +108,11 @@ export default class HeaderBar extends React.Component {
         }
 
         // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <img src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
-        let to = (this.props.activeUserType && this.props.activeUserType !== 'signUp') ? `/products` : `/`;
+        let to = (this.props.activeUserType && this.props.activeUserType !== 'signUp') ? `/products/products` : `/`;
 
         return (
             <div id="header-bar" style={styles.header}>
-                <Link to={to} onClick={ (e)=>this.props.setActivateTab('products')} ><img src={assets('./images/sibi_logo_white.png')} alt="sibi logo" style={styles.sibiLogo}/></Link>
+                <Link to={to} ><img src={assets('./images/sibi_logo_white.png')} alt="sibi logo" style={styles.sibiLogo}/></Link>
                 <Tabs type={ this.props.activeUserType }
                       activeTab={ this.props.activeTab }
                       setActivateTab={ this.props.setActivateTab } />

@@ -1,5 +1,6 @@
 import React                    from 'react';
 import _                        from 'lodash';
+import { Link }                 from 'react-router';
 
 export default class FilterPanel extends React.Component {
 
@@ -30,8 +31,8 @@ export default class FilterPanel extends React.Component {
         };
 
         let options = _.map(this.props.myMatchups, (option, key)=>{ // standard, custom
-            let title = (key === 'standard') ? 'Standard' : 'Custom';
-            return (<div key={key} className="options" onClick={()=>this.props.changeContent('matchups', key)}>{title} Matchups</div>);
+            let title = (option.type === 'standard') ? 'Standard' : 'Custom';
+            return (<div key={key} className="options"><Link to={'/products/matchup-' + option.type} >{ title } Matchups</Link></div>);
         });
 
         let matchups =  <div>
@@ -42,8 +43,8 @@ export default class FilterPanel extends React.Component {
                             <div style={{display: (this.state.activeSection === 'matchups') ? 'block' : 'none'}}>{options}</div>
                         </div>;
 
-        options = _.map(this.props.myLists, (elem, key)=>{
-            return (<div key={key} className="options" onClick={()=>this.props.changeContent('products', key)}>{key}</div>);
+        options = _.map(this.props.myLists, (option, key)=>{
+            return (<div key={key} className="options"><Link to={'/products/myList-' + key}>{ option.name }</Link></div>);
         });
 
         let myLists =   <div>
