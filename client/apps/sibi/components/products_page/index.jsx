@@ -5,6 +5,7 @@ import assets                   from '../../libs/assets';
 
 import { setActivateTab }       from '../../actions/header';
 import { setActivePage }        from '../../actions/products';
+import { showOverlay }          from '../../actions/application';
 
 import KeyIndicatorsBar         from './key_indicators_bar';
 import FilterPanel              from './filter_panel';
@@ -21,15 +22,13 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {setActivateTab, setActivePage}, null, {withRef: true})
+@connect(select, {setActivateTab, setActivePage, showOverlay}, null, {withRef: true})
 export default class ProductsPage extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {activePage: this.props.params.activePage, keyIndicatorBars: this.props.keyIndicatorBars};
-
-        this.changeContent = this.changeContent.bind(this);
 
         // TODO: may need to have a server call here to get all products,
         //       or maybe have "most ordered products" load first from the server
@@ -41,12 +40,6 @@ export default class ProductsPage extends React.Component {
         if(nextProps.params.activePage) {
             this.setState({activePage: nextProps.params.activePage});
         }
-    }
-
-    changeContent(type, content) { //e.g. (matchups, (standard/custom))
-        console.log(type, content);
-
-        this.props.setActivePage(type, content);
     }
 
     render() {
@@ -64,10 +57,10 @@ export default class ProductsPage extends React.Component {
                       <KeyIndicatorsBar activeKeyIndicatorBar={activeKeyIndicatorBar}/>
                       <div style={{display: 'inline-flex', width: '97%'}}>
                           <FilterPanel
-                              changeContent={this.changeContent}
                               myMatchups={myMatchups}
                               myLists={myLists}
-                              myFilterPanel={myFilterPanel} />
+                              myFilterPanel={myFilterPanel}
+                              showOverlay={this.props.showOverlay} />
                           <ContentPanel
                               activePage={this.state.activePage} />
                       </div>

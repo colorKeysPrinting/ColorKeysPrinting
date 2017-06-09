@@ -298,7 +298,7 @@ export default (state = initialState, action)=>{
                     break;
                 case 'myLists':
                     let myLists = state.getIn(['activeUser', 'myLists']).toJS();
-                    myLists[action.newItem] = [];
+                    myLists.push({name: action.newItem, items: []});
 
                     myLists = Immutable.fromJS(myLists);
 

@@ -27,6 +27,16 @@ export default class FilterPanel extends React.Component {
                 backgroundColor: '#FFF',
                 borderRight: '1px solid rgba(50, 50, 50, 0.1)',
                 width: '300px'
+            },
+            submitBtn: {
+                backgroundColor: '#06cfe5',
+                borderRadius: '5px',
+                color: '#FFF',
+                cursor: 'pointer',
+                width: '200px',
+                height: '46px',
+                margin: '20px auto',
+                paddingTop: '13px'
             }
         };
 
@@ -52,7 +62,10 @@ export default class FilterPanel extends React.Component {
                                 <div id="title">MY LISTS</div>
                                 <div>{(this.state.activeSection === 'myLists') ? '+' : '-'}</div>
                             </div>
-                            <div style={{display: (this.state.activeSection === 'myLists') ? 'block' : 'none'}}>{options}</div>
+                            <div style={{display: (this.state.activeSection === 'myLists') ? 'block' : 'none'}}>
+                                {options}
+                                <div onClick={()=>this.props.showOverlay('addNewList', {type: 'myLists'})} style={styles.submitBtn}>New List</div>
+                            </div>
                         </div>;
 
         let filterPanel = _.map(this.props.myFilterPanel, (section, key)=>{

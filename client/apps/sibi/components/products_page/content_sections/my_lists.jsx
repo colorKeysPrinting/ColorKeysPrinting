@@ -1,5 +1,6 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
+import { Link }                 from 'react-router';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
@@ -23,8 +24,6 @@ export default class MyLists extends React.Component {
 
         let myLists = (this.props.myLists.size > 0) ? this.props.myLists.toJS() : [];
         this.state = {myLists};
-
-        this.addToTruck = this.addToTruck.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -33,19 +32,12 @@ export default class MyLists extends React.Component {
         }
     }
 
-    addToTruck(matchup) {
-        console.log('matchup: ', matchup);
-
-        this.props.addToTruck({...matchup, tonnage, seer, applicationType});
-    }
-
     render() {
+        let content;
+
         let styles = {
             container: {
                 width: '98%'
-            },
-            productContainer: {
-                width: '86%'
             },
             titleSection: {
                 width: '100%',
@@ -54,28 +46,30 @@ export default class MyLists extends React.Component {
                 textAlign: 'left',
                 padding: '20px',
                 fontSize: '30px',
+                display: 'inline-flex'
             },
-            searchBox: {
-                border: '1px solid #FFF',
-                padding: '30px',
-                width: '100%',
-            },
-            dropdown: {
+            deleteList: {
                 position: 'absolute',
                 left: '85%',
                 width: '190px',
                 height: '45px',
-                marginTop: '17px',
-                marginLeft: '15px',
-                border: '1px solid rgba(50, 50, 50, 0.1)',
+                border: '1px solid rgba(50,50,50,0.1)',
                 backgroundColor: '#FFF',
+                textAlign: 'center',
+                cursor: 'pointer',
+                padding: '10px',
+                borderRadius: '5px',
+                color: '#06cfe5'
             },
-            headers: {
-                height: '50px',
-                width: '100%',
-                textAlign: 'left',
-                backgroundColor: '#F4F8FB',
-                padding: '20px'
+            submitBtn: {
+                backgroundColor: '#06cfe5',
+                borderRadius: '5px',
+                color: '#FFF',
+                cursor: 'pointer',
+                width: '200px',
+                height: '46px',
+                margin: '20px auto',
+                paddingTop: '13px'
             }
         };
 
@@ -83,32 +77,45 @@ export default class MyLists extends React.Component {
         let listName = this.state.myLists[index].name;
         let items    = this.state.myLists[index].items;
 
-        let products = _.map(items, (product, key)=>{
-            let products = this.props.products.toJS();
+        if(_.size(items) > 0) {
 
-            let index = _.findIndex(products, ['modelNum', product]);
-            product = products[index];
+            let products = _.map(items, (product, key)=>{
+                let products = this.props.products.toJS();
 
-            return (
-                <Product
-                    key={key + 'listItem'}
-                    parent="myList"
-                    listName={listName}
-                    product={product}
-                    addToTruck={this.props.addToTruck}
-                    showOverlay={this.props.showOverlay} />
-            );
-        });
+                let index = _.findIndex(products, ['modelNum', product]);
+                product = products[index];
+
+                return (
+                    <Product
+                        key={key + 'listItem'}
+                        parent="myList"
+                        listName={listName}
+                        product={product}
+                        addToTruck={this.props.addToTruck}
+                        showOverlay={this.props.showOverlay} />
+                );
+            });
+
+            content = <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
+                          { products }
+                      </div>;
+        } else {
+            content = <div>
+                          <h2>This list is empty</h2>
+                          <div>Click the "+" icon while viewing a product to add it to your list.</div>
+                          <Link to={`/products/products`} style={styles.submitBtn}>Browse Products</Link>
+                      </div>
+        }
+
 
         return (
             <div style={styles.container}>
                 <div style={styles.titleSection}>
-                    { listName }
+                    <div>{ listName }</div>
+                    <div onClick={()=>this.props.showOverlay('removeItem', {listName})} style={styles.deleteList} >Delete List</div>
                 </div>
                 <div style={{margin: '50px -1px'}}>
-                    <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
-                        { products }
-                    </div>
+                    { content }
                 </div>
             </div>
         );
