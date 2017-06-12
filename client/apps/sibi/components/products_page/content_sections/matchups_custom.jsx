@@ -30,8 +30,6 @@ export default class MatchupsCustom extends React.Component {
         this.state = {matchups};
 
         this.delete = this.delete.bind(this);
-        this.addToTruck = this.addToTruck.bind(this);
-        this.newMatchup = this.newMatchup.bind(this);
         this.share = this.share.bind(this);
         this.download = this.download.bind(this);
     }
@@ -52,17 +50,6 @@ export default class MatchupsCustom extends React.Component {
 
         this.setState({matchups});
         // TODO: this will eventually need to go to the store to be removed or make a server call
-    }
-
-    addToTruck(matchup) {
-        console.log('addToTruck: ', matchup);
-
-        this.props.addToTruck(matchup);
-    }
-
-    newMatchup(){
-        console.log('clicked new matchup');
-
     }
 
     share() {
@@ -117,16 +104,14 @@ export default class MatchupsCustom extends React.Component {
         };
 
         let matchups = _.map(this.state.matchups.items, (matchup, key)=>{
-            let name = matchup, items;
-
-            matchup = _.find(this.props.matchups,['matchup', matchup]);
+            let name = matchup.name, items;
 
             if(_.size(matchup.items) > 0) {
                 items = Object.keys(matchup.items);
                 items = items.join(',');
 
             } else {
-                items = <Link to={`/products/products`}><div style={styles.blueTxt} >Add Products</div></Link>;
+                items = <Link to={`/products`}><div style={styles.blueTxt} >Add Products</div></Link>;
             }
 
             return (
@@ -135,7 +120,7 @@ export default class MatchupsCustom extends React.Component {
                     <td>{items}</td>
                     <td onClick={()=>this.props.showOverlay('customMatchup', {name, products: matchup.items})} style={styles.blueTxt} >View Products</td>
                     <td>${(matchup.price).formatMoney(2, '.', ',')}</td>
-                    <td onClick={()=>this.addToTruck(matchup)} style={styles.blueTxt}>Add to truck</td>
+                    <td onClick={()=>this.props.addToTruck(matchup.items)} style={styles.blueTxt}>Add to truck</td>
                     <td><div onClick={()=>this.delete(name)} style={styles.delete}><img src={''} alt="delete"/></div></td>
                 </tr>
             );

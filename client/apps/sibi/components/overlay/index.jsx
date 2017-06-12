@@ -129,6 +129,7 @@ export default class Overlay extends React.Component {
             this.props.addToList(type, this.state.newList, this.state.overlayObj.modelNum); // TODO: check to make sure this functionality is correct,
                                                                                             // when you create a new list the product you clicked on will be added to that list
         }
+
         this.close();
     }
 
@@ -224,6 +225,8 @@ export default class Overlay extends React.Component {
             case 'addToConfirmation':
                 overlay = <AddToConfirmation
                                 title={this.state.overlayObj.name}
+                                type={this.props.overlayObj.type}
+                                index={this.props.overlayObj.index}
                                 product={_.find(this.props.products, (product)=>{return product.modelNum === this.state.overlayObj.modelNum})}
                                 changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
                                 close={this.close} />;

@@ -42,7 +42,7 @@ export default class FilterPanel extends React.Component {
 
         let options = _.map(this.props.myMatchups, (option, key)=>{ // standard, custom
             let title = (option.type === 'standard') ? 'Standard' : 'Custom';
-            return (<div key={key} className="options"><Link to={'/products/matchup-' + option.type} >{ title } Matchups</Link></div>);
+            return (<Link to={'/products/matchup-' + option.type} ><div key={key} className="options">{ title } Matchups</div></Link>);
         });
 
         let matchups =  <div>
@@ -54,7 +54,7 @@ export default class FilterPanel extends React.Component {
                         </div>;
 
         options = _.map(this.props.myLists, (option, key)=>{
-            return (<div key={key} className="options"><Link to={'/products/myList-' + key}>{ option.name }</Link></div>);
+            return (<Link to={'/products/myList-' + key}><div key={key} className="options">{ option.name }</div></Link>);
         });
 
         let myLists =   <div>

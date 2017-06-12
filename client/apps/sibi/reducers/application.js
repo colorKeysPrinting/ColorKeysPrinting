@@ -41,7 +41,12 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
         },
         myMatchups: [
             {type: 'standard'},
-            {type: 'custom', items: ['Dwight\'s Heat Pump Split-System', 'Dwight\'s Gas Split-System']}
+            {type: 'custom',
+                items: [
+                    {name: 'Dwight\'s Heat Pump Split-System', price: 1512.25, items: {'GSX140421': 1, 'GMS80805CN': 2}},
+                    {name: 'Dwight\'s Gas Split-System',       price: 1800.20, items: {'ARUF37C14': 1, 'HKSX10XC': 3, 'GXZ140601': 1}}
+                ]
+            }
         ],
         myLists: [
             {name: 'Dwight\'s List', items: ['ASPT61D14', 'GXZ140601', 'GPH1430H41']},
@@ -73,6 +78,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
         salesTaxRate: 8.25
     },
     products: [
+        // productId: incremental int
         {modelNum: 'GSX140421',     name: 'Goodman 3.5 Ton 14 Seer Air conditioner condenser w/ R410A refrigerant',         brand: 'Goodman', image: '', price: 709.00,  types: ['airConditioners'],              tabs:{ 'complete the system': ['GMS80805CN','CAPF4860C6'], 'recommended parts': ['GPH1430H41','GXZ140601'],  'code compliance': '<h4>Information for Contractors</h4><h2>Codes 101 Brochure</h2><p>This brochure covers that basics of codes and standards and is aimed at providing contractors with a general understanding of these issues so that they can become more involved in the code evelopment processes that affect the HVAC inducstry. <a>Download it.</a></p><h2>Residential System Design Review Form</h2><p>ACCA has crafted an easy-to-use evaluation of HVAC system design elements in the pertinent building codes. <a>Download it.</a></p> <h2>Computing Infiltration Loads base on a Target Envelope Leakage Requirment</h2><p>This Technical Note shows how to convert a maximum code allowable leakage limit (say, 3 or 5 ACH 50 per the ICC International Energy Conservation Code) to Manual J infiltration CFM value, and then to the infiltration load contributions (Btuh) fr sensible heating, sensible cooling, and latent cooling.  It also discusses the use of blower door data for one or more test points. <a>Download it.</a></p> <h2>ACCA Codes Committee (committee members only)</h2><p>Get involved in ACCA\'s Codes Committee and make a difference in the development and adoption of good building codes.  For more info about becoming involved in the Codes Committee and ACCA\'s building code efforts, contact codes@acca.org.</a></p><hr> <h4>Information for Code officials</h4><h2>Brochures for Code officials</h2><p>ACCA has developed several brochures which help code officials verify residential load calculations, duct design and equipment selection in accordance with Manuals I.D. and S. While it\'s not practical for code officials to verify every single aspect of these</p>', overview: {downloadLink: './documents/product-spec.pdf', 'Standard Features': ['Energy-efficient compressor','Single-speed condenser fan motor','Factory-installed filter drier','Copper tube/aluminum fin coil','Service valves with sweat connections and easy-access guage ports','Contractor with lug connection','Ground lug connection','Ground lug connection','AHRI Certified, ETL Listed'], 'Cabinet Features': ['Heavy-guage galvanized-steel cabinet with a louvered sound control top','Attractive Architectural Gray power-paint finish with 500-hour salt-spray approval','Steel louver coil guard','Top and side maintenance access','Single-panel access to controls with space provided for field-installed accessories','When properly anchored\, meets the 2010 Florida Building Code Unit Integrity requirements for hurricane-type winds (Anchor bracket kits available.)'], 'Outstanding Warranty Protection': 'This unit is backed by a 10-Year Parts Limited Warranty.  The GSX14 Air Conditioner features operating sound levels that are among the lowest in the heating and cooling industry.  With its 14 SEER rating, the GSX14 will help reduce energy consumption throughout the life of the system.'}, 'specifications': './documents/product-spec.pdf', FAQ: [{question: 'Can frost, ice, dirt or other debris keep the outdoor unit of my cooling system from operating effectively?', answer: 'Anything that prevents airflow from making its way to the outdoor coil can negatively affect the efficiency and performance of the equipment.  Make it a priority to keep the space around the equipment clean and clear.'}, {question: 'Should I cover my outdoor unti in the fall and winter?', answer: 'Covering the outdoor unit in the winter months prevents unwanted debris from accumulating on the outdoor unit and later impeding airflow to the outdoor unti.  At the same time accidentally operating the outdoor unit with a covering in place could cause system damage.  It is recommended that high voltage power always be disconnected from the outdoor unit whenever a cover or anything obstructing airflow is introduced.'}]}},
         {modelNum: 'GMS80805CN',    name: 'Goodman 80% AFUE 80,000 BTU Upflow  Stage Gas Furnace up to 5 Ton',              brand: 'Goodman', image: '', price: 344.00,  types: ['furnaces'],                     tabs:{ 'complete the system': ['GSX140421','CAPF4860C6'],  'recommended parts': ['GPH1430H41','GXZ140601'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
         {modelNum: 'CAPF4860C6',    name: 'Goodman 4 to 5 ton 21 Inch Width Air Conditioner Evaporator Cased Coil',         brand: 'Goodman', image: '', price: 258.00,  types: ['coils'],                        tabs:{ 'complete the system': ['GMS80805CN','GSX140421'],  'recommended parts': ['GPH1430H41','GXZ140601'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
@@ -92,10 +98,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
         {matchup: 'DSXC19',  name: 'Gas Split-System',          image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 1419.16, items: {'GSX140421': 1, 'GMS80805CN': 1, 'CAPF4860C6': 1}},
         {matchup: 'GMVC9',   name: 'Heat Pump Split-System',    image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 3262.66, items: {'GSZ140361': 3, 'ARUF37C14': 1, 'HKSX10XC': 1}},
         {matchup: 'DSXC17',  name: 'Package Gas System',        image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 2568.77, items: {'GXZ140601': 1, 'ASPT61D14': 2, 'HKSC15': 1}, applicationTypeOptions: {multiPosition: 'Multi-Position', singlePosition: 'Single Position'}},
-        {matchup: 'GMVC7',   name: 'Package Heat Pump System',  image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 2290.57, items: {'GXZ140601': 1,'ASPT61D14': 1, 'HKSC15': 5}, applicationTypeOptions: {multiPosition: 'Multi-Position', horizontalPosition: 'Horizontal'}},
-
-        {matchup: 'Dwight\'s Heat Pump Split-System', price: 1512.25, items: {'GSX140421': 1, 'GMS80805CN': 2}},
-        {matchup: 'Dwight\'s Gas Split-System',       price: 1800.20, items: {'ARUF37C14': 1, 'HKSX10XC': 3, 'GXZ140601': 1}}
+        {matchup: 'GMVC7',   name: 'Package Heat Pump System',  image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 2290.57, items: {'GXZ140601': 1,'ASPT61D14': 1, 'HKSC15': 5}, applicationTypeOptions: {multiPosition: 'Multi-Position', horizontalPosition: 'Horizontal'}}
     ],
     productLocations: [
         // this dummy data is for GSX140421 only
@@ -251,8 +254,8 @@ export default (state = initialState, action)=>{
                     truck.push(item);
                 }
 
-            } else if (item.matchup) {
-                _.each(item.items, (qty, modelNum)=>{
+            } else{
+                _.each(item, (qty, modelNum)=>{
                     let index = _.findIndex(truck, ['modelNum', modelNum]);
 
                     if(index >= 0) {
@@ -266,83 +269,71 @@ export default (state = initialState, action)=>{
                 });
             }
 
-            let newTruck = Immutable.fromJS(truck);
-
-            state = state.set('truck', newTruck);
+            state = state.update('truck', Immutable.fromJS(truck));
             console.log('current Truck:', state.get('truck').toJS());
             break;
 
         case ActionTypes.CREATE_NEW_LIST:
             console.log('TODO: ASYNC CALL - create new: ' + action.key, action.newItem);
 
-            switch(action.key) {
-                case 'customMatchups':
-                    let matchups = state.get('matchups').toJS();
-                    let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
-                    let index = _.findIndex(myMatchups, ['type','custom']);
-                    let customMatchups = myMatchups[index].items;
+            if(action.key === 'customMatchups') {
+                let myMatchupsOld = state.getIn(['activeUser', 'myMatchups']).toJS(); //0:{standard}, 1:{custom}
+                let customMatchups = myMatchupsOld[1].items;
 
-                    matchups.push({matchup: action.newItem, price: 0, items: {}});
-                    customMatchups.push(action.newItem);
+                customMatchups.push({name: action.newItem, price: 0, items: {}});
 
-                    myMatchups[index].items = customMatchups;
+                myMatchupsOld[1].items = customMatchups;
 
-                    matchups = Immutable.fromJS(matchups);
-                    myMatchups = Immutable.fromJS(myMatchups);
+                state = state.updateIn(['activeUser', 'myMatchups'], value=>Immutable.fromJS(myMatchupsOld));
 
-                    state = state.update('matchups', value=>matchups);
-                    state = state.updateIn(['activeUser', 'myMatchups'], value=>myMatchups);
+                console.log('current myMatchups:', state.getIn(['activeUser', 'myMatchups']).toJS());
 
-                    console.log('current matchups:', state.get('matchups').toJS());
-                    console.log('current myMatchups:', state.getIn(['activeUser', 'myMatchups']).toJS());
-                    break;
-                case 'myLists':
-                    let myLists = state.getIn(['activeUser', 'myLists']).toJS();
-                    myLists.push({name: action.newItem, items: []});
+            } else if (action.key === 'myLists') {
+                let myLists = state.getIn(['activeUser', 'myLists']).toJS();
+                myLists.push({name: action.newItem, items: []});
 
-                    myLists = Immutable.fromJS(myLists);
+                state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));
+                console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
 
-                    state = state.updateIn(['activeUser', 'myLists'], value=>myLists);
-                    console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
-                    break;
-                default:
-                    console.log('ERROR: no list specified!');
+                browserHistory.push({ pathname: `#/products/myList-${_.size(myLists) - 1}` });
             }
             break;
 
         case ActionTypes.ADD_TO_LIST:
-            let index;
             console.log('TODO: ASYNC CALL - add to ' + action.listName, action.modelNum);
 
-            switch(action.key) {
-                case 'customMatchups':
-                    let matchups = state.get('matchups').toJS();
-                    index = _.findIndex(matchups, ['matchup', action.listName]);
-                    let matchup = matchups[index];
+            if(action.key === 'customMatchups') {
+                let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
+                let customMatchups = myMatchups[1].items;
 
-                    if(matchup.items[action.modelNum]) {
-                        matchup.items[action.modelNum] += 1;
+                let index = _.findIndex(customMatchups, ['name', action.listName]);
+                let matchup = customMatchups[index];
 
-                    } else {
-                        matchup.items[action.modelNum] = 1;
-                    }
+                if(matchup.items[action.modelNum]) {
+                    matchup.items[action.modelNum] += 1;
 
-                    matchups[index] = matchup;
+                } else {
+                    matchup.items[action.modelNum] = 1;
+                }
 
-                    state = state.update('matchups', value=>Immutable.fromJS(matchups));
-                    console.log('current matchups:', state.get('matchups').toJS());
+                myMatchups[index] = matchup;
 
-                    state = state.set('activeOverlay', 'addToConfirmation');
-                    state = state.set('overlayObj', {name: action.listName, modelNum: action.modelNum, products: matchup.items});
-                    break;
-                case 'myLists':
-                    let myLists = state.getIn(['activeUser', 'myLists']).toJS();
-                    myLists[name].push(action.modelNum);
+                state = state.updateIn(['activeUser', 'myMatchups'], value=>Immutable.fromJS(myMatchups));
+                console.log('current matchups:', state.getIn(['activeUser', 'myMatchups']).toJS());
 
-                    state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));
-                    console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
-                    break;
-                default:
+                state = state.set('activeOverlay', 'addToConfirmation');
+                state = state.set('overlayObj', {name: action.listName, modelNum: action.modelNum, products: matchup.items, type: 'Matchup'});
+
+            } else if (action.key === 'myLists') {
+                let myLists = state.getIn(['activeUser', 'myLists']).toJS();
+                let index = _.findIndex(myLists, ['name', action.listName]);
+                myLists[index].items.push(action.modelNum);
+
+                state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));
+                console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
+
+                state = state.set('activeOverlay', 'addToConfirmation');
+                state = state.set('overlayObj', {name: action.listName, modelNum: action.modelNum, type: 'List', index});
             }
             break;
 

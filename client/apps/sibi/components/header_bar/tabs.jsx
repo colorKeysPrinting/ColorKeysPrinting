@@ -31,7 +31,7 @@ export default (props)=>{
     };
 
     const tabs = {
-        products     : <Link to={`/products/products`}     style={(props.activeTab === 'products')     ? styles.active : styles.tabs} >Products</Link>,
+        products     : <Link to={`/products`}     style={(props.activeTab === 'products')     ? styles.active : styles.tabs} >Products</Link>,
         features     : <Link to={`/features`}     style={(props.activeTab === 'features')     ? styles.active : styles.tabs} >Features</Link>,
         support      : <Link to={`/support`}      style={(props.activeTab === 'support')      ? styles.active : styles.tabs} >Support</Link>,
         orderHistory : <Link to={`/orderHistory`} style={(props.activeTab === 'orderHistory') ? styles.active : styles.tabs} >Order History</Link>,

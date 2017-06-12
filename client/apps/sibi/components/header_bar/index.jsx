@@ -108,7 +108,7 @@ export default class HeaderBar extends React.Component {
         }
 
         // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <img src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
-        let to = (this.props.activeUserType && this.props.activeUserType !== 'signUp') ? `/products/products` : `/`;
+        let to = (this.props.activeUserType && this.props.activeUserType !== 'signUp') ? `/products` : `/`;
 
         return (
             <div id="header-bar" style={styles.header}>

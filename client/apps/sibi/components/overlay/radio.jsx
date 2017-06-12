@@ -7,7 +7,7 @@ export default class RadioOverlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeRadio: Object.keys(this.props.overlayObj.list)[0]};
+        this.state = {activeRadio: this.props.overlayObj.list[0].name};
 
         this.update = this.update.bind(this);
     }
@@ -69,12 +69,16 @@ export default class RadioOverlay extends React.Component {
                 width: '60px'
             },
             submitBtn: {
+                backgroundColor: '#06cfe5',
                 borderRadius: '5px',
+                color: '#FFF',
                 cursor: 'pointer',
-                height: '40px',
                 width: '100%',
-                margin: '20px auto',
-                paddingTop: '10px'
+                height: '46px',
+                margin: '7px auto',
+                textAlign: 'center',
+                fontSize: '18px',
+                paddingTop: '14px'
             },
             createNew: {
                 textAlign: 'center',
@@ -98,11 +102,11 @@ export default class RadioOverlay extends React.Component {
             default:
         }
 
-        let items = _.map(this.props.overlayObj.list, (item)=>{
+        let items = _.map(this.props.overlayObj.list, (item, key)=>{
             return (
-                <div key={item} onClick={()=>{this.setState({activeRadio: item})}} style={styles.options}>
-                    <input type="radio" name={this.props.overlayObj.type} value={item} onChange={()=>this.update(item)} style={styles.radio} checked={this.state.activeRadio === item} />
-                    <div style={{margin: '15px'}}>{item}</div>
+                <div key={key} onClick={()=>{this.setState({activeRadio: item.name})}} style={styles.options}>
+                    <input type="radio" name={this.props.overlayObj.type} value={item.name} onChange={()=>this.update(item.name)} style={styles.radio} checked={this.state.activeRadio === item.name} />
+                    <div style={{margin: '15px'}}>{ item.name }</div>
                 </div>
             );
         });
@@ -110,20 +114,20 @@ export default class RadioOverlay extends React.Component {
         return (
             <div style={styles.container}>
                 <div style={ styles.titleBar }>
-                    <div style={styles.title}>Add to {title}</div>
+                    <div style={styles.title}>Add to { title }</div>
                     <div onClick={this.props.close} style={styles.close}>X</div>
                 </div>
                 <div style={styles.content}>
-                    <form onSubmit={()=>this.props.submitAddToBtn(this.props.overlayObj.type, this.state.activeRadio)} style={styles.content}>
+                    <div style={styles.content}>
                         <div>
                             <div style={{textAlign: 'left', padding: '5px'}}>Select list to add item to:</div>
                             {items}
                         </div>
                         <div onClick={()=>{this.props.changeOverlay('addNewList')}} style={styles.options}>
-                            <div style={styles.createNew}>Create a New {title}</div>
+                            <div style={styles.createNew}>Create a New { title }</div>
                         </div>
-                        <input className="button" type="submit" value={btnText} style={ styles.submitBtn }/>
-                    </form>
+                        <div className="button" onClick={()=>this.props.submitAddToBtn(this.props.overlayObj.type, this.state.activeRadio)} style={styles.submitBtn} >{ btnText }</div>
+                    </div>
                 </div>
             </div>
         );

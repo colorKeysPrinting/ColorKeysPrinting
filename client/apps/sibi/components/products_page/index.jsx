@@ -5,7 +5,7 @@ import assets                   from '../../libs/assets';
 
 import { setActivateTab }       from '../../actions/header';
 import { setActivePage }        from '../../actions/products';
-import { showOverlay }          from '../../actions/application';
+import { showOverlay, closeOverlay }          from '../../actions/application';
 
 import KeyIndicatorsBar         from './key_indicators_bar';
 import FilterPanel              from './filter_panel';
@@ -22,13 +22,14 @@ let select = (state)=>{
     };
 };
 
-@connect(select, {setActivateTab, setActivePage, showOverlay}, null, {withRef: true})
+@connect(select, {setActivateTab, setActivePage, showOverlay, closeOverlay}, null, {withRef: true})
 export default class ProductsPage extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {activePage: this.props.params.activePage, keyIndicatorBars: this.props.keyIndicatorBars};
+        this.props.closeOverlay();
 
         // TODO: may need to have a server call here to get all products,
         //       or maybe have "most ordered products" load first from the server
@@ -36,10 +37,14 @@ export default class ProductsPage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        // console.log('productPage nextProps:', nextProps);
-        if(nextProps.params.activePage) {
-            this.setState({activePage: nextProps.params.activePage});
+        const re = /(\w{1,}-[\w|\d]{1,})/;
+        const activePage = re.exec(location.hash) || [nextProps.params];
+
+        if(activePage[0] !== this.props.params) {
+            this.setState({activePage});
         }
+
+        this.props.closeOverlay();
     }
 
     render() {

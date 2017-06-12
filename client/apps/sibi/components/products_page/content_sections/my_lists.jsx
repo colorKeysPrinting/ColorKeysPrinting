@@ -27,8 +27,10 @@ export default class MyLists extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.myList) {
-            this.setState({myList: nextProps.myList});
+        if(nextProps.myLists.size > 0) {
+
+            let myLists = nextProps.myLists.toJS();
+            this.setState({myLists});
         }
     }
 
@@ -68,12 +70,18 @@ export default class MyLists extends React.Component {
                 cursor: 'pointer',
                 width: '200px',
                 height: '46px',
-                margin: '20px auto',
-                paddingTop: '13px'
+                margin: '7px auto',
+                textAlign: 'center',
+                fontSize: '18px',
+                paddingTop: '14px'
+            },
+            content: {
+                margin: '50px auto',
+                width: '230px'
             }
         };
 
-        let index    = this.props.list;
+        let index    = Number(this.props.list);
         let listName = this.state.myLists[index].name;
         let items    = this.state.myLists[index].items;
 
@@ -100,10 +108,10 @@ export default class MyLists extends React.Component {
                           { products }
                       </div>;
         } else {
-            content = <div>
+            content = <div style={styles.content}>
                           <h2>This list is empty</h2>
                           <div>Click the "+" icon while viewing a product to add it to your list.</div>
-                          <Link to={`/products/products`} style={styles.submitBtn}>Browse Products</Link>
+                          <Link to={`/products`} ><div style={styles.submitBtn}>Browse Products</div></Link>
                       </div>
         }
 

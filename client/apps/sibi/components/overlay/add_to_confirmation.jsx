@@ -1,4 +1,5 @@
-import React    from 'react';
+import React            from 'react';
+import { Link }         from 'react-router';
 
 export default function AddToConfirmationOverlay(props) {
 
@@ -67,6 +68,9 @@ export default function AddToConfirmationOverlay(props) {
 
     let title;
 
+    let viewType = (props.type === 'matchup') ? <div onClick={()=>props.changeOverlay('customMatchup')} style={styles.viewMatchup}>View Matchup</div>
+                                              : <Link to={`/products/myList-${props.index}`} style={styles.viewMatchup} >View List</Link>;
+
     return (
         <div style={styles.container}>
             <div style={ styles.titleBar }>
@@ -83,7 +87,7 @@ export default function AddToConfirmationOverlay(props) {
                 </div>
                 <div style={styles.text}>*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>
                 <div style={{display: 'inline-flex', width: '100%'}}>
-                    <div onClick={()=>props.changeOverlay('customMatchup')} style={styles.viewMatchup}>View Matchup</div>
+                    { viewType }
                     <div onClick={props.close} style={styles.submitBtn}>Continue Shopping</div>
                 </div>
             </div>
