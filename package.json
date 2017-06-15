@@ -33,5 +33,7 @@
   "dependencies": {
     "del": "^2.2.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "react-slider": "^0.8.0"
+  }
 }

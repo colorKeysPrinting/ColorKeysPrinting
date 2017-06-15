@@ -50,7 +50,7 @@ export default class FilterPanel extends React.Component {
     }
 
     update(props) {
-        console.log(props);
+        this.props.setActiveFilters('price', {min: props[0], max: props[1]});
     }
 
     render() {
@@ -158,31 +158,21 @@ export default class FilterPanel extends React.Component {
                         );
                     });
                 } else if(filter === 'price') {
-                    // <ReactSlider
-                            // min={availableFilters.filters.price.min}
-                            // max={availableFilters.filters.price.max}
-                    //         defaultValue={[80, 800]}
-                    //         minDistance={10}
-                    //         onBeforeChange={this.update}
-                    //         onChange={this.update}
-                    //         onAfterChange={this.update}
-                    //         getValue={this.update}
-                    //         withBars
-                    //         pearling />
+                    let priceMin = availableFilters.filters.price.min;
+                    let priceMax = availableFilters.filters.price.max;
+                    let filterPriceMin = (this.state.activeFilters.price) ? this.state.activeFilters.price.min : availableFilters.filters.price.min;
+                    let filterPriceMax = (this.state.activeFilters.price) ? this.state.activeFilters.price.max : availableFilters.filters.price.max;
 
                     options = <div id="price-slider" >
-                                  <div>{ this.state.priceMin } - { this.state.priceMax }</div>
+                                  <div>${ filterPriceMin } - ${ filterPriceMax }</div>
                                   <div>
                                       <ReactSlider
                                               className="horizontal-slider"
-                                              min={availableFilters.filters.price.min}
-                                              max={availableFilters.filters.price.max}
+                                              min={priceMin}
+                                              max={priceMax}
                                               minDistance={62}
-                                              defaultValue={[80, 800]}
-                                              onBeforeChange={this.update}
+                                              defaultValue={[priceMin, priceMax]}
                                               onChange={this.update}
-                                              onAfterChange={this.update}
-                                              getValue={this.update}
                                               withBars
                                               pearling >
                                           <div className="my-handle"><img src={assets('./images/oval-1.png')} alt="min" /></div>

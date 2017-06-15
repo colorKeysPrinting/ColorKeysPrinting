@@ -15,6 +15,10 @@
     text-align: center;
     cursor: pointer;
 }
+.my-handle {
+    width: 10px;
+    padding-top: 2px;
+}
 
 // .handle.active {
 //     background-color: grey;
@@ -39,7 +43,7 @@
 }
 .horizontal-slider .handle {
     top: 1px;
-    width: 50px;
+    width: 30px;
     height: 48px;
     line-height: 48px;
 }
