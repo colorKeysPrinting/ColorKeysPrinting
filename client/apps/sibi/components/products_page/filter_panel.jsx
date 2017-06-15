@@ -168,7 +168,7 @@ export default class FilterPanel extends React.Component {
                                   <div>
                                       <ReactSlider
                                               className="horizontal-slider"
-                                              min={priceMin}
+                                              min={0}
                                               max={priceMax}
                                               minDistance={62}
                                               defaultValue={[priceMin, priceMax]}
