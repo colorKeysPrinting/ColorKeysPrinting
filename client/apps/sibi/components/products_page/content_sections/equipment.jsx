@@ -12,6 +12,7 @@ let select = (state)=>{
         currLang        : state.application.get('currLanguage'),
         products        : state.application.get('products').toJS(),
         mostPurchased   : state.application.getIn(['activeUser','myProducts','mostPurchased']),
+        activeFilters   : state.application.get('activeFilterss')
     };
 };
 
@@ -21,12 +22,14 @@ export default class Equipment extends React.Component {
     constructor(props) {
         super(props);
 
-        // activePage: products, matchups, equipment, partsSupplies
         // products is the default to be loaded
+        console.log(this.props.activeFilters);
+        debugger
         let products = _.map(this.props.products, (product, key)=>{
             debugger
             if(_.findIndex(product,['types', this.props.type]) >= 0) { return product };
         });
+
         this.state = {searchTerm: '', sortBy: 'brand', products,
             sortByOptions: { lowPrice: 'price - low to high', highPrice: 'price - hight to low', nameA: 'name - A to Z', nameZ: 'name - Z to A', rating: 'highest rating', modelNumber: 'Model Number', brand: 'Brand Name'},
 
@@ -118,7 +121,7 @@ export default class Equipment extends React.Component {
         } else if(this.props.mostPurchased) {
             let purchases = (this.props.mostPurchased.size > 0) ? this.props.mostPurchased.toJS() : [];
             productAmount = (this.props.mostPurchased.size > 0) ? this.props.mostPurchased.size : 0;
-
+            debugger
             mostPurchased = _.map(sortedProducts, (product, key)=>{
                 let isMostPurchased = (_.indexOf(purchases, product.modelNumber)) ? true : false;
                 if(isMostPurchased) {

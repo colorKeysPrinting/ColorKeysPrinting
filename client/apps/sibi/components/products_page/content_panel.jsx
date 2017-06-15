@@ -1,5 +1,4 @@
 import React                    from 'react';
-import _                        from 'lodash';
 
 import Products                 from './content_sections/products';
 import Matchups                 from './content_sections/matchups';
@@ -8,6 +7,7 @@ import MyLists                  from './content_sections/my_lists';
 import Equipment                from './content_sections/equipment';
 
 export default function ContentPanel(props) {
+
     let activeSection;
 
     let styles = {
@@ -22,9 +22,8 @@ export default function ContentPanel(props) {
         }
     };
 
-    // activeSection: products, matchups, equipment, partsSupplies
     const re = /(\w{1,})-([\w|\d]{1,})/;
-    const type = re.exec(props.activePage) || ['',''];
+    const type = re.exec(location.hash) || ['',''];
 
     switch(type[1]) {
         case 'matchup':

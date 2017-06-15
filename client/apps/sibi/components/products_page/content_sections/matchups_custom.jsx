@@ -6,7 +6,6 @@ import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
 import { showOverlay, addToTruck }          from '../../../actions/application';
-import { setActivePage }        from '../../../actions/products';
 
 let select = (state)=>{
     return {
@@ -16,7 +15,7 @@ let select = (state)=>{
     };
 };
 
-@connect(select, { showOverlay, setActivePage, addToTruck }, null, {withRef: true})
+@connect(select, { showOverlay, addToTruck }, null, {withRef: true})
 export default class MatchupsCustom extends React.Component {
 
     constructor(props) {

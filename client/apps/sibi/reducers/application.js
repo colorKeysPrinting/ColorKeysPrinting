@@ -12,6 +12,8 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
     tradeList: ['engineer', 'carpenter', 'fur trade'], entityList: ['business', 'apartment', '4 plex', 'douplex'], languageList: ['English', 'Spanish', 'German'],
     contracts: {'goodman': './documents/pdf-test.pdf', 'asure': './documents/pdf-test.pdf'},
     states: {'AL':'Alabama','AK':'Alaska','AS':'American Samoa','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'District Of Columbia','FM':'Federated States Of Micronesia','FL':'Florida','GA':'Georgia','GU':'Guam','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MH':'Marshall Islands','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','MP':'Northern Mariana Islands','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PW':'Palau','PA':'Pennsylvania','PR':'Puerto Rico','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VI':'Virgin Islands','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'},
+    availableFilters: { types: {matchups: ['btu','price'], 'hvac equipment': ['seer','btu','price']}, filters: {btu:['5,000 - 9,000','9,000 - 13,000','13,000 - 17,000','17,000 - 21,000','21,000 - 25,000', '25,000+'], seer: ['8-10','11-13','12-14'], price: {min: 75, max: 1000}}},
+    activeFilters: {},
 
     keyIndicatorTypes: {
         products: {title: 'Equipment Spend', timeFrame: ['YTD']},
@@ -127,12 +129,13 @@ export default (state = initialState, action)=>{
             state = state.set('currLanguage', action.language);
             break;
 
-        case ActionTypes.SET_ACTIVE_PAGE:
-            console.log('activePage: ', action.key, action.content);
-            let activePageContent = (action.content) ? action.content : '';
+        case ActionTypes.SET_ACTIVE_FILTERS:
+            console.log('active filters', action.key, action.value);
+            let activeFilters = state.get('activeFilters').toJS();
 
-            state = state.set('activePage', action.key);
-            state = state.set('activePageContent', activePageContent);
+            activeFilters[action.key] = action.value;
+
+            state = state.set('activeFilters', Immutable.fromJS(activeFilters));
             break;
 
         case ActionTypes.GET_STRIPE_TOKEN_DONE:
@@ -255,7 +258,7 @@ export default (state = initialState, action)=>{
                 }
 
             } else{
-                _.each(item, (qty, modelNum)=>{
+                _.each(item.items, (qty, modelNum)=>{
                     let index = _.findIndex(truck, ['modelNum', modelNum]);
 
                     if(index >= 0) {
@@ -269,7 +272,7 @@ export default (state = initialState, action)=>{
                 });
             }
 
-            state = state.update('truck', Immutable.fromJS(truck));
+            state = state.update('truck', value=>Immutable.fromJS(truck));
             console.log('current Truck:', state.get('truck').toJS());
             break;
 

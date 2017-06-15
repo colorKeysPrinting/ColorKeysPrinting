@@ -16,7 +16,7 @@ const actionTypes = [
     "SET_ACTIVATE_TAB",
 
 // products
-    "SET_ACTIVE_PAGE",
+    "SET_ACTIVE_FILTERS",
     "UPDATE_INFO_BAR",
     "CREATE_NEW_LIST", // needs to be a async call
     "ADD_TO_LIST", // needs to be a async call

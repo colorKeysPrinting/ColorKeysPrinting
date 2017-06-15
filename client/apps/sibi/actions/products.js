@@ -1,17 +1,18 @@
 'use strict';
 import ActionTypes      from '../constants/action_types';
 
-export function setActivePage(key, content) {
-    return {
-        type: ActionTypes.SET_ACTIVE_PAGE,
-        key,
-        content
-    };
-}
 
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
+export function setActiveFilters(key, value) {
+    return {
+        type: ActionTypes.SET_ACTIVE_FILTERS,
+        key,
+        value
+    }
+}
+
 export function removeProduct(key, product) {
     return {
         type: ActionTypes.REMOVE_PRODUCT,
