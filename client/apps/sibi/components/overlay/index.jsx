@@ -250,8 +250,7 @@ export default class Overlay extends React.Component {
                 break;
             case 'removeItem' :
                 overlay = <RemoveItem
-                                list={this.state.overlayObj.listName}
-                                listType={this.state.overlayObj.listType}
+                                overlayObj={this.state.overlayObj}
                                 product={_.find(this.props.products, (product)=>{return product.modelNum === this.state.overlayObj.modelNum})}
                                 removeProduct={this.props.removeProduct}
                                 close={this.close} />;

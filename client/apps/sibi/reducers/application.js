@@ -340,8 +340,22 @@ export default (state = initialState, action)=>{
             }
             break;
 
-        case ActionTypes.DELETE_ITEM:
+        case ActionTypes.REMOVE_PRODUCT:
             console.log('delete call back');
+            let myList = state.getIn(['activeUser', action.key]).toJS();
+            let listName = action.listName;
+
+            if(action.modelNum) {
+                let index = _.findIndex(myList, ['name', listName]);
+                myList[index].items = _.remove(myList[index].items, (product)=>{ return product !== action.modelNum });
+
+            } else {
+                myList = _.remove(myList, (list)=>{ return list.name !== listName });
+                browserHistory.push({ pathname: action.redirect });
+            }
+
+            state = state.updateIn(['activeUser', action.key], value=>Immutable.fromJS(myList));
+            state = state.set('activeOverlay', '');
             break;
 
         default:

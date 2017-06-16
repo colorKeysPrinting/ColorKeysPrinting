@@ -2,6 +2,8 @@ import React                                     from 'react';
 import assets                                    from '../../libs/assets';
 
 export default function RemoveItem(props) {
+    let title, message;
+    let listName = props.overlayObj.listName;
 
     let styles = {
         container: {
@@ -63,23 +65,30 @@ export default function RemoveItem(props) {
         }
     };
 
-    let listType = (props.listType === 'myList') ? 'list' : 'matchup';
+    if(props.product) {
+        title = 'Remove Item from';
+        message = `Are you sure you want to remove "${ props.product.name }" from ${ listName }`;
+    } else {
+        title = 'Delete'
+        message = `Are you sure you want to remove "${ listName }"`;
+    }
+
+    let modelNum = (props.product) ? props.product.modelNum : '';
+    let redirect = (props.overlayObj.redirect) ? props.overlayObj.redirect : '';
 
     return (
         <div style={styles.container}>
             <div style={styles.titleBar}>
-                <div style={styles.title}>Remove Item from { props.list }</div>
+                <div style={styles.title}>{ title } { listName }</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
-            <form onSubmit={()=>props.submitLoginBtn(props.type)}>
-                <div style={styles.content}>
-                    <p>Are you sure you want to remove "{ props.product.name }" from { props.list }</p>
-                </div>
-                <div style={{display: 'inline-flex', width: '100%'}}>
-                    <div style={styles.cancelBtn} onClick={props.close}>Cancel</div>
-                    <div style={styles.submitBtn} onClick={()=>props.removeProduct(props.list, props.product.modelNum)}>Remove</div>
-                </div>
-            </form>
+            <div style={styles.content}>
+                <p>{ message }</p>
+            </div>
+            <div style={{display: 'inline-flex', width: '100%'}}>
+                <div style={styles.cancelBtn} onClick={props.close}>Cancel</div>
+                <div style={styles.submitBtn} onClick={()=>props.removeProduct(props.overlayObj.listType, listName, modelNum, redirect)}>Remove</div>
+            </div>
         </div>
     );
 }

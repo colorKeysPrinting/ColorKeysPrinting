@@ -96,7 +96,7 @@ export default class MyLists extends React.Component {
                 return (
                     <Product
                         key={key + 'listItem'}
-                        parent="myList"
+                        parent="myLists"
                         listName={listName}
                         product={product}
                         addToTruck={this.props.addToTruck}
@@ -120,7 +120,7 @@ export default class MyLists extends React.Component {
             <div style={styles.container}>
                 <div style={styles.titleSection}>
                     <div>{ listName }</div>
-                    <div onClick={()=>this.props.showOverlay('removeItem', {listType: 'myList', listName})} style={styles.deleteList} >Delete List</div>
+                    <div onClick={()=>this.props.showOverlay('removeItem', {listType: 'myLists', redirect: `#/products`, listName})} style={styles.deleteList} >Delete List</div>
                 </div>
                 <div style={{margin: '50px -1px'}}>
                     { content }
