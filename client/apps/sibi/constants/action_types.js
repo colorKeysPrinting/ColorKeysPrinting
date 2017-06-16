@@ -20,6 +20,7 @@ const actionTypes = [
     "UPDATE_INFO_BAR",
     "CREATE_NEW_LIST", // needs to be a async call
     "ADD_TO_LIST", // needs to be a async call
+    "REMOVE_PRODUCT", // needs to be a async call
 
 // signup
     "UPLOAD_DOCUMENT",
@@ -34,7 +35,7 @@ const asyncActionTypes = [
     "SUBMIT_SIGNUP",
 
 // products
-    "REMOVE_PRODUCT",
+    // "REMOVE_PRODUCT",
 ];
 
 export default wrapper(actionTypes, asyncActionTypes);

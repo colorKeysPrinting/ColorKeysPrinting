@@ -3,7 +3,7 @@ import { connect }              from 'react-redux';
 
 import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
-import { createNewList, addToList }         from '../../actions/products';
+import { createNewList, addToList, removeProduct }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -14,6 +14,7 @@ import AddToConfirmation        from './add_to_confirmation';
 import AddNewList               from './add_new_list';
 import ViewMatchup              from './view_matchup';
 import Profile                  from './profile';
+import RemoveItem               from './remove_item';
 
 let select = (state)=>{
     return {
@@ -27,7 +28,7 @@ let select = (state)=>{
     }
 };
 
-let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewList, addToList, changeLanguage};
+let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewList, addToList, changeLanguage, removeProduct};
 
 @connect(select, actions, null, {withRef: true})
 export default class Overlay extends React.Component {
@@ -248,8 +249,12 @@ export default class Overlay extends React.Component {
                                 close={this.close} />;
                 break;
             case 'removeItem' :
-                overlay = <div>Need to create this overlay</div>;
-
+                overlay = <RemoveItem
+                                list={this.state.overlayObj.listName}
+                                listType={this.state.overlayObj.listType}
+                                product={_.find(this.props.products, (product)=>{return product.modelNum === this.state.overlayObj.modelNum})}
+                                removeProduct={this.props.removeProduct}
+                                close={this.close} />;
             default:
         }
 

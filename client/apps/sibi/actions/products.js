@@ -13,11 +13,11 @@ export function setActiveFilters(key, value) {
     }
 }
 
-export function removeProduct(key, product) {
+export function removeProduct(name, modelNum) {
     return {
         type: ActionTypes.REMOVE_PRODUCT,
-        key,
-        product
+        name,
+        modelNum
     };
 }
 

@@ -73,14 +73,14 @@ export default class Product extends React.Component {
             }
         };
 
-        let roundBtn = (this.props.parent === 'products') ? <img  src={assets('./images/plus_circle.png')}
-                                                                  alt="add"
-                                                                  onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})}
-                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
-                                                          : <img  src={assets('./images/minus_circle.png')}
-                                                                  alt="remove"
-                                                                  onClick={(e)=>this.props.showOverlay('removeItem', {modelNum: product.modelNum, listName: this.props.listName})}
-                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />;
+        let roundBtn = (this.props.parent === 'products') ? <img src={assets('./images/plus_circle.png')}
+                                                                 alt="add"
+                                                                 onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})}
+                                                                 style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
+                                                          : <img src={assets('./images/minus_circle.png')}
+                                                                 alt="remove"
+                                                                 onClick={(e)=>this.props.showOverlay('removeItem', {listType: this.props.parent, listName: this.props.listName, modelNum: product.modelNum})}
+                                                                 style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />;
         return (
             <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>
                 <div style={styles.productThumbnail}>
