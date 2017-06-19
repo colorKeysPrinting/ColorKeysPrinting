@@ -46,3 +46,11 @@ export function updateInfoBar(key) {
         key
     };
 }
+
+export function checkingInventory(product, location) {
+    return {
+        type: ActionTypes.CHECKING_INVENTORY,
+        product,
+        location
+    };
+}

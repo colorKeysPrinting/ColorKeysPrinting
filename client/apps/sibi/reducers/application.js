@@ -6,6 +6,7 @@ import ActionTypes              from '../constants/action_types';
 import { browserHistory }       from 'react-router';
 
 const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', activePageContent: '', temp: {docs: {workerComp: '', w9: '', insurance: '', contractGoodman: false,  contractAsure: false}},
+    isInStock: true,
 
 // ****** API information starts here ******
     fundsList: ['Associated fund', 'value fund', 'foo fund', 'Jolly fund'], locationList: ['petes place', 'lower towers', 'twin terrace'],
@@ -356,6 +357,25 @@ export default (state = initialState, action)=>{
 
             state = state.updateIn(['activeUser', action.key], value=>Immutable.fromJS(myList));
             state = state.set('activeOverlay', '');
+            break;
+
+        case ActionTypes.CHECKING_INVENTORY:
+            console.log('checking inventory:' , action.location, action.product);
+            state = state.set('activeOverlay', '');
+
+            //TODO: remove this is dummy data check
+            if(action.location.name === 'West Phoenix') {
+                let locations = state.get('productLocations').toJS();
+
+                var index = _.findIndex(locations, (location)=>{ return location.name === action.location.name });
+                locations[index].stock = 0;
+
+                state = state.update('productLocations', value=>Immutable.fromJS(locations));
+                state = state.update('isInStock', value=>false);
+            } else {
+                state = state.update('isInStock', value=>true);
+            }
+
             break;
 
         default:

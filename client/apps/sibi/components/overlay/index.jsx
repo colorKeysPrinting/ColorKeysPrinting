@@ -3,7 +3,7 @@ import { connect }              from 'react-redux';
 
 import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
-import { createNewList, addToList, removeProduct }         from '../../actions/products';
+import { createNewList, addToList, removeProduct, checkingInventory }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -15,6 +15,7 @@ import AddNewList               from './add_new_list';
 import ViewMatchup              from './view_matchup';
 import Profile                  from './profile';
 import RemoveItem               from './remove_item';
+import StockCheck               from './stock_check';
 
 let select = (state)=>{
     return {
@@ -28,7 +29,7 @@ let select = (state)=>{
     }
 };
 
-let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewList, addToList, changeLanguage, removeProduct};
+let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewList, addToList, changeLanguage, removeProduct, checkingInventory};
 
 @connect(select, actions, null, {withRef: true})
 export default class Overlay extends React.Component {
@@ -253,6 +254,12 @@ export default class Overlay extends React.Component {
                                 overlayObj={this.state.overlayObj}
                                 product={_.find(this.props.products, (product)=>{return product.modelNum === this.state.overlayObj.modelNum})}
                                 removeProduct={this.props.removeProduct}
+                                close={this.close} />;
+            case 'stockCheck' :
+                overlay = <StockCheck
+                                location={this.state.overlayObj.location}
+                                product={this.state.overlayObj.product}
+                                checkingInventory={this.props.checkingInventory}
                                 close={this.close} />;
             default:
         }

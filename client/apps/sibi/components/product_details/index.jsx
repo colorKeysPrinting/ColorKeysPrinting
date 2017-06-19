@@ -14,7 +14,8 @@ let select = (state)=>{
         currLang          : state.application.get('currLanguage'),
         products          : state.application.get('products').toJS(),
         productLocations  : state.application.get('productLocations').toJS(),
-        truck             : state.application.get('truck')
+        truck             : state.application.get('truck'),
+        isInStock         : state.application.get('isInStock'),
     };
 };
 
@@ -26,11 +27,14 @@ export default class ProductDetails extends React.Component {
 
         this.state = {
             product: _.find(this.props.products, ['modelNum', this.props.params.modelNum]), qty: 1, location: this.props.productLocations[0], warranty: false,
-            truck: (this.props.truck.size > 0) ? this.props.truck.toJS() : []
+            truck: (this.props.truck.size > 0) ? this.props.truck.toJS() : [],
+            minStock: 10
         };
 
         this.update = this.update.bind(this);
-        this.addToTruck = this.addToTruck.bind(this);
+        this.checkInventory = this.checkInventory.bind(this);
+
+        this.checkInventory(this.state.location.name);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -41,14 +45,19 @@ export default class ProductDetails extends React.Component {
 
     update(type, value) {
         this.setState({[type]: value});
+
+        this.checkInventory(value);
     }
 
-    addToTruck(product) {
-        console.log('addToTruck', product);
+    checkInventory(value) {
+        let index = _.findIndex(this.props.productLocations, (location)=>{ return location.name === value });
+
+        if(this.props.productLocations[index].stock < this.state.minStock) {
+            this.props.showOverlay('stockCheck', {product: this.state.product, location: this.props.productLocations[index]});
+        }
     }
 
     render() {
-
         let styles = {
             container: {
                 width: '98%',
@@ -56,11 +65,14 @@ export default class ProductDetails extends React.Component {
                 textAlign: 'left',
                 display: 'inline-flex'
             },
-            dropdown: {
+            dropdownSection: {
                 width: '60%',
+                marginLeft: '15px'
+            },
+            dropdown: {
+                width: '98%',
                 height: '45px',
-                marginLeft: '15px',
-                border: '1px solid rgba(50, 50, 50, 0.1)',
+                border: (this.props.isInStock) ? '1px solid rgba(50, 50, 50, 0.1)' : '1px solid #F00',
                 backgroundColor: '#FFF',
             },
             qtyInput: {
@@ -105,6 +117,11 @@ export default class ProductDetails extends React.Component {
             },
             checkbox: {
                 margin: '25px auto'
+            },
+            stockError: {
+                display: (!this.props.isInStock) ? 'block' : 'none',
+                color: '#F00',
+                fontSize: '15px'
             }
         };
 
@@ -128,9 +145,12 @@ export default class ProductDetails extends React.Component {
                             <div><img src={''} alt="product perks? " width="80%" height="80" style={styles.image}/></div>
                             <div style={{display: 'inline-flex', width: '100%'}}>
                                 <div style={{width: '20%'}}>Qty: <input type="number" value={this.state.qty} onChange={(e)=>this.update('qty', e.target.value)} style={styles.qtyInput} /></div>
-                                <select id="locationSelectDropdown" value={ this.state.location } onChange={ (e)=>this.update('location', e.target.value) } style={styles.dropdown}>
-                                    {locationOptions}
-                                </select>
+                                <div style={styles.dropdownSection}>
+                                    <select id="locationSelectDropdown" value={ this.state.location } onChange={ (e)=>this.update('location', e.target.value) } style={styles.dropdown}>
+                                        {locationOptions}
+                                    </select>
+                                    <div style={styles.stockError}>This item is sold out here.  Select a new location.</div>
+                                </div>
                             </div>
                             <div style={styles.checkbox}>
                                 <input type="checkbox"
