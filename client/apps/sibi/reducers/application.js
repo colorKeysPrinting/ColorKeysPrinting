@@ -56,6 +56,18 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             {name: 'Saved Trucks', items: ['ARUF37C14', 'GPH1460h42']},
             {name: 'Supplies', items: []}
         ],
+        myOrders: [
+            {orderNum: 138992342, orderDate: 1488412800000, total: 5631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'ordered',           items: {'0': 16, '9': 16}},
+            {orderNum: 138992343, orderDate: 1488153600000, total: 876.03,   propertyAddress: '113 Washington Blvd, Ogden, UT, 84414', shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           items: {'4': 2, '2': 2}},
+            {orderNum: 138992344, orderDate: 1487548800000, total: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           items: {'11': 16, '9': 16}},
+            {orderNum: 138992345, orderDate: 1487462400000, total: 22331.76, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Shipped',           items: {'1': 50, '6': 10, '7': 50, '2': 1}},
+            {orderNum: 138992346, orderDate: 1487462400000, total: 1631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Partially Shipped', items: {'0': 3}},
+            {orderNum: 138992347, orderDate: 1487462400000, total: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         items: {'2': 4, '5': 1}},
+            {orderNum: 138992348, orderDate: 1486771200000, total: 831.96,   propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         items: {'0': 3, '9': 3, '10': 1}},
+            {orderNum: 138992349, orderDate: 1486684800000, total: 18631.92, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Delivered',         items: {'0': 16, '9': 11, '7': 10, '3': 1}},
+            {orderNum: 138992350, orderDate: 1485561600000, total: 13631.91, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         items: {'0': 16, '9': 11, '7': 4, '3': 3}},
+        ],
+
         filterPanel:{
             'hvac equipment': {
                 types: {
