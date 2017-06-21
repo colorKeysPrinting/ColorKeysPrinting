@@ -6,6 +6,7 @@ import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
 import { showOverlay, addToTruck }          from '../../../actions/application';
+import { removeList }          from '../../../actions/products';
 
 let select = (state)=>{
     return {
@@ -16,7 +17,7 @@ let select = (state)=>{
     };
 };
 
-@connect(select, { showOverlay, addToTruck }, null, {withRef: true})
+@connect(select, { showOverlay, addToTruck, removeList }, null, {withRef: true})
 export default class MatchupsCustom extends React.Component {
 
     constructor(props) {
@@ -24,11 +25,10 @@ export default class MatchupsCustom extends React.Component {
 
         let matchups = _.find(this.props.myMatchups.toJS(), ['type', 'custom']);
 
-        matchups = (matchups) ? matchups : {type:'', matchups: ''};
+        matchups = (matchups) ? matchups.matchups : {};
 
         this.state = {matchups};
 
-        this.delete = this.delete.bind(this);
         this.share = this.share.bind(this);
         this.download = this.download.bind(this);
     }
@@ -37,17 +37,8 @@ export default class MatchupsCustom extends React.Component {
         if(nextProps.myMatchups) {
             let matchups = _.find(nextProps.myMatchups.toJS(), ['type', 'custom']);
 
-            this.setState({matchups});
+            this.setState({matchups: matchups.matchups});
         }
-    }
-
-    delete(matchupID) {
-        console.log('delete: ', matchupID);
-
-        let matchups = _.remove(this.state.matchups.products, (matchup)=>{return matchup.id !== matchupID});
-
-        this.setState({matchups});
-        // TODO: this will eventually need to go to the store to be removed or make a server call
     }
 
     share() {
@@ -101,7 +92,7 @@ export default class MatchupsCustom extends React.Component {
             }
         };
 
-        let matchups = _.map(this.state.matchups.matchups, (matchup)=>{
+        let matchups = _.map(this.state.matchups, (matchup)=>{
             let products;
 
             if(_.size(matchup.products) > 0) {
@@ -124,7 +115,7 @@ export default class MatchupsCustom extends React.Component {
                     <td onClick={()=>this.props.showOverlay('customMatchup', matchup)} style={styles.blueTxt} >View Products</td>
                     <td>${ (matchup.price).formatMoney(2, '.', ',') }</td>
                     <td onClick={()=>this.props.addToTruck({products: matchup.products})} style={styles.blueTxt}>Add to truck</td>
-                    <td><div onClick={()=>this.delete(matchup.name)} style={styles.delete}><img src={''} alt="delete"/></div></td>
+                    <td><div onClick={()=>this.props.removeList('customMatchup', matchup.id)} style={styles.delete}><img src={''} alt="delete"/></div></td>
                 </tr>
             );
         });

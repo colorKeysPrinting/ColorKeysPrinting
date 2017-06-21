@@ -62,7 +62,7 @@ export default function AddNewListOverlay(props) {
     return (
         <div style={styles.container}>
             <div style={ styles.titleBar }>
-                <div style={styles.title}>Create New {title}</div>
+                <div style={styles.title}>Create New { title }</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
             <form onSubmit={()=>props.submitCreateListBtn(props.overlayObj.type)}>

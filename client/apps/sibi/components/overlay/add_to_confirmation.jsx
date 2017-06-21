@@ -67,28 +67,28 @@ export default function AddToConfirmationOverlay(props) {
     };
 
     let title;
-
-    let viewType = (props.type === 'matchup') ? <div onClick={()=>props.changeOverlay('customMatchup')} style={styles.viewMatchup}>View Matchup</div>
-                                              : <Link to={`/products/myList-${props.index}`} style={styles.viewMatchup} >View List</Link>;
+    let product = props.product;
+    let viewType = (props.overlayObj.type === 'Matchup') ? <div onClick={()=>props.changeOverlay('customMatchup')} style={styles.viewMatchup} >View Matchup</div>
+                                                         : <Link to={`/products/myList-${props.overlayObj.id}`} style={styles.viewMatchup} >View List</Link>;
 
     return (
         <div style={styles.container}>
-            <div style={ styles.titleBar }>
+            <div style={styles.titleBar}>
                 <div>1 Item Added to </div>
-                <div style={styles.title}>{props.title}</div>
+                <div style={styles.title} >{ props.overlayObj.name }</div>
             </div>
             <div style={styles.content}>
                 <div style={{display: 'inline-flex'}}>
-                    <div><img src={''} alt={props.product.modelNum} height="200" width="175" style={styles.image}/></div>
+                    <div><img src={''} alt={product.modelNum} height="200" width="175" style={styles.image} /></div>
                     <div>
-                        <div>{props.product.name}</div>
-                        <div>Model # {props.product.modelNum}</div>
+                        <div>{ product.name }</div>
+                        <div>Model # { product.modelNum }</div>
                     </div>
                 </div>
-                <div style={styles.text}>*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>
+                <div style={styles.text} >*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>
                 <div style={{display: 'inline-flex', width: '100%'}}>
                     { viewType }
-                    <div onClick={props.close} style={styles.submitBtn}>Continue Shopping</div>
+                    <div onClick={props.close} style={styles.submitBtn} >Continue Shopping</div>
                 </div>
             </div>
         </div>

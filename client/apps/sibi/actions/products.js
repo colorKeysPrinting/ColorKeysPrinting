@@ -13,21 +13,29 @@ export function setActiveFilters(key, value) {
     }
 }
 
-export function removeProduct(key, listName, id, redirect) {
+export function removeProduct(key, listID, id, redirect) {
     return {
         type: ActionTypes.REMOVE_PRODUCT,
         key,
-        listName,
+        listID,
         id,
         redirect
     };
 }
 
-export function addToList(key, listName, id) {
+export function removeList(listType, listID) {
+    return {
+        type: ActionTypes.REMOVE_LIST,
+        listType,
+        listID
+    };
+}
+
+export function addToList(key, listID, id) {
     return {
         type: ActionTypes.ADD_TO_LIST,
         key,
-        listName,
+        listID,
         id
     };
 }

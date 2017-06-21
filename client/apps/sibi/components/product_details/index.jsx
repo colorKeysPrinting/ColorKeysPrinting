@@ -12,8 +12,8 @@ import YourTruck                from './your_truck';
 let select = (state)=>{
     return {
         currLang          : state.application.get('currLanguage'),
-        products          : state.application.get('products').toJS(),
-        productLocations  : state.application.get('productLocations').toJS(),
+        products          : state.application.get('products'),
+        productLocations  : state.application.get('productLocations'),
         truck             : state.application.get('truck'),
         isInStock         : state.application.get('isInStock'),
     };
@@ -25,8 +25,10 @@ export default class ProductDetails extends React.Component {
     constructor(props) {
         super(props);
 
+        let location = this.props.productLocations.toJS();
+
         this.state = {
-            product: _.find(this.props.products, ['modelNum', this.props.params.modelNum]), qty: 1, location: this.props.productLocations[0], warranty: false,
+            product: _.find(this.props.products.toJS(), ['id', parseInt(this.props.params.id)]), qty: 1, location: location[0], warranty: false,
             truck: (this.props.truck.size > 0) ? this.props.truck.toJS() : [],
             minStock: 10
         };
@@ -54,7 +56,7 @@ export default class ProductDetails extends React.Component {
     }
 
     checkInventory(id) {
-        let location = _.find(this.props.productLocations, ['id', parseInt(id)]);
+        let location = _.find(this.props.productLocations.toJS(), ['id', parseInt(id)]);
 
         if(location.stock < this.state.minStock) {
             this.props.showOverlay('stockCheck', {product: this.state.product, location});
@@ -129,7 +131,7 @@ export default class ProductDetails extends React.Component {
             }
         };
 
-        let locationOptions = _.map(this.props.productLocations, (location)=>{
+        let locationOptions = _.map(this.props.productLocations.toJS(), (location)=>{
             return <option key={location.id} value={location.id} >{location.name} ({location.stock} in stock)</option>;
         });
 
@@ -169,7 +171,7 @@ export default class ProductDetails extends React.Component {
                     </div>
                     <DetailTabs
                         tabs={this.state.product.tabs}
-                        products={this.props.products}
+                        products={this.props.products.toJS()}
                         addToTruck={this.props.addToTruck} />
                 </div>
                 <YourTruck

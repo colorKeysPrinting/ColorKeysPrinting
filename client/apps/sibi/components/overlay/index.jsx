@@ -127,8 +127,8 @@ export default class Overlay extends React.Component {
         console.log('submit add to clicked');
 
         this.props.createNewList(type, this.state.newList);
-        if(this.state.overlayObj['modelNum']) {
-            this.props.addToList(type, this.state.newList, this.state.overlayObj.modelNum); // TODO: check to make sure this functionality is correct,
+        if(this.state.overlayObj['id']) {
+            this.props.addToList(type, this.state.newList, this.state.overlayObj.id); // TODO: check to make sure this functionality is correct,
                                                                                             // when you create a new list the product you clicked on will be added to that list
         }
 
@@ -138,7 +138,7 @@ export default class Overlay extends React.Component {
     submitAddToBtn(type, listName) {
         console.log('submit add to clicked');
 
-        this.props.addToList(type, listName, this.state.overlayObj.modelNum);
+        this.props.addToList(type, listName, this.state.overlayObj.id);
     }
 
     addToTruck(items) {
@@ -226,10 +226,8 @@ export default class Overlay extends React.Component {
 
             case 'addToConfirmation':
                 overlay = <AddToConfirmation
-                                title={this.state.overlayObj.name}
-                                type={this.props.overlayObj.type}
-                                index={this.props.overlayObj.index}
-                                product={_.find(this.props.products, (product)=>{return product.modelNum === this.state.overlayObj.modelNum})}
+                                overlayObj={this.state.overlayObj}
+                                product={_.find(this.props.products, (product)=>{return product.id === this.state.overlayObj.id})}
                                 changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
                                 close={this.close} />;
                 break;

@@ -108,7 +108,7 @@ export default class Matchups extends React.Component {
                 </div>
                 <div style={{margin: '50px -1px'}}>
                     <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
-                        {matchups}
+                        { matchups }
                     </div>
                 </div>
             </div>

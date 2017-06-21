@@ -218,21 +218,21 @@ export default (state = initialState, action)=>{
             state = state.set('activeOverlay', action.key);
 
             if(action.listType) {
-                let list;
+                let lists;
 
                 switch(action.listType) {
                     case 'customMatchups':
                         let myMatchups = _.find(state.getIn(['activeUser', 'myMatchups']).toJS(), ['type','custom']);
-                        list = myMatchups.products;
+                        lists = myMatchups.matchups;
                         break;
 
                     case 'myLists':
-                        list = state.getIn(['activeUser', 'myLists']).toJS();
+                        lists = state.getIn(['activeUser', 'myLists']).toJS();
                         break;
                     default:
                 }
 
-                state = state.set('overlayObj', {type: action.listType, id: action.id, list});
+                state = state.set('overlayObj', {type: action.listType, id: action.id, lists});
             }
             break;
 
@@ -295,7 +295,7 @@ export default (state = initialState, action)=>{
                 let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
                 let customMatchups = _.find(myMatchups, ['type', 'custom']);
 
-                myMatchups = _.remove(myMatchups, (matchups)=>{return matchups.type !== 'custom'});
+                myMatchups = _.remove(myMatchups, (matchup)=>{return matchup.type !== 'custom'});
 
                 customMatchups.matchups.push({id: _.size(customMatchups.matchups), name: action.newItem, price: 0, products: {}});
 
@@ -317,40 +317,42 @@ export default (state = initialState, action)=>{
             break;
 
         case ActionTypes.ADD_TO_LIST:
-            console.log('TODO: ASYNC CALL - add to ' + action.listName, action.id);
+            console.log('TODO: ASYNC CALL - add to ' + action.listID, action.id);
 
             if(action.key === 'customMatchups') {
                 let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
                 let customMatchups = _.find(myMatchups, ['type', 'custom']);
+                let matchup = _.find(customMatchups.matchups, ['id', action.listID]);
 
-                let index = _.findIndex(customMatchups.matchups, ['name', action.listName]);
-                let matchup = customMatchups[index];
+                myMatchups = _.remove(myMatchups, (matchup)=>{return matchup.type !== 'custom'}); // remove custom match from myMatchups
+                customMatchups.matchups = _.remove(customMatchups.matchups, (matchup)=>{return matchup.id !== action.listID}); // remove matchup from custom matchups
 
-                if(matchup.matchups[action.id]) {
-                    matchup.matchups[action.id] += 1;
+                if(matchup.products[action.id]) {
+                    matchup.products[action.id] += 1;
 
                 } else {
-                    matchup.matchups[action.id] = 1;
+                    matchup.products[action.id] = 1;
                 }
 
-                myMatchups[index] = matchup;
+                customMatchups.matchups.push(matchup); // add the modified matchup back into custom matchups
+                myMatchups.push(customMatchups); // add the full custom matchup back into myMatchups
 
                 state = state.updateIn(['activeUser', 'myMatchups'], value=>Immutable.fromJS(myMatchups));
                 console.log('current matchups:', state.getIn(['activeUser', 'myMatchups']).toJS());
 
                 state = state.set('activeOverlay', 'addToConfirmation');
-                state = state.set('overlayObj', {name: action.listName, id: action.id, matchups: matchup.products, type: 'Matchup'});
+                state = state.set('overlayObj', {type: 'Matchup', name: matchup.name, id: action.id, products: matchup.products});
 
             } else if (action.key === 'myLists') {
                 let myLists = state.getIn(['activeUser', 'myLists']).toJS();
-                let index = _.findIndex(myLists, ['name', action.listName]);
+                let index = _.findIndex(myLists, ['id', action.listID]);
                 myLists[index].products.push(action.id);
 
                 state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));
                 console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
 
                 state = state.set('activeOverlay', 'addToConfirmation');
-                state = state.set('overlayObj', {name: action.listName, id: action.id, type: 'List', index});
+                state = state.set('overlayObj', {type: 'List', name: myLists[index].name, id: action.id});
             }
             break;
 
@@ -370,6 +372,22 @@ export default (state = initialState, action)=>{
 
             state = state.updateIn(['activeUser', action.key], value=>Immutable.fromJS(myList));
             state = state.set('activeOverlay', '');
+            break;
+
+        case ActionTypes.REMOVE_LIST:
+            console.log('delete call back list');
+
+            if(action.listType === 'customMatchup') {
+                let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
+                let customMatchups = _.find(myMatchups, ['type', 'custom']);
+
+                myMatchups = _.remove(myMatchups, (matchup)=>{ return matchup.type !== 'custom' });
+                customMatchups.matchups = _.remove(customMatchups.matchups, (matchup)=>{ return matchup.id !== parseInt(action.listID) });
+
+                myMatchups.push(customMatchups);
+
+                state = state.updateIn(['activeUser', 'myMatchups'], value=>Immutable.fromJS(myMatchups));
+            }
             break;
 
         case ActionTypes.CHECKING_INVENTORY:
