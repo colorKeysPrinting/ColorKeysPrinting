@@ -11,6 +11,7 @@ let select = (state)=>{
     return {
         currLang        : state.application.get('currLanguage'),
         matchups        : state.application.get('matchups').toJS(),
+        products        : state.application.get('products').toJS(),
         myMatchups      : state.application.getIn(['activeUser', 'myMatchups'])
     };
 };
@@ -21,10 +22,9 @@ export default class MatchupsCustom extends React.Component {
     constructor(props) {
         super(props);
 
-        let matchups = (this.props.myMatchups.size > 0) ? this.props.myMatchups.toJS() : [];
-        let index = _.findIndex(matchups, ['type', 'custom']);
+        let matchups = _.find(this.props.myMatchups.toJS(), ['type', 'custom']);
 
-        matchups = (index !== -1) ? matchups[index] : {type:'', items: ''};
+        matchups = (matchups) ? matchups : {type:'', matchups: ''};
 
         this.state = {matchups};
 
@@ -35,17 +35,16 @@ export default class MatchupsCustom extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.myMatchups) {
-            let matchups = (nextProps.myMatchups.size > 0) ? nextProps.myMatchups.toJS() : [];
-            let index = _.findIndex(matchups, ['type', 'custom']);
+            let matchups = _.find(nextProps.myMatchups.toJS(), ['type', 'custom']);
 
-            this.setState({matchups: matchups[index]});
+            this.setState({matchups});
         }
     }
 
-    delete(matchup) {
-        console.log('delete: ', matchup);
+    delete(matchupID) {
+        console.log('delete: ', matchupID);
 
-        let matchups = _.remove(this.state.matchups, (obj)=>{return obj !== matchup});
+        let matchups = _.remove(this.state.matchups.products, (matchup)=>{return matchup.id !== matchupID});
 
         this.setState({matchups});
         // TODO: this will eventually need to go to the store to be removed or make a server call
@@ -102,25 +101,30 @@ export default class MatchupsCustom extends React.Component {
             }
         };
 
-        let matchups = _.map(this.state.matchups.items, (matchup, key)=>{
-            let name = matchup.name, items;
+        let matchups = _.map(this.state.matchups.matchups, (matchup)=>{
+            let products;
 
-            if(_.size(matchup.items) > 0) {
-                items = Object.keys(matchup.items);
-                items = items.join(',');
+            if(_.size(matchup.products) > 0) {
+
+                products = _.map(matchup.products, (qty, productID)=>{
+                    let product = _.find(this.props.products, (product)=>{ return product.id === parseInt(productID) });
+                    return product.modelNum;
+                });
+
+                products = products.join(', ');
 
             } else {
-                items = <Link to={`/products`}><div style={styles.blueTxt} >Add Products</div></Link>;
+                products = <Link to={`/products`}><div style={styles.blueTxt} >Add Products</div></Link>;
             }
 
             return (
-                <tr key={key}>
-                    <td>{name}</td>
-                    <td>{items}</td>
-                    <td onClick={()=>this.props.showOverlay('customMatchup', {name, products: matchup.items})} style={styles.blueTxt} >View Products</td>
-                    <td>${(matchup.price).formatMoney(2, '.', ',')}</td>
-                    <td onClick={()=>this.props.addToTruck(matchup.items)} style={styles.blueTxt}>Add to truck</td>
-                    <td><div onClick={()=>this.delete(name)} style={styles.delete}><img src={''} alt="delete"/></div></td>
+                <tr key={matchup.id}>
+                    <td>{ matchup.name }</td>
+                    <td>{ products }</td>
+                    <td onClick={()=>this.props.showOverlay('customMatchup', matchup)} style={styles.blueTxt} >View Products</td>
+                    <td>${ (matchup.price).formatMoney(2, '.', ',') }</td>
+                    <td onClick={()=>this.props.addToTruck(matchup.products)} style={styles.blueTxt}>Add to truck</td>
+                    <td><div onClick={()=>this.delete(matchup.name)} style={styles.delete}><img src={''} alt="delete"/></div></td>
                 </tr>
             );
         });
@@ -148,7 +152,7 @@ export default class MatchupsCustom extends React.Component {
                         </tr>
                         </thead>
                         <tbody>
-                            {matchups}
+                            { matchups }
                         </tbody>
                     </table>
                 </div>
