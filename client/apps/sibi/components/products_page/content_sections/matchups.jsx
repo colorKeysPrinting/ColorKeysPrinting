@@ -43,7 +43,7 @@ export default class Matchups extends React.Component {
             applicationType = (this.state.applicationType) ? this.state.applicationType : matchup.applicationTypeOptions[0];
         }
 
-        this.props.addToTruck({...matchup, tonnage, seer, applicationType});
+        this.props.addToTruck({products: matchup.products, tonnage, seer, applicationType}); // TODO: need to make sure this is choosing the correct products
     }
 
     render() {
