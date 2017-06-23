@@ -207,10 +207,10 @@ export default (state = initialState, action)=>{
             console.log('show radio overlay', action.overlay);
             state = state.set('activeOverlay', action.overlay);
 
-            if(action.listType) {
+            if(action.collectionType) {
                 let collections;
 
-                switch(action.listType) {
+                switch(action.collectionType) {
                     case 'customMatchups':
                         let myMatchups = _.find(state.getIn(['activeUser', 'myMatchups']).toJS(), ['type','custom']);
                         collections = myMatchups.matchups;
@@ -222,7 +222,7 @@ export default (state = initialState, action)=>{
                     default:
                 }
 
-                state = state.set('overlayObj', {type: action.listType, productID: action.productID, collections});
+                state = state.set('overlayObj', {type: action.collectionType, productID: action.productID, collections});
             }
             break;
 
@@ -278,33 +278,33 @@ export default (state = initialState, action)=>{
             console.log('current Truck:', state.get('truck').toJS());
             break;
 
-        case ActionTypes.ADD_TO_LIST:
+        case ActionTypes.ADD_TO_COLLECTION:
             console.log('TODO: ASYNC CALL - add to ' + action.collectionID, action.productID);
             let collectionObj;
 
-            if(action.listType === 'customMatchups') {
+            if(action.collectionType === 'customMatchups') {
                 let customMatchups = _.find(state.getIn(['activeUser','myMatchups']).toJS(), ['type', 'custom']);
                 collectionObj = _.find(customMatchups.matchups, ['id', action.collectionID]);
 
-            } else if (action.listType === 'myLists') {
+            } else if (action.collectionType === 'myLists') {
                 collectionObj = _.find(state.getIn(['activeUser','myLists']).toJS(), ['id', action.collectionID]);
             }
 
-            state = productFunctions.addToListHelper(state, action.listType, collectionObj.id, action.productID);
+            state = productFunctions.addToListHelper(state, action.collectionType, collectionObj.id, action.productID);
             break;
 
         case ActionTypes.CREATE_NEW_LIST:
             let collectionID;
-            console.log('TODO: ASYNC CALL - create new: ' + action.listType, action.listName);
+            console.log('TODO: ASYNC CALL - create new: ' + action.collectionType, action.collectionName);
 
-            if(action.listType === 'customMatchups') {
+            if(action.collectionType === 'customMatchups') {
                 let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
                 let customMatchups = _.find(myMatchups, ['type', 'custom']);
                 collectionID = _.size(customMatchups.matchups);
 
                 myMatchups = _.remove(myMatchups, (matchup)=>{return matchup.type !== 'custom'});
 
-                customMatchups.matchups.push({id: collectionID, name: action.listName, price: 0, products: {}});
+                customMatchups.matchups.push({id: collectionID, name: action.collectionName, price: 0, products: {}});
 
                 myMatchups.push(customMatchups);
 
@@ -312,11 +312,11 @@ export default (state = initialState, action)=>{
 
                 console.log('current myMatchups:', state.getIn(['activeUser', 'myMatchups']).toJS());
 
-            } else if (action.listType === 'myLists') {
+            } else if (action.collectionType === 'myLists') {
                 let myLists = state.getIn(['activeUser', 'myLists']).toJS();
                 collectionID = _.size(myLists);
 
-                myLists.push({id: collectionID, name: action.listName, products: []});
+                myLists.push({id: collectionID, name: action.collectionName, products: []});
 
                 state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));
                 state = state.set('activeOverlay', '');
@@ -326,17 +326,17 @@ export default (state = initialState, action)=>{
             }
 
             if(action.productID) {
-                state = productFunctions.addToListHelper(state, action.listType, collectionID, parseInt(action.productID));
+                state = productFunctions.addToListHelper(state, action.collectionType, collectionID, parseInt(action.productID));
             }
             break;
 
         case ActionTypes.REMOVE_PRODUCT:
             console.log('delete call back');
 
-            let listType = action.obj.listType;
+            let collectionType = action.obj.collectionType;
             let productID = (action.obj.productID) ? action.obj.productID : '';
 
-            let myList = state.getIn(['activeUser', listType]).toJS();
+            let myList = state.getIn(['activeUser', collectionType]).toJS();
 
             if(productID.toString()) {
                 let collection = _.find(myList, ['id', action.obj.collectionID]);
@@ -351,14 +351,14 @@ export default (state = initialState, action)=>{
                 browserHistory.push({ pathname: action.obj.redirect });
             }
 
-            state = state.updateIn(['activeUser', listType], value=>Immutable.fromJS(myList));
+            state = state.updateIn(['activeUser', collectionType], value=>Immutable.fromJS(myList));
             state = state.set('activeOverlay', '');
             break;
 
-        case ActionTypes.REMOVE_LIST:
+        case ActionTypes.REMOVE_COLLECTION:
             console.log('delete call back list');
 
-            if(action.listType === 'customMatchup') {
+            if(action.collectionType === 'customMatchup') {
                 let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
                 let customMatchups = _.find(myMatchups, ['type', 'custom']);
 

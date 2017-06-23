@@ -79,7 +79,7 @@ export default class Product extends React.Component {
                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
                                                           : <img src={assets('./images/minus_circle.png')}
                                                                  alt="remove"
-                                                                 onClick={(e)=>this.props.showOverlay('removeItem', {listType: this.props.parent, collectionID: this.props.collectionID, productID: product.id})}
+                                                                 onClick={(e)=>this.props.showOverlay('removeItem', {collectionType: this.props.parent, collectionID: this.props.collectionID, productID: product.id})}
                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />;
         return (
             <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>

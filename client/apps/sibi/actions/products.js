@@ -20,28 +20,28 @@ export function removeProduct(obj) {
     };
 }
 
-export function removeList(listType, collectionID) {
+export function removeCollection(collectionType, collectionID) {
     return {
-        type: ActionTypes.REMOVE_LIST,
-        listType,
+        type: ActionTypes.REMOVE_COLLECTION,
+        collectionType,
         collectionID
     };
 }
 
-export function addToList(listType, collectionID, productID) {
+export function addToCollection(collectionType, collectionID, productID) {
     return {
-        type: ActionTypes.ADD_TO_LIST,
-        listType,
+        type: ActionTypes.ADD_TO_COLLECTION,
+        collectionType,
         collectionID,
         productID
     };
 }
 
-export function createNewList(listType, listName, productID) {
+export function createNewCollection(collectionType, collectionName, productID) {
     return {
         type: ActionTypes.CREATE_NEW_LIST,
-        listType,
-        listName,
+        collectionType,
+        collectionName,
         productID
     };
 }

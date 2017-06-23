@@ -19,9 +19,9 @@ const actionTypes = [
     "SET_ACTIVE_FILTERS",
     "UPDATE_INFO_BAR",
     "CREATE_NEW_LIST", // needs to be a async call
-    "ADD_TO_LIST", // needs to be a async call
+    "ADD_TO_COLLECTION", // needs to be a async call
     "REMOVE_PRODUCT", // needs to be a async call
-    "REMOVE_LIST", // needs to be a async call
+    "REMOVE_COLLECTION", // needs to be a async call
     "CHECKING_INVENTORY", // needs to be a async call
 
 // signup

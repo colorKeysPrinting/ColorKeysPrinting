@@ -100,7 +100,7 @@ export default class MyLists extends React.Component {
             <div style={styles.container}>
                 <div style={styles.titleSection}>
                     <div>{ collection.name }</div>
-                    <div onClick={()=>this.props.showOverlay('removeItem', {listType: 'myLists', redirect: `#/products`, collectionID: collection.id})} style={styles.deleteList} >Delete List</div>
+                    <div onClick={()=>this.props.showOverlay('removeItem', {collectionType: 'myLists', redirect: `#/products`, collectionID: collection.id})} style={styles.deleteList} >Delete List</div>
                 </div>
                 <div style={{margin: '50px -1px'}}>
                     { content }

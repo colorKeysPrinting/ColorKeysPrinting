@@ -3,7 +3,7 @@ import { connect }              from 'react-redux';
 
 import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
-import { createNewList, addToList, removeProduct, checkingInventory }         from '../../actions/products';
+import { createNewCollection, addToCollection, removeProduct, checkingInventory }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -30,7 +30,7 @@ let select = (state)=>{
     }
 };
 
-let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewList, addToList, changeLanguage, removeProduct, checkingInventory};
+let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewCollection, addToCollection, changeLanguage, removeProduct, checkingInventory};
 
 @connect(select, actions, null, {withRef: true})
 export default class Overlay extends React.Component {
@@ -136,13 +136,13 @@ export default class Overlay extends React.Component {
             productID = this.state.overlayObj.productID.toString();
         }
 
-        this.props.createNewList(type, this.state.newList, productID);
+        this.props.createNewCollection(type, this.state.newList, productID);
         this.close();
     }
 
-    submitAddToBtn(type, listName) {
+    submitAddToBtn(type, collectionName) {
         console.log('submit add to clicked');
-        this.props.addToList(type, listName, this.state.overlayObj.productID);
+        this.props.addToCollection(type, collectionName, this.state.overlayObj.productID);
     }
 
     addToTruck(items) {

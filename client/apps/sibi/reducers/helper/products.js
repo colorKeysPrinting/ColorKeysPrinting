@@ -3,8 +3,8 @@
 import _                        from 'lodash';
 import Immutable                from 'immutable';
 
-export function addToListHelper(state, listType, collectionID, productID) {
-    if(listType === 'customMatchups') {
+export function addToListHelper(state, collectionType, collectionID, productID) {
+    if(collectionType === 'customMatchups') {
         let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
         let customMatchups = _.find(myMatchups, ['type', 'custom']);
         let matchup = _.find(customMatchups.matchups, ['id', collectionID]);
@@ -28,7 +28,7 @@ export function addToListHelper(state, listType, collectionID, productID) {
         state = state.set('activeOverlay', 'addToConfirmation');
         state = state.set('overlayObj', {type: 'Matchup', collectionObj: matchup, productID});
 
-    } else if (listType === 'myLists') {
+    } else if (collectionType === 'myLists') {
         let myLists = state.getIn(['activeUser', 'myLists']).toJS();
         let index = _.findIndex(myLists, ['id', collectionID]);
         myLists[index].products.push(productID);

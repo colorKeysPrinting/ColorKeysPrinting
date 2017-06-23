@@ -9,11 +9,11 @@ export function showOverlay(overlay, obj) {
     };
 }
 
-export function showRadioOverlay(overlay, listType, productID) {
+export function showRadioOverlay(overlay, collectionType, productID) {
     return {
         type: ActionTypes.SHOW_RADIO_OVERLAY,
         overlay,
-        listType,
+        collectionType,
         productID
     };
 }

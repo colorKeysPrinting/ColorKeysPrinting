@@ -88,7 +88,7 @@ export default function RemoveListItem(props) {
             </div>
             <div style={{display: 'inline-flex', width: '100%'}}>
                 <div style={styles.cancelBtn} onClick={props.close}>Cancel</div>
-                <div style={styles.submitBtn} onClick={()=>props.removeProduct({listType: props.overlayObj.listType, collectionID: collection.id, productID, redirect})}>Remove</div>
+                <div style={styles.submitBtn} onClick={()=>props.removeProduct({collectionType: props.overlayObj.collectionType, collectionID: collection.id, productID, redirect})}>Remove</div>
             </div>
         </div>
     );
