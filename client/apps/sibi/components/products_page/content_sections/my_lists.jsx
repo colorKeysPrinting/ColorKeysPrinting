@@ -66,11 +66,11 @@ export default class MyLists extends React.Component {
             }
         };
 
-        let list = _.find(this.props.myLists.toJS(), ['id', parseInt(this.props.listID)]);
+        let collection = _.find(this.props.myLists.toJS(), ['id', parseInt(this.props.collectionID)]);
 
-        if(_.size(list.products)> 0) {
+        if(_.size(collection.products)> 0) {
 
-            let products = _.map(list.products,(productID)=>{
+            let products = _.map(collection.products,(productID)=>{
 
                 let product = _.find(this.props.products.toJS(), ['id', parseInt(productID)]);
 
@@ -78,7 +78,7 @@ export default class MyLists extends React.Component {
                     <Product
                         key={'myListProduct' + product.id}
                         parent="myLists"
-                        listID={list.id}
+                        collectionID={collection.id}
                         product={product}
                         addToTruck={this.props.addToTruck}
                         showOverlay={this.props.showOverlay} />
@@ -99,8 +99,8 @@ export default class MyLists extends React.Component {
         return (
             <div style={styles.container}>
                 <div style={styles.titleSection}>
-                    <div>{ list.name }</div>
-                    <div onClick={()=>this.props.showOverlay('removeItem', {listType: 'myLists', redirect: `#/products`, listID: list.id})} style={styles.deleteList} >Delete List</div>
+                    <div>{ collection.name }</div>
+                    <div onClick={()=>this.props.showOverlay('removeItem', {listType: 'myLists', redirect: `#/products`, collectionID: collection.id})} style={styles.deleteList} >Delete List</div>
                 </div>
                 <div style={{margin: '50px -1px'}}>
                     { content }

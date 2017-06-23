@@ -208,21 +208,21 @@ export default (state = initialState, action)=>{
             state = state.set('activeOverlay', action.overlay);
 
             if(action.listType) {
-                let lists;
+                let collections;
 
                 switch(action.listType) {
                     case 'customMatchups':
                         let myMatchups = _.find(state.getIn(['activeUser', 'myMatchups']).toJS(), ['type','custom']);
-                        lists = myMatchups.matchups;
+                        collections = myMatchups.matchups;
                         break;
 
                     case 'myLists':
-                        lists = state.getIn(['activeUser', 'myLists']).toJS();
+                        collections = state.getIn(['activeUser', 'myLists']).toJS();
                         break;
                     default:
                 }
 
-                state = state.set('overlayObj', {type: action.listType, productID: action.productID, lists});
+                state = state.set('overlayObj', {type: action.listType, productID: action.productID, collections});
             }
             break;
 
@@ -279,32 +279,32 @@ export default (state = initialState, action)=>{
             break;
 
         case ActionTypes.ADD_TO_LIST:
-            console.log('TODO: ASYNC CALL - add to ' + action.listID, action.productID);
-            let listObj;
+            console.log('TODO: ASYNC CALL - add to ' + action.collectionID, action.productID);
+            let collectionObj;
 
             if(action.listType === 'customMatchups') {
                 let customMatchups = _.find(state.getIn(['activeUser','myMatchups']).toJS(), ['type', 'custom']);
-                listObj = _.find(customMatchups.matchups, ['id', action.listID]);
+                collectionObj = _.find(customMatchups.matchups, ['id', action.collectionID]);
 
             } else if (action.listType === 'myLists') {
-                listObj = _.find(state.getIn(['activeUser','myLists']).toJS(), ['id', action.listID]);
+                collectionObj = _.find(state.getIn(['activeUser','myLists']).toJS(), ['id', action.collectionID]);
             }
 
-            state = productFunctions.addToListHelper(state, action.listType, listObj.id, action.productID);
+            state = productFunctions.addToListHelper(state, action.listType, collectionObj.id, action.productID);
             break;
 
         case ActionTypes.CREATE_NEW_LIST:
-            let listID;
+            let collectionID;
             console.log('TODO: ASYNC CALL - create new: ' + action.listType, action.listName);
 
             if(action.listType === 'customMatchups') {
                 let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
                 let customMatchups = _.find(myMatchups, ['type', 'custom']);
-                listID = _.size(customMatchups.matchups);
+                collectionID = _.size(customMatchups.matchups);
 
                 myMatchups = _.remove(myMatchups, (matchup)=>{return matchup.type !== 'custom'});
 
-                customMatchups.matchups.push({id: listID, name: action.listName, price: 0, products: {}});
+                customMatchups.matchups.push({id: collectionID, name: action.listName, price: 0, products: {}});
 
                 myMatchups.push(customMatchups);
 
@@ -314,19 +314,19 @@ export default (state = initialState, action)=>{
 
             } else if (action.listType === 'myLists') {
                 let myLists = state.getIn(['activeUser', 'myLists']).toJS();
-                listID = _.size(myLists);
+                collectionID = _.size(myLists);
 
-                myLists.push({id: listID, name: action.listName, products: []});
+                myLists.push({id: collectionID, name: action.listName, products: []});
 
                 state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));
                 state = state.set('activeOverlay', '');
                 console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
 
-                browserHistory.push({ pathname: `#/products/myList-${ listID }` });
+                browserHistory.push({ pathname: `#/products/myList-${ collectionID }` });
             }
 
-            if(action.productID.toString()) {
-                state = productFunctions.addToListHelper(state, action.listType, listID, action.productID);
+            if(action.productID) {
+                state = productFunctions.addToListHelper(state, action.listType, collectionID, parseInt(action.productID));
             }
             break;
 
@@ -339,15 +339,15 @@ export default (state = initialState, action)=>{
             let myList = state.getIn(['activeUser', listType]).toJS();
 
             if(productID.toString()) {
-                let list = _.find(myList, ['id', action.obj.listID]);
-                myList = _.remove(myList, (list)=>{return list.id !== action.obj.listID});
+                let collection = _.find(myList, ['id', action.obj.collectionID]);
+                myList = _.remove(myList, (collection)=>{return collection.id !== action.obj.collectionID});
 
-                list.products = _.remove(list.products, (thisProductID)=>{ return parseInt(thisProductID) !== productID});
+                collection.products = _.remove(collection.products, (thisProductID)=>{ return parseInt(thisProductID) !== productID});
 
-                myList.push(list);
+                myList.push(collection);
 
             } else {
-                myList = _.remove(myList, (list)=>{ return list.id !== parseInt(action.obj.listID) });
+                myList = _.remove(myList, (collection)=>{ return collection.id !== parseInt(action.obj.collectionID) });
                 browserHistory.push({ pathname: action.obj.redirect });
             }
 
@@ -363,7 +363,7 @@ export default (state = initialState, action)=>{
                 let customMatchups = _.find(myMatchups, ['type', 'custom']);
 
                 myMatchups = _.remove(myMatchups, (matchup)=>{ return matchup.type !== 'custom' });
-                customMatchups.matchups = _.remove(customMatchups.matchups, (matchup)=>{ return matchup.id !== parseInt(action.listID) });
+                customMatchups.matchups = _.remove(customMatchups.matchups, (matchup)=>{ return matchup.id !== parseInt(action.collectionID) });
 
                 myMatchups.push(customMatchups);
 

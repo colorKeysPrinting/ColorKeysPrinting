@@ -20,19 +20,19 @@ export function removeProduct(obj) {
     };
 }
 
-export function removeList(listType, listID) {
+export function removeList(listType, collectionID) {
     return {
         type: ActionTypes.REMOVE_LIST,
         listType,
-        listID
+        collectionID
     };
 }
 
-export function addToList(listType, listID, productID) {
+export function addToList(listType, collectionID, productID) {
     return {
         type: ActionTypes.ADD_TO_LIST,
         listType,
-        listID,
+        collectionID,
         productID
     };
 }

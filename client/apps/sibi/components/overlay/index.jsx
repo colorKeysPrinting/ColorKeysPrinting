@@ -126,7 +126,17 @@ export default class Overlay extends React.Component {
 
     submitCreateListBtn(type) {
         console.log('submit add to clicked');
-        this.props.createNewList(type, this.state.newList, this.state.overlayObj.productID);
+
+        let productID;
+        if(this.state.overlayObj.productID === undefined) {
+            productID = '';
+        } else if (this.state.overlayObj.productID === undefined) {
+            productID = '0';
+        } else {
+            productID = this.state.overlayObj.productID.toString();
+        }
+
+        this.props.createNewList(type, this.state.newList, productID);
         this.close();
     }
 
@@ -221,7 +231,7 @@ export default class Overlay extends React.Component {
             case 'addToConfirmation':
                 overlay = <AddToConfirmation
                                 overlayObj={this.state.overlayObj}
-                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.id)])}
+                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productID)])}
                                 changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
                                 close={this.close} />;
                 break;
@@ -238,14 +248,13 @@ export default class Overlay extends React.Component {
             case 'customMatchup':
                 overlay = <ViewMatchup
                                 overlayObj={this.state.overlayObj}
-                                products={this.props.products.toJS()}
                                 close={this.close} />;
                 break;
 
             case 'removeItem' :
                 overlay = <RemoveListItem
                                 overlayObj={this.state.overlayObj}
-                                list={_.find(this.props.myLists.toJS(), ['id', parseInt(this.state.overlayObj.listID)])}
+                                collection={_.find(this.props.myLists.toJS(), ['id', parseInt(this.state.overlayObj.collectionID)])}
                                 product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productID)])}
                                 removeProduct={this.props.removeProduct}
                                 close={this.close} />;

@@ -112,7 +112,7 @@ export default class MatchupsCustom extends React.Component {
                 <tr key={matchup.id}>
                     <td>{ matchup.name }</td>
                     <td>{ products }</td>
-                    <td onClick={()=>this.props.showOverlay('customMatchup', matchup)} style={styles.blueTxt} >View Products</td>
+                    <td onClick={()=>this.props.showOverlay('customMatchup', {collectionObj: matchup})} style={styles.blueTxt} >View Products</td>
                     <td>${ (matchup.price).formatMoney(2, '.', ',') }</td>
                     <td onClick={()=>this.props.addToTruck({products: matchup.products})} style={styles.blueTxt}>Add to truck</td>
                     <td><div onClick={()=>this.props.removeList('customMatchup', matchup.id)} style={styles.delete}><img src={''} alt="delete"/></div></td>

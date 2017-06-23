@@ -7,7 +7,7 @@ export default class RadioOverlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeRadio: this.props.overlayObj.lists[0].id};
+        this.state = {activeRadio: this.props.overlayObj.collections[0].id};
 
         this.update = this.update.bind(this);
     }
@@ -104,11 +104,11 @@ export default class RadioOverlay extends React.Component {
             default:
         }
 
-        let lists = _.map(this.props.overlayObj.lists, (list)=>{
+        let collections = _.map(this.props.overlayObj.collections, (collection)=>{
             return (
-                <div key={list.id} onClick={()=>{this.setState({activeRadio: list.id})}} style={styles.options}>
-                    <input type="radio" name={this.props.overlayObj.type} onChange={()=>this.update(list.id)} style={styles.radio} checked={this.state.activeRadio === list.id} />
-                    <div style={{margin: '15px'}}>{ list.name }</div>
+                <div key={collection.id} onClick={()=>{this.setState({activeRadio: collection.id})}} style={styles.options}>
+                    <input type="radio" name={this.props.overlayObj.type} onChange={()=>this.update(collection.id)} style={styles.radio} checked={this.state.activeRadio === collection.id} />
+                    <div style={{margin: '15px'}}>{ collection.name }</div>
                 </div>
             );
         });
@@ -123,7 +123,7 @@ export default class RadioOverlay extends React.Component {
                     <div style={styles.content}>
                         <div>
                             <div style={{textAlign: 'left', padding: '5px'}}>Select list to add item to:</div>
-                            { lists }
+                            { collections }
                         </div>
                         <div onClick={()=>{this.props.changeOverlay('addNewList')}} style={styles.options}>
                             <div style={styles.createNew}>Create a New { title }</div>

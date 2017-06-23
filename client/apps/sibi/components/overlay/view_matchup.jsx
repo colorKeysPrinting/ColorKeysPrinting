@@ -9,6 +9,7 @@ import { addToTruck }           from '../../actions/application';
 let select = (state)=>{
     return {
         currLang            : state.application.get('currLanguage'),
+        products            : state.application.get('products'),
         salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate'])
     };
 };
@@ -19,8 +20,8 @@ export default class ViewMatchupOverlay extends React.Component {
     constructor(props) {
         super(props);
 
-        let products = _.map(this.props.overlayObj.products, (matchupQty, productID)=>{
-            let product = this.props.products[productID];
+        let products = _.map(this.props.overlayObj.collectionObj.products, (matchupQty, productID)=>{
+            let product = _.find(this.props.products.toJS(), ['id', parseInt(productID)]);
             let cost = (parseFloat(product.price * matchupQty));
 
             return {...product, matchupQty, cost};
@@ -28,7 +29,7 @@ export default class ViewMatchupOverlay extends React.Component {
 
         let calc = this.calculate(products);
 
-        this.state = {products, title: this.props.overlayObj.listObj.name, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total};
+        this.state = {products, title: this.props.overlayObj.collectionObj.name, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total};
 
         this.update = this.update.bind(this);
         this.calculate = this.calculate.bind(this);
@@ -39,14 +40,14 @@ export default class ViewMatchupOverlay extends React.Component {
         this.share = this.share.bind(this);
     }
 
-    update(id, matchupQty) {
+    update(productID, matchupQty) {
         let products = this.state.products;
 
-        let product = _.find(products, ['id', id]);
+        let product = _.find(products, ['id', productID]);
         product.matchupQty = parseInt(matchupQty);
         product.cost = product.price * product.matchupQty;
 
-        let index = _.findIndex(products, (product)=>{ return product.id === id});
+        let index = _.findIndex(products, (product)=>{ return product.id === productID});
         products[index] = product;
 
         let calc = this.calculate(products);
@@ -80,9 +81,9 @@ export default class ViewMatchupOverlay extends React.Component {
         return parseFloat(result);
     }
 
-    remove(id) {
-        console.log('removing:', id);
-        let products = _.remove(this.state.products, (product)=>{return product.id !== id});
+    remove(productID) {
+        console.log('removing:', productID);
+        let products = _.remove(this.state.products, (product)=>{return product.id !== productID});
 
         let calc = this.calculate(products);
 

@@ -55,7 +55,7 @@ export default withRouter(class ContentPanel extends React.Component {
                 break;
             case 'myList':
                 activeSection = <MyLists
-                                    listID={type[2]} />;
+                                    collectionID={type[2]} />;
                 break;
             case 'equipment':
                 activeSection = <Equipment

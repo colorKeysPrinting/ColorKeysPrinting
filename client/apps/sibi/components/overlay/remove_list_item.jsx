@@ -3,7 +3,7 @@ import assets                                    from '../../libs/assets';
 
 export default function RemoveListItem(props) {
     let title, message, productID;
-    let list = props.list;
+    let collection = props.collection;
 
     let styles = {
         container: {
@@ -67,11 +67,11 @@ export default function RemoveListItem(props) {
 
     if(props.product) {
         title = 'Remove Item from';
-        message = `Are you sure you want to remove "${ props.product.name }" from ${ list.name }`;
+        message = `Are you sure you want to remove "${ props.product.name }" from ${ collection.name }`;
         productID = props.product.id;
     } else {
         title = 'Delete'
-        message = `Are you sure you want to remove "${ list.name }"`;
+        message = `Are you sure you want to remove "${ collection.name }"`;
     }
 
     let modelNum = (props.product) ? props.product.modelNum : '';
@@ -80,7 +80,7 @@ export default function RemoveListItem(props) {
     return (
         <div style={styles.container}>
             <div style={styles.titleBar}>
-                <div style={styles.title}>{ title } { list.name }</div>
+                <div style={styles.title}>{ title } { collection.name }</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
             <div style={styles.content}>
@@ -88,7 +88,7 @@ export default function RemoveListItem(props) {
             </div>
             <div style={{display: 'inline-flex', width: '100%'}}>
                 <div style={styles.cancelBtn} onClick={props.close}>Cancel</div>
-                <div style={styles.submitBtn} onClick={()=>props.removeProduct({listType: props.overlayObj.listType, listID: list.id, productID, redirect})}>Remove</div>
+                <div style={styles.submitBtn} onClick={()=>props.removeProduct({listType: props.overlayObj.listType, collectionID: collection.id, productID, redirect})}>Remove</div>
             </div>
         </div>
     );
