@@ -338,11 +338,11 @@ export default (state = initialState, action)=>{
 
             let myList = state.getIn(['activeUser', listType]).toJS();
 
-            if(productID) {
+            if(productID.toString()) {
                 let list = _.find(myList, ['id', action.obj.listID]);
                 myList = _.remove(myList, (list)=>{return list.id !== action.obj.listID});
 
-                list.products = _.remove(list.products, (thisProductID)=>{ return thisProductID !== productID});
+                list.products = _.remove(list.products, (thisProductID)=>{ return parseInt(thisProductID) !== productID});
 
                 myList.push(list);
 

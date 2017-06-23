@@ -78,7 +78,7 @@ export default class MyLists extends React.Component {
                     <Product
                         key={'myListProduct' + product.id}
                         parent="myLists"
-                        listName={list.name}
+                        listID={list.id}
                         product={product}
                         addToTruck={this.props.addToTruck}
                         showOverlay={this.props.showOverlay} />
