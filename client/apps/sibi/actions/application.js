@@ -1,20 +1,20 @@
 'use strict';
 import ActionTypes      from '../constants/action_types';
 
-export function showOverlay(key, obj) {
+export function showOverlay(overlay, obj) {
     return {
         type: ActionTypes.SHOW_OVERLAY,
-        key,
+        overlay,
         obj
     };
 }
 
-export function showRadioOverlay(key, listType, id) {
+export function showRadioOverlay(overlay, listType, productID) {
     return {
         type: ActionTypes.SHOW_RADIO_OVERLAY,
-        key,
+        overlay,
         listType,
-        id
+        productID
     };
 }
 

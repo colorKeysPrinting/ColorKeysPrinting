@@ -76,33 +76,33 @@ export default class FilterPanel extends React.Component {
             }
         };
 
-        let options = _.map(this.props.myMatchups.toJS() || [], (option, key)=>{ // standard, custom
+        let options = _.map(this.props.myMatchups.toJS() || [], (option)=>{ // standard, custom
             let title = (option.type === 'standard') ? 'Standard' : 'Custom';
-            return (<Link to={'/products/matchup-' + option.type} key={key}><div className="options">{ title } Matchups</div></Link>);
+            return (<Link to={'/products/matchup-' + option.type} key={option.type}><div className="options">{ title } Matchups</div></Link>);
         });
 
-        let matchups =  <div>
-                            <div className={((this.state.activeSection === 'matchups') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('matchups')}>
-                                <div id="title">MATCHUPS</div>
-                                <div>{(this.state.activeSection === 'matchups') ? '-' : '+'}</div>
-                            </div>
-                            <div style={{display: (this.state.activeSection === 'matchups') ? 'block' : 'none'}}>{options}</div>
-                        </div>;
+        let matchups = <div>
+                           <div className={((this.state.activeSection === 'matchups') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('matchups')}>
+                               <div id="title">MATCHUPS</div>
+                               <div>{(this.state.activeSection === 'matchups') ? '-' : '+'}</div>
+                           </div>
+                           <div style={{display: (this.state.activeSection === 'matchups') ? 'block' : 'none'}}>{ options }</div>
+                       </div>;
 
-        options = _.map(this.props.myLists.toJS() || [], (option, key)=>{
-            return (<Link to={'/products/myList-' + key} key={key}><div className="options">{ option.name }</div></Link>);
+        options = _.map(this.props.myLists.toJS() || [], (option)=>{
+            return (<Link to={'/products/myList-' + option.id} key={option.id}><div className="options">{ option.name }</div></Link>);
         });
 
-        let myLists =   <div>
-                            <div className={((this.state.activeSection === 'myLists') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('myLists')}>
-                                <div id="title">MY LISTS</div>
-                                <div>{(this.state.activeSection === 'myLists') ? '-' : '+'}</div>
-                            </div>
-                            <div style={{display: (this.state.activeSection === 'myLists') ? 'block' : 'none'}}>
-                                { options }
-                                <div onClick={()=>this.props.showOverlay('addNewList', {type: 'myLists'})} style={styles.submitBtn}>New List</div>
-                            </div>
-                        </div>;
+        let myLists = <div>
+                          <div className={((this.state.activeSection === 'myLists') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('myLists')}>
+                              <div id="title">MY LISTS</div>
+                              <div>{(this.state.activeSection === 'myLists') ? '-' : '+'}</div>
+                          </div>
+                          <div style={{display: (this.state.activeSection === 'myLists') ? 'block' : 'none'}}>
+                              { options }
+                              <div onClick={()=>this.props.showOverlay('addNewList', {type: 'myLists'})} style={styles.submitBtn}>New List</div>
+                          </div>
+                      </div>;
 
         let filterPanel = _.map(this.props.myFilterPanel.toJS() || [], (section, key)=>{
             let options;

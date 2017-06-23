@@ -14,7 +14,7 @@ import AddToConfirmation        from './add_to_confirmation';
 import AddNewList               from './add_new_list';
 import ViewMatchup              from './view_matchup';
 import Profile                  from './profile';
-import RemoveItem               from './remove_item';
+import RemoveListItem           from './remove_list_item';
 import StockCheck               from './stock_check';
 
 let select = (state)=>{
@@ -23,7 +23,8 @@ let select = (state)=>{
         overlayObj          : state.application.get('overlayObj'),
         username            : state.application.getIn(['activeUser', 'username']),
         profilePic          : state.application.getIn(['activeUser', 'profilePic']),
-        products            : state.application.get('products').toJS(),
+        myLists             : state.application.getIn(['activeUser', 'myLists']),
+        products            : state.application.get('products'),
         contractGoodman     : state.application.getIn(['contracts','goodman']),
         contractAsure       : state.application.getIn(['contracts','asure'])
     }
@@ -125,20 +126,13 @@ export default class Overlay extends React.Component {
 
     submitCreateListBtn(type) {
         console.log('submit add to clicked');
-
-        this.props.createNewList(type, this.state.newList);
-        if(this.state.overlayObj['id']) {
-            this.props.addToList(type, this.state.newList, this.state.overlayObj.id); // TODO: check to make sure this functionality is correct,
-                                                                                            // when you create a new list the product you clicked on will be added to that list
-        }
-
+        this.props.createNewList(type, this.state.newList, this.state.overlayObj.productID);
         this.close();
     }
 
     submitAddToBtn(type, listName) {
         console.log('submit add to clicked');
-
-        this.props.addToList(type, listName, this.state.overlayObj.id);
+        this.props.addToList(type, listName, this.state.overlayObj.productID);
     }
 
     addToTruck(items) {
@@ -227,7 +221,7 @@ export default class Overlay extends React.Component {
             case 'addToConfirmation':
                 overlay = <AddToConfirmation
                                 overlayObj={this.state.overlayObj}
-                                product={_.find(this.props.products, (product)=>{return product.id === this.state.overlayObj.id})}
+                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.id)])}
                                 changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
                                 close={this.close} />;
                 break;
@@ -244,21 +238,27 @@ export default class Overlay extends React.Component {
             case 'customMatchup':
                 overlay = <ViewMatchup
                                 overlayObj={this.state.overlayObj}
-                                products={this.props.products}
+                                products={this.props.products.toJS()}
                                 close={this.close} />;
                 break;
+
             case 'removeItem' :
-                overlay = <RemoveItem
+                overlay = <RemoveListItem
                                 overlayObj={this.state.overlayObj}
-                                product={_.find(this.props.products, (product)=>{return product.modelNum === this.state.overlayObj.modelNum})}
+                                list={_.find(this.props.myLists.toJS(), ['id', parseInt(this.state.overlayObj.listID)])}
+                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productID)])}
                                 removeProduct={this.props.removeProduct}
                                 close={this.close} />;
+                break;
+
             case 'stockCheck' :
                 overlay = <StockCheck
                                 location={this.state.overlayObj.location}
                                 product={this.state.overlayObj.product}
                                 checkingInventory={this.props.checkingInventory}
                                 close={this.close} />;
+                break;
+
             default:
         }
 

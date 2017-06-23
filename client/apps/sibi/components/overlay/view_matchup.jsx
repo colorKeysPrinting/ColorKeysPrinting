@@ -28,7 +28,7 @@ export default class ViewMatchupOverlay extends React.Component {
 
         let calc = this.calculate(products);
 
-        this.state = {products, title: this.props.overlayObj.name, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total};
+        this.state = {products, title: this.props.overlayObj.listObj.name, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total};
 
         this.update = this.update.bind(this);
         this.calculate = this.calculate.bind(this);

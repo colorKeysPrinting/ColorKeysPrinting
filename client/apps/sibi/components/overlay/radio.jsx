@@ -106,7 +106,7 @@ export default class RadioOverlay extends React.Component {
 
         let lists = _.map(this.props.overlayObj.lists, (list)=>{
             return (
-                <div key={list.id} onClick={()=>{this.setState({activeRadio: list.name})}} style={styles.options}>
+                <div key={list.id} onClick={()=>{this.setState({activeRadio: list.id})}} style={styles.options}>
                     <input type="radio" name={this.props.overlayObj.type} onChange={()=>this.update(list.id)} style={styles.radio} checked={this.state.activeRadio === list.id} />
                     <div style={{margin: '15px'}}>{ list.name }</div>
                 </div>

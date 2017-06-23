@@ -68,14 +68,15 @@ export default function AddToConfirmationOverlay(props) {
 
     let title;
     let product = props.product;
+    let list = props.overlayObj.listObj;
     let viewType = (props.overlayObj.type === 'Matchup') ? <div onClick={()=>props.changeOverlay('customMatchup')} style={styles.viewMatchup} >View Matchup</div>
-                                                         : <Link to={`/products/myList-${props.overlayObj.id}`} style={styles.viewMatchup} >View List</Link>;
+                                                         : <Link to={`/products/myList-${ list.id }`} style={styles.viewMatchup} >View List</Link>;
 
     return (
         <div style={styles.container}>
             <div style={styles.titleBar}>
-                <div>1 Item Added to </div>
-                <div style={styles.title} >{ props.overlayObj.name }</div>
+                <div>1 Item Added to &nbsp;</div>
+                <div style={styles.title} >{ list.name }</div>
             </div>
             <div style={styles.content}>
                 <div style={{display: 'inline-flex'}}>

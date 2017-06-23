@@ -19,21 +19,6 @@ let select = (state)=>{
 @connect(select, {addToTruck, showOverlay}, null, {withRef: true})
 export default class MyLists extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        let myLists = (this.props.myLists.size > 0) ? this.props.myLists.toJS() : [];
-        this.state = {myLists};
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.myLists.size > 0) {
-
-            let myLists = nextProps.myLists.toJS();
-            this.setState({myLists});
-        }
-    }
-
     render() {
         let content;
 
@@ -81,23 +66,19 @@ export default class MyLists extends React.Component {
             }
         };
 
-        let index    = Number(this.props.list);
-        let listName = this.state.myLists[index].name;
-        let items    = this.state.myLists[index].items;
+        let list = _.find(this.props.myLists.toJS(), ['id', parseInt(this.props.listID)]);
 
-        if(_.size(items) > 0) {
+        if(_.size(list.products)> 0) {
 
-            let products = _.map(items, (product, key)=>{
-                let products = this.props.products.toJS();
+            let products = _.map(list.products,(productID)=>{
 
-                let index = _.findIndex(products, ['modelNum', product]);
-                product = products[index];
+                let product = _.find(this.props.products.toJS(), ['id', parseInt(productID)]);
 
                 return (
                     <Product
-                        key={key + 'listItem'}
+                        key={'myListProduct' + product.id}
                         parent="myLists"
-                        listName={listName}
+                        listName={list.name}
                         product={product}
                         addToTruck={this.props.addToTruck}
                         showOverlay={this.props.showOverlay} />
@@ -115,12 +96,11 @@ export default class MyLists extends React.Component {
                       </div>
         }
 
-
         return (
             <div style={styles.container}>
                 <div style={styles.titleSection}>
-                    <div>{ listName }</div>
-                    <div onClick={()=>this.props.showOverlay('removeItem', {listType: 'myLists', redirect: `#/products`, listName})} style={styles.deleteList} >Delete List</div>
+                    <div>{ list.name }</div>
+                    <div onClick={()=>this.props.showOverlay('removeItem', {listType: 'myLists', redirect: `#/products`, listID: list.id})} style={styles.deleteList} >Delete List</div>
                 </div>
                 <div style={{margin: '50px -1px'}}>
                     { content }
