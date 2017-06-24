@@ -42,7 +42,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             }
         },
         myProducts: {
-            mostPurchased: ['0', '1', '2','3']
+            mostPurchased: [11, 7, 3, 2]
         },
         myMatchups: [
             {type: 'standard'},
