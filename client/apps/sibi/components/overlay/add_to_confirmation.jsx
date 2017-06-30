@@ -39,33 +39,14 @@ export default function AddToConfirmationOverlay(props) {
         text: {
             color: '#F00',
             padding: '10px'
-        },
-        submitBtn: {
-            width: '200px',
-            height: '46px',
-            margin: '7px auto',
-            fontSize: '18px',
-            paddingTop: '14px'
-        },
-        viewMatchup: {
-            border: '1px solid #C0C0C0',
-            borderRadius: '5px',
-            color: 'rgb(47, 205, 237)',
-            cursor: 'pointer',
-            paddingTop: '14px',
-            width: '200px',
-            height: '46px',
-            fontSize: '18px',
-            margin: '7px auto',
-            textAlign: 'center',
         }
     };
 
     let title;
     let product = props.product;
     let collection = props.overlayObj.collectionObj;
-    let viewType = (props.overlayObj.type === 'Matchup') ? <div onClick={()=>props.changeOverlay('customMatchup')} style={styles.viewMatchup} >View Matchup</div>
-                                                         : <Link to={`/products/myList-${ collection.id }`} style={styles.viewMatchup} >View List</Link>;
+    let viewType = (props.overlayObj.type === 'Matchup') ? <div className="cancel-btn" onClick={()=>props.changeOverlay('customMatchup')} style={{margin: '7px auto'}} >View Matchup</div>
+                                                         : <Link className="cancel-btn" to={`/products/myList-${ collection.id }`} style={{margin: '7px auto'}} >View List</Link>;
 
     return (
         <div style={styles.container}>
@@ -84,7 +65,7 @@ export default function AddToConfirmationOverlay(props) {
                 <div style={styles.text} >*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>
                 <div style={{display: 'inline-flex', width: '100%'}}>
                     { viewType }
-                    <div className="submit-btn" onClick={props.close} style={styles.submitBtn} >Continue Shopping</div>
+                    <div className="submit-btn" onClick={props.close} style={{margin: '7px auto'}} >Continue Shopping</div>
                 </div>
             </div>
         </div>

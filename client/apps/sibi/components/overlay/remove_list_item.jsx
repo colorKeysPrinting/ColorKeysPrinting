@@ -41,19 +41,6 @@ export default function RemoveListItem(props) {
         },
         text: {
             margin: '10px'
-        },
-        submitBtn: {
-            height: '50px',
-            width: '50%',
-            margin: '20px auto',
-            paddingTop: '10px',
-            padding: '18px'
-        },
-        cancelBtn: {
-            height: '50px',
-            width: '50%',
-            margin: '20px auto',
-            paddingTop: '10px'
         }
     };
 
@@ -79,8 +66,8 @@ export default function RemoveListItem(props) {
                 <p>{ message }</p>
             </div>
             <div style={{display: 'inline-flex', width: '100%'}}>
-                <div className="cancel-btn" style={styles.cancelBtn} onClick={props.close}>Cancel</div>
-                <div className="submit-btn" style={styles.submitBtn} onClick={()=>props.removeProduct({collectionType: props.overlayObj.collectionType, collectionID: collection.id, productID, redirect})}>Remove</div>
+                <div className="cancel-btn" style={{width: '50%'}} onClick={props.close}>Cancel</div>
+                <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeProduct({collectionType: props.overlayObj.collectionType, collectionID: collection.id, productID, redirect})}>Remove</div>
             </div>
         </div>
     );

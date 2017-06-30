@@ -68,12 +68,6 @@ export default class RadioOverlay extends React.Component {
                 height: '30px',
                 width: '60px'
             },
-            submitBtn: {
-                width: '100%',
-                height: '46px',
-                margin: '7px auto',
-                paddingTop: '14px'
-            },
             createNew: {
                 textAlign: 'center',
                 color: '#06cfe5',
@@ -122,7 +116,7 @@ export default class RadioOverlay extends React.Component {
                         <div onClick={()=>{this.props.changeOverlay('addNewList')}} style={styles.options}>
                             <div style={styles.createNew}>Create a New { title }</div>
                         </div>
-                        <div className="submit-btn" onClick={()=>this.props.submitAddToBtn(this.props.overlayObj.type, this.state.activeRadio)} style={styles.submitBtn} >{ btnText }</div>
+                        <div className="submit-btn" onClick={()=>this.props.submitAddToBtn(this.props.overlayObj.type, this.state.activeRadio)} style={{width: '100%', margin: '7px auto'}} >{ btnText }</div>
                     </div>
                 </div>
             </div>

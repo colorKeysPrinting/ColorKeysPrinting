@@ -134,13 +134,13 @@ export default class Products extends React.Component {
                     <input id="productSearchBox" type="text" value={this.state.searchTerm} placeholder="Search for a product by name, brand, or model number" onChange={(e)=>this.searchTerm(e.target.value)} style={styles.searchBox}/>
                     <select id="productSortByDropdown" value={ this.state.sortBy } onChange={ (e)=>this.sortBy(e.target.value) } style={styles.dropdown}>
                         <option disabled >Sort By</option>
-                        {sortBy}
+                        { sortBy }
                     </select>
                 </div>
                 <div>
                     <div style={styles.headers}>YOUR MOST ORDERED PRODUCTS ({ this.props.mostPurchased.size })</div>
                     <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
-                        {mostPurchased}
+                        { mostPurchased }
                     </div>
                 </div>
             </div>

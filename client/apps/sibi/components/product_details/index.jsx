@@ -93,12 +93,6 @@ export default class ProductDetails extends React.Component {
                 height: '46px',
                 padding: '10px'
             },
-            submitBtn: {
-                margin: 'auto',
-                width: '200px',
-                height: '46px',
-                paddingTop: '13px'
-            },
             image: {
                 margin: '10px'
             },
@@ -154,7 +148,7 @@ export default class ProductDetails extends React.Component {
                             </div>
                             <div style={{display: 'inline-flex', width: '85%'}}>
                                 <div style={{width: '50%'}} ><div className="cancel-btn" onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: this.state.product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} style={styles.saveItemBtn}>Save Item</div></div>
-                                <div style={{width: '50%'}} ><div className="submit-btn" onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty: this.state.warranty})} style={styles.submitBtn}>Add to truck</div></div>
+                                <div style={{width: '50%'}} ><div className="submit-btn" onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty: this.state.warranty})} >Add to truck</div></div>
                             </div>
                         </div>
                     </div>

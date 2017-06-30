@@ -62,12 +62,6 @@ export default class AgreementOverlay extends React.Component {
             text: {
                 margin: '10px'
             },
-            submitBtn: {
-                height: '40px',
-                width: '40%',
-                margin: '20px auto',
-                paddingTop: '13px',
-            },
             checkbox: {
                 width: '60%',
                 padding: '30px'
@@ -104,7 +98,9 @@ export default class AgreementOverlay extends React.Component {
                                     onClick={this.update}
                                     checked={this.state.checkbox} />I agree
                         </div>
-                        <div className="submit-btn" style={styles.submitBtn} onClick={(e)=>{e.preventDefault(); this.props.acceptAgreement(this.props.type ,this.state.checkbox); this.props.close()}}>Done</div>
+                        <div className="submit-btn"
+                             onClick={(e)=>{e.preventDefault(); this.props.acceptAgreement(this.props.type ,this.state.checkbox); this.props.close()}}
+                             style={{paddingTop: '13px', width: '40%'}} >Done</div>
                     </div>
                 </div>
             </div>

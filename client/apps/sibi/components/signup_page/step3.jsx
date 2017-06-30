@@ -31,13 +31,6 @@ export default function SignUpStep3(props) {
             textAlign: 'left',
             display: 'grid'
         },
-        submitBtn: {
-            height: '65px',
-            width: '70%',
-            margin: '20px auto',
-            paddingTop: '10px',
-            fontSize: '20px'
-        },
         element: {
             display: 'inline-flex',
             height: '70px',
@@ -156,7 +149,7 @@ export default function SignUpStep3(props) {
                             </div>
                         </div>
 
-                        <input className="submit-btn" type="submit" value="Finish" style={ styles.submitBtn }/>
+                        <input className="submit-btn" type="submit" value="Finish" style={{width: '70%'}} />
                     </form>;
 
     return (

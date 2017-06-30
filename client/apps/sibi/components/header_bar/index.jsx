@@ -71,20 +71,6 @@ export default class HeaderBar extends React.Component {
                     cursor: 'pointer'
                 }
             },
-            login: {
-                padding: '11px',
-                cursor: 'pointer'
-            },
-            signUp: {
-                border: '1px solid #C0C0C0',
-                borderRadius: '10px',
-                color: 'rgb(47, 205, 237)',
-                cursor: 'pointer',
-                outline: 'none',
-                padding: '11px',
-                textDecoration: 'none',
-                height: '42px'
-            },
             sibiLogo: {
                 width: '273px',
                 cursor: 'pointer'
@@ -93,8 +79,8 @@ export default class HeaderBar extends React.Component {
 
         if(!this.props.activeUserType || this.props.activeUserType === 'signUp') {
             loginSection = <div style={styles.loginSection}>
-                <div onClick={()=>this.props.showOverlay('login') } style={styles.login}>Login</div>
-                <Link to={`/signup`} style={styles.signUp} >Sign Up</Link>
+                <div className="submit-btn" onClick={()=>this.props.showOverlay('login') } >Login</div>
+                <Link className="cancel-btn" to={`/signup`} >Sign Up</Link>
             </div>;
 
         } else {

@@ -106,10 +106,8 @@ export default class Matchups extends React.Component {
                 <div style={styles.titleSection}>
                     Standard Matchups
                 </div>
-                <div style={{margin: '50px -1px'}}>
-                    <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
-                        { matchups }
-                    </div>
+                <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
+                    { matchups }
                 </div>
             </div>
         );

@@ -1,27 +1,44 @@
+$blue-color: #06cfe5;
+$gray-color: rgba(50,50,50,0.1);
+$white: #FFF;
+
 .submit-btn {
-    background-color: '#06cfe5';
-    border-radius: '5px';
-    color: '#FFF';
-    cursor: 'pointer';
-    text-align: 'center';
-    width: '200px';
-    height: '46px';
-    font-size: '18px',
-    // margin: '20px auto';
-    // padding-top: '13px';
+    background-color: $blue-color;
+    border-radius: 5px;
+    color: $white;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    padding: 10px;
+    width: 200px;
+    height: 46px;
+    font-size: 18px;
+
+    margin: 20px auto;
+    padding-top: 14px;
 }
 
 .cancel-btn {
-    border: '1px solid rgba(50,50,50,0.1)';
-    border-radius: '5px';
-    color: '#06cfe5';
-    cursor: 'pointer';
-    font-weight: 'bold';
-    text-align: 'center';
-    margin: 'auto';
-    padding: '10px';
-    width: '200px';
-    height: '46px';
+    border: 1px solid $gray-color;
+    border-radius: 5px;
+    color: $blue-color;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    margin: auto;
+    padding: 10px;
+    width: 200px;
+    height: 46px;
+    font-size: 18px;
+
+    margin: 20px auto;
+    padding-top: 14px;
 }
 
-
+.text-link {
+    color: $blue-color;
+    cursor: pointer;
+}

@@ -34,10 +34,10 @@ export default class Product extends React.Component {
                 margin: '5px',
                 height: '42px',
                 width: '42px',
-                zIndex: '9'
+                zIndex: '9',
+                position: 'absolute'
             },
             image: {
-                marginTop: '-52px',
                 height: '300px',
                 backgroundColor: '#FFF'
             },
@@ -56,16 +56,6 @@ export default class Product extends React.Component {
                 color: 'rgba(50, 50, 50, 0.4)',
                 fontSize: '16px',
                 margin: '2px'
-            },
-            submitBtn: {
-                backgroundColor: '#06cfe5',
-                borderRadius: '5px',
-                color: '#FFF',
-                cursor: 'pointer',
-                width: '200px',
-                height: '46px',
-                margin: '20px auto',
-                paddingTop: '13px'
             },
             prodInfo: {
                 textAlign: 'left',
@@ -97,7 +87,7 @@ export default class Product extends React.Component {
                         <div style={styles.price}>${ (product.price).formatMoney(2, '.', ',') }</div>
                         <div style={styles.modelNum}>#{ product.modelNum }</div>
                     </div>
-                    <div onClick={()=>{this.props.addToTruck(product)}} style={styles.submitBtn}>Add to truck</div>
+                    <div className="submit-btn" onClick={()=>{this.props.addToTruck(product)}} style={{width: '140px'}}>Add to truck</div>
                 </div>
             </div>
         );

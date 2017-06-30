@@ -27,19 +27,6 @@ export default function StockCheck(props) {
         },
         text: {
             margin: '10px'
-        },
-        submitBtn: {
-            height: '50px',
-            width: '50%',
-            margin: '20px auto',
-            paddingTop: '10px',
-            padding: '18px'
-        },
-        cancelBtn: {
-            height: '50px',
-            width: '50%',
-            margin: '20px auto',
-            paddingTop: '10px'
         }
     };
 
@@ -49,8 +36,8 @@ export default function StockCheck(props) {
                 <div style={styles.text}>The inventory at this location is low.  Would you like to check and make sure the item is still available here?</div>
             </div>
             <div style={{display: 'inline-flex', width: '100%'}}>
-                <div className="cancel-btn" style={styles.cancelBtn} onClick={props.close}>No, Thanks</div>
-                <div className="submit-btn" style={styles.submitBtn} onClick={()=>props.checkingInventory(props.product.modelNum, props.location)}>Check</div>
+                <div className="cancel-btn" style={{width: '50%'}} onClick={props.close}>No, Thanks</div>
+                <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.checkingInventory(props.product.modelNum, props.location)}>Check</div>
             </div>
         </div>
     );

@@ -40,12 +40,6 @@ export default function Product(props) {
             fontSize: '16px',
             margin: '2px'
         },
-        submitBtn: {
-            width: '200px',
-            height: '46px',
-            margin: '20px auto',
-            paddingTop: '13px'
-        },
         prodInfo: {
             textAlign: 'left',
             padding: '20px 26px 0 0'
@@ -63,7 +57,7 @@ export default function Product(props) {
                     <div style={styles.price}>${(product.price).formatMoney(2, '.', ',')}</div>
                     <div style={styles.modelNum}>#{product.modelNum}</div>
                 </div>
-                <div className="submit-btn" onClick={()=>{props.addToTruck(product)}} style={styles.submitBtn}>Add to truck</div>
+                <div className="submit-btn" onClick={()=>{props.addToTruck(product)}} >Add to truck</div>
             </div>
         </div>
     );

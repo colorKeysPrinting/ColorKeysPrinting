@@ -169,14 +169,6 @@ export default class ViewMatchupOverlay extends React.Component {
                 fontSize: '20px',
                 paddingLeft: '5px'
             },
-            submitBtn: {
-                width: '200px',
-                height: '46px',
-                margin: '7px auto',
-                marginTop: '100%',
-                paddingTop: '10px',
-                padding: '15px'
-            },
             table: {
                 col1: {
                     width: '80%'
@@ -225,7 +217,7 @@ export default class ViewMatchupOverlay extends React.Component {
                     </td>
                     <td style={styles.table.col3}>
                         <div> ${ (product.cost).formatMoney(2, '.', ',') } </div>
-                        <div className="submit-btn" onClick={()=>this.addItemToTruck(product)} style={styles.table.submitBtn}>Add to Truck</div>
+                        <div className="submit-btn" onClick={()=>this.addItemToTruck(product)} style={{margin: '7px auto', marginTop: '100%'}} >Add to Truck</div>
                     </td>
                 </tr>
             );
@@ -258,7 +250,7 @@ export default class ViewMatchupOverlay extends React.Component {
                                 <td style={{width: '20%'}}>SHIPPING: ${(this.state.shipping).formatMoney(2, '.')}</td>
                                 <td style={{width: '20%'}}>SALES TAX: ${(this.state.salesTax).formatMoney(2)}</td>
                                 <td style={{width: '20%'}}>TOTAL: ${(this.state.total).formatMoney(2, '.', ',')}</td>
-                                <td><div className="submit-btn" onClick={()=>this.addAllToTruck(this.state.products)} style={styles.submitBtn}>Add All Items to Truck</div></td>
+                                <td><div className="submit-btn" onClick={()=>this.addAllToTruck(this.state.products)} >Add All Items to Truck</div></td>
                             </tr>
                         </tbody>
                     </table>

@@ -16,7 +16,6 @@ export default function Matchup(props) {
             display: 'grid'
         },
         image: {
-            marginTop: '-52px',
             height: '300px',
             backgroundColor: '#FFF'
         },
@@ -40,16 +39,6 @@ export default function Matchup(props) {
             padding: '10px',
             border: '1px solid rgba(50, 50, 50, 0.1)',
             backgroundColor: '#FFF',
-        },
-        blueTxt: {
-            color: '#06cfe5',
-            cursor: 'pointer'
-        },
-        submitBtn: {
-            width: '200px',
-            height: '46px',
-            margin: '20px auto',
-            paddingTop: '13px'
         },
         prodInfo: {
             textAlign: 'left',
@@ -107,11 +96,11 @@ export default function Matchup(props) {
             </div>
             <div style={{display: 'inline-flex'}}>
                 <div style={styles.prodInfo}>
-                    <div style={styles.price}>${(matchup.price).formatMoney(2, '.', ',')}</div>
+                    <div style={styles.price}>${ (matchup.price).formatMoney(2, '.', ',') }</div>
                 </div>
                 <div>
-                    <div className="submit-btn" onClick={()=>props.addToTruck(matchup)} style={styles.submitBtn}>Add to truck</div>
-                    <div onClick={()=>props.showOverlay('customMatchup', {name: matchup.name, products: matchup.products})} style={styles.blueTxt}>view items</div>
+                    <div className="submit-btn" onClick={()=>props.addToTruck(matchup)} >Add to truck</div>
+                    <div className="text-link" onClick={()=>props.showOverlay('customMatchup', {name: matchup.name, products: matchup.products})} >view items</div>
                 </div>
             </div>
         </div>
