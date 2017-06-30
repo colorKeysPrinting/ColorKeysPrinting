@@ -20,7 +20,7 @@ export default class Matchups extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {matchups: _.find(this.props.matchups, ['matchup', 'standard']).items, tonnage: '', seer: '', applicationType: ''};
+        this.state = {matchups: _.find(this.props.matchups, ['matchup', 'standard']).matchups, tonnage: '', seer: '', applicationType: ''};
 
         this.update = this.update.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
@@ -43,7 +43,7 @@ export default class Matchups extends React.Component {
             applicationType = (this.state.applicationType) ? this.state.applicationType : matchup.applicationTypeOptions[0];
         }
 
-        this.props.addToTruck({...matchup, tonnage, seer, applicationType});
+        this.props.addToTruck({products: matchup.products, tonnage, seer, applicationType}); // TODO: need to make sure this is choosing the correct products
     }
 
     render() {
@@ -87,11 +87,11 @@ export default class Matchups extends React.Component {
             }
         };
 
-        let matchups = _.map(this.state.matchups, (matchup, key)=>{
+        let matchups = _.map(this.state.matchups, (id, key)=>{
             return (
                 <Matchup
                     key={key}
-                    matchup={_.find(this.props.matchups, ['matchup', matchup])}
+                    matchup={_.find(this.props.matchups, ['id', parseInt(id)])}
                     tonnage={this.state.tonnage}
                     seer={this.state.seer}
                     applicationType={this.state.applicationType}
@@ -108,7 +108,7 @@ export default class Matchups extends React.Component {
                 </div>
                 <div style={{margin: '50px -1px'}}>
                     <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
-                        {matchups}
+                        { matchups }
                     </div>
                 </div>
             </div>

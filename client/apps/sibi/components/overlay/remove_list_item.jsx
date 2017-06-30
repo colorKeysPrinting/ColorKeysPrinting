@@ -1,9 +1,9 @@
 import React                                     from 'react';
 import assets                                    from '../../libs/assets';
 
-export default function RemoveItem(props) {
-    let title, message;
-    let listName = props.overlayObj.listName;
+export default function RemoveListItem(props) {
+    let title, message, productID;
+    let collection = props.collection;
 
     let styles = {
         container: {
@@ -67,10 +67,11 @@ export default function RemoveItem(props) {
 
     if(props.product) {
         title = 'Remove Item from';
-        message = `Are you sure you want to remove "${ props.product.name }" from ${ listName }`;
+        message = `Are you sure you want to remove "${ props.product.name }" from ${ collection.name }`;
+        productID = props.product.id;
     } else {
         title = 'Delete'
-        message = `Are you sure you want to remove "${ listName }"`;
+        message = `Are you sure you want to remove "${ collection.name }"`;
     }
 
     let modelNum = (props.product) ? props.product.modelNum : '';
@@ -79,7 +80,7 @@ export default function RemoveItem(props) {
     return (
         <div style={styles.container}>
             <div style={styles.titleBar}>
-                <div style={styles.title}>{ title } { listName }</div>
+                <div style={styles.title}>{ title } { collection.name }</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
             <div style={styles.content}>
@@ -87,7 +88,7 @@ export default function RemoveItem(props) {
             </div>
             <div style={{display: 'inline-flex', width: '100%'}}>
                 <div style={styles.cancelBtn} onClick={props.close}>Cancel</div>
-                <div style={styles.submitBtn} onClick={()=>props.removeProduct(props.overlayObj.listType, listName, modelNum, redirect)}>Remove</div>
+                <div style={styles.submitBtn} onClick={()=>props.removeProduct({collectionType: props.overlayObj.collectionType, collectionID: collection.id, productID, redirect})}>Remove</div>
             </div>
         </div>
     );

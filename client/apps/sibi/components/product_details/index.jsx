@@ -12,8 +12,8 @@ import YourTruck                from './your_truck';
 let select = (state)=>{
     return {
         currLang          : state.application.get('currLanguage'),
-        products          : state.application.get('products').toJS(),
-        productLocations  : state.application.get('productLocations').toJS(),
+        products          : state.application.get('products'),
+        productLocations  : state.application.get('productLocations'),
         truck             : state.application.get('truck'),
         isInStock         : state.application.get('isInStock'),
     };
@@ -25,16 +25,16 @@ export default class ProductDetails extends React.Component {
     constructor(props) {
         super(props);
 
+        let location = this.props.productLocations.toJS();
+
         this.state = {
-            product: _.find(this.props.products, ['modelNum', this.props.params.modelNum]), qty: 1, location: this.props.productLocations[0], warranty: false,
+            product: _.find(this.props.products.toJS(), ['id', parseInt(this.props.params.id)]), qty: 1, location: location[0], warranty: false,
             truck: (this.props.truck.size > 0) ? this.props.truck.toJS() : [],
             minStock: 10
         };
 
         this.update = this.update.bind(this);
         this.checkInventory = this.checkInventory.bind(this);
-
-        this.checkInventory(this.state.location.name);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -43,17 +43,23 @@ export default class ProductDetails extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.checkInventory(this.state.location.id);
+    }
+
     update(type, value) {
         this.setState({[type]: value});
 
-        this.checkInventory(value);
+        if(type === 'location') {
+            this.checkInventory(value);
+        }
     }
 
-    checkInventory(value) {
-        let index = _.findIndex(this.props.productLocations, (location)=>{ return location.name === value });
+    checkInventory(id) {
+        let location = _.find(this.props.productLocations.toJS(), ['id', parseInt(id)]);
 
-        if(this.props.productLocations[index].stock < this.state.minStock) {
-            this.props.showOverlay('stockCheck', {product: this.state.product, location: this.props.productLocations[index]});
+        if(location.stock < this.state.minStock) {
+            this.props.showOverlay('stockCheck', {product: this.state.product, location});
         }
     }
 
@@ -125,8 +131,8 @@ export default class ProductDetails extends React.Component {
             }
         };
 
-        let locationOptions = _.map(this.props.productLocations, (location, key)=>{
-            return <option key={key} value={location.name} >{location.name} ({location.stock} in stock)</option>;
+        let locationOptions = _.map(this.props.productLocations.toJS(), (location)=>{
+            return <option key={location.id} value={location.id} >{location.name} ({location.stock} in stock)</option>;
         });
 
         let image = (this.state.product.image) ? assets(this.state.product.image) : '';
@@ -147,7 +153,7 @@ export default class ProductDetails extends React.Component {
                                 <div style={{width: '20%'}}>Qty: <input type="number" value={this.state.qty} onChange={(e)=>this.update('qty', e.target.value)} style={styles.qtyInput} /></div>
                                 <div style={styles.dropdownSection}>
                                     <select id="locationSelectDropdown" value={ this.state.location } onChange={ (e)=>this.update('location', e.target.value) } style={styles.dropdown}>
-                                        {locationOptions}
+                                        { locationOptions }
                                     </select>
                                     <div style={styles.stockError}>This item is sold out here.  Select a new location.</div>
                                 </div>
@@ -165,7 +171,7 @@ export default class ProductDetails extends React.Component {
                     </div>
                     <DetailTabs
                         tabs={this.state.product.tabs}
-                        products={this.props.products}
+                        products={this.props.products.toJS()}
                         addToTruck={this.props.addToTruck} />
                 </div>
                 <YourTruck

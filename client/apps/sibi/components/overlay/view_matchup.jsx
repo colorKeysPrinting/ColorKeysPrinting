@@ -9,6 +9,7 @@ import { addToTruck }           from '../../actions/application';
 let select = (state)=>{
     return {
         currLang            : state.application.get('currLanguage'),
+        products            : state.application.get('products'),
         salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate'])
     };
 };
@@ -19,17 +20,16 @@ export default class ViewMatchupOverlay extends React.Component {
     constructor(props) {
         super(props);
 
-        let items = _.map(this.props.overlayObj.products, (matchupQty, modelNum)=>{
-
-            let product = _.find(this.props.products, ['modelNum', modelNum]);
+        let products = _.map(this.props.overlayObj.collectionObj.products, (matchupQty, productID)=>{
+            let product = _.find(this.props.products.toJS(), ['id', parseInt(productID)]);
             let cost = (parseFloat(product.price * matchupQty));
 
-            return {modelNum, ...product, matchupQty, cost};
+            return {...product, matchupQty, cost};
         });
 
-        let calc = this.calculate(items);
+        let calc = this.calculate(products);
 
-        this.state = {items, title: this.props.overlayObj.name, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total};
+        this.state = {products, title: this.props.overlayObj.collectionObj.name, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total};
 
         this.update = this.update.bind(this);
         this.calculate = this.calculate.bind(this);
@@ -40,28 +40,28 @@ export default class ViewMatchupOverlay extends React.Component {
         this.share = this.share.bind(this);
     }
 
-    update(modelNum, matchupQty) {
-        let items = this.state.items;
+    update(productID, matchupQty) {
+        let products = this.state.products;
 
-        let product = _.find(items, ['modelNum', modelNum]);
+        let product = _.find(products, ['id', productID]);
         product.matchupQty = parseInt(matchupQty);
         product.cost = product.price * product.matchupQty;
 
-        let index = _.findIndex(items, (obj)=>{ return obj.modelNum === modelNum});
-        items[index] = product;
+        let index = _.findIndex(products, (product)=>{ return product.id === productID});
+        products[index] = product;
 
-        let calc = this.calculate(items);
+        let calc = this.calculate(products);
 
-        this.setState({items, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total});
+        this.setState({products, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total});
     }
 
-    calculate(items) {
+    calculate(products) {
         let subtotal = 0,
             salesTax = 0,
             shipping = 0;
 
-        _.each(items, (item)=>{
-            let cost = item.cost
+        _.each(products, (product)=>{
+            let cost = product.cost
             subtotal += cost;
             salesTax += this.calcTax(cost * this.props.salesTaxRate / 100);
         });
@@ -81,35 +81,35 @@ export default class ViewMatchupOverlay extends React.Component {
         return parseFloat(result);
     }
 
-    remove(modelNum) {
-        console.log('removing:', modelNum);
-        let items = _.remove(this.state.items, (obj)=>{return obj.modelNum !== modelNum});
+    remove(productID) {
+        console.log('removing:', productID);
+        let products = _.remove(this.state.products, (product)=>{return product.id !== productID});
 
-        let calc = this.calculate(items);
+        let calc = this.calculate(products);
 
-        this.setState({items, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total});
+        this.setState({products, subtotal: calc.subtotal, shipping: calc.shipping, salesTax: calc.salesTax, total: calc.total});
         // TODO: this will eventually need to go to the store to be removed or make a server call
     }
 
-    addItemToTruck(item) {
-        console.log('addToTruck:', item);
-        let qty = item.matchupQty;
+    addItemToTruck(product) {
+        console.log('addToTruck:', product);
+        let qty = product.matchupQty;
 
-        item['qty'] = qty;
-        delete item.matchupQty;
+        product['qty'] = qty;
+        delete product.matchupQty;
 
-        this.props.addToTruck(item);
+        this.props.addToTruck(product);
     }
 
     addAllToTruck(matchup) {
         console.log('addToTruck:', matchup);
 
-        let items = {};
-        _.each(matchup, (item)=>{
-            items[item.modelNum] = item.matchupQty;
+        let products = {};
+        _.each(matchup, (product)=>{
+            products[product.id] = product.matchupQty;
         });
 
-        matchup = {matchup: this.state.title, items};
+        matchup = {matchup: this.state.title, products};
 
         this.props.addToTruck(matchup);
     }
@@ -224,10 +224,10 @@ export default class ViewMatchupOverlay extends React.Component {
             },
         };
 
-        let items = _.map(this.state.items, (product, i)=>{
+        let products = _.map(this.state.products, (product)=>{
 
             return (
-                <tr key={product.modelNum} style={{width: '100%'}}>
+                <tr key={product.id} style={{width: '100%'}}>
                     <td style={styles.table.col1}>
                         <div style={{display: 'inline-flex'}}>
                             <div>
@@ -235,16 +235,16 @@ export default class ViewMatchupOverlay extends React.Component {
                             </div>
                             <div>
                                 <h2>{product.name}</h2>
-                                <div style={styles.modelNum}>Model # {product.modelNum}</div>
+                                <div style={styles.modelNum}>Model # { product.modelNum }</div>
                             </div>
                         </div>
                     </td>
                     <td style={styles.table.col2}>
-                        <label style={{display: 'inline-flex'}} style={{fontSize: '20px', marginRight: '10px'}}>Qty: <input type="number" value={product.matchupQty} onChange={(e)=>this.update(product.modelNum, e.target.value)} style={styles.qtyInput}/></label>
-                        <div onClick={()=>this.remove(product.modelNum)} style={styles.table.removeBtn}>Remove</div>
+                        <label style={{display: 'inline-flex'}} style={{fontSize: '20px', marginRight: '10px'}}>Qty: <input type="number" value={product.matchupQty} onChange={(e)=>this.update(product.id, e.target.value)} style={styles.qtyInput}/></label>
+                        <div onClick={()=>this.remove(product.id)} style={styles.table.removeBtn}>Remove</div>
                     </td>
                     <td style={styles.table.col3}>
-                        <div>${(product.cost).formatMoney(2, '.', ',')}</div>
+                        <div> ${ (product.cost).formatMoney(2, '.', ',') } </div>
                         <div onClick={()=>this.addItemToTruck(product)} style={styles.table.submitBtn}>Add to Truck</div>
                     </td>
                 </tr>
@@ -255,7 +255,7 @@ export default class ViewMatchupOverlay extends React.Component {
             <div style={styles.container}>
                 <div style={styles.titleBar }>
                     <div style={styles.title}>{this.state.title}</div>
-                    <div onClick={()=>this.share(this.state.items)}><img src={''} alt="share" style={styles.actions} /></div>
+                    <div onClick={()=>this.share(this.state.products)}><img src={''} alt="share" style={styles.actions} /></div>
                     <div onClick={this.props.close} style={styles.close}>X</div>
                 </div>
                 <div style={styles.content}>
@@ -268,7 +268,7 @@ export default class ViewMatchupOverlay extends React.Component {
                         </tr>
                         </thead>
                         <tbody>
-                            {items}
+                            { products }
                         </tbody>
                     </table>
                     <table>
@@ -278,7 +278,7 @@ export default class ViewMatchupOverlay extends React.Component {
                                 <td style={{width: '20%'}}>SHIPPING: ${(this.state.shipping).formatMoney(2, '.')}</td>
                                 <td style={{width: '20%'}}>SALES TAX: ${(this.state.salesTax).formatMoney(2)}</td>
                                 <td style={{width: '20%'}}>TOTAL: ${(this.state.total).formatMoney(2, '.', ',')}</td>
-                                <td><div onClick={()=>this.addAllToTruck(this.state.items)} style={styles.submitBtn}>Add All Items to Truck</div></td>
+                                <td><div onClick={()=>this.addAllToTruck(this.state.products)} style={styles.submitBtn}>Add All Items to Truck</div></td>
                             </tr>
                         </tbody>
                     </table>

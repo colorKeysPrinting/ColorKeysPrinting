@@ -3,7 +3,7 @@ import { connect }              from 'react-redux';
 
 import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
-import { createNewList, addToList, removeProduct, checkingInventory }         from '../../actions/products';
+import { createNewCollection, addToCollection, removeProduct, checkingInventory }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -14,7 +14,7 @@ import AddToConfirmation        from './add_to_confirmation';
 import AddNewList               from './add_new_list';
 import ViewMatchup              from './view_matchup';
 import Profile                  from './profile';
-import RemoveItem               from './remove_item';
+import RemoveListItem           from './remove_list_item';
 import StockCheck               from './stock_check';
 
 let select = (state)=>{
@@ -23,13 +23,14 @@ let select = (state)=>{
         overlayObj          : state.application.get('overlayObj'),
         username            : state.application.getIn(['activeUser', 'username']),
         profilePic          : state.application.getIn(['activeUser', 'profilePic']),
-        products            : state.application.get('products').toJS(),
+        myLists             : state.application.getIn(['activeUser', 'myLists']),
+        products            : state.application.get('products'),
         contractGoodman     : state.application.getIn(['contracts','goodman']),
         contractAsure       : state.application.getIn(['contracts','asure'])
     }
 };
 
-let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewList, addToList, changeLanguage, removeProduct, checkingInventory};
+let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewCollection, addToCollection, changeLanguage, removeProduct, checkingInventory};
 
 @connect(select, actions, null, {withRef: true})
 export default class Overlay extends React.Component {
@@ -126,19 +127,22 @@ export default class Overlay extends React.Component {
     submitCreateListBtn(type) {
         console.log('submit add to clicked');
 
-        this.props.createNewList(type, this.state.newList);
-        if(this.state.overlayObj['modelNum']) {
-            this.props.addToList(type, this.state.newList, this.state.overlayObj.modelNum); // TODO: check to make sure this functionality is correct,
-                                                                                            // when you create a new list the product you clicked on will be added to that list
+        let productID;
+        if(this.state.overlayObj.productID === undefined) {
+            productID = '';
+        } else if (this.state.overlayObj.productID === undefined) {
+            productID = '0';
+        } else {
+            productID = this.state.overlayObj.productID.toString();
         }
 
+        this.props.createNewCollection(type, this.state.newList, productID);
         this.close();
     }
 
-    submitAddToBtn(type, listName) {
+    submitAddToBtn(type, collectionName) {
         console.log('submit add to clicked');
-
-        this.props.addToList(type, listName, this.state.overlayObj.modelNum);
+        this.props.addToCollection(type, collectionName, this.state.overlayObj.productID);
     }
 
     addToTruck(items) {
@@ -226,10 +230,8 @@ export default class Overlay extends React.Component {
 
             case 'addToConfirmation':
                 overlay = <AddToConfirmation
-                                title={this.state.overlayObj.name}
-                                type={this.props.overlayObj.type}
-                                index={this.props.overlayObj.index}
-                                product={_.find(this.props.products, (product)=>{return product.modelNum === this.state.overlayObj.modelNum})}
+                                overlayObj={this.state.overlayObj}
+                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productID)])}
                                 changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
                                 close={this.close} />;
                 break;
@@ -246,21 +248,26 @@ export default class Overlay extends React.Component {
             case 'customMatchup':
                 overlay = <ViewMatchup
                                 overlayObj={this.state.overlayObj}
-                                products={this.props.products}
                                 close={this.close} />;
                 break;
+
             case 'removeItem' :
-                overlay = <RemoveItem
+                overlay = <RemoveListItem
                                 overlayObj={this.state.overlayObj}
-                                product={_.find(this.props.products, (product)=>{return product.modelNum === this.state.overlayObj.modelNum})}
+                                collection={_.find(this.props.myLists.toJS(), ['id', parseInt(this.state.overlayObj.collectionID)])}
+                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productID)])}
                                 removeProduct={this.props.removeProduct}
                                 close={this.close} />;
+                break;
+
             case 'stockCheck' :
                 overlay = <StockCheck
                                 location={this.state.overlayObj.location}
                                 product={this.state.overlayObj.product}
                                 checkingInventory={this.props.checkingInventory}
                                 close={this.close} />;
+                break;
+
             default:
         }
 

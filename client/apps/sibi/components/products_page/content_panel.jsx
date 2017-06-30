@@ -1,6 +1,8 @@
 import React                    from 'react';
-import { connect }              from 'react-redux';
 import { withRouter }           from 'react-router';
+import { connect }              from 'react-redux';
+
+import { closeOverlay }         from '../../actions/application';
 
 import Products                 from './content_sections/products';
 import Matchups                 from './content_sections/matchups';
@@ -10,14 +12,24 @@ import Equipment                from './content_sections/equipment';
 
 let select = (state)=>{
     return {
-        myProducts    : state.application.getIn(['activeUser','myProducts']),
-        myLists       : state.application.getIn(['activeUser','myLists']),
-        myMatchups    : state.application.getIn(['activeUser','myMatchups']),
+        currLang        : state.application.get('currLanguage'),
+        activeOverlay   : state.application.get('activeOverlay')
     };
 };
 
-@connect(select, {}, null, {withRef: true})
+@connect(select, {closeOverlay}, null, {withRef: true})
 export default withRouter(class ContentPanel extends React.Component {
+
+    componentWillUpdate() {
+        const re = /(\w{1,})-([\w|\d]{1,})/;
+        const type = re.exec(location.hash) || ['',''];
+
+        if(type[1] === 'myList') {
+            if(this.props.activeOverlay === 'addToConfirmation') {
+                this.props.closeOverlay();
+            }
+        }
+    }
 
     render() {
         let activeSection;
@@ -43,7 +55,7 @@ export default withRouter(class ContentPanel extends React.Component {
                 break;
             case 'myList':
                 activeSection = <MyLists
-                                    list={type[2]} />;
+                                    collectionID={type[2]} />;
                 break;
             case 'equipment':
                 activeSection = <Equipment

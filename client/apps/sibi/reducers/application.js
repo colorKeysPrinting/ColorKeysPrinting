@@ -5,6 +5,8 @@ import Immutable                from 'immutable';
 import ActionTypes              from '../constants/action_types';
 import { browserHistory }       from 'react-router';
 
+import * as productFunctions    from './helper/products'
+
 const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', activePageContent: '', temp: {docs: {workerComp: '', w9: '', insurance: '', contractGoodman: false,  contractAsure: false}},
     isInStock: true,
 
@@ -40,33 +42,33 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             }
         },
         myProducts: {
-            mostPurchased: ['GSX140421', 'GMS80805CN', 'CAPF4860C6','GSZ140361']
+            mostPurchased: [11, 7, 3, 2]
         },
         myMatchups: [
             {type: 'standard'},
             {type: 'custom',
-                items: [
-                    {name: 'Dwight\'s Heat Pump Split-System', price: 1512.25, items: {'GSX140421': 1, 'GMS80805CN': 2}},
-                    {name: 'Dwight\'s Gas Split-System',       price: 1800.20, items: {'ARUF37C14': 1, 'HKSX10XC': 3, 'GXZ140601': 1}}
+                matchups: [
+                    {id: 0, name: 'Dwight\'s Heat Pump Split-System', price: 1512.25, products: {'0': 1, '1': 2}},
+                    {id: 1, name: 'Dwight\'s Gas Split-System',       price: 1800.20, products: {'4': 1, '5': 3, '6': 1}}
                 ]
             }
         ],
         myLists: [
-            {name: 'Dwight\'s List', items: ['ASPT61D14', 'GXZ140601', 'GPH1430H41']},
-            {name: 'Saved Trucks', items: ['ARUF37C14', 'GPH1460h42']},
-            {name: 'Supplies', items: []}
+            {id: 0, name: 'Dwight\'s List', products: ['7', '6', '10']},
+            {id: 1, name: 'Saved Trucks', products: ['4', '11']},
+            {id: 2, name: 'Supplies', products: []}
         ],
-        myOrders: [
-            {orderNum: 138992342, orderDate: 1488412800000, total: 5631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'ordered',           items: {'0': 16, '9': 16}},
-            {orderNum: 138992343, orderDate: 1488153600000, total: 876.03,   propertyAddress: '113 Washington Blvd, Ogden, UT, 84414', shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           items: {'4': 2, '2': 2}},
-            {orderNum: 138992344, orderDate: 1487548800000, total: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           items: {'11': 16, '9': 16}},
-            {orderNum: 138992345, orderDate: 1487462400000, total: 22331.76, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Shipped',           items: {'1': 50, '6': 10, '7': 50, '2': 1}},
-            {orderNum: 138992346, orderDate: 1487462400000, total: 1631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Partially Shipped', items: {'0': 3}},
-            {orderNum: 138992347, orderDate: 1487462400000, total: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         items: {'2': 4, '5': 1}},
-            {orderNum: 138992348, orderDate: 1486771200000, total: 831.96,   propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         items: {'0': 3, '9': 3, '10': 1}},
-            {orderNum: 138992349, orderDate: 1486684800000, total: 18631.92, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Delivered',         items: {'0': 16, '9': 11, '7': 10, '3': 1}},
-            {orderNum: 138992350, orderDate: 1485561600000, total: 13631.91, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         items: {'0': 16, '9': 11, '7': 4, '3': 3}},
-        ],
+        myOrders: {
+            '0': {orderNum: 138992342, orderDate: 1488412800000, totalCost: 5631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'ordered',           products: {'0': 16, '9': 16}},
+            '1': {orderNum: 138992343, orderDate: 1488153600000, totalCost: 876.03,   propertyAddress: '113 Washington Blvd, Ogden, UT, 84414', shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           products: {'4': 2, '2': 2}},
+            '2': {orderNum: 138992344, orderDate: 1487548800000, totalCost: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           products: {'11': 16, '9': 16}},
+            '3': {orderNum: 138992345, orderDate: 1487462400000, totalCost: 22331.76, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Shipped',           products: {'1': 50, '6': 10, '7': 50, '2': 1}},
+            '4': {orderNum: 138992346, orderDate: 1487462400000, totalCost: 1631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Partially Shipped', products: {'0': 3}},
+            '5': {orderNum: 138992347, orderDate: 1487462400000, totalCost: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'2': 4, '5': 1}},
+            '6': {orderNum: 138992348, orderDate: 1486771200000, totalCost: 831.96,   propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'0': 3, '9': 3, '10': 1}},
+            '7': {orderNum: 138992349, orderDate: 1486684800000, totalCost: 18631.92, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Delivered',         products: {'0': 16, '9': 11, '7': 10, '3': 1}},
+            '8': {orderNum: 138992350, orderDate: 1485561600000, totalCost: 13631.91, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'0': 16, '9': 11, '7': 4, '3': 3}},
+        },
 
         filterPanel:{
             'hvac equipment': {
@@ -94,33 +96,33 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
     },
     products: [
         // productId: incremental int
-        {modelNum: 'GSX140421',     name: 'Goodman 3.5 Ton 14 Seer Air conditioner condenser w/ R410A refrigerant',         brand: 'Goodman', image: '', price: 709.00,  types: ['airConditioners'],              tabs:{ 'complete the system': ['GMS80805CN','CAPF4860C6'], 'recommended parts': ['GPH1430H41','GXZ140601'],  'code compliance': '<h4>Information for Contractors</h4><h2>Codes 101 Brochure</h2><p>This brochure covers that basics of codes and standards and is aimed at providing contractors with a general understanding of these issues so that they can become more involved in the code evelopment processes that affect the HVAC inducstry. <a>Download it.</a></p><h2>Residential System Design Review Form</h2><p>ACCA has crafted an easy-to-use evaluation of HVAC system design elements in the pertinent building codes. <a>Download it.</a></p> <h2>Computing Infiltration Loads base on a Target Envelope Leakage Requirment</h2><p>This Technical Note shows how to convert a maximum code allowable leakage limit (say, 3 or 5 ACH 50 per the ICC International Energy Conservation Code) to Manual J infiltration CFM value, and then to the infiltration load contributions (Btuh) fr sensible heating, sensible cooling, and latent cooling.  It also discusses the use of blower door data for one or more test points. <a>Download it.</a></p> <h2>ACCA Codes Committee (committee members only)</h2><p>Get involved in ACCA\'s Codes Committee and make a difference in the development and adoption of good building codes.  For more info about becoming involved in the Codes Committee and ACCA\'s building code efforts, contact codes@acca.org.</a></p><hr> <h4>Information for Code officials</h4><h2>Brochures for Code officials</h2><p>ACCA has developed several brochures which help code officials verify residential load calculations, duct design and equipment selection in accordance with Manuals I.D. and S. While it\'s not practical for code officials to verify every single aspect of these</p>', overview: {downloadLink: './documents/product-spec.pdf', 'Standard Features': ['Energy-efficient compressor','Single-speed condenser fan motor','Factory-installed filter drier','Copper tube/aluminum fin coil','Service valves with sweat connections and easy-access guage ports','Contractor with lug connection','Ground lug connection','Ground lug connection','AHRI Certified, ETL Listed'], 'Cabinet Features': ['Heavy-guage galvanized-steel cabinet with a louvered sound control top','Attractive Architectural Gray power-paint finish with 500-hour salt-spray approval','Steel louver coil guard','Top and side maintenance access','Single-panel access to controls with space provided for field-installed accessories','When properly anchored\, meets the 2010 Florida Building Code Unit Integrity requirements for hurricane-type winds (Anchor bracket kits available.)'], 'Outstanding Warranty Protection': 'This unit is backed by a 10-Year Parts Limited Warranty.  The GSX14 Air Conditioner features operating sound levels that are among the lowest in the heating and cooling industry.  With its 14 SEER rating, the GSX14 will help reduce energy consumption throughout the life of the system.'}, 'specifications': './documents/product-spec.pdf', FAQ: [{question: 'Can frost, ice, dirt or other debris keep the outdoor unit of my cooling system from operating effectively?', answer: 'Anything that prevents airflow from making its way to the outdoor coil can negatively affect the efficiency and performance of the equipment.  Make it a priority to keep the space around the equipment clean and clear.'}, {question: 'Should I cover my outdoor unti in the fall and winter?', answer: 'Covering the outdoor unit in the winter months prevents unwanted debris from accumulating on the outdoor unit and later impeding airflow to the outdoor unti.  At the same time accidentally operating the outdoor unit with a covering in place could cause system damage.  It is recommended that high voltage power always be disconnected from the outdoor unit whenever a cover or anything obstructing airflow is introduced.'}]}},
-        {modelNum: 'GMS80805CN',    name: 'Goodman 80% AFUE 80,000 BTU Upflow  Stage Gas Furnace up to 5 Ton',              brand: 'Goodman', image: '', price: 344.00,  types: ['furnaces'],                     tabs:{ 'complete the system': ['GSX140421','CAPF4860C6'],  'recommended parts': ['GPH1430H41','GXZ140601'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'CAPF4860C6',    name: 'Goodman 4 to 5 ton 21 Inch Width Air Conditioner Evaporator Cased Coil',         brand: 'Goodman', image: '', price: 258.00,  types: ['coils'],                        tabs:{ 'complete the system': ['GMS80805CN','GSX140421'],  'recommended parts': ['GPH1430H41','GXZ140601'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'GSZ140361',     name: 'Goodman 3 Ton 14 SEER Heat Pump Air Conditioner Condenser',                      brand: 'Goodman', image: '', price: 866.00,  types: ['heatPumps', 'airConditioners'], tabs:{ 'complete the system': [],                          'recommended parts': [],                          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'ARUF37C14',     name: 'Goodman 3 Ton Air Conditioner Air Handler with Smart Frame Cabinet',             brand: 'Goodman', image: '', price: 380.00,  types: ['airConditioners'],              tabs:{ 'complete the system': [],                          'recommended parts': [],                          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'HKSX10XC',      name: 'Goodman 10 Kilowatt 34,100 BTU Heater Coil for Smart Frame Air Handler',         brand: 'Goodman', image: '', price: 36.00,   types: ['coils'],                        tabs:{ 'complete the system': [],                          'recommended parts': [],                          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'GXZ140601',     name: 'Goodman 5 Ton 14 SEER Heat Pump Air Conditioner Condenser',                      brand: 'Goodman', image: '', price: 1175.00, types: ['airConditioners', 'heatPumps'], tabs:{ 'complete the system': [],                          'recommended parts': [],                          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'ASPT61D14',     name: 'Goodman 5 Ton Air Conditioner Air Handler with Smart Frame Cabinet',             brand: 'Goodman', image: '', price: 561.00,  types: ['airConditioners'],              tabs:{ 'complete the system': [],                          'recommended parts': [],                          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'HKSC15',        name: 'Goodman 15 Kilowatt 51,150 BTU Heater Coil for Smart Fram Air Handler',          brand: 'Goodman', image: '', price: 76.00,   types: ['coils'],                        tabs:{ 'complete the system': [],                          'recommended parts': [],                          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'GPG1442080M41', name: 'Goodman 3.5 Ton 14 SEER 80,000 BTU Gas/Electric Package Unit - Multi-Position',  brand: 'Goodman', image: '', price: 1606.00, types: ['packagedUnits'],                tabs:{ 'complete the system': [],                          'recommended parts': [],                          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'GPH1430H41',    name: 'Goodman 2.5 Ton 14 SEER Horizontal Heat Pump Package Unit',                      brand: 'Goodman', image: '', price: 1310.00, types: ['packagedUnits', 'heatPumps'],   tabs:{ 'complete the system': [],                          'recommended parts': [],                          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {modelNum: 'GPH1460h42',    name: 'Goodman 5 Ton 14 SEER Horizontal Heat Pump Package Unit',                        brand: 'Goodman', image: '', price: 1799.00, types: ['airConditioners'],              tabs:{ 'complete the system': [],                          'recommended parts': [],                          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 0,  modelNum: 'GSX140421',     name: 'Goodman 3.5 Ton 14 Seer Air conditioner condenser w/ R410A refrigerant',         brand: 'Goodman', image: '', price: 709.00,  types: ['airConditioners'],              tabs:{ 'complete the system': ['1','2'], 'recommended parts': ['10','6'],  'code compliance': '<h4>Information for Contractors</h4><h2>Codes 101 Brochure</h2><p>This brochure covers that basics of codes and standards and is aimed at providing contractors with a general understanding of these issues so that they can become more involved in the code evelopment processes that affect the HVAC inducstry. <a>Download it.</a></p><h2>Residential System Design Review Form</h2><p>ACCA has crafted an easy-to-use evaluation of HVAC system design elements in the pertinent building codes. <a>Download it.</a></p> <h2>Computing Infiltration Loads base on a Target Envelope Leakage Requirment</h2><p>This Technical Note shows how to convert a maximum code allowable leakage limit (say, 3 or 5 ACH 50 per the ICC International Energy Conservation Code) to Manual J infiltration CFM value, and then to the infiltration load contributions (Btuh) fr sensible heating, sensible cooling, and latent cooling.  It also discusses the use of blower door data for one or more test points. <a>Download it.</a></p> <h2>ACCA Codes Committee (committee members only)</h2><p>Get involved in ACCA\'s Codes Committee and make a difference in the development and adoption of good building codes.  For more info about becoming involved in the Codes Committee and ACCA\'s building code efforts, contact codes@acca.org.</a></p><hr> <h4>Information for Code officials</h4><h2>Brochures for Code officials</h2><p>ACCA has developed several brochures which help code officials verify residential load calculations, duct design and equipment selection in accordance with Manuals I.D. and S. While it\'s not practical for code officials to verify every single aspect of these</p>', overview: {downloadLink: './documents/product-spec.pdf', 'Standard Features': ['Energy-efficient compressor','Single-speed condenser fan motor','Factory-installed filter drier','Copper tube/aluminum fin coil','Service valves with sweat connections and easy-access guage ports','Contractor with lug connection','Ground lug connection','Ground lug connection','AHRI Certified, ETL Listed'], 'Cabinet Features': ['Heavy-guage galvanized-steel cabinet with a louvered sound control top','Attractive Architectural Gray power-paint finish with 500-hour salt-spray approval','Steel louver coil guard','Top and side maintenance access','Single-panel access to controls with space provided for field-installed accessories','When properly anchored\, meets the 2010 Florida Building Code Unit Integrity requirements for hurricane-type winds (Anchor bracket kits available.)'], 'Outstanding Warranty Protection': 'This unit is backed by a 10-Year Parts Limited Warranty.  The GSX14 Air Conditioner features operating sound levels that are among the lowest in the heating and cooling industry.  With its 14 SEER rating, the GSX14 will help reduce energy consumption throughout the life of the system.'}, 'specifications': './documents/product-spec.pdf', FAQ: [{question: 'Can frost, ice, dirt or other debris keep the outdoor unit of my cooling system from operating effectively?', answer: 'Anything that prevents airflow from making its way to the outdoor coil can negatively affect the efficiency and performance of the equipment.  Make it a priority to keep the space around the equipment clean and clear.'}, {question: 'Should I cover my outdoor unti in the fall and winter?', answer: 'Covering the outdoor unit in the winter months prevents unwanted debris from accumulating on the outdoor unit and later impeding airflow to the outdoor unti.  At the same time accidentally operating the outdoor unit with a covering in place could cause system damage.  It is recommended that high voltage power always be disconnected from the outdoor unit whenever a cover or anything obstructing airflow is introduced.'}]}},
+        {id: 1,  modelNum: 'GMS80805CN',    name: 'Goodman 80% AFUE 80,000 BTU Upflow  Stage Gas Furnace up to 5 Ton',              brand: 'Goodman', image: '', price: 344.00,  types: ['furnaces'],                     tabs:{ 'complete the system': ['0','2'], 'recommended parts': ['10','6'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 2,  modelNum: 'CAPF4860C6',    name: 'Goodman 4 to 5 ton 21 Inch Width Air Conditioner Evaporator Cased Coil',         brand: 'Goodman', image: '', price: 258.00,  types: ['coils'],                        tabs:{ 'complete the system': ['1','0'], 'recommended parts': ['10','6'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 3,  modelNum: 'GSZ140361',     name: 'Goodman 3 Ton 14 SEER Heat Pump Air Conditioner Condenser',                      brand: 'Goodman', image: '', price: 866.00,  types: ['heatPumps', 'airConditioners'], tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 4,  modelNum: 'ARUF37C14',     name: 'Goodman 3 Ton Air Conditioner Air Handler with Smart Frame Cabinet',             brand: 'Goodman', image: '', price: 380.00,  types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 5,  modelNum: 'HKSX10XC',      name: 'Goodman 10 Kilowatt 34,100 BTU Heater Coil for Smart Frame Air Handler',         brand: 'Goodman', image: '', price: 36.00,   types: ['coils'],                        tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 6,  modelNum: 'GXZ140601',     name: 'Goodman 5 Ton 14 SEER Heat Pump Air Conditioner Condenser',                      brand: 'Goodman', image: '', price: 1175.00, types: ['airConditioners', 'heatPumps'], tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 7,  modelNum: 'ASPT61D14',     name: 'Goodman 5 Ton Air Conditioner Air Handler with Smart Frame Cabinet',             brand: 'Goodman', image: '', price: 561.00,  types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 8,  modelNum: 'HKSC15',        name: 'Goodman 15 Kilowatt 51,150 BTU Heater Coil for Smart Fram Air Handler',          brand: 'Goodman', image: '', price: 76.00,   types: ['coils'],                        tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 9,  modelNum: 'GPG1442080M41', name: 'Goodman 3.5 Ton 14 SEER 80,000 BTU Gas/Electric Package Unit - Multi-Position',  brand: 'Goodman', image: '', price: 1606.00, types: ['packagedUnits'],                tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 10, modelNum: 'GPH1430H41',    name: 'Goodman 2.5 Ton 14 SEER Horizontal Heat Pump Package Unit',                      brand: 'Goodman', image: '', price: 1310.00, types: ['packagedUnits', 'heatPumps'],   tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 11, modelNum: 'GPH1460h42',    name: 'Goodman 5 Ton 14 SEER Horizontal Heat Pump Package Unit',                        brand: 'Goodman', image: '', price: 1799.00, types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
     ],
     matchups: [
-        {matchup: 'standard', items:['DSXC19', 'GMVC9', 'DSXC17', 'GMVC7']},
+        {id: 0, matchup: 'standard', matchups:['1', '2', '3', '4']},
 
-        {matchup: 'DSXC19',  name: 'Gas Split-System',          image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 1419.16, items: {'GSX140421': 1, 'GMS80805CN': 1, 'CAPF4860C6': 1}},
-        {matchup: 'GMVC9',   name: 'Heat Pump Split-System',    image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 3262.66, items: {'GSZ140361': 3, 'ARUF37C14': 1, 'HKSX10XC': 1}},
-        {matchup: 'DSXC17',  name: 'Package Gas System',        image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 2568.77, items: {'GXZ140601': 1, 'ASPT61D14': 2, 'HKSC15': 1}, applicationTypeOptions: {multiPosition: 'Multi-Position', singlePosition: 'Single Position'}},
-        {matchup: 'GMVC7',   name: 'Package Heat Pump System',  image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 2290.57, items: {'GXZ140601': 1,'ASPT61D14': 1, 'HKSC15': 5}, applicationTypeOptions: {multiPosition: 'Multi-Position', horizontalPosition: 'Horizontal'}}
+        {id: 1, matchup: 'DSXC19',  name: 'Gas Split-System',          image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 1419.16, products: {'0': 1, '1': 1, '2': 1}},
+        {id: 2, matchup: 'GMVC9',   name: 'Heat Pump Split-System',    image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 3262.66, products: {'3': 3, '4': 1, '5': 1}},
+        {id: 3, matchup: 'DSXC17',  name: 'Package Gas System',        image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 2568.77, products: {'6': 1, '7': 2, '8': 1}, applicationTypeOptions: {multiPosition: 'Multi-Position', singlePosition: 'Single Position'}},
+        {id: 4, matchup: 'GMVC7',   name: 'Package Heat Pump System',  image: '', tonnageOptions: [1.5, 1.8], seerOptions: [14, 15, 12], price: 2290.57, products: {'6': 1,'7': 1, '8': 5}, applicationTypeOptions: {multiPosition: 'Multi-Position', horizontalPosition: 'Horizontal'}}
     ],
     productLocations: [
         // this dummy data is for GSX140421 only
-        {name: 'West Phoenix', stock: 5},
-        {name: 'Utah', stock: 2},
-        {name: 'New York', stock: 1},
-        {name: 'Texas', stock: 20}
+        {id: 0, name: 'West Phoenix', stock: 5},
+        {id: 1, name: 'Utah', stock: 2},
+        {id: 2, name: 'New York', stock: 1},
+        {id: 3, name: 'Texas', stock: 20}
     ],
     truck: []
 });
@@ -191,8 +193,8 @@ export default (state = initialState, action)=>{
 
 // **** OVERLAY SECTION
         case ActionTypes.SHOW_OVERLAY:
-            console.log('show overlay', action.key);
-            state = state.set('activeOverlay', action.key);
+            console.log('show overlay', action.overlay);
+            state = state.set('activeOverlay', action.overlay);
 
             // normal case
             if(action.obj) {
@@ -200,39 +202,27 @@ export default (state = initialState, action)=>{
             }
 
             break;
-        case ActionTypes.SHOW_ADD_TO_OVERLAY:
-            console.log('show add to overlay', action.key);
-            state = state.set('activeOverlay', action.key);
-
-            if(action.mouseCoord) {
-                state = state.set('overlayObj', action.mouseCoord);
-            }
-
-            if(action.modelNum) {
-                state = state.setIn(['temp','modelNum'], action.modelNum);
-            }
-            break;
 
         case ActionTypes.SHOW_RADIO_OVERLAY:
-            console.log('show radio overlay', action.key);
-            state = state.set('activeOverlay', action.key);
+            console.log('show radio overlay', action.overlay);
+            state = state.set('activeOverlay', action.overlay);
 
-            if(action.listType) {
-                let list;
+            if(action.collectionType) {
+                let collections;
 
-                switch(action.listType) {
+                switch(action.collectionType) {
                     case 'customMatchups':
-                        let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS()
-                        let index = _.findIndex(myMatchups, ['type','custom']);
-                        list = myMatchups[index].items;
+                        let myMatchups = _.find(state.getIn(['activeUser', 'myMatchups']).toJS(), ['type','custom']);
+                        collections = myMatchups.matchups;
                         break;
+
                     case 'myLists':
-                        list = state.getIn(['activeUser', 'myLists']).toJS();
+                        collections = state.getIn(['activeUser', 'myLists']).toJS();
                         break;
                     default:
                 }
 
-                state = state.set('overlayObj', {type: action.listType, modelNum: action.modelNum, list});
+                state = state.set('overlayObj', {type: action.collectionType, productID: action.productID, collections});
             }
             break;
 
@@ -257,9 +247,9 @@ export default (state = initialState, action)=>{
             console.log('adding item(s) to truck: ', action.item);
             let item = action.item, truck = state.get('truck').toJS(), products = state.get('products').toJS();
 
-            if(item.modelNum) {
-                let modelNum = item.modelNum
-                let index = _.findIndex(truck, ['modelNum', modelNum]);
+            if(typeof(item.id) === 'number') {
+
+                let index = _.findIndex(truck, ['id', item.id]);
 
                 if(index >= 0) {
                     truck[index].qty += 1;
@@ -271,14 +261,13 @@ export default (state = initialState, action)=>{
                 }
 
             } else{
-                _.each(item.items, (qty, modelNum)=>{
-                    let index = _.findIndex(truck, ['modelNum', modelNum]);
+                _.each(item.products, (qty, id)=>{
+                    let index = _.findIndex(truck, ['id', parseInt(id)]);
 
                     if(index >= 0) {
                         truck[index].qty += qty;
                     } else {
-                        let index = _.findIndex(products, ['modelNum', modelNum]);
-                        let product = products[index];
+                        let product = _.find(products, ['id', parseInt(id)]);
                         product['qty'] = qty;
                         truck.push(product);
                     }
@@ -289,86 +278,97 @@ export default (state = initialState, action)=>{
             console.log('current Truck:', state.get('truck').toJS());
             break;
 
+        case ActionTypes.ADD_TO_COLLECTION:
+            console.log('TODO: ASYNC CALL - add to ' + action.collectionID, action.productID);
+            let collectionObj;
+
+            if(action.collectionType === 'customMatchups') {
+                let customMatchups = _.find(state.getIn(['activeUser','myMatchups']).toJS(), ['type', 'custom']);
+                collectionObj = _.find(customMatchups.matchups, ['id', action.collectionID]);
+
+            } else if (action.collectionType === 'myLists') {
+                collectionObj = _.find(state.getIn(['activeUser','myLists']).toJS(), ['id', action.collectionID]);
+            }
+
+            state = productFunctions.addToListHelper(state, action.collectionType, collectionObj.id, action.productID);
+            break;
+
         case ActionTypes.CREATE_NEW_LIST:
-            console.log('TODO: ASYNC CALL - create new: ' + action.key, action.newItem);
+            let collectionID;
+            console.log('TODO: ASYNC CALL - create new: ' + action.collectionType, action.collectionName);
 
-            if(action.key === 'customMatchups') {
-                let myMatchupsOld = state.getIn(['activeUser', 'myMatchups']).toJS(); //0:{standard}, 1:{custom}
-                let customMatchups = myMatchupsOld[1].items;
+            if(action.collectionType === 'customMatchups') {
+                let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
+                let customMatchups = _.find(myMatchups, ['type', 'custom']);
+                collectionID = _.size(customMatchups.matchups);
 
-                customMatchups.push({name: action.newItem, price: 0, items: {}});
+                myMatchups = _.remove(myMatchups, (matchup)=>{return matchup.type !== 'custom'});
 
-                myMatchupsOld[1].items = customMatchups;
+                customMatchups.matchups.push({id: collectionID, name: action.collectionName, price: 0, products: {}});
 
-                state = state.updateIn(['activeUser', 'myMatchups'], value=>Immutable.fromJS(myMatchupsOld));
+                myMatchups.push(customMatchups);
+
+                state = state.updateIn(['activeUser', 'myMatchups'], value=>Immutable.fromJS(myMatchups));
 
                 console.log('current myMatchups:', state.getIn(['activeUser', 'myMatchups']).toJS());
 
-            } else if (action.key === 'myLists') {
+            } else if (action.collectionType === 'myLists') {
                 let myLists = state.getIn(['activeUser', 'myLists']).toJS();
-                myLists.push({name: action.newItem, items: []});
+                collectionID = _.size(myLists);
+
+                myLists.push({id: collectionID, name: action.collectionName, products: []});
 
                 state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));
+                state = state.set('activeOverlay', '');
                 console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
 
-                browserHistory.push({ pathname: `#/products/myList-${_.size(myLists) - 1}` });
+                browserHistory.push({ pathname: `#/products/myList-${ collectionID }` });
             }
-            break;
 
-        case ActionTypes.ADD_TO_LIST:
-            console.log('TODO: ASYNC CALL - add to ' + action.listName, action.modelNum);
-
-            if(action.key === 'customMatchups') {
-                let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
-                let customMatchups = myMatchups[1].items;
-
-                let index = _.findIndex(customMatchups, ['name', action.listName]);
-                let matchup = customMatchups[index];
-
-                if(matchup.items[action.modelNum]) {
-                    matchup.items[action.modelNum] += 1;
-
-                } else {
-                    matchup.items[action.modelNum] = 1;
-                }
-
-                myMatchups[index] = matchup;
-
-                state = state.updateIn(['activeUser', 'myMatchups'], value=>Immutable.fromJS(myMatchups));
-                console.log('current matchups:', state.getIn(['activeUser', 'myMatchups']).toJS());
-
-                state = state.set('activeOverlay', 'addToConfirmation');
-                state = state.set('overlayObj', {name: action.listName, modelNum: action.modelNum, products: matchup.items, type: 'Matchup'});
-
-            } else if (action.key === 'myLists') {
-                let myLists = state.getIn(['activeUser', 'myLists']).toJS();
-                let index = _.findIndex(myLists, ['name', action.listName]);
-                myLists[index].items.push(action.modelNum);
-
-                state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));
-                console.log('current myLists:', state.getIn(['activeUser', 'myLists']).toJS());
-
-                state = state.set('activeOverlay', 'addToConfirmation');
-                state = state.set('overlayObj', {name: action.listName, modelNum: action.modelNum, type: 'List', index});
+            if(action.productID) {
+                state = productFunctions.addToListHelper(state, action.collectionType, collectionID, parseInt(action.productID));
             }
             break;
 
         case ActionTypes.REMOVE_PRODUCT:
             console.log('delete call back');
-            let myList = state.getIn(['activeUser', action.key]).toJS();
-            let listName = action.listName;
 
-            if(action.modelNum) {
-                let index = _.findIndex(myList, ['name', listName]);
-                myList[index].items = _.remove(myList[index].items, (product)=>{ return product !== action.modelNum });
+            let collectionType = action.obj.collectionType;
+            let productID = (action.obj.productID) ? action.obj.productID : '';
+
+            let myList = state.getIn(['activeUser', collectionType]).toJS();
+
+            if(productID.toString()) {
+                let collection = _.find(myList, ['id', action.obj.collectionID]);
+                myList = _.remove(myList, (collection)=>{return collection.id !== action.obj.collectionID});
+
+                collection.products = _.remove(collection.products, (thisProductID)=>{ return parseInt(thisProductID) !== productID});
+
+                myList.push(collection);
 
             } else {
-                myList = _.remove(myList, (list)=>{ return list.name !== listName });
-                browserHistory.push({ pathname: action.redirect });
+                myList = _.remove(myList, (collection)=>{ return collection.id !== parseInt(action.obj.collectionID) });
+                browserHistory.push({ pathname: action.obj.redirect });
             }
 
-            state = state.updateIn(['activeUser', action.key], value=>Immutable.fromJS(myList));
+            state = state.updateIn(['activeUser', collectionType], value=>Immutable.fromJS(myList));
             state = state.set('activeOverlay', '');
+            break;
+
+        case ActionTypes.REMOVE_COLLECTION:
+            console.log('delete call back list');
+
+            if(action.collectionType === 'customMatchup') {
+                let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
+                let customMatchups = _.find(myMatchups, ['type', 'custom']);
+
+                myMatchups = _.remove(myMatchups, (matchup)=>{ return matchup.type !== 'custom' });
+                customMatchups.matchups = _.remove(customMatchups.matchups, (matchup)=>{ return matchup.id !== parseInt(action.collectionID) });
+
+                myMatchups.push(customMatchups);
+
+                state = state.updateIn(['activeUser', 'myMatchups'], value=>Immutable.fromJS(myMatchups));
+            }
             break;
 
         case ActionTypes.CHECKING_INVENTORY:
@@ -379,7 +379,7 @@ export default (state = initialState, action)=>{
             if(action.location.name === 'West Phoenix') {
                 let locations = state.get('productLocations').toJS();
 
-                var index = _.findIndex(locations, (location)=>{ return location.name === action.location.name });
+                var index = _.findIndex(locations, (location)=>{ return location.id === action.location.id });
                 locations[index].stock = 0;
 
                 state = state.update('productLocations', value=>Immutable.fromJS(locations));

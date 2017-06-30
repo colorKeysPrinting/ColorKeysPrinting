@@ -112,11 +112,9 @@ export default class Products extends React.Component {
             console.log('TODO: may need to have a call to the server for this to be handled on the backend?');
 
         } else if(this.props.mostPurchased) {
-            let purchases = (this.props.mostPurchased.size > 0) ? this.props.mostPurchased.toJS() : [];
-            productAmount = (this.props.mostPurchased.size > 0) ? this.props.mostPurchased.size : 0;
 
             mostPurchased = _.map(sortedProducts, (product, key)=>{
-                let isMostPurchased = (_.indexOf(purchases, product.modelNumber)) ? true : false;
+                let isMostPurchased = (_.indexOf(this.props.mostPurchased.toJS(), product.id)) ? true : false;
                 if(isMostPurchased) {
                     return (
                         <Product
@@ -140,7 +138,7 @@ export default class Products extends React.Component {
                     </select>
                 </div>
                 <div>
-                    <div style={styles.headers}>YOUR MOST ORDERED PRODUCTS ({productAmount})</div>
+                    <div style={styles.headers}>YOUR MOST ORDERED PRODUCTS ({ this.props.mostPurchased.size })</div>
                     <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
                         {mostPurchased}
                     </div>

@@ -13,30 +13,36 @@ export function setActiveFilters(key, value) {
     }
 }
 
-export function removeProduct(key, listName, modelNum, redirect) {
+export function removeProduct(obj) {
     return {
         type: ActionTypes.REMOVE_PRODUCT,
-        key,
-        listName,
-        modelNum,
-        redirect
+        obj
     };
 }
 
-export function addToList(key, listName, modelNum) {
+export function removeCollection(collectionType, collectionID) {
     return {
-        type: ActionTypes.ADD_TO_LIST,
-        key,
-        listName,
-        modelNum
+        type: ActionTypes.REMOVE_COLLECTION,
+        collectionType,
+        collectionID
     };
 }
 
-export function createNewList(key, newItem) {
+export function addToCollection(collectionType, collectionID, productID) {
+    return {
+        type: ActionTypes.ADD_TO_COLLECTION,
+        collectionType,
+        collectionID,
+        productID
+    };
+}
+
+export function createNewCollection(collectionType, collectionName, productID) {
     return {
         type: ActionTypes.CREATE_NEW_LIST,
-        key,
-        newItem
+        collectionType,
+        collectionName,
+        productID
     };
 }
 

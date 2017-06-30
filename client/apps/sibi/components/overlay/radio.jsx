@@ -7,7 +7,7 @@ export default class RadioOverlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeRadio: this.props.overlayObj.list[0].name};
+        this.state = {activeRadio: this.props.overlayObj.collections[0].id};
 
         this.update = this.update.bind(this);
     }
@@ -95,18 +95,20 @@ export default class RadioOverlay extends React.Component {
                 title = 'Custom Matchup';
                 btnText = 'Add to Matchup';
                 break;
+
             case 'myLists':
                 title = 'List';
                 btnText = 'Add to List';
                 break;
+
             default:
         }
 
-        let items = _.map(this.props.overlayObj.list, (item, key)=>{
+        let collections = _.map(this.props.overlayObj.collections, (collection)=>{
             return (
-                <div key={key} onClick={()=>{this.setState({activeRadio: item.name})}} style={styles.options}>
-                    <input type="radio" name={this.props.overlayObj.type} value={item.name} onChange={()=>this.update(item.name)} style={styles.radio} checked={this.state.activeRadio === item.name} />
-                    <div style={{margin: '15px'}}>{ item.name }</div>
+                <div key={collection.id} onClick={()=>{this.setState({activeRadio: collection.id})}} style={styles.options}>
+                    <input type="radio" name={this.props.overlayObj.type} onChange={()=>this.update(collection.id)} style={styles.radio} checked={this.state.activeRadio === collection.id} />
+                    <div style={{margin: '15px'}}>{ collection.name }</div>
                 </div>
             );
         });
@@ -121,7 +123,7 @@ export default class RadioOverlay extends React.Component {
                     <div style={styles.content}>
                         <div>
                             <div style={{textAlign: 'left', padding: '5px'}}>Select list to add item to:</div>
-                            {items}
+                            { collections }
                         </div>
                         <div onClick={()=>{this.props.changeOverlay('addNewList')}} style={styles.options}>
                             <div style={styles.createNew}>Create a New { title }</div>
