@@ -41,14 +41,9 @@ export default function AddToConfirmationOverlay(props) {
             padding: '10px'
         },
         submitBtn: {
-            backgroundColor: '#06cfe5',
-            borderRadius: '5px',
-            color: '#FFF',
-            cursor: 'pointer',
             width: '200px',
             height: '46px',
             margin: '7px auto',
-            textAlign: 'center',
             fontSize: '18px',
             paddingTop: '14px'
         },
@@ -89,7 +84,7 @@ export default function AddToConfirmationOverlay(props) {
                 <div style={styles.text} >*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>
                 <div style={{display: 'inline-flex', width: '100%'}}>
                     { viewType }
-                    <div onClick={props.close} style={styles.submitBtn} >Continue Shopping</div>
+                    <div className="submit-btn" onClick={props.close} style={styles.submitBtn} >Continue Shopping</div>
                 </div>
             </div>
         </div>

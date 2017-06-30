@@ -15,3 +15,4 @@ require('./partials/accordion.scss');
 require('./partials/slider.scss');
 // require('./responsive/*');
 require('./theme/forms.scss');
+require('./theme/main.scss');

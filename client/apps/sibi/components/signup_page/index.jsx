@@ -171,8 +171,6 @@ export default class SignUp extends React.Component {
                 width: (this.state.currentStep === 5) ? '89%' : ''
             },
             submitBtn: {
-                borderRadius: '5px',
-                cursor: 'pointer',
                 height: '40px',
                 width: '89%',
                 margin: '20px auto',
@@ -199,7 +197,7 @@ export default class SignUp extends React.Component {
                             <input type="password"  placeholder="Password"  value={this.state.password} onChange={ (e)=>this.update('password', e.target.value) }   style={{width: '435px'}} required/>
                         </div>
 
-                        <input className="button" type="submit" value="Create Account" style={ styles.submitBtn } required/>
+                        <input className="submit-btn" type="submit" value="Create Account" style={ styles.submitBtn } required/>
                     </form>
                 </div>;
                 break;
@@ -260,7 +258,7 @@ export default class SignUp extends React.Component {
                         <p>We'll email {this.state.email} when approved.</p>
                     </div>
 
-                    <input className="button" type="submit" value="Got it" style={ styles.submitBtn } required/>
+                    <input className="submit-btn" type="submit" value="Got it" style={ styles.submitBtn } required/>
                 </form>;
                 break;
             default:

@@ -91,24 +91,13 @@ export default class ProductDetails extends React.Component {
                 margin: 'auto',
                 width: '200px',
                 height: '46px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                border: '1px solid rgba(50,50,50,0.1)',
-                padding: '10px',
-                borderRadius: '5px',
-                color: '#06cfe5',
-                fontWeight: 'bold',
+                padding: '10px'
             },
             submitBtn: {
                 margin: 'auto',
-                backgroundColor: '#06cfe5',
-                borderRadius: '5px',
-                color: '#FFF',
-                cursor: 'pointer',
                 width: '200px',
                 height: '46px',
-                paddingTop: '13px',
-                textAlign: 'center',
+                paddingTop: '13px'
             },
             image: {
                 margin: '10px'
@@ -164,8 +153,8 @@ export default class ProductDetails extends React.Component {
                                        checked={this.state.warranty} />Add 10 Year Parts & Labor Warranty
                             </div>
                             <div style={{display: 'inline-flex', width: '85%'}}>
-                                <div style={{width: '50%'}} ><div onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: this.state.product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} style={styles.saveItemBtn}>Save Item</div></div>
-                                <div style={{width: '50%'}} ><div onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty: this.state.warranty})} style={styles.submitBtn}>Add to truck</div></div>
+                                <div style={{width: '50%'}} ><div className="cancel-btn" onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: this.state.product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} style={styles.saveItemBtn}>Save Item</div></div>
+                                <div style={{width: '50%'}} ><div className="submit-btn" onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty: this.state.warranty})} style={styles.submitBtn}>Add to truck</div></div>
                             </div>
                         </div>
                     </div>

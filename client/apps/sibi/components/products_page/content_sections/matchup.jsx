@@ -30,10 +30,6 @@ export default function Matchup(props) {
             fontSize: '25px',
             margin: '2px'
         },
-        viewItem: {
-            color: '#06cfe5',
-            cursor: 'pointer'
-        },
         label: {
             textAlign: 'left',
             padding: '5px 19px'
@@ -45,11 +41,11 @@ export default function Matchup(props) {
             border: '1px solid rgba(50, 50, 50, 0.1)',
             backgroundColor: '#FFF',
         },
+        blueTxt: {
+            color: '#06cfe5',
+            cursor: 'pointer'
+        },
         submitBtn: {
-            backgroundColor: '#06cfe5',
-            borderRadius: '5px',
-            color: '#FFF',
-            cursor: 'pointer',
             width: '200px',
             height: '46px',
             margin: '20px auto',
@@ -114,8 +110,8 @@ export default function Matchup(props) {
                     <div style={styles.price}>${(matchup.price).formatMoney(2, '.', ',')}</div>
                 </div>
                 <div>
-                    <div onClick={()=>props.addToTruck(matchup)} style={styles.submitBtn}>Add to truck</div>
-                    <div onClick={()=>props.showOverlay('customMatchup', {name: matchup.name, products: matchup.products})} style={styles.viewItem}>view items</div>
+                    <div className="submit-btn" onClick={()=>props.addToTruck(matchup)} style={styles.submitBtn}>Add to truck</div>
+                    <div onClick={()=>props.showOverlay('customMatchup', {name: matchup.name, products: matchup.products})} style={styles.blueTxt}>view items</div>
                 </div>
             </div>
         </div>

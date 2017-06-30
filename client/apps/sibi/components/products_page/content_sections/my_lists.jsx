@@ -40,23 +40,12 @@ export default class MyLists extends React.Component {
                 left: '85%',
                 width: '190px',
                 height: '45px',
-                border: '1px solid rgba(50,50,50,0.1)',
-                backgroundColor: '#FFF',
-                textAlign: 'center',
-                cursor: 'pointer',
-                padding: '10px',
-                borderRadius: '5px',
-                color: '#06cfe5'
+                padding: '10px'
             },
             submitBtn: {
-                backgroundColor: '#06cfe5',
-                borderRadius: '5px',
-                color: '#FFF',
-                cursor: 'pointer',
                 width: '200px',
                 height: '46px',
                 margin: '7px auto',
-                textAlign: 'center',
                 fontSize: '18px',
                 paddingTop: '14px'
             },
@@ -92,7 +81,7 @@ export default class MyLists extends React.Component {
             content = <div style={styles.content}>
                           <h2>This list is empty</h2>
                           <div>Click the "+" icon while viewing a product to add it to your list.</div>
-                          <Link to={`/products`} ><div style={styles.submitBtn}>Browse Products</div></Link>
+                          <Link to={`/products`} ><div className="submit-btn" style={styles.submitBtn}>Browse Products</div></Link>
                       </div>
         }
 
@@ -100,7 +89,7 @@ export default class MyLists extends React.Component {
             <div style={styles.container}>
                 <div style={styles.titleSection}>
                     <div>{ collection.name }</div>
-                    <div onClick={()=>this.props.showOverlay('removeItem', {collectionType: 'myLists', redirect: `#/products`, collectionID: collection.id})} style={styles.deleteList} >Delete List</div>
+                    <div className="cancel-btn" onClick={()=>this.props.showOverlay('removeItem', {collectionType: 'myLists', redirect: `#/products`, collectionID: collection.id})} >Delete List</div>
                 </div>
                 <div style={{margin: '50px -1px'}}>
                     { content }

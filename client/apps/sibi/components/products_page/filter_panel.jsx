@@ -61,10 +61,6 @@ export default class FilterPanel extends React.Component {
                 width: '300px'
             },
             submitBtn: {
-                backgroundColor: '#06cfe5',
-                borderRadius: '5px',
-                color: '#FFF',
-                cursor: 'pointer',
                 width: '200px',
                 height: '46px',
                 margin: '20px auto',
@@ -100,7 +96,7 @@ export default class FilterPanel extends React.Component {
                           </div>
                           <div style={{display: (this.state.activeSection === 'myLists') ? 'block' : 'none'}}>
                               { options }
-                              <div onClick={()=>this.props.showOverlay('addNewList', {type: 'myLists'})} style={styles.submitBtn}>New List</div>
+                              <div className="submit-btn" onClick={()=>this.props.showOverlay('addNewList', {type: 'myLists'})} style={styles.submitBtn}>New List</div>
                           </div>
                       </div>;
 

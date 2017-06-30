@@ -41,15 +41,10 @@ export default function Product(props) {
             margin: '2px'
         },
         submitBtn: {
-            backgroundColor: '#06cfe5',
-            borderRadius: '5px',
-            color: '#FFF',
-            cursor: 'pointer',
             width: '200px',
             height: '46px',
             margin: '20px auto',
-            paddingTop: '13px',
-            textAlign: 'center'
+            paddingTop: '13px'
         },
         prodInfo: {
             textAlign: 'left',
@@ -68,7 +63,7 @@ export default function Product(props) {
                     <div style={styles.price}>${(product.price).formatMoney(2, '.', ',')}</div>
                     <div style={styles.modelNum}>#{product.modelNum}</div>
                 </div>
-                <div onClick={()=>{props.addToTruck(product)}} style={styles.submitBtn}>Add to truck</div>
+                <div className="submit-btn" onClick={()=>{props.addToTruck(product)}} style={styles.submitBtn}>Add to truck</div>
             </div>
         </div>
     );

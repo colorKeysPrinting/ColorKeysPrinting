@@ -44,10 +44,6 @@ export default function OrderHistoryItem(props) {
             margin: '2px'
         },
         submitBtn: {
-            backgroundColor: '#06cfe5',
-            borderRadius: '5px',
-            color: '#FFF',
-            cursor: 'pointer',
             width: '200px',
             height: '46px',
             margin: '20px auto',
@@ -77,7 +73,7 @@ export default function OrderHistoryItem(props) {
             <td>{ itemTotal }</td>
             <td>{ props.propertyAddress }</td>
             <td>{ props.status }</td>
-            <td><div onClick={()=>props.addToTruck('order', props.id)} >Add to truck</div></td>
+            <td><div className="submit-btn" onClick={()=>props.addToTruck('order', props.id)} >Add to truck</div></td>
             <td>
                 <div onClick={console.log('TODO: share')}><img src={''} alt="share"/></div>
                 <div onClick={console.log('TODO: export')}><img src={''} alt="export"/></div>

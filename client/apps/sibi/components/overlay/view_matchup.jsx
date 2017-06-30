@@ -170,16 +170,12 @@ export default class ViewMatchupOverlay extends React.Component {
                 paddingLeft: '5px'
             },
             submitBtn: {
-                backgroundColor: '#06cfe5',
-                borderRadius: '5px',
-                color: '#FFF',
-                cursor: 'pointer',
                 width: '200px',
                 height: '46px',
                 margin: '7px auto',
-                textAlign: 'center',
-                fontSize: '18px',
-                paddingTop: '14px'
+                marginTop: '100%',
+                paddingTop: '10px',
+                padding: '15px'
             },
             table: {
                 col1: {
@@ -198,23 +194,7 @@ export default class ViewMatchupOverlay extends React.Component {
                 },
                 removeBtn: {
                     marginTop: '100%',
-                    textAlign: 'center',
-                    cursor: 'pointer',
-                    border: '1px solid rgba(50,50,50,0.1)',
-                    padding: '10px',
-                    borderRadius: '5px',
-                    color: '#06cfe5',
-                    fontWeight: 'bold',
-                },
-                submitBtn: {
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    marginTop: '100%',
-                    paddingTop: '10px',
-                    color: '#FFF',
-                    backgroundColor: '#06cfe5',
-                    padding: '15px',
-                    textAlign: 'center'
+                    padding: '10px'
                 }
             },
             modelNum: {
@@ -241,11 +221,11 @@ export default class ViewMatchupOverlay extends React.Component {
                     </td>
                     <td style={styles.table.col2}>
                         <label style={{display: 'inline-flex'}} style={{fontSize: '20px', marginRight: '10px'}}>Qty: <input type="number" value={product.matchupQty} onChange={(e)=>this.update(product.id, e.target.value)} style={styles.qtyInput}/></label>
-                        <div onClick={()=>this.remove(product.id)} style={styles.table.removeBtn}>Remove</div>
+                        <div className="cancel-btn" onClick={()=>this.remove(product.id)} style={styles.table.removeBtn}>Remove</div>
                     </td>
                     <td style={styles.table.col3}>
                         <div> ${ (product.cost).formatMoney(2, '.', ',') } </div>
-                        <div onClick={()=>this.addItemToTruck(product)} style={styles.table.submitBtn}>Add to Truck</div>
+                        <div className="submit-btn" onClick={()=>this.addItemToTruck(product)} style={styles.table.submitBtn}>Add to Truck</div>
                     </td>
                 </tr>
             );
@@ -278,7 +258,7 @@ export default class ViewMatchupOverlay extends React.Component {
                                 <td style={{width: '20%'}}>SHIPPING: ${(this.state.shipping).formatMoney(2, '.')}</td>
                                 <td style={{width: '20%'}}>SALES TAX: ${(this.state.salesTax).formatMoney(2)}</td>
                                 <td style={{width: '20%'}}>TOTAL: ${(this.state.total).formatMoney(2, '.', ',')}</td>
-                                <td><div onClick={()=>this.addAllToTruck(this.state.products)} style={styles.submitBtn}>Add All Items to Truck</div></td>
+                                <td><div className="submit-btn" onClick={()=>this.addAllToTruck(this.state.products)} style={styles.submitBtn}>Add All Items to Truck</div></td>
                             </tr>
                         </tbody>
                     </table>

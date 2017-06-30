@@ -39,8 +39,6 @@ export default function AddNewListOverlay(props) {
             textAlign: 'left'
         },
         submitBtn: {
-            borderRadius: '5px',
-            cursor: 'pointer',
             height: '40px',
             width: '86%',
             margin: '20px auto',
@@ -71,7 +69,7 @@ export default function AddNewListOverlay(props) {
                     <input type="text" placeholder="My Favorites" value={props.newList} onChange={(e)=>{props.update('newList', e.target.value)}} style={{width: '420px'}} required/>
                 </div>
 
-                <input className="button" type="submit" value="Submit" style={ styles.submitBtn }/>
+                <input className="submit-btn" type="submit" value="Submit" style={ styles.submitBtn }/>
             </form>
         </div>
     );

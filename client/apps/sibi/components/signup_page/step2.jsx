@@ -31,8 +31,6 @@ export default function SignUpStep2(props) {
             textAlign: 'left'
         },
         submitBtn: {
-            borderRadius: '5px',
-            cursor: 'pointer',
             height: '40px',
             width: '89%',
             margin: '20px auto',
@@ -106,7 +104,7 @@ export default function SignUpStep2(props) {
                             </div>
                         </div>
 
-                        <input className="button" type="submit" value="Next" style={ styles.submitBtn } required/>
+                        <input className="submit-btn" type="submit" value="Next" style={ styles.submitBtn } required/>
                     </form>;
 
     return (

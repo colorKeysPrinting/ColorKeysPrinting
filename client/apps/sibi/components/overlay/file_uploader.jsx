@@ -45,10 +45,6 @@ export default function fileUploaderOverlay(props) {
             margin: '10px'
         },
         submitBtn: {
-            backgroundColor: 'rgb(47, 205, 237)',
-            borderRadius: '5px',
-            color: '#FFF',
-            cursor: 'pointer',
             height: '50px',
             width: '50%',
             margin: '20px auto',
@@ -99,7 +95,7 @@ export default function fileUploaderOverlay(props) {
                      onDragOver={(e)=>{e.preventDefault(); e.dropEffect='copy'}}>
 
                     <label>Drag and drop a document or</label>
-                    <label htmlFor="file" style={styles.submitBtn}>Choose file
+                    <label htmlFor="file" className="submit-btn" style={styles.submitBtn}>Choose file
                         <input  id="file"
                                 type="file"
                                 onChange={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.target.files[0])}}

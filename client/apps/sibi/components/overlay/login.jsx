@@ -42,15 +42,12 @@ export default function LoginOverlay(props) {
             margin: '10px'
         },
         submitBtn: {
-            borderRadius: '5px',
-            cursor: 'pointer',
             height: '40px',
             width: '86%',
             margin: '20px auto',
             paddingTop: '10px'
         },
         resetBtn: {
-            cursor: 'pointer',
             height: '40px',
             width: '97%',
             margin: '20px auto',
@@ -67,8 +64,8 @@ export default function LoginOverlay(props) {
                     </div>;
 
             actionSection = <div style={{columnCount: 2, display: 'inline-flex', width: '435px', textAlign: 'left'}}>
-                                <div onClick={()=>props.changeOverlay('reset')} style={styles.resetBtn}>Forgot password?</div>
-                                <input className="button" type="submit" value="Login" style={ styles.submitBtn }/>
+                                <div className="cancel-btn" onClick={()=>props.changeOverlay('reset')} style={styles.resetBtn}>Forgot password?</div>
+                                <input className="submit-btn" type="submit" value="Login" style={ styles.submitBtn }/>
                             </div>;
             break;
 
@@ -79,7 +76,7 @@ export default function LoginOverlay(props) {
                         <input type="email" placeholder="Email" value={props.email.email} onChange={(e)=>{props.update('email', e.target.value)}} style={{width: '435px'}} required/>
                     </div>;
 
-            actionSection = <input className="button" type="submit" value="Submit" style={ styles.submitBtn }/>;
+            actionSection = <input className="submit-btn" type="submit" value="Submit" style={ styles.submitBtn }/>;
             break;
         default:
     }

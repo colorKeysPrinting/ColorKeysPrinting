@@ -64,15 +64,9 @@ export default class MatchupsCustom extends React.Component {
                 display: 'inline-flex'
             },
             submitBtn: {
-                backgroundColor: '#06cfe5',
-                borderRadius: '5px',
-                color: '#FFF',
-                cursor: 'pointer',
                 width: '200px',
                 height: '46px',
                 margin: '7px auto',
-                textAlign: 'center',
-                fontSize: '18px',
                 paddingTop: '14px'
             },
             blueTxt: {
@@ -127,7 +121,7 @@ export default class MatchupsCustom extends React.Component {
                     <div style={{display: 'inline-flex', marginLeft: '60%'}}>
                         <div onClick={()=>this.share()}><img src={''} alt="share" style={styles.actions} /></div>
                         <div onClick={()=>this.download()}><img src={''} alt="download" style={styles.actions} /></div>
-                        <div onClick={()=>this.props.showOverlay('addNewList', {type: 'customMatchups'})} style={styles.submitBtn}>New Custom Matchup</div>
+                        <div className="submit-btn" onClick={()=>this.props.showOverlay('addNewList', {type: 'customMatchups'})} style={styles.submitBtn}>New Custom Matchup</div>
                     </div>
                 </div>
                 <div>
