@@ -89,10 +89,10 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             },
             'parts & supplies': {}
         },
-        myTruck: {}
+        myTruck: []
     },
     calculations: {
-        salesTaxRate: 8.25
+        salesTaxRate: (8.25 / 100)
     },
     products: [
         // productId: incremental int
