@@ -61,9 +61,9 @@ export default class ViewMatchupOverlay extends React.Component {
             shipping = 0;
 
         _.each(products, (product)=>{
-            let cost = product.cost
+            let cost = product.cost;
             subtotal += cost;
-            salesTax += this.calcTax(cost * this.props.salesTaxRate / 100);
+            salesTax += this.calcTax(cost * this.props.salesTaxRate);
         });
 
         let total = subtotal + salesTax;
@@ -246,10 +246,10 @@ export default class ViewMatchupOverlay extends React.Component {
                     <table>
                         <tbody>
                             <tr>
-                                <td style={{width: '20%'}}>SUBTOTAL: ${(this.state.subtotal).formatMoney(2, '.', ',')}</td>
-                                <td style={{width: '20%'}}>SHIPPING: ${(this.state.shipping).formatMoney(2, '.')}</td>
-                                <td style={{width: '20%'}}>SALES TAX: ${(this.state.salesTax).formatMoney(2)}</td>
-                                <td style={{width: '20%'}}>TOTAL: ${(this.state.total).formatMoney(2, '.', ',')}</td>
+                                <td style={{width: '20%'}}>SUBTOTAL: ${ (this.state.subtotal).formatMoney(2, '.', ',') }</td>
+                                <td style={{width: '20%'}}>SHIPPING: ${ (this.state.shipping).formatMoney(2, '.') }</td>
+                                <td style={{width: '20%'}}>SALES TAX: ${ (this.state.salesTax).formatMoney(2) }</td>
+                                <td style={{width: '20%'}}>TOTAL: ${ (this.state.total).formatMoney(2, '.', ',') }</td>
                                 <td><div className="submit-btn" onClick={()=>this.addAllToTruck(this.state.products)} >Add All Items to Truck</div></td>
                             </tr>
                         </tbody>

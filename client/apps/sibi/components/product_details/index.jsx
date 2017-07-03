@@ -87,12 +87,6 @@ export default class ProductDetails extends React.Component {
                 fontSize: '20px',
                 paddingLeft: '5px'
             },
-            saveItemBtn: {
-                margin: 'auto',
-                width: '200px',
-                height: '46px',
-                padding: '10px'
-            },
             image: {
                 margin: '10px'
             },
@@ -147,7 +141,7 @@ export default class ProductDetails extends React.Component {
                                        checked={this.state.warranty} />Add 10 Year Parts & Labor Warranty
                             </div>
                             <div style={{display: 'inline-flex', width: '85%'}}>
-                                <div style={{width: '50%'}} ><div className="cancel-btn" onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: this.state.product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} style={styles.saveItemBtn}>Save Item</div></div>
+                                <div style={{width: '50%'}} ><div className="cancel-btn" onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: this.state.product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} >Save Item</div></div>
                                 <div style={{width: '50%'}} ><div className="submit-btn" onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty: this.state.warranty})} >Add to truck</div></div>
                             </div>
                         </div>
