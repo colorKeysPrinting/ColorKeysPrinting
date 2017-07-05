@@ -22,7 +22,7 @@ and our [Firebase React starter appliction](https://github.com/atomicjolt/react_
 
 Make sure to install git, npm before you start then:
 
-1. git clone https://github.com/atomicjolt/react_client_starter_app.git my_project_name
+1. git clone https://bitbucket.org/HQ-Team/sibi-fe my_project_name
 2. Rename .env.example to .env. This file contains the port the server will use.
    The default 8080 should be fine, but you can also use a local domain or ngrok if you wish.
 3. Install packages with

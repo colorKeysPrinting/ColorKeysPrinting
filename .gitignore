@@ -28,3 +28,5 @@ npm-debug.log
 /build
 
 coverage/
+
+yarn-error.log
