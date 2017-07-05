@@ -15,7 +15,9 @@ Make sure to install git, npm before you start then:
 
 1. git clone https://bitbucket.org/HQ-Team/sibi-fe my_project_name
 2. Rename .env.example to .env. This file contains the port the server will use.
-   The default 8080 should be fine, but you can also use a local domain or ngrok if you wish.
+   - The default 8080 should be fine, but you can also use a local domain or ngrok if you wish.
+   - To change the default port uncomment `ASSETS_PORT=` and set it to the desired port.
+   - To enable assets to be served from local host make sure to uncomment `ASSETS_URL=HTTP://0.0.0.0`
 3. Install packages with
 
     `npm install`
