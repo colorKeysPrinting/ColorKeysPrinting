@@ -1,14 +1,3 @@
-<!--#SIBI App [![Build Status](https://travis-ci.org/atomicjolt/react_client_starter_app.svg?branch=master)](https://travis-ci.org/atomicjolt/react_client_starter_app) [![Coverage Status](https://coveralls.io/repos/github/atomicjolt/react_client_starter_app/badge.svg?branch=coveralls)](https://coveralls.io/github/atomicjolt/react_client_starter_app?branch=coveralls)
------------------------
-There are many starter kits that will help you get started with React and Redux.
-This is the one created by, maintained by and used by [Atomic Jolt](http://www.atomicjolt.com).
-Atomic Jolt uses this as application as a starting place for our
-[Ruby on Rails and React starter application](https://github.com/atomicjolt/react_rails_starter_app)
-and our [Firebase React starter appliction](https://github.com/atomicjolt/react_firebase_starter_app).-->
-
-<!--#Demo:
------------------------
-[SIBI App Demo](http://reactclientstarterapp.com.s3-website-us-east-1.amazonaws.com)-->
 
 # Getting Started Docker:
 -----------------------
