@@ -1,14 +1,5 @@
-<!--#SIBI App [![Build Status](https://travis-ci.org/atomicjolt/react_client_starter_app.svg?branch=master)](https://travis-ci.org/atomicjolt/react_client_starter_app) [![Coverage Status](https://coveralls.io/repos/github/atomicjolt/react_client_starter_app/badge.svg?branch=coveralls)](https://coveralls.io/github/atomicjolt/react_client_starter_app?branch=coveralls)
------------------------
-There are many starter kits that will help you get started with React and Redux.
-This is the one created by, maintained by and used by [Atomic Jolt](http://www.atomicjolt.com).
-Atomic Jolt uses this as application as a starting place for our
-[Ruby on Rails and React starter application](https://github.com/atomicjolt/react_rails_starter_app)
-and our [Firebase React starter appliction](https://github.com/atomicjolt/react_firebase_starter_app).-->
+## SIBI - FrontEnd
 
-<!--#Demo:
------------------------
-[SIBI App Demo](http://reactclientstarterapp.com.s3-website-us-east-1.amazonaws.com)-->
 
 # Getting Started Docker:
 -----------------------
@@ -20,18 +11,18 @@ and our [Firebase React starter appliction](https://github.com/atomicjolt/react_
 #Getting Started:
 -----------------------
 
-Make sure to install git, npm and yarn before you start then:
+Make sure to install git, npm before you start then:
 
-1. git clone https://github.com/atomicjolt/react_client_starter_app.git my_project_name
+1. git clone https://bitbucket.org/HQ-Team/sibi-fe my_project_name
 2. Rename .env.example to .env. This file contains the port the server will use.
    The default 8080 should be fine, but you can also use a local domain or ngrok if you wish.
 3. Install packages with
 
-    `yarn`
+    `npm install`
 
 4. Start server with:
 
-  `yarn hot`
+  `npm run hot`
 
 then visit `http://localhost:8080`
 
@@ -40,7 +31,7 @@ each new application that is started.
 
 If you have multiple applications you can run them one at a time with the application name:
 
-  `yarn hot sibi`
+  `npm run hot sibi`
 
 then `visit http://localhost:8080`
 
@@ -97,14 +88,14 @@ Files added to the static directory will be copied directly into the build. Thes
 -----------
 Karma and Jasmine are used for testing. To run tests run:
 
-  `yarn test`
+  `npm run test`
 
 
 #Check for updates
 -----------
 Inside the client directory run:
 
-  `yarn upgrade-interactive`
+  `npm run upgrade-interactive`
 
 
 #Scripts:
@@ -112,45 +103,45 @@ Inside the client directory run:
 The following scripts are available for testing, building and deploying applications
 
 Run all tests:
-  `yarn test`
+  `npm run test`
 
 Generate coverage report:
-  `yarn coverage`
+  `npm run coverage`
 
 Run webpack hot reload server:
-  `yarn hot`
+  `npm run hot`
 
 Run reload server for a specific application:
-  `yarn hot [app name]`
+  `npm run hot [app name]`
 
-Serve production assets. Must run `yarn build` first:
-  `yarn live`
+Serve production assets. Must run `npm run build` first:
+  `npm run live`
 
 Build development version including html pages:
-  `yarn build_dev`
+  `npm run build_dev`
 
 Only run the webpack build without generating html pages or subdirectories. This will output all results
 directly into the build/dev directory
-  `yarn build_dev_pack`
+  `npm run build_dev_pack`
 
 Build for production:
-  `yarn build`
+  `npm run build`
 
 Only run the webpack build without generating html pages or subdirectories. This will output all results
 directly into the build/prod directory
-  `yarn build_pack`
+  `npm run build_pack`
 
 After setting up .s3-website.json this will create a S3 bucket and set it as a website:
-  `yarn create`
+  `npm run create`
 
-Release a production build to the S3 website bucket created by `yarn create`
-  `yarn release`
+Release a production build to the S3 website bucket created by `npm run create`
+  `npm run release`
 
 Run a linter over the project:
-  `yarn lint`
+  `npm run lint`
 
 Wipe out all node modules:
-  `yarn nuke`
+  `npm run nuke`
 
 #Deploy to S3:
 -----------------------
@@ -170,17 +161,17 @@ Wipe out all node modules:
 
   3. Configure the bucket as a website
 
-    `yarn create`
+    `npm run create`
 
   4. Deploy.
 
-    `yarn release`
+    `npm run release`
 
 #Production
 -----------------------
 If you want to see what your application will look like in production run
 
-  `yarn live`
+  `npm run live`
 
 This will serve files from the build/prod directory.
 
@@ -190,17 +181,17 @@ This will serve files from the build/prod directory.
 
   Build a development release without deploying:
 
-  `yarn build_dev`
+  `npm run build_dev`
 
 
   Build a release without deploying:
 
-  `yarn build`
+  `npm run build`
 
 
   Build a release and deploy:
 
-  `yarn release`
+  `npm run release`
 
 
 License and attribution
