@@ -38,6 +38,12 @@ export function addToTruck(item) {
     }
 }
 
+export function updateTruck(truck) {
+    return {
+        type: ActionTypes.UPDATE_TRUCK,
+        truck
+    }
+}
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////

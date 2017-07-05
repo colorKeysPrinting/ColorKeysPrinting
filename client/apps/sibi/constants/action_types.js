@@ -23,6 +23,7 @@ const actionTypes = [
     "REMOVE_PRODUCT", // needs to be a async call
     "REMOVE_COLLECTION", // needs to be a async call
     "CHECKING_INVENTORY", // needs to be a async call
+    "UPDATE_TRUCK", // needs to be a async call
 
 // signup
     "UPLOAD_DOCUMENT",

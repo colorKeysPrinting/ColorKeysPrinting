@@ -7,20 +7,9 @@ import assets                   from '../../libs/assets';
 import { addToTruck, showOverlay }           from '../../actions/application';
 
 import DetailTabs               from './detail_tabs';
-import YourTruck                from './your_truck';
+import YourTruck                from '../common/your_truck';
 
-let select = (state)=>{
-    return {
-        currLang          : state.application.get('currLanguage'),
-        products          : state.application.get('products'),
-        productLocations  : state.application.get('productLocations'),
-        truck             : state.application.get('truck'),
-        isInStock         : state.application.get('isInStock'),
-    };
-};
-
-@connect(select, {addToTruck, showOverlay}, null, {withRef: true})
-export default class ProductDetails extends React.Component {
+class ProductDetails extends React.Component {
 
     constructor(props) {
         super(props);
@@ -29,18 +18,11 @@ export default class ProductDetails extends React.Component {
 
         this.state = {
             product: _.find(this.props.products.toJS(), ['id', parseInt(this.props.params.id)]), qty: 1, location: location[0], warranty: false,
-            truck: (this.props.truck.size > 0) ? this.props.truck.toJS() : [],
             minStock: 10
         };
 
         this.update = this.update.bind(this);
         this.checkInventory = this.checkInventory.bind(this);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.truck) {
-            this.setState({truck: nextProps.truck.toJS()});
-        }
     }
 
     componentDidMount() {
@@ -151,12 +133,19 @@ export default class ProductDetails extends React.Component {
                         products={this.props.products.toJS()}
                         addToTruck={this.props.addToTruck} />
                 </div>
-                <YourTruck
-                    truck={this.state.truck} />
+                <YourTruck />
             </div>
         );
     }
 }
 
+let select = (state)=>{
+    return {
+        currLang          : state.application.get('currLanguage'),
+        products          : state.application.get('products'),
+        productLocations  : state.application.get('productLocations'),
+        isInStock         : state.application.get('isInStock'),
+    };
+};
 
-
+export default connect(select, {addToTruck, showOverlay}, null, {withRef: true})(ProductDetails);
