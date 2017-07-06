@@ -273,7 +273,7 @@ export default (state = initialState, action)=>{
 
                     if(item.warranty) {
                         item['warranty'] = _.find(warranties, ['id', parseInt(item.warrantyType)])
-                        item['warranty'] = item.qty;
+                        item['warranty'].qty = item.qty;
                     } else {
                         item['warranty'] = false;
                     }

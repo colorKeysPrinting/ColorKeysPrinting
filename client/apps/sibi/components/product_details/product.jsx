@@ -54,8 +54,8 @@ export default function Product(props) {
             </div>
             <div style={{display: 'inline-flex'}}>
                 <div style={styles.prodInfo}>
-                    <div style={styles.price}>${(product.price).formatMoney(2, '.', ',')}</div>
-                    <div style={styles.modelNum}>#{product.modelNum}</div>
+                    <div style={styles.price}>${ (product.price).formatMoney(2, '.', ',') }</div>
+                    <div style={styles.modelNum}>#{ product.modelNum }</div>
                 </div>
                 <div className="submit-btn" onClick={()=>{props.addToTruck(product)}} >Add to truck</div>
             </div>

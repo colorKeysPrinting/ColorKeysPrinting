@@ -102,16 +102,16 @@ class ProductDetails extends React.Component {
                     <div style={{width: '100%', display: 'inline-flex'}}>
                         <div style={{margin: '20px'}}><img src={image} alt={this.state.product.modelNum} width="500" height="600" style={styles.image}/></div>
                         <div style={{margin: '20px', padding: '20px', width: '50%'}}>
-                            <h1>{this.state.product.name}</h1>
+                            <h1>{ this.state.product.name }</h1>
                             <div style={{display: 'inline-flex', width: '100%'}}>
-                                <div style={styles.price} >${(this.state.product.price).formatMoney(2, '.', ',')}</div>
-                                <div style={styles.modelNum} >Model #{this.state.product.modelNum}</div>
+                                <div style={styles.price} >${ (this.state.product.price).formatMoney(2, '.', ',') }</div>
+                                <div style={styles.modelNum} >Model #{ this.state.product.modelNum }</div>
                             </div>
                             <div><img src={''} alt="product perks? " width="80%" height="80" style={styles.image}/></div>
                             <div style={{display: 'inline-flex', width: '100%'}}>
                                 <div style={{width: '20%'}}>Qty: <input type="number" value={this.state.qty} onChange={(e)=>this.update('qty', e.target.value)} style={styles.qtyInput} /></div>
                                 <div style={styles.dropdownSection}>
-                                    <select id="locationSelectDropdown" value={ this.state.location } onChange={ (e)=>this.update('location', e.target.value) } style={styles.dropdown}>
+                                    <select id="locationSelectDropdown" value={this.state.location} onChange={(e)=>this.update('location', e.target.value)} style={styles.dropdown}>
                                         { locationOptions }
                                     </select>
                                     <div style={styles.stockError}>This item is sold out here.  Select a new location.</div>
