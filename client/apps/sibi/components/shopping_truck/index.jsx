@@ -1,15 +1,15 @@
-import '../custom_formats.js'                        // adds formatMoney to Number types
+import '../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
 import { connect }              from 'react-redux';
-import { Link }                 from 'react-router';
-import assets                   from '../../../libs/assets';
+import assets                   from '../../libs/assets';
 import _                        from 'lodash';
 
-import { updateTruck }          from '../../../actions/application';
+import { updateTruck, removeFromTruck, addToTruck }          from '../../actions/application';
 
 import Product                  from './product';
+import Warranty                 from './warranty';
 
-class YourTruck extends React.Component {
+class ShoppingTruck extends React.Component {
 
     constructor(props) {
         super(props);
@@ -28,6 +28,10 @@ class YourTruck extends React.Component {
             product.qty = parseInt(value);
             product.cost = product.price * product.qty;
 
+            if(product.warranty) {
+                product.warranty.qty = product.qty;
+            }
+
         } else if(type === 'warranty') {
             product.warranty = value;
             product.cost = (product.price * product.qty) + product.warrantyPrice;
@@ -42,14 +46,7 @@ class YourTruck extends React.Component {
     calculate(product) {
 
         let subTotal = parseFloat(product.price * product.qty);
-
         let salesTax = this.calcTax(subTotal * this.props.salesTaxRate);
-
-        if(product.warranty) {
-            salesTax += this.calcTax(product.warranty.price * this.props.salesTaxRate);
-        }
-
-        // let productTotal = (subTotal + salesTax);
 
         return {subTotal, salesTax};
     }
@@ -65,23 +62,26 @@ class YourTruck extends React.Component {
     }
 
     render() {
-        let truck, total = 0;
-
-        let height = ("innerHeight" in window) ? window.innerHeight : document.documentElement.offsetHeight;
+        let truck, subTotal = 0, salesTax = 0, total = 0;
 
         let styles = {
             container: {
-                height,
-                width: '20%',
-                backgroundColor: '#F4F8FB'
+                width: '95%',
+                margin: '0 auto',
+                textAlign: 'left'
             },
             title: {
                 padding: '10px',
-                fontSize: '18px'
+                fontSize: '24px'
             },
-            truckElements: {
-                overflowY: 'scroll',
-                height
+            table: {
+                width: '80%',
+                margin: 'auto'
+            },
+            footer: {
+                display: 'inline-flex',
+                backgroundColor: '#FFF',
+                width: '98%'
             }
         };
 
@@ -90,7 +90,10 @@ class YourTruck extends React.Component {
             truck = _.map(this.props.truck.toJS(), (product)=>{
                 let cost = this.calculate(product);
 
+                subTotal += cost.subTotal;
+                salesTax += cost.salesTax;
                 total += (cost.subTotal + cost.salesTax);
+
                 return (
                     <Product
                         key={product.id}
@@ -98,8 +101,28 @@ class YourTruck extends React.Component {
                         subTotal={cost.subTotal}
                         salesTax={cost.salesTax}
                         update={this.update}
-                        calculate={this.calculate} />
+                        removeFromTruck={this.props.removeFromTruck} />
                 );
+            });
+
+            _.each(this.props.truck.toJS(), (product, index)=>{
+                if(product.warranty) {
+                    let cost = this.calculate(product.warranty);
+
+                    subTotal += cost.subTotal;
+                    salesTax += cost.salesTax;
+                    total += (cost.subTotal + cost.salesTax);
+
+                    truck.splice(
+                        index + 1,
+                        0,
+                        <Warranty
+                            key={'warranty' + product.warranty.id}
+                            productID={product.id}
+                            warranty={product.warranty}
+                            update={this.update} />
+                    );
+                }
             });
 
         } else {
@@ -111,18 +134,27 @@ class YourTruck extends React.Component {
         }
 
         return (
-            <div id="your-truck-section" style={styles.container}>
-                <div style={styles.title}>YOUR TRUCK</div>
-                <hr />
-                <div >
-                    { truck }
+            <div id="my-shopping-truck" style={styles.container}>
+                <div style={styles.title}>Shopping Truck</div>
+                <div>
+                <table style={styles.table}>
+                    <thead>
+                        <tr>
+                            <td>Product</td>
+                            <td>Qty</td>
+                            <td>Price</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { truck }
+                    </tbody>
+                </table>
                 </div>
-                <div style={{display: (this.props.truck.size > 0) ? 'block' : 'none'}}>
-                    <hr />
+                <div style={styles.footer}>
+                    <div>SUBTOTAL: ${ (subTotal).formatMoney(2, '.', ',') }</div>
+                    <div>SALES TAX: ${ (salesTax).formatMoney(2, '.', ',') }</div>
                     <div>TOTAL: ${ (total).formatMoney(2, '.', ',') }</div>
-
-                    <div className="submit-btn" ><Link to={'/'} >Go to Checkout</Link></div>
-                    <div className="cancel-btn" ><Link to={'/shopping-truck'} >View Truck</Link></div>
+                    <div className="submit-btn" >Go to Checkout</div>
                 </div>
             </div>
         );
@@ -137,4 +169,4 @@ let select = (state)=>{
     };
 };
 
-export default connect(select, {updateTruck}, null, {withRef: true})(YourTruck);
+export default connect(select, {updateTruck, removeFromTruck, addToTruck}, null, {withRef: true})(ShoppingTruck);

@@ -69,7 +69,6 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             '7': {orderNum: 138992349, orderDate: 1486684800000, totalCost: 18631.92, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Delivered',         products: {'0': 16, '9': 11, '7': 10, '3': 1}},
             '8': {orderNum: 138992350, orderDate: 1485561600000, totalCost: 13631.91, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'0': 16, '9': 11, '7': 4, '3': 3}},
         },
-
         filterPanel:{
             'hvac equipment': {
                 types: {
@@ -89,25 +88,29 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             },
             'parts & supplies': {}
         },
-        myTruck: []
+        myTruck: [],
+        myWarranties: [],
     },
     calculations: {
         salesTaxRate: (8.25 / 100)
     },
     products: [
         // productId: incremental int
-        {id: 0,  modelNum: 'GSX140421',     name: 'Goodman 3.5 Ton 14 Seer Air conditioner condenser w/ R410A refrigerant',         brand: 'Goodman', image: '', price: 709.00,  warrantyPrice: 100.00, types: ['airConditioners'],              tabs:{ 'complete the system': ['1','2'], 'recommended parts': ['10','6'],  'code compliance': '<h4>Information for Contractors</h4><h2>Codes 101 Brochure</h2><p>This brochure covers that basics of codes and standards and is aimed at providing contractors with a general understanding of these issues so that they can become more involved in the code evelopment processes that affect the HVAC inducstry. <a>Download it.</a></p><h2>Residential System Design Review Form</h2><p>ACCA has crafted an easy-to-use evaluation of HVAC system design elements in the pertinent building codes. <a>Download it.</a></p> <h2>Computing Infiltration Loads base on a Target Envelope Leakage Requirment</h2><p>This Technical Note shows how to convert a maximum code allowable leakage limit (say, 3 or 5 ACH 50 per the ICC International Energy Conservation Code) to Manual J infiltration CFM value, and then to the infiltration load contributions (Btuh) fr sensible heating, sensible cooling, and latent cooling.  It also discusses the use of blower door data for one or more test points. <a>Download it.</a></p> <h2>ACCA Codes Committee (committee members only)</h2><p>Get involved in ACCA\'s Codes Committee and make a difference in the development and adoption of good building codes.  For more info about becoming involved in the Codes Committee and ACCA\'s building code efforts, contact codes@acca.org.</a></p><hr> <h4>Information for Code officials</h4><h2>Brochures for Code officials</h2><p>ACCA has developed several brochures which help code officials verify residential load calculations, duct design and equipment selection in accordance with Manuals I.D. and S. While it\'s not practical for code officials to verify every single aspect of these</p>', overview: {downloadLink: './documents/product-spec.pdf', 'Standard Features': ['Energy-efficient compressor','Single-speed condenser fan motor','Factory-installed filter drier','Copper tube/aluminum fin coil','Service valves with sweat connections and easy-access guage ports','Contractor with lug connection','Ground lug connection','Ground lug connection','AHRI Certified, ETL Listed'], 'Cabinet Features': ['Heavy-guage galvanized-steel cabinet with a louvered sound control top','Attractive Architectural Gray power-paint finish with 500-hour salt-spray approval','Steel louver coil guard','Top and side maintenance access','Single-panel access to controls with space provided for field-installed accessories','When properly anchored\, meets the 2010 Florida Building Code Unit Integrity requirements for hurricane-type winds (Anchor bracket kits available.)'], 'Outstanding Warranty Protection': 'This unit is backed by a 10-Year Parts Limited Warranty.  The GSX14 Air Conditioner features operating sound levels that are among the lowest in the heating and cooling industry.  With its 14 SEER rating, the GSX14 will help reduce energy consumption throughout the life of the system.'}, 'specifications': './documents/product-spec.pdf', FAQ: [{question: 'Can frost, ice, dirt or other debris keep the outdoor unit of my cooling system from operating effectively?', answer: 'Anything that prevents airflow from making its way to the outdoor coil can negatively affect the efficiency and performance of the equipment.  Make it a priority to keep the space around the equipment clean and clear.'}, {question: 'Should I cover my outdoor unti in the fall and winter?', answer: 'Covering the outdoor unit in the winter months prevents unwanted debris from accumulating on the outdoor unit and later impeding airflow to the outdoor unti.  At the same time accidentally operating the outdoor unit with a covering in place could cause system damage.  It is recommended that high voltage power always be disconnected from the outdoor unit whenever a cover or anything obstructing airflow is introduced.'}]}},
-        {id: 1,  modelNum: 'GMS80805CN',    name: 'Goodman 80% AFUE 80,000 BTU Upflow  Stage Gas Furnace up to 5 Ton',              brand: 'Goodman', image: '', price: 344.00,  warrantyPrice: 100.00, types: ['furnaces'],                     tabs:{ 'complete the system': ['0','2'], 'recommended parts': ['10','6'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 2,  modelNum: 'CAPF4860C6',    name: 'Goodman 4 to 5 ton 21 Inch Width Air Conditioner Evaporator Cased Coil',         brand: 'Goodman', image: '', price: 258.00,  warrantyPrice: 100.00, types: ['coils'],                        tabs:{ 'complete the system': ['1','0'], 'recommended parts': ['10','6'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 3,  modelNum: 'GSZ140361',     name: 'Goodman 3 Ton 14 SEER Heat Pump Air Conditioner Condenser',                      brand: 'Goodman', image: '', price: 866.00,  warrantyPrice: 100.00, types: ['heatPumps', 'airConditioners'], tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 4,  modelNum: 'ARUF37C14',     name: 'Goodman 3 Ton Air Conditioner Air Handler with Smart Frame Cabinet',             brand: 'Goodman', image: '', price: 380.00,  warrantyPrice: 100.00, types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 5,  modelNum: 'HKSX10XC',      name: 'Goodman 10 Kilowatt 34,100 BTU Heater Coil for Smart Frame Air Handler',         brand: 'Goodman', image: '', price: 36.00,   warrantyPrice: 100.00, types: ['coils'],                        tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 6,  modelNum: 'GXZ140601',     name: 'Goodman 5 Ton 14 SEER Heat Pump Air Conditioner Condenser',                      brand: 'Goodman', image: '', price: 1175.00, warrantyPrice: 100.00, types: ['airConditioners', 'heatPumps'], tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 7,  modelNum: 'ASPT61D14',     name: 'Goodman 5 Ton Air Conditioner Air Handler with Smart Frame Cabinet',             brand: 'Goodman', image: '', price: 561.00,  warrantyPrice: 100.00, types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 8,  modelNum: 'HKSC15',        name: 'Goodman 15 Kilowatt 51,150 BTU Heater Coil for Smart Fram Air Handler',          brand: 'Goodman', image: '', price: 76.00,   warrantyPrice: 100.00, types: ['coils'],                        tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 9,  modelNum: 'GPG1442080M41', name: 'Goodman 3.5 Ton 14 SEER 80,000 BTU Gas/Electric Package Unit - Multi-Position',  brand: 'Goodman', image: '', price: 1606.00, warrantyPrice: 100.00, types: ['packagedUnits'],                tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 10, modelNum: 'GPH1430H41',    name: 'Goodman 2.5 Ton 14 SEER Horizontal Heat Pump Package Unit',                      brand: 'Goodman', image: '', price: 1310.00, warrantyPrice: 100.00, types: ['packagedUnits', 'heatPumps'],   tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
-        {id: 11, modelNum: 'GPH1460h42',    name: 'Goodman 5 Ton 14 SEER Horizontal Heat Pump Package Unit',                        brand: 'Goodman', image: '', price: 1799.00, warrantyPrice: 100.00, types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 0,  modelNum: 'GSX140421',     name: 'Goodman 3.5 Ton 14 Seer Air conditioner condenser w/ R410A refrigerant',         brand: 'Goodman', image: '', price: 709.00,  types: ['airConditioners'],              tabs:{ 'complete the system': ['1','2'], 'recommended parts': ['10','6'],  'code compliance': '<h4>Information for Contractors</h4><h2>Codes 101 Brochure</h2><p>This brochure covers that basics of codes and standards and is aimed at providing contractors with a general understanding of these issues so that they can become more involved in the code evelopment processes that affect the HVAC inducstry. <a>Download it.</a></p><h2>Residential System Design Review Form</h2><p>ACCA has crafted an easy-to-use evaluation of HVAC system design elements in the pertinent building codes. <a>Download it.</a></p> <h2>Computing Infiltration Loads base on a Target Envelope Leakage Requirment</h2><p>This Technical Note shows how to convert a maximum code allowable leakage limit (say, 3 or 5 ACH 50 per the ICC International Energy Conservation Code) to Manual J infiltration CFM value, and then to the infiltration load contributions (Btuh) fr sensible heating, sensible cooling, and latent cooling.  It also discusses the use of blower door data for one or more test points. <a>Download it.</a></p> <h2>ACCA Codes Committee (committee members only)</h2><p>Get involved in ACCA\'s Codes Committee and make a difference in the development and adoption of good building codes.  For more info about becoming involved in the Codes Committee and ACCA\'s building code efforts, contact codes@acca.org.</a></p><hr> <h4>Information for Code officials</h4><h2>Brochures for Code officials</h2><p>ACCA has developed several brochures which help code officials verify residential load calculations, duct design and equipment selection in accordance with Manuals I.D. and S. While it\'s not practical for code officials to verify every single aspect of these</p>', overview: {downloadLink: './documents/product-spec.pdf', 'Standard Features': ['Energy-efficient compressor','Single-speed condenser fan motor','Factory-installed filter drier','Copper tube/aluminum fin coil','Service valves with sweat connections and easy-access guage ports','Contractor with lug connection','Ground lug connection','Ground lug connection','AHRI Certified, ETL Listed'], 'Cabinet Features': ['Heavy-guage galvanized-steel cabinet with a louvered sound control top','Attractive Architectural Gray power-paint finish with 500-hour salt-spray approval','Steel louver coil guard','Top and side maintenance access','Single-panel access to controls with space provided for field-installed accessories','When properly anchored\, meets the 2010 Florida Building Code Unit Integrity requirements for hurricane-type winds (Anchor bracket kits available.)'], 'Outstanding Warranty Protection': 'This unit is backed by a 10-Year Parts Limited Warranty.  The GSX14 Air Conditioner features operating sound levels that are among the lowest in the heating and cooling industry.  With its 14 SEER rating, the GSX14 will help reduce energy consumption throughout the life of the system.'}, 'specifications': './documents/product-spec.pdf', FAQ: [{question: 'Can frost, ice, dirt or other debris keep the outdoor unit of my cooling system from operating effectively?', answer: 'Anything that prevents airflow from making its way to the outdoor coil can negatively affect the efficiency and performance of the equipment.  Make it a priority to keep the space around the equipment clean and clear.'}, {question: 'Should I cover my outdoor unti in the fall and winter?', answer: 'Covering the outdoor unit in the winter months prevents unwanted debris from accumulating on the outdoor unit and later impeding airflow to the outdoor unti.  At the same time accidentally operating the outdoor unit with a covering in place could cause system damage.  It is recommended that high voltage power always be disconnected from the outdoor unit whenever a cover or anything obstructing airflow is introduced.'}]}},
+        {id: 1,  modelNum: 'GMS80805CN',    name: 'Goodman 80% AFUE 80,000 BTU Upflow  Stage Gas Furnace up to 5 Ton',              brand: 'Goodman', image: '', price: 344.00,  types: ['furnaces'],                     tabs:{ 'complete the system': ['0','2'], 'recommended parts': ['10','6'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 2,  modelNum: 'CAPF4860C6',    name: 'Goodman 4 to 5 ton 21 Inch Width Air Conditioner Evaporator Cased Coil',         brand: 'Goodman', image: '', price: 258.00,  types: ['coils'],                        tabs:{ 'complete the system': ['1','0'], 'recommended parts': ['10','6'],  'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 3,  modelNum: 'GSZ140361',     name: 'Goodman 3 Ton 14 SEER Heat Pump Air Conditioner Condenser',                      brand: 'Goodman', image: '', price: 866.00,  types: ['heatPumps', 'airConditioners'], tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 4,  modelNum: 'ARUF37C14',     name: 'Goodman 3 Ton Air Conditioner Air Handler with Smart Frame Cabinet',             brand: 'Goodman', image: '', price: 380.00,  types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 5,  modelNum: 'HKSX10XC',      name: 'Goodman 10 Kilowatt 34,100 BTU Heater Coil for Smart Frame Air Handler',         brand: 'Goodman', image: '', price: 36.00,   types: ['coils'],                        tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 6,  modelNum: 'GXZ140601',     name: 'Goodman 5 Ton 14 SEER Heat Pump Air Conditioner Condenser',                      brand: 'Goodman', image: '', price: 1175.00, types: ['airConditioners', 'heatPumps'], tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 7,  modelNum: 'ASPT61D14',     name: 'Goodman 5 Ton Air Conditioner Air Handler with Smart Frame Cabinet',             brand: 'Goodman', image: '', price: 561.00,  types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 8,  modelNum: 'HKSC15',        name: 'Goodman 15 Kilowatt 51,150 BTU Heater Coil for Smart Fram Air Handler',          brand: 'Goodman', image: '', price: 76.00,   types: ['coils'],                        tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 9,  modelNum: 'GPG1442080M41', name: 'Goodman 3.5 Ton 14 SEER 80,000 BTU Gas/Electric Package Unit - Multi-Position',  brand: 'Goodman', image: '', price: 1606.00, types: ['packagedUnits'],                tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 10, modelNum: 'GPH1430H41',    name: 'Goodman 2.5 Ton 14 SEER Horizontal Heat Pump Package Unit',                      brand: 'Goodman', image: '', price: 1310.00, types: ['packagedUnits', 'heatPumps'],   tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+        {id: 11, modelNum: 'GPH1460h42',    name: 'Goodman 5 Ton 14 SEER Horizontal Heat Pump Package Unit',                        brand: 'Goodman', image: '', price: 1799.00, types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+    ],
+    warranties: [
+        {id: 0, modelNum: 'MSRCA10PL-T', name: '10 Year Parts & Labor Warranty', image: './images/warranty.png', price: 135.00}
     ],
     matchups: [
         {id: 0, matchup: 'standard', matchups:['1', '2', '3', '4']},
@@ -245,7 +248,10 @@ export default (state = initialState, action)=>{
 // product actions
         case ActionTypes.ADD_TO_TRUCK:
             console.log('adding item(s) to truck: ', action.item);
-            let item = action.item, truck = state.get('truck').toJS(), products = state.get('products').toJS();
+            var item = action.item,
+                truck = state.get('truck').toJS(),
+                products = state.get('products').toJS(),
+                warranties = state.get('warranties').toJS();
 
             if(typeof(item.id) === 'number') {
 
@@ -253,10 +259,23 @@ export default (state = initialState, action)=>{
 
                 if(index >= 0) {
                     truck[index].qty += 1;
-                    truck[index].warranty = item.warranty;
+
+                    if(item.warranty) {
+                        truck[index].warranty = _.find(warranties, ['id', parseInt(item.warrantyType)]);
+                        truck[index].warranty['qty'] = truck[index].qty;
+                    } else {
+                        truck[index].warranty = false;
+                    }
                 } else {
                     if(!item.qty) {
                         item['qty'] = 1
+                    }
+
+                    if(item.warranty) {
+                        item['warranty'] = _.find(warranties, ['id', parseInt(item.warrantyType)])
+                        item['warranty'] = item.qty;
+                    } else {
+                        item['warranty'] = false;
                     }
                     truck.push(item);
                 }
@@ -278,9 +297,19 @@ export default (state = initialState, action)=>{
             state = state.update('truck', value=>Immutable.fromJS(truck));
             console.log('current Truck:', state.get('truck').toJS());
             break;
+        case ActionTypes.REMOVE_FROM_TRUCK:
+            console.log('removiing item: ' + action.item);
+            var item = action.item,
+                truck = state.get('truck').toJS();
+
+            truck = _.remove(truck, (product)=>{ return product.id !== item.id });
+
+            state = state.update('truck', value=>Immutable.fromJS(truck));
+            console.log('current Truck:', state.get('truck').toJS());
+            break;
 
         case ActionTypes.UPDATE_TRUCK:
-            console.log("updating truck");
+            console.log('updating truck');
             state = state.update('truck', value=>Immutable.fromJS(action.truck));
             break;
 

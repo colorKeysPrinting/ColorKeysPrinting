@@ -38,6 +38,14 @@ export function addToTruck(item) {
     }
 }
 
+export function removeFromTruck(item) {
+    return {
+        type: ActionTypes.REMOVE_FROM_TRUCK,
+        item
+    }
+}
+
+
 export function updateTruck(truck) {
     return {
         type: ActionTypes.UPDATE_TRUCK,

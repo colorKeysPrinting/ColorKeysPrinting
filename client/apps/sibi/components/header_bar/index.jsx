@@ -9,16 +9,7 @@ import { showOverlay }          from '../../actions/application';
 
 import Tabs                     from './tabs';
 
-let select = (state)=>{
-    return {
-        activeUserType  : state.application.getIn(['activeUser', 'type']),
-        profilePic      : state.application.getIn(['activeUser', 'profilePic']),
-        activeTab       : state.application.get('activeTab')
-    };
-};
-
-@connect(select, {...HeaderActions, showOverlay}, null, {withRef: true})
-export default class HeaderBar extends React.Component {
+class HeaderBar extends React.Component {
 
     constructor(props) {
         super(props);
@@ -40,14 +31,11 @@ export default class HeaderBar extends React.Component {
 
         let styles = {
             header: {
-                position: 'absolute',
-                top: '0px',
-                left: '10px',
                 height: '85px',
-                width: '97%',
-                margin: '0 5px',
+                width: '95%',
+                margin: '0 auto',
                 display: 'inline-flex',
-                background: '#FFF',
+                background: '#2D324C',
                 boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)'
             },
             loginSection: {
@@ -98,7 +86,6 @@ export default class HeaderBar extends React.Component {
 
         return (
             <div id="header-bar" style={styles.header}>
-                <Link to={to} ><img src={assets('./images/sibi_logo_white.png')} alt="sibi logo" style={styles.sibiLogo}/></Link>
                 <Tabs type={ this.props.activeUserType }
                       activeTab={ this.props.activeTab }
                       setActivateTab={ this.props.setActivateTab } />
@@ -107,3 +94,13 @@ export default class HeaderBar extends React.Component {
         );
     }
 }
+
+let select = (state)=>{
+    return {
+        activeUserType  : state.application.getIn(['activeUser', 'type']),
+        profilePic      : state.application.getIn(['activeUser', 'profilePic']),
+        activeTab       : state.application.get('activeTab')
+    };
+};
+
+export default connect(select, {...HeaderActions, showOverlay}, null, {withRef: true})(HeaderBar);

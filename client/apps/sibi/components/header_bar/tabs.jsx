@@ -12,7 +12,7 @@ export default (props)=>{
             margin: '0 auto'
         },
         tabs: {
-            color: '#000',
+            color: '#FFF',
             outline: 'none',
             textDecoration: 'none',
             padding: '30px 15px 15px',
@@ -21,7 +21,7 @@ export default (props)=>{
 
         },
         active: {
-            color: '#000',
+            color: '#FFF',
             outline: 'none',
             textDecoration: 'none',
             padding: '30px 15px 15px',
