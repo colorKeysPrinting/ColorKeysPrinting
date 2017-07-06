@@ -29,7 +29,7 @@ export default function Product(props) {
                               </div>
                           </div>;
     } else {
-        checkboxSection = <div><input type="checkbox" onClick={()=>props.update(props.product.id, 'warranty', true)} />Add 10 Year Parts & Labor Warranty</div>
+        checkboxSection = <div><input type="checkbox" onClick={()=>props.update(props.product.id, 'warranty', 0)} />Add 10 Year Parts & Labor Warranty</div>
     }
 
     return (

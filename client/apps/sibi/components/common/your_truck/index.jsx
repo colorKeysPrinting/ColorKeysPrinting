@@ -20,36 +20,40 @@ class YourTruck extends React.Component {
     }
 
     update(productID, type, value) {
-        let products = this.props.truck.toJS();
+        let truck = this.props.truck.toJS();
 
-        let product = _.find(products, ['id', parseInt(productID)]);
+        let product = _.find(truck, ['id', parseInt(productID)]);
 
         if(type === 'qty') {
             product.qty = parseInt(value);
             product.cost = product.price * product.qty;
 
+            if(product.warranty) {
+                product.warranty.qty = product.qty;
+                product.cost += product.warranty.price * product.qty;
+            }
+
         } else if(type === 'warranty') {
-            product.warranty = value;
-            product.cost = (product.price * product.qty) + product.warrantyPrice;
+            product.warranty = _.find(this.props.warranties.toJS(), ['id', parseInt(value)]);
+            product.warranty.qty = product.qty;
+            product.cost = (product.price * product.qty) + (product.warranty.price * product.qty);
         }
 
-        let index = _.findIndex(products, (product)=>{return product.id === productID});
-        products[index] = product;
+        let index = _.findIndex(truck, (product)=>{return product.id === productID});
+        truck[index] = product;
 
-        this.props.updateTruck(products);
+        this.props.updateTruck(truck);
     }
 
     calculate(product) {
 
         let subTotal = parseFloat(product.price * product.qty);
-
         let salesTax = this.calcTax(subTotal * this.props.salesTaxRate);
 
         if(product.warranty) {
+            subTotal += parseFloat(product.warranty.price * product.warranty.qty);
             salesTax += this.calcTax(product.warranty.price * this.props.salesTaxRate);
         }
-
-        // let productTotal = (subTotal + salesTax);
 
         return {subTotal, salesTax};
     }
@@ -134,6 +138,7 @@ let select = (state)=>{
         currLang            : state.application.get('currLanguage'),
         salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate']),
         truck               : state.application.get('truck'),
+        warranties          : state.application.get('warranties'),
     };
 };
 

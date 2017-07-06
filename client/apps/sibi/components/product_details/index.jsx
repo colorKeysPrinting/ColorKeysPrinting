@@ -95,6 +95,7 @@ class ProductDetails extends React.Component {
         });
 
         let image = (this.state.product.image) ? assets(this.state.product.image) : '';
+        let warranty = (this.state.warranty) ? _.find(this.props.warranties.toJS(), ['id', 0]) : false ;
 
         return (
             <div id="product-details" style={styles.container}>
@@ -124,7 +125,7 @@ class ProductDetails extends React.Component {
                             </div>
                             <div style={{display: 'inline-flex', width: '85%'}}>
                                 <div style={{width: '50%'}} ><div className="cancel-btn" onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: this.state.product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} >Save Item</div></div>
-                                <div style={{width: '50%'}} ><div className="submit-btn" onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty: this.state.warranty, warrantyType: 0})} >Add to truck</div></div>
+                                <div style={{width: '50%'}} ><div className="submit-btn" onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty})} >Add to truck</div></div>
                             </div>
                         </div>
                     </div>
@@ -145,6 +146,7 @@ let select = (state)=>{
         products          : state.application.get('products'),
         productLocations  : state.application.get('productLocations'),
         isInStock         : state.application.get('isInStock'),
+        warranties        : state.application.get('warranties'),
     };
 };
 

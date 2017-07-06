@@ -250,8 +250,7 @@ export default (state = initialState, action)=>{
             console.log('adding item(s) to truck: ', action.item);
             var item = action.item,
                 truck = state.get('truck').toJS(),
-                products = state.get('products').toJS(),
-                warranties = state.get('warranties').toJS();
+                products = state.get('products').toJS();
 
             if(typeof(item.id) === 'number') {
 
@@ -261,7 +260,7 @@ export default (state = initialState, action)=>{
                     truck[index].qty += 1;
 
                     if(item.warranty) {
-                        truck[index].warranty = _.find(warranties, ['id', parseInt(item.warrantyType)]);
+                        truck[index].warranty = item.warranty;
                         truck[index].warranty['qty'] = truck[index].qty;
                     } else {
                         truck[index].warranty = false;
@@ -272,7 +271,7 @@ export default (state = initialState, action)=>{
                     }
 
                     if(item.warranty) {
-                        item['warranty'] = _.find(warranties, ['id', parseInt(item.warrantyType)])
+                        item['warranty'] = item.warranty;
                         item['warranty'].qty = item.qty;
                     } else {
                         item['warranty'] = false;
