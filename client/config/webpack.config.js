@@ -107,8 +107,7 @@ module.exports = function webpackConfig(app) {
   }
 
   const rules = [
-    { test: /\.js$/, use: jsLoaders, exclude: /node_modules/ },
-    { test: /\.jsx?$/, use: jsLoaders, exclude: /node_modules/ },
+    { test: /\.(js|jsx)$/, use: jsLoaders, exclude: /node_modules/ },
     { test: /\.scss$/i, use: extractCSS.extract(scssLoaders) },
     { test: /\.css$/i, use: extractCSS.extract(cssLoaders) },
     { test: /\.less$/i, use: extractCSS.extract(lessLoaders) },

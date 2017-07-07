@@ -9,7 +9,9 @@ const actionTypes = [
     "SHOW_RADIO_OVERLAY",
     "CLOSE_OVERLAY",
     "CHANGE_LANGUAGE",
-    "ADD_TO_TRUCK",
+    "ADD_TO_TRUCK", // needs to be a async call
+    "REMOVE_FROM_TRUCK", // needs to be a async call
+    "UPDATE_TRUCK", // needs to be a async call
 
 // header bar
     "GO_HOME",

@@ -119,12 +119,14 @@ export default class Api {
       return part;
     }
 
-    const slash = _.last(apiUrl.split('')) === '/' ? '' : '/';
-    let newPart = part;
-    if (part[0] === '/') {
-      newPart = part.slice(1);
+    if(apiUrl) {
+      const slash = _.last(apiUrl.split('')) === '/' ? '' : '/';
+      let newPart = part;
+      if (part[0] === '/') {
+        newPart = part.slice(1);
+      }
+      return apiUrl + slash + newPart;
     }
-    return apiUrl + slash + newPart;
   }
 
   static doRequest(url, requestMethod, requestType) {

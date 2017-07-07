@@ -69,7 +69,6 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             '7': {orderNum: 138992349, orderDate: 1486684800000, totalCost: 18631.92, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Delivered',         products: {'0': 16, '9': 11, '7': 10, '3': 1}},
             '8': {orderNum: 138992350, orderDate: 1485561600000, totalCost: 13631.91, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'0': 16, '9': 11, '7': 4, '3': 3}},
         },
-
         filterPanel:{
             'hvac equipment': {
                 types: {
@@ -89,10 +88,11 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
             },
             'parts & supplies': {}
         },
-        myTruck: {}
+        myTruck: [],
+        myWarranties: [],
     },
     calculations: {
-        salesTaxRate: 8.25
+        salesTaxRate: (8.25 / 100)
     },
     products: [
         // productId: incremental int
@@ -108,6 +108,9 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
         {id: 9,  modelNum: 'GPG1442080M41', name: 'Goodman 3.5 Ton 14 SEER 80,000 BTU Gas/Electric Package Unit - Multi-Position',  brand: 'Goodman', image: '', price: 1606.00, types: ['packagedUnits'],                tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
         {id: 10, modelNum: 'GPH1430H41',    name: 'Goodman 2.5 Ton 14 SEER Horizontal Heat Pump Package Unit',                      brand: 'Goodman', image: '', price: 1310.00, types: ['packagedUnits', 'heatPumps'],   tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
         {id: 11, modelNum: 'GPH1460h42',    name: 'Goodman 5 Ton 14 SEER Horizontal Heat Pump Package Unit',                        brand: 'Goodman', image: '', price: 1799.00, types: ['airConditioners'],              tabs:{ 'complete the system': [],        'recommended parts': [],          'code compliance': '', overview: '', 'specifications': {}, FAQ: [{question: '', answer: ''}]}},
+    ],
+    warranties: [
+        {id: 0, modelNum: 'MSRCA10PL-T', name: '10 Year Parts & Labor Warranty', image: './images/warranty.png', price: 135.00}
     ],
     matchups: [
         {id: 0, matchup: 'standard', matchups:['1', '2', '3', '4']},
@@ -245,7 +248,9 @@ export default (state = initialState, action)=>{
 // product actions
         case ActionTypes.ADD_TO_TRUCK:
             console.log('adding item(s) to truck: ', action.item);
-            let item = action.item, truck = state.get('truck').toJS(), products = state.get('products').toJS();
+            var item = action.item,
+                truck = state.get('truck').toJS(),
+                products = state.get('products').toJS();
 
             if(typeof(item.id) === 'number') {
 
@@ -253,19 +258,33 @@ export default (state = initialState, action)=>{
 
                 if(index >= 0) {
                     truck[index].qty += 1;
+
+                    if(item.warranty) {
+                        truck[index].warranty = item.warranty;
+                        truck[index].warranty['qty'] = truck[index].qty;
+                    } else {
+                        truck[index].warranty = false;
+                    }
                 } else {
                     if(!item.qty) {
                         item['qty'] = 1
                     }
+
+                    if(item.warranty) {
+                        item['warranty'] = item.warranty;
+                        item['warranty'].qty = item.qty;
+                    } else {
+                        item['warranty'] = false;
+                    }
                     truck.push(item);
                 }
-
-            } else{
+            } else {
                 _.each(item.products, (qty, id)=>{
                     let index = _.findIndex(truck, ['id', parseInt(id)]);
 
                     if(index >= 0) {
                         truck[index].qty += qty;
+                        truck[index].warranty = item.warranty;
                     } else {
                         let product = _.find(products, ['id', parseInt(id)]);
                         product['qty'] = qty;
@@ -276,6 +295,21 @@ export default (state = initialState, action)=>{
 
             state = state.update('truck', value=>Immutable.fromJS(truck));
             console.log('current Truck:', state.get('truck').toJS());
+            break;
+        case ActionTypes.REMOVE_FROM_TRUCK:
+            console.log('removiing item: ' + action.item);
+            var item = action.item,
+                truck = state.get('truck').toJS();
+
+            truck = _.remove(truck, (product)=>{ return product.id !== item.id });
+
+            state = state.update('truck', value=>Immutable.fromJS(truck));
+            console.log('current Truck:', state.get('truck').toJS());
+            break;
+
+        case ActionTypes.UPDATE_TRUCK:
+            console.log('updating truck');
+            state = state.update('truck', value=>Immutable.fromJS(action.truck));
             break;
 
         case ActionTypes.ADD_TO_COLLECTION:

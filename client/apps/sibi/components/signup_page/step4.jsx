@@ -33,14 +33,6 @@ export default function SignUpStep4(props) {
             margin: '0px auto',
             marginTop: '40px',
             textAlign: 'left'
-        },
-        submitBtn: {
-            borderRadius: '5px',
-            cursor: 'pointer',
-            height: '40px',
-            width: '89%',
-            margin: '20px auto',
-            paddingTop: '10px'
         }
     };
 
@@ -74,7 +66,7 @@ export default function SignUpStep4(props) {
                             </div>
                         </div>
 
-                        <input className="button" type="submit" value="Finish" style={ styles.submitBtn } required/>
+                        <input className="submit-btn" type="submit" value="Finish" style={{width: '89%'}} required/>
                     </form>;
 
     return (

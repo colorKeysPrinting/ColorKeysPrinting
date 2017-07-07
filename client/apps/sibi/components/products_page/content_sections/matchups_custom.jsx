@@ -63,22 +63,6 @@ export default class MatchupsCustom extends React.Component {
                 fontSize: '30px',
                 display: 'inline-flex'
             },
-            submitBtn: {
-                backgroundColor: '#06cfe5',
-                borderRadius: '5px',
-                color: '#FFF',
-                cursor: 'pointer',
-                width: '200px',
-                height: '46px',
-                margin: '7px auto',
-                textAlign: 'center',
-                fontSize: '18px',
-                paddingTop: '14px'
-            },
-            blueTxt: {
-                color: '#06cfe5',
-                cursor: 'pointer'
-            },
             delete: {
                 cursor: 'pointer'
             },
@@ -105,16 +89,16 @@ export default class MatchupsCustom extends React.Component {
                 products = products.join(', ');
 
             } else {
-                products = <Link to={`/products`}><div style={styles.blueTxt} >Add Products</div></Link>;
+                products = <Link to={`/products`}><div className="text-link" >Add Products</div></Link>;
             }
 
             return (
                 <tr key={matchup.id}>
                     <td>{ matchup.name }</td>
                     <td>{ products }</td>
-                    <td onClick={()=>this.props.showOverlay('customMatchup', {collectionObj: matchup})} style={styles.blueTxt} >View Products</td>
+                    <td className="text-link" onClick={()=>this.props.showOverlay('customMatchup', {collectionObj: matchup})} >View Products</td>
                     <td>${ (matchup.price).formatMoney(2, '.', ',') }</td>
-                    <td onClick={()=>this.props.addToTruck({products: matchup.products})} style={styles.blueTxt}>Add to truck</td>
+                    <td className="text-link" onClick={()=>this.props.addToTruck({products: matchup.products})} >Add to truck</td>
                     <td><div onClick={()=>this.props.removeCollection('customMatchup', matchup.id)} style={styles.delete}><img src={''} alt="delete"/></div></td>
                 </tr>
             );
@@ -127,7 +111,7 @@ export default class MatchupsCustom extends React.Component {
                     <div style={{display: 'inline-flex', marginLeft: '60%'}}>
                         <div onClick={()=>this.share()}><img src={''} alt="share" style={styles.actions} /></div>
                         <div onClick={()=>this.download()}><img src={''} alt="download" style={styles.actions} /></div>
-                        <div onClick={()=>this.props.showOverlay('addNewList', {type: 'customMatchups'})} style={styles.submitBtn}>New Custom Matchup</div>
+                        <div className="submit-btn" onClick={()=>this.props.showOverlay('addNewList', {type: 'customMatchups'})} style={{marginTop: '7px'}} >New Custom Matchup</div>
                     </div>
                 </div>
                 <div>

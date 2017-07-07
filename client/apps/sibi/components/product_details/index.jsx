@@ -7,20 +7,9 @@ import assets                   from '../../libs/assets';
 import { addToTruck, showOverlay }           from '../../actions/application';
 
 import DetailTabs               from './detail_tabs';
-import YourTruck                from './your_truck';
+import YourTruck                from '../common/your_truck';
 
-let select = (state)=>{
-    return {
-        currLang          : state.application.get('currLanguage'),
-        products          : state.application.get('products'),
-        productLocations  : state.application.get('productLocations'),
-        truck             : state.application.get('truck'),
-        isInStock         : state.application.get('isInStock'),
-    };
-};
-
-@connect(select, {addToTruck, showOverlay}, null, {withRef: true})
-export default class ProductDetails extends React.Component {
+class ProductDetails extends React.Component {
 
     constructor(props) {
         super(props);
@@ -29,18 +18,11 @@ export default class ProductDetails extends React.Component {
 
         this.state = {
             product: _.find(this.props.products.toJS(), ['id', parseInt(this.props.params.id)]), qty: 1, location: location[0], warranty: false,
-            truck: (this.props.truck.size > 0) ? this.props.truck.toJS() : [],
             minStock: 10
         };
 
         this.update = this.update.bind(this);
         this.checkInventory = this.checkInventory.bind(this);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.truck) {
-            this.setState({truck: nextProps.truck.toJS()});
-        }
     }
 
     componentDidMount() {
@@ -87,29 +69,6 @@ export default class ProductDetails extends React.Component {
                 fontSize: '20px',
                 paddingLeft: '5px'
             },
-            saveItemBtn: {
-                margin: 'auto',
-                width: '200px',
-                height: '46px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                border: '1px solid rgba(50,50,50,0.1)',
-                padding: '10px',
-                borderRadius: '5px',
-                color: '#06cfe5',
-                fontWeight: 'bold',
-            },
-            submitBtn: {
-                margin: 'auto',
-                backgroundColor: '#06cfe5',
-                borderRadius: '5px',
-                color: '#FFF',
-                cursor: 'pointer',
-                width: '200px',
-                height: '46px',
-                paddingTop: '13px',
-                textAlign: 'center',
-            },
             image: {
                 margin: '10px'
             },
@@ -136,6 +95,7 @@ export default class ProductDetails extends React.Component {
         });
 
         let image = (this.state.product.image) ? assets(this.state.product.image) : '';
+        let warranty = (this.state.warranty) ? _.find(this.props.warranties.toJS(), ['id', 0]) : false ;
 
         return (
             <div id="product-details" style={styles.container}>
@@ -143,16 +103,16 @@ export default class ProductDetails extends React.Component {
                     <div style={{width: '100%', display: 'inline-flex'}}>
                         <div style={{margin: '20px'}}><img src={image} alt={this.state.product.modelNum} width="500" height="600" style={styles.image}/></div>
                         <div style={{margin: '20px', padding: '20px', width: '50%'}}>
-                            <h1>{this.state.product.name}</h1>
+                            <h1>{ this.state.product.name }</h1>
                             <div style={{display: 'inline-flex', width: '100%'}}>
-                                <div style={styles.price} >${(this.state.product.price).formatMoney(2, '.', ',')}</div>
-                                <div style={styles.modelNum} >Model #{this.state.product.modelNum}</div>
+                                <div style={styles.price} >${ (this.state.product.price).formatMoney(2, '.', ',') }</div>
+                                <div style={styles.modelNum} >Model #{ this.state.product.modelNum }</div>
                             </div>
                             <div><img src={''} alt="product perks? " width="80%" height="80" style={styles.image}/></div>
                             <div style={{display: 'inline-flex', width: '100%'}}>
                                 <div style={{width: '20%'}}>Qty: <input type="number" value={this.state.qty} onChange={(e)=>this.update('qty', e.target.value)} style={styles.qtyInput} /></div>
                                 <div style={styles.dropdownSection}>
-                                    <select id="locationSelectDropdown" value={ this.state.location } onChange={ (e)=>this.update('location', e.target.value) } style={styles.dropdown}>
+                                    <select id="locationSelectDropdown" value={this.state.location} onChange={(e)=>this.update('location', e.target.value)} style={styles.dropdown}>
                                         { locationOptions }
                                     </select>
                                     <div style={styles.stockError}>This item is sold out here.  Select a new location.</div>
@@ -164,8 +124,8 @@ export default class ProductDetails extends React.Component {
                                        checked={this.state.warranty} />Add 10 Year Parts & Labor Warranty
                             </div>
                             <div style={{display: 'inline-flex', width: '85%'}}>
-                                <div style={{width: '50%'}} ><div onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: this.state.product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} style={styles.saveItemBtn}>Save Item</div></div>
-                                <div style={{width: '50%'}} ><div onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty: this.state.warranty})} style={styles.submitBtn}>Add to truck</div></div>
+                                <div style={{width: '50%'}} ><div className="cancel-btn" onClick={(e)=>this.props.showOverlay('productAddTo', {modelNum: this.state.product.modelNum, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} >Save Item</div></div>
+                                <div style={{width: '50%'}} ><div className="submit-btn" onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty})} >Add to truck</div></div>
                             </div>
                         </div>
                     </div>
@@ -174,12 +134,20 @@ export default class ProductDetails extends React.Component {
                         products={this.props.products.toJS()}
                         addToTruck={this.props.addToTruck} />
                 </div>
-                <YourTruck
-                    truck={this.state.truck} />
+                <YourTruck />
             </div>
         );
     }
 }
 
+let select = (state)=>{
+    return {
+        currLang          : state.application.get('currLanguage'),
+        products          : state.application.get('products'),
+        productLocations  : state.application.get('productLocations'),
+        isInStock         : state.application.get('isInStock'),
+        warranties        : state.application.get('warranties'),
+    };
+};
 
-
+export default connect(select, {addToTruck, showOverlay}, null, {withRef: true})(ProductDetails);
