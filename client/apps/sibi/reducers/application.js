@@ -5,13 +5,14 @@ import Immutable                from 'immutable';
 import ActionTypes              from '../constants/action_types';
 import { browserHistory }       from 'react-router';
 
-import * as productFunctions    from './helper/products'
+import * as productFunctions    from './application/helper/products';
 
-const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', activePageContent: '', temp: {docs: {workerComp: '', w9: '', insurance: '', contractGoodman: false,  contractAsure: false}},
+const initialState = Immutable.fromJS({currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', activePageContent: '', temp: {docs: {workerComp: '', w9: '', insurance: '', contractGoodman: false,  contractAsure: false}},
     isInStock: true,
 
 // ****** API information starts here ******
-    fundsList: ['Associated fund', 'value fund', 'foo fund', 'Jolly fund'], locationList: ['petes place', 'lower towers', 'twin terrace'],
+    fundsList: ['Associated fund', 'value fund', 'foo fund', 'Jolly fund'],
+    locationList: ['petes place', 'lower towers', 'twin terrace'],
     tradeList: ['engineer', 'carpenter', 'fur trade'], entityList: ['business', 'apartment', '4 plex', 'douplex'], languageList: ['English', 'Spanish', 'German'],
     contracts: {'goodman': './documents/pdf-test.pdf', 'asure': './documents/pdf-test.pdf'},
     states: {'AL':'Alabama','AK':'Alaska','AS':'American Samoa','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'District Of Columbia','FM':'Federated States Of Micronesia','FL':'Florida','GA':'Georgia','GU':'Guam','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MH':'Marshall Islands','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','MP':'Northern Mariana Islands','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PW':'Palau','PA':'Pennsylvania','PR':'Puerto Rico','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VI':'Virgin Islands','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'},
@@ -26,7 +27,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English', activeTab: '', 
         workOrders: {title: 'Work orders in', timeFrame: ['YTD']}
     },
     activeUser: {
-        type: 'sibi',
+        type: '',
         username: 'JohnDoe',
         profilePic: './images/profile_pic.jpg',
         JWT: '',
@@ -162,8 +163,9 @@ export default (state = initialState, action)=>{
             break;
 
 // **** LOGIN/CREATE USER SECTION
-        case ActionTypes.LOGIN:
-            console.log('login: ', action.username, action.password);
+        case ActionTypes.LOGIN_DONE:
+            console.log('login: ', action.result);
+
             state = state.set('activeOverlay', '');
             state = state.setIn(['activeUser', 'type'], 'sibi'); // TODO: REMOVE THIS LINE FOR TESTING ONLY!
             history.pushState(null, '/products');
@@ -185,12 +187,13 @@ export default (state = initialState, action)=>{
             // TODO: call API function
             break;
 
-        case ActionTypes.SIGNUP:
-            console.log('signup');
+        case ActionTypes.SIGNUP_DONE:
+            console.log('signup', action);
             break;
 
-        case ActionTypes.SUBMIT_SIGNUP:
-            console.log('submitting signUp');
+        case ActionTypes.SUBMIT_SIGNUP_DONE:
+            console.log('submitting signUp', action.result);
+
             // state = state.set('person', action.personDetails);
             break;
 

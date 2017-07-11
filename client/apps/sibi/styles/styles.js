@@ -2,6 +2,11 @@
 require('./styles.less');
 require('./styles.scss');
 
+// require('./theme/colors.scss');
+require('./theme/button.scss');
+require('./theme/forms.scss');
+// require('./theme/layout.scss');
+
 // HQ STYLES
 require('./pure-min.scss');
 require('./pure-responsive-min.scss');
@@ -14,5 +19,3 @@ require('./reset.scss');
 require('./partials/accordion.scss');
 require('./partials/slider.scss');
 // require('./responsive/*');
-require('./theme/forms.scss');
-require('./theme/main.scss');

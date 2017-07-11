@@ -2,8 +2,6 @@ import wrapper  from './wrapper';
 
 const actionTypes = [
 // application
-    "LOGIN", // TODO: change this to async, keep here during initial dev
-    "LOGOUT", // TODO: change this to async, keep here during initial dev
     "SHOW_PRODUCT_DETAILS", // TODO: change this to async, keep here during initial dev
     "SHOW_OVERLAY",
     "SHOW_RADIO_OVERLAY",
@@ -34,9 +32,14 @@ const actionTypes = [
 // These types will receive a _DONE
 const asyncActionTypes = [
 // application
+    "GET_TRADES",
+    "GET_FUNDS",
+    "GET_COMPANIES",
+    "LOGIN",
+    "LOGOUT",
+    "SIGNUP",
     "PASSWORD_RESET",
     "GET_STRIPE_TOKEN",
-    "SUBMIT_SIGNUP",
 
 // products
     // "REMOVE_PRODUCT",

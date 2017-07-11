@@ -4,34 +4,19 @@ import { browserHistory }       from 'react-router';
 import _                        from 'lodash';
 import assets                   from '../../libs/assets';
 
-import { changeLanguage, showOverlay, signUp }         from '../../actions/application';
-import { getStripeToken }       from '../../actions/signup';
+import { changeLanguage, showOverlay }         from '../../actions/application';
+import { signUp }               from '../../actions/signup';
 
 import Step2                    from './step2';
 import Step3                    from './step3';
 import Step4                    from './step4';
 
-let select = (state)=>{
-    return {
-        currLang    : state.application.get('currLanguage'),
-        languages   : state.application.get('languageList').toJS(),
-        funds       : state.application.get('fundsList').toJS(),
-        locations   : state.application.get('locationList').toJS(),
-        trades      : state.application.get('tradeList').toJS(),
-        entities    : state.application.get('entityList').toJS(),
-        states      : state.application.get('states').toJS(),
-        docs        : state.application.getIn(['temp','docs']).toJS(),
-        stripeToken : state.application.getIn(['temp','stripeToken']),
-    };
-};
-
-@connect(select, {changeLanguage, showOverlay, signUp, getStripeToken}, null, {withRef: true})
-export default class SignUp extends React.Component {
+class SignUp extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {currentStep: 1, buttonText: 'Create Account', errorMsg: '',
+        this.state = {currentStep: 5, buttonText: 'Create Account', errorMsg: '',
             email: '', password: '', firstName: '', lastName: '', fund:'', location: '', trade: '',
             companyName: '', street: '', city: '', state: '', phone: '', fax: '', entityType: '',
             taxPIN: '', requestRate: '', approvedRate: '', dealerAccountNum: '', docWorkerComp: '',
@@ -60,25 +45,48 @@ export default class SignUp extends React.Component {
     sendInfo() {
         let address = this.state.str1 + " " + this.state.str2 + ", " + this.state.billCity + ", " + this.state.billState + " " + this.state.zip;
 
+        // let person = {
+        //     email: this.state.email,
+        //     password: this.state.password,
+        //     name: {first: this.state.firstName, last: this.state.lastName},
+        //     fundId: this.state.fund,
+        //     location: this.state.location,
+        //     tradeId: this.state.trade,
+        //     companyName: this.state.companyName,
+        //     address: {street: this.state.street, city: this.state.city, state: this.state.state},
+        //     phone: this.state.phone,
+        //     fax: this.state.fax,
+        //     entityType: this.state.entityType,
+        //     taxPIN: this.state.taxPIN,
+        //     laborRate: {request: this.state.requestRate, approved: this.state.approvedRate},
+        //     dealerAccountNum: this.state.dealerAccountNum,
+        //     docs: {workerComp: this.state.docWorkerComp, w9: this.state.docW9, insurance: this.state.docInsurance, goodman: this.state.contractGoodman, asure: this.state.contractAsure},
+        //     payment: {
+        //         // TODO: make sure to add the stripeToken to this object in the reducer
+        //         billingAddr: {name: this.state.billName, address}
+        //     }
+        // };
+
+// TODO: need to get company objects with ID's
         let person = {
-            email: this.state.email,
-            password: this.state.password,
-            name: {first: this.state.firstName, last: this.state.lastName},
-            fund: this.state.fund,
+            email: 'seth@builtbyhq.com',
+            password: 'password',
+            name: {first: 'seth', last: 'bertlshofer'},
+            fundId: '0',
             location: this.state.location,
-            trade: this.state.trade,
-            companyName: this.state.companyName,
-            address: {street: this.state.street, city: this.state.city, state: this.state.state},
-            phone: this.state.phone,
-            fax: this.state.fax,
-            entityType: this.state.entityType,
-            taxPIN: this.state.taxPIN,
-            laborRate: {request: this.state.requestRate, approved: this.state.approvedRate},
-            dealerAccountNum: this.state.dealerAccountNum,
-            docs: {workerComp: this.state.docWorkerComp, w9: this.state.docW9, insurance: this.state.docInsurance, goodman: this.state.contractGoodman, asure: this.state.contractAsure},
+            tradeId: '0',
+            companyId: '0',
+            address: {street: '2870 N. 1025 E.', city: 'North Ogden', state: 'UT'},
+            phone: '8013887031',
+            fax: '',
+            entityType: '',
+            taxPIN: '',
+            laborRate: {request: '', approved: ''},
+            dealerAccountNum: '',
+            docs: {workerComp: '', w9: '', insurance: '', goodman: '', asure: ''},
             payment: {
                 // TODO: make sure to add the stripeToken to this object in the reducer
-                billingAddr: {name: this.state.billName, address}
+                billingAddr: {name: '', address: ''}
             }
         };
 
@@ -175,16 +183,16 @@ export default class SignUp extends React.Component {
         switch(this.state.currentStep) {
             case 1:
                 let languages = _.map(this.props.languages, (language, key)=>{
-                    return (<option key={ key } value={ language }>{ language }</option>);
+                    return (<option key={ key } value={language} >{ language }</option>);
                 });
 
-                let languageSelect =    <select value={ this.props.currLang } onChange={ (e)=>this.props.changeLanguage(e.target.value) } required>
-                                            <option disabled value='select'>Language</option>
-                                            {languages}
-                                        </select>;
+                let languageSelect = <select value={this.props.currLang} onChange={(e)=>this.props.changeLanguage(e.target.value)} required>
+                                         <option disabled value='select'>Language</option>
+                                         { languages }
+                                     </select>;
 
                 content = <div>
-                    <div style={ styles.titleBar }><div style={ styles.title}>Sign Up</div><div style={styles.language}>{languageSelect}</div></div>
+                    <div style={styles.titleBar }><div style={styles.title}>Sign Up</div><div style={styles.language}>{languageSelect}</div></div>
                     <form onSubmit={this.nextAction}>
                         <div style={styles.content}>
                             <input type="email"     placeholder="Email"     value={this.state.email}    onChange={ (e)=>this.update('email', e.target.value) }      style={{width: '435px'}} required/>
@@ -223,7 +231,7 @@ export default class SignUp extends React.Component {
                                 contractAsure={this.state.contractAsure}
                                 update={this.update}
                                 showOverlay={this.props.showOverlay}
-                                nextAction={this.nextAction}/>;
+                                nextAction={this.nextAction} />;
 
 
                 break;
@@ -241,15 +249,15 @@ export default class SignUp extends React.Component {
                                 billState={this.state.billState}
                                 zip={this.state.zip}
                                 update={this.update}
-                                nextAction={this.nextAction}/>;
+                                nextAction={this.nextAction} />;
                 break;
             case 5:
                 content = <form onSubmit={this.sendInfo}>
-                    <div style={ styles.titleBar}><div style={ styles.title }>All done</div></div>
+                    <div style={styles.titleBar}><div style={styles.title} >All done</div></div>
                     <div style={styles.content}>
                         <p>Your account must be approved. This typically happens within 24 hours.</p><br/>
 
-                        <p>We'll email {this.state.email} when approved.</p>
+                        <p>We'll email { this.state.email } when approved.</p>
                     </div>
 
                     <input className="submit-btn" type="submit" value="Got it" required/>
@@ -260,11 +268,24 @@ export default class SignUp extends React.Component {
 
         return (
             <div style={styles.container}>
-                {content}
+                { content }
             </div>
         );
     }
 }
 
+let select = (state)=>{
+    return {
+        currLang    : state.application.get('currLanguage'),
+        languages   : state.application.get('languageList').toJS(),
+        funds       : state.application.get('fundsList').toJS(),
+        locations   : state.application.get('locationList').toJS(),
+        trades      : state.application.get('tradeList').toJS(),
+        entities    : state.application.get('entityList').toJS(),
+        states      : state.application.get('states').toJS(),
+        docs        : state.application.getIn(['temp','docs']).toJS(),
+        stripeToken : state.application.getIn(['temp','stripeToken']),
+    };
+};
 
-
+export default connect(select, {changeLanguage, showOverlay, signUp, getStripeToken}, null, {withRef: true})(SignUp);

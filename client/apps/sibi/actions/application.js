@@ -1,5 +1,6 @@
 'use strict';
 import ActionTypes      from '../constants/action_types';
+import Network          from '../../../libs/constants/network';
 
 export function showOverlay(overlay, obj) {
     return {
@@ -52,14 +53,19 @@ export function updateTruck(truck) {
         truck
     }
 }
+
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
 export function login(username, password) {
     return {
-        type: ActionTypes.LOGIN,
-        username,
-        password
+        type   : ActionTypes.LOGIN,
+        method : Network.POST,
+        url    : `${Network.DOMAIN}/signin`,
+        body   : {
+            username,
+            password
+        }
     };
 }
 
@@ -76,19 +82,4 @@ export function passwordReset(email) {
         type: ActionTypes.PASSWORD_RESET,
         email
     };
-}
-
-export function getStripeToken(obj) {
-    // needs to be a async call
-    return {
-        type: ActionTypes.GET_STRIPE_TOKEN,
-        obj
-    };
-}
-
-export function signUp(personDetails) {
-    return {
-        type: ActionTypes.SUBMIT_SIGNUP,
-        personDetails
-    }
 }

@@ -55,6 +55,77 @@ body {
   color: GrayText;
   cursor: default;
 }
+.submit-btn {
+  background-color: #06cfe5;
+  border-radius: 5px;
+  color: #FFF;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  padding: 10px;
+  width: 200px;
+  height: 46px;
+  font-size: 18px;
+  margin: 20px auto;
+  padding-top: 14px;
+}
+
+.cancel-btn {
+  border: 1px solid rgba(50, 50, 50, 0.1);
+  border-radius: 5px;
+  color: #06cfe5;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  margin: auto;
+  padding: 10px;
+  width: 200px;
+  height: 46px;
+  font-size: 18px;
+  margin: 20px auto;
+  padding-top: 14px;
+}
+
+.text-link {
+  color: #06cfe5;
+  cursor: pointer;
+}
+form input, form select {
+  font-size: 14px;
+  margin: 8px;
+  padding: 12px;
+  width: 200px;
+  height: 46px;
+}
+
+form .button {
+  background-color: #06cfe5;
+  color: #FFF;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+table {
+  text-align: left;
+  width: 100%;
+}
+
+table thead {
+  background-color: rgba(50, 50, 50, 0.4);
+  font-weight: bold;
+}
+
+table tr {
+  border-bottom: 1px solid rgba(50, 50, 50, 0.1);
+  background-color: #FFF;
+}
+
+table td {
+  padding: 10px;
+}
 /*!
 Pure v0.6.0
 Copyright 2014 Yahoo! Inc. All rights reserved.
@@ -869,75 +940,4 @@ a, a:hover, a:focus, button:focus, button:active {
 
 #horizontal-2 .bar.bar-2 {
   background: #ddd;
-}
-form input, form select {
-  font-size: 14px;
-  margin: 8px;
-  padding: 12px;
-  width: 200px;
-  height: 46px;
-}
-
-form .button {
-  background-color: #06cfe5;
-  color: #FFF;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-table {
-  text-align: left;
-  width: 100%;
-}
-
-table thead {
-  background-color: rgba(50, 50, 50, 0.4);
-  font-weight: bold;
-}
-
-table tr {
-  border-bottom: 1px solid rgba(50, 50, 50, 0.1);
-  background-color: #FFF;
-}
-
-table td {
-  padding: 10px;
-}
-.submit-btn {
-  background-color: #06cfe5;
-  border-radius: 5px;
-  color: #FFF;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  outline: none;
-  padding: 10px;
-  width: 200px;
-  height: 46px;
-  font-size: 18px;
-  margin: 20px auto;
-  padding-top: 14px;
-}
-
-.cancel-btn {
-  border: 1px solid rgba(50, 50, 50, 0.1);
-  border-radius: 5px;
-  color: #06cfe5;
-  cursor: pointer;
-  font-weight: bold;
-  text-align: center;
-  text-decoration: none;
-  outline: none;
-  margin: auto;
-  padding: 10px;
-  width: 200px;
-  height: 46px;
-  font-size: 18px;
-  margin: 20px auto;
-  padding-top: 14px;
-}
-
-.text-link {
-  color: #06cfe5;
-  cursor: pointer;
 }
