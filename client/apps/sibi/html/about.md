@@ -1,13 +1,13 @@
 ---
 title: About
-author: Atomic Jolt
+author: HQ
 layout: application
 permalink: /about-us/
 categories:
   - About Us
 tags:
   - About Us
-  - Atomic Jolt
+  - HQ
 ---
 About Us
 ---------------
