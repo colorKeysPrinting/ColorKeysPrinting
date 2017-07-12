@@ -7,15 +7,14 @@ import { browserHistory }       from 'react-router';
 
 import * as productFunctions    from './application/helper/products';
 
-const initialState = Immutable.fromJS({currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', activePageContent: '', temp: {docs: {workerComp: '', w9: '', insurance: '', contractGoodman: false,  contractAsure: false}},
+const initialState = Immutable.fromJS({currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', activePageContent: '',
     isInStock: true,
+    states: {'AL':'Alabama','AK':'Alaska','AS':'American Samoa','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'District Of Columbia','FM':'Federated States Of Micronesia','FL':'Florida','GA':'Georgia','GU':'Guam','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MH':'Marshall Islands','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','MP':'Northern Mariana Islands','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PW':'Palau','PA':'Pennsylvania','PR':'Puerto Rico','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VI':'Virgin Islands','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'},
+    temp: {docs: {workerComp: '', w9: '', insurance: '', contractGoodman: false,  contractAsure: false}},
+
 
 // ****** API information starts here ******
-    fundsList: ['Associated fund', 'value fund', 'foo fund', 'Jolly fund'],
-    locationList: ['petes place', 'lower towers', 'twin terrace'],
-    tradeList: ['engineer', 'carpenter', 'fur trade'], entityList: ['business', 'apartment', '4 plex', 'douplex'], languageList: ['English', 'Spanish', 'German'],
     contracts: {'goodman': './documents/pdf-test.pdf', 'asure': './documents/pdf-test.pdf'},
-    states: {'AL':'Alabama','AK':'Alaska','AS':'American Samoa','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'District Of Columbia','FM':'Federated States Of Micronesia','FL':'Florida','GA':'Georgia','GU':'Guam','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MH':'Marshall Islands','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','MP':'Northern Mariana Islands','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PW':'Palau','PA':'Pennsylvania','PR':'Puerto Rico','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VI':'Virgin Islands','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'},
     availableFilters: { types: {matchups: ['btu','price'], 'hvac equipment': ['seer','btu','price']}, filters: {btu:['5,000 - 9,000','9,000 - 13,000','13,000 - 17,000','17,000 - 21,000','21,000 - 25,000', '25,000+'], seer: ['8-10','11-13','12-14'], price: {min: 75, max: 1000}}},
     activeFilters: {},
 
@@ -157,11 +156,6 @@ export default (state = initialState, action)=>{
             state = state.set('activeFilters', Immutable.fromJS(activeFilters));
             break;
 
-        case ActionTypes.GET_STRIPE_TOKEN_DONE:
-            console.log('received stripe token');
-            state = state.setIn(['temp','stripeToken', action.key], action.isChecked);
-            break;
-
 // **** LOGIN/CREATE USER SECTION
         case ActionTypes.LOGIN_DONE:
             console.log('login: ', action.result);
@@ -187,8 +181,45 @@ export default (state = initialState, action)=>{
             // TODO: call API function
             break;
 
+        case ActionTypes.GET_TRADES_DONE:
+            console.log('trades payload:', action.payload);
+            state = state.set('trades', Immutable.fromJS(action.payload));
+            break;
+
+        case ActionTypes.GET_FUNDS_DONE:
+            console.log('funds payload:', action.payload);
+            state = state.set('funds', Immutable.fromJS(action.payload));
+            break;
+
+        case ActionTypes.GET_COMPANIES_DONE:
+            console.log('companies payload:', action.payload);
+            state = state.set('companies', Immutable.fromJS(action.payload));
+            break;
+
+        case ActionTypes.CREATE_COMPANY_DONE:
+            console.log('create companies payload:', action.payload);
+            state = state.setIn(['temp','companyId'], Immutable.fromJS(action.payload.id));
+            break;
+
+        case ActionTypes.GET_ENTITY_TYPES_DONE:
+            console.log('entityTypes payload:', action.payload);
+            state = state.set('entityTypes', Immutable.fromJS(action.payload));
+            break;
+
+        case ActionTypes.GET_LOCATIONS_DONE:
+            console.log('locations payload:', action.payload);
+            state = state.set('locations', Immutable.fromJS(action.payload));
+            break;
+
+        case ActionTypes.CREATE_LOCATION_DONE:
+            console.log('create location payload:', action.payload);
+            state = state.setIn(['temp','locationId'], '');
+            state = state.setIn(['temp','companyId'], Immutable.fromJS(action.payload.id));
+            break;
+
         case ActionTypes.SIGNUP_DONE:
-            console.log('signup', action);
+            console.log('signup success', action);
+            state = state.setIn(['temp','companyId'], '');
             break;
 
         case ActionTypes.SUBMIT_SIGNUP_DONE:
@@ -238,14 +269,14 @@ export default (state = initialState, action)=>{
             break;
 
 // signup actions
-        case ActionTypes.UPLOAD_DOCUMENT:
-            console.log('uploading document');
-            state = state.setIn(['temp','docs', action.key], action.file);
+        case ActionTypes.ADD_DOCUMENT:
+            console.log('adding document');
+            state = state.setIn(['temp','docs', action.fileType], action.file);
             break;
 
         case ActionTypes.ACCEPT_AGREEMENT:
             console.log('accept agreement');
-            state = state.setIn(['temp','docs', action.key], action.isChecked);
+            state = state.setIn(['temp','docs', action.fileType], action.isChecked);
             break;
 
 // product actions

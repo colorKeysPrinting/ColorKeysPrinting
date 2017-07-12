@@ -25,7 +25,7 @@ const actionTypes = [
     "CHECKING_INVENTORY", // needs to be a async call
 
 // signup
-    "UPLOAD_DOCUMENT",
+    "ADD_DOCUMENT",
     "ACCEPT_AGREEMENT",
 ];
 
@@ -35,11 +35,14 @@ const asyncActionTypes = [
     "GET_TRADES",
     "GET_FUNDS",
     "GET_COMPANIES",
+    "CREATE_COMPANY",
+    "GET_ENTITY_TYPES",
+    "GET_LOCATIONS",
+    "CREATE_LOCATION",
     "LOGIN",
     "LOGOUT",
     "SIGNUP",
     "PASSWORD_RESET",
-    "GET_STRIPE_TOKEN",
 
 // products
     // "REMOVE_PRODUCT",
