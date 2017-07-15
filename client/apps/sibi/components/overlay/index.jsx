@@ -1,5 +1,6 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
+import _                        from 'lodash';
 
 import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
@@ -17,27 +18,14 @@ import Profile                  from './profile';
 import RemoveListItem           from './remove_list_item';
 import StockCheck               from './stock_check';
 
-let select = (state)=>{
-    return {
-        activeOverlay       : state.application.get('activeOverlay'),
-        overlayObj          : state.application.get('overlayObj'),
-        username            : state.application.getIn(['activeUser', 'username']),
-        profilePic          : state.application.getIn(['activeUser', 'profilePic']),
-        myLists             : state.application.getIn(['activeUser', 'myLists']),
-        products            : state.application.get('products'),
-        contractGoodman     : state.application.getIn(['contracts','goodman']),
-        contractAsure       : state.application.getIn(['contracts','asure'])
-    }
-};
-
-let actions = {login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement, createNewCollection, addToCollection, changeLanguage, removeProduct, checkingInventory};
-
-@connect(select, actions, null, {withRef: true})
-export default class Overlay extends React.Component {
+class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '', contractGoodman: false, contractAsure: false};
+        this.state = {
+            activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '',
+            contractGoodman: false, contractAsure: false
+        };
 
         this.resetState = this.resetState.bind(this);
         this.changeOverlay = this.changeOverlay.bind(this);
@@ -63,7 +51,10 @@ export default class Overlay extends React.Component {
     }
 
     resetState() {
-        this.setState({activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '', contractGoodman: false, contractAsure: false});
+        this.setState({
+            activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '',
+            contractGoodman: false, contractAsure: false
+        });
     }
 
     changeOverlay(activeOverlay) {
@@ -100,7 +91,6 @@ export default class Overlay extends React.Component {
         }
 
         if(isCorrect) {
-
             this.props.addDocument(type, value);
             this.close();
             return true;
@@ -273,9 +263,29 @@ export default class Overlay extends React.Component {
 
         return (
             <div id="overlay-container" style={styles.overlayBackground}>
-                {closeSection}
-                {overlay}
+                { closeSection }
+                { overlay }
             </div>
         );
     }
 }
+
+let select = (state)=>{
+    return {
+        activeOverlay       : state.application.get('activeOverlay'),
+        overlayObj          : state.application.get('overlayObj'),
+        username            : state.application.getIn(['activeUser', 'username']),
+        profilePic          : state.application.getIn(['activeUser', 'profilePic']),
+        myLists             : state.application.getIn(['activeUser', 'myLists']),
+        products            : state.application.get('products'),
+        contractGoodman     : state.application.getIn(['contracts','goodman']),
+        contractAsure       : state.application.getIn(['contracts','asure'])
+    }
+};
+
+let actions = {
+    login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement,
+    createNewCollection, addToCollection, changeLanguage, removeProduct, checkingInventory
+};
+
+export default connect(select, actions, null, {withRef: true})(Overlay);

@@ -78,7 +78,7 @@ export default function SignUpStep3(props) {
         }
     };
 
-    let errorMsg = (props.errorMsg) ? <div style={styles.errorMsg}>{props.errorMsg}</div> : '';
+    let errorMsg = (props.errorMsg) ? <div style={styles.errorMsg}>{ props.errorMsg }</div> : '';
 
     let workerCompText = (props.docWorkerComp) ? <div style={styles.added}>
                                                      <div>
@@ -124,39 +124,38 @@ export default function SignUpStep3(props) {
                                             </div>
                                           : <div onClick={()=>{props.showOverlay('contractAsure')}} style={styles.notAdded}>Agree to Asure contact</div>;
 
-    let title = <div style={ styles.titleBar}><div style={styles.title }>Compliance</div><div style={styles.steps}>step 3 of 4</div></div>;
-    let content =   <form onSubmit={()=>props.nextAction('step3')}>
-                        <div style={styles.contentUpload}>
-                            <div style={styles.element}>
-                                <img src={''} alt="workersCompImg" style={(props.docWorkerComp) ? styles.imageAdded : styles.image}/>
-                                {workerCompText}
-                            </div>
-                            <div style={styles.element}>
-                                <img src={''} alt="w9Img" style={(props.docW9) ? styles.imageAdded : styles.image}/>
-                                {w9Text}
-                            </div>
-                            <div style={styles.element}>
-                                <img src={''} alt="insuranceImg" style={(props.docInsurance) ? styles.imageAdded : styles.image}/>
-                                {insuranceText}
-                            </div>
-                            <div style={styles.element}>
-                                <img src={''} alt="insuranceImg" style={(props.contractGoodman) ? styles.imageAdded : styles.image}/>
-                                {goodmanText}
-                            </div>
-                            <div style={styles.element}>
-                                <img src={''} alt="insuranceImg" style={(props.contractAsure) ? styles.imageAdded : styles.image}/>
-                                {asureText}
-                            </div>
-                        </div>
-
-                        <input className="submit-btn" type="submit" value="Finish" style={{width: '70%'}} />
-                    </form>;
+    let title = <div style={styles.titleBar}><div style={styles.title}>Compliance</div><div style={styles.steps}>step 3 of 4</div></div>;
+    let content = <form onSubmit={()=>props.nextAction('step3')}>
+                      <div style={styles.contentUpload}>
+                          <div style={styles.element}>
+                              <img src={''} alt="workersCompImg" style={(props.docWorkerComp) ? styles.imageAdded : styles.image}/>
+                              { workerCompText }
+                          </div>
+                          <div style={styles.element}>
+                              <img src={''} alt="w9Img" style={(props.docW9) ? styles.imageAdded : styles.image}/>
+                              { w9Text }
+                          </div>
+                          <div style={styles.element}>
+                              <img src={''} alt="insuranceImg" style={(props.docInsurance) ? styles.imageAdded : styles.image}/>
+                              { insuranceText }
+                          </div>
+                          <div style={styles.element}>
+                              <img src={''} alt="insuranceImg" style={(props.contractGoodman) ? styles.imageAdded : styles.image}/>
+                              { goodmanText }
+                          </div>
+                          <div style={styles.element}>
+                              <img src={''} alt="insuranceImg" style={(props.contractAsure) ? styles.imageAdded : styles.image}/>
+                              { asureText }
+                          </div>
+                      </div>
+                     <input className="submit-btn" type="submit" value="Finish" style={{width: '70%'}} />
+                  </form>;
 
     return (
         <div>
-            {title}
-            {errorMsg}
-            {content}
+            { title }
+            { errorMsg }
+            { content }
         </div>
     );
 }

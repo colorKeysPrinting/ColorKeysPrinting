@@ -37,7 +37,7 @@ export function createCompany(company) {
         body    : {
             name: company.name,
             phoneNumber: company.phoneNumber,
-            faxNumber: company.faxNumber,
+            faxNumber: company.faxNumber || null,
             entityTypeId: company.entityTypeId,
             federalTaxPin: company.federalTaxPin,
             requestedLaborRate: company.requestedLaborRate,
@@ -98,23 +98,23 @@ export function getFunds() {
     };
 }
 
-export function signup(personDetails) {
+export function signup(person) {
     return {
         type    : ActionTypes.SIGNUP,
         method  : Network.POST,
         url     : `${Network.DOMAIN}/signup`,
         body : {
             type            : 'vendor',
-            firstName       : personDetails.name.first,
-            lastName        : personDetails.name.last,
-            email           : personDetails.email,
-            password        : personDetails.password,
-            tradeId         : personDetails.tradeId,
-            fundId          : personDetails.fundId,
-            fundLocationId  : personDetails.locationId,
-            companyId       : personDetails.companyId,
-            // payment         : personDetails.stripeToken,
-            // docs            : personDetails.docs // TODO: need the api updated to handle doc files
+            firstName       : person.firstName,
+            lastName        : person.lastName,
+            email           : person.email,
+            password        : person.password,
+            tradeId         : person.tradeId,
+            fundId          : person.fundId,
+            fundLocationId  : person.locationId,
+            companyId       : person.companyId,
+            // payment         : person.stripeToken,
+            // docs            : person.docs // TODO: need the api updated to handle doc files
         }
     };
 }

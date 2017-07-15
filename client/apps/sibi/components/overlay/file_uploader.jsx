@@ -1,5 +1,5 @@
-import React                                     from 'react';
-import assets                                    from '../../libs/assets';
+import React                    from 'react';
+import assets                   from '../../libs/assets';
 
 export default function fileUploaderOverlay(props) {
     let title, inputs, actionSection, close;
@@ -73,16 +73,16 @@ export default function fileUploaderOverlay(props) {
         default:
     }
 
-    let errorMsg = (props.errorMsg) ? <div style={styles.errorMsg}>{props.errorMsg}</div> : '';
+    let errorMsg = (props.errorMsg) ? <div style={styles.errorMsg}>{ props.errorMsg }</div> : '';
 
     return (
         <div style={styles.container}>
-            <div style={ styles.titleBar }>
-                <div style={styles.title}>Add {title}</div>
+            <div style={styles.titleBar}>
+                <div style={styles.title}>Add { title }</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
             <div style={styles.content}>
-                {errorMsg}
+                { errorMsg }
                 <div style={styles.uploadContainer}
                      onDrop={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}}
                      onDragOver={(e)=>{e.preventDefault(); e.dropEffect='copy'}}>

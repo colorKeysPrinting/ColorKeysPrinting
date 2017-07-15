@@ -17,14 +17,14 @@ class Signup extends React.Component {
         super(props);
 
         this.state = {currentStep: 1, buttonText: 'Create Account', errorMsg: '',
-            email: 'seth@builtbyhq.com', password: 'password', firstName: 'fistTest', lastName: 'lastTest', fundId: '6b1faf05-68b6-4808-b127-1bf2fe97aa10', locationId: 'cac27aa2-e6c5-463f-bb2a-e2d8ccf18807', tradeId: '52ebd6b2-9ab4-4a07-899e-64928dcfa74b', companyId: '',
+            email: '', password: '', firstName: '', lastName: '', fundId: '', locationId: '', tradeId: '', companyId: '',
             docW9: '',  docInsurance: '', docWorkerComp: '', contractGoodman: false,  contractAsure: false,
 
-            companyName: 'testCompany1', street: 'testAddress1', city: 'Ogden', state: 'UT', zipcode: '84414', phone: '1234561234', fax: '', entityTypeId: '6562a9ae-4817-45c2-8560-cb7b501ab583',
-            taxPIN: '123456789', requestedRate: '12', approvedRate: '34', dealerAccountNum: '123456789',
+            companyName: '', street: '', city: '', state: '', zipcode: '', phone: '', fax: '', entityTypeId: '',
+            taxPIN: '', requestedRate: '', approvedRate: '', dealerAccountNum: '',
 
-            cardName: '', cardNumber: '', cardExpDate: '', cardCvc: '', cardBillName: '', cardStr1: '', cardStr2: '', cardBillCity: '',
-            cardBillState: '', cardZip: ''
+            cardName: '', cardNumber: '', expDate: '', cvc: '', billName: '', str1: '', str2: '', billCity: '',
+            billState: '', cardZipcode: ''
         };
 
         this.props.getTrades();
@@ -39,7 +39,7 @@ class Signup extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.docs) {
-            _.each(nextProps.docs, (value, key)=>{
+            _.each(nextProps.docs.toJS(), (value, key)=>{
                 this.setState({[key]: value});
             });
         }
@@ -47,13 +47,13 @@ class Signup extends React.Component {
         if(nextProps.locationId) {
             let company = {
                 name: this.state.companyName,
-                phoneNumber: this.state.companyPhone,
-                faxNumber: this.state.companyFax,
-                entityTypeId: this.state.companyEntityTypeId,
-                federalTaxPin: this.state.companyTaxPIN,
-                requestedLaborRate: this.state.companyRequestedRate,
-                approvedLaborRate: this.state.companyApprovedRate,
-                dealerAccountNumber: this.state.companyDealerAccountNum,
+                phoneNumber: this.state.phone,
+                faxNumber: this.state.fax,
+                entityTypeId: this.state.entityTypeId,
+                federalTaxPin: this.state.taxPIN,
+                requestedLaborRate: this.state.requestedRate,
+                approvedLaborRate: this.state.approvedRate,
+                dealerAccountNumber: this.state.dealerAccountNum,
                 locationId: nextProps.locationId
             };
 
@@ -81,7 +81,6 @@ class Signup extends React.Component {
     }
 
     update(type, value) {
-
         this.setState({[type]: value});
     }
 
@@ -114,11 +113,6 @@ class Signup extends React.Component {
 
             this.props.createLocation(location);
         }
-
-        // TODO: check if company exists (if it doesn't hit the company create endpoint)
-        //       this will return a companyId update "Person" with new companyId
-
-
     }
 
     nextAction(step) {
@@ -139,15 +133,15 @@ class Signup extends React.Component {
             this.setState({currentStep});
 
             if(step === 'step4') {
-                this.props.getStripeToken({
-                    cardName: this.state.cardName,
-                    cardNumber: this.state.cardNumber,
-                    expDate: this.state.expDate,
-                    cvc: this.state.cvc
-                });
+                // this.props.getStripeToken({
+                //     cardName: this.state.cardName,
+                //     cardNumber: this.state.cardNumber,
+                //     expDate: this.state.expDate,
+                //     cvc: this.state.cvc
+                // });
 
                 // remove credit card info from state
-                this.setState({cardName: '', cardNumber: '', expDate: '', cvc: ''});
+                this.setState({cardName: '', cardNumber: '', expDate: '', cvc: '', billName: '', str1: '', str2: '', billCity: '', billState: '', cardZipcode: ''});
             }
         } else {
             if(step === 'step3') {
@@ -219,11 +213,11 @@ class Signup extends React.Component {
                                      </select>;
 
                 content = <div>
-                              <div style={styles.titleBar }><div style={styles.title}>Sign Up</div><div style={styles.language}>{languageSelect}</div></div>
+                              <div style={styles.titleBar }><div style={styles.title}>Sign Up</div><div style={styles.language}>{ languageSelect }</div></div>
                               <form onSubmit={this.nextAction}>
                                   <div style={styles.content}>
-                                      <input type="email"     placeholder="Email"     value={this.state.email}    onChange={ (e)=>this.update('email', e.target.value) }      style={{width: '435px'}} required/>
-                                      <input type="password"  placeholder="Password"  value={this.state.password} onChange={ (e)=>this.update('password', e.target.value) }   style={{width: '435px'}} required/>
+                                      <input type="email"     placeholder="Email"     value={this.state.email}    onChange={(e)=>this.update('email', e.target.value)}      style={{width: '435px'}} required/>
+                                      <input type="password"  placeholder="Password"  value={this.state.password} onChange={(e)=>this.update('password', e.target.value)}   style={{width: '435px'}} required/>
                                   </div>
 
                                   <input className="submit-btn" type="submit" value="Create Account" style={{width: '89%'}} required/>
@@ -271,13 +265,11 @@ class Signup extends React.Component {
                                 update={this.update}
                                 showOverlay={this.props.showOverlay}
                                 nextAction={this.nextAction} />;
-
-
                 break;
 
             case 4:
                 content = <Step4
-                                states={this.props.states}
+                                states={this.props.states.toJS()}
                                 cardName={this.state.cardName}
                                 expDate={this.state.expDate}
                                 cardNumber={this.state.cardNumber}
@@ -287,22 +279,21 @@ class Signup extends React.Component {
                                 str2={this.state.str2}
                                 billCity={this.state.billCity}
                                 billState={this.state.billState}
-                                zip={this.state.zip}
+                                cardZipcode={this.state.cardZipcode}
                                 update={this.update}
                                 nextAction={this.nextAction} />;
                 break;
 
             case 5:
-                content = <form onSubmit={this.sendInfo}>
-                    <div style={styles.titleBar}><div style={styles.title} >All done</div></div>
-                    <div style={styles.content}>
-                        <p>Your account must be approved. This typically happens within 24 hours.</p><br/>
+                content = <div>
+                              <div style={styles.titleBar}><div style={styles.title} >All done</div></div>
+                              <div style={styles.content}>
+                                  <p>Your account must be approved. This typically happens within 24 hours.</p><br/>
+                                  <p>We'll email { this.state.email } when approved.</p>
+                              </div>
 
-                        <p>We'll email { this.state.email } when approved.</p>
-                    </div>
-
-                    <input className="submit-btn" type="submit" value="Got it" required/>
-                </form>;
+                              <div className="submit-btn" onClick={this.sendInfo} >Got it</div>
+                          </div>;
                 break;
         }
 
@@ -319,19 +310,19 @@ class Signup extends React.Component {
 
 let select = (state)=>{
     return {
-        funds       : state.application.get('funds'),
-        locations   : state.application.get('locations'),
-        trades      : state.application.get('trades'),
-        entityTypes : state.application.get('entityTypes'),
-        companies   : state.application.get('companies'),
-        states      : state.application.get('states'),
+        funds               : state.application.get('funds'),
+        locations           : state.application.get('locations'),
+        trades              : state.application.get('trades'),
+        entityTypes         : state.application.get('entityTypes'),
+        companies           : state.application.get('companies'),
+        states              : state.application.get('states'),
 
-        docs        : state.application.getIn(['temp','docs']),
-        companyId   : state.application.getIn(['temp','companyId']),
-        locationId  : state.application.getIn(['temp','locationId']),
+        docs                : state.application.getIn(['temp','docs']),
+        companyId           : state.application.getIn(['temp','companyId']),
+        locationId          : state.application.getIn(['temp','locationId']),
 
-        currLang    : state.application.get('currLanguage'),
-        languages   : state.application.get('language'),
+        currLang            : state.application.get('currLanguage'),
+        languages           : state.application.get('language'),
     };
 };
 
