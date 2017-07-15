@@ -76,7 +76,7 @@ class Signup extends React.Component {
             };
 
             this.props.signup(person);
-            browserHistory.push('/');
+            browserHistory.push('/'); // TODO: need to update this reroute to actually re-route
         }
     }
 
@@ -101,7 +101,7 @@ class Signup extends React.Component {
             };
 
             this.props.signup(person);
-            browserHistory.push('/');
+            browserHistory.push('/'); // TODO: need to update this reroute to actually re-route
         } else {
             // create location
             let location = {

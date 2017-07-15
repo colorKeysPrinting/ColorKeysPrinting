@@ -158,12 +158,22 @@ export default (state = initialState, action)=>{
 
 // **** LOGIN/CREATE USER SECTION
         case ActionTypes.LOGIN_DONE:
-            console.log('login: ', action.result);
+            console.log('login: ', action.payload);
 
             state = state.set('activeOverlay', '');
-            state = state.setIn(['activeUser', 'type'], 'sibi'); // TODO: REMOVE THIS LINE FOR TESTING ONLY!
-            history.pushState(null, '/products');
-            // TODO: call API function
+
+            if(action.payload.id) {
+                if(!action.payload.disabled) {
+                    state = state.set('activeUser', Immutable.fromJS(action.payload));
+                    window.DEFAULT_JWT = action.payload.token;
+                    history.pushState(null, '/products');
+                } else {
+                    alert('Your account has been disabled!\nIf you find this to be an error please contact your fund');
+                }
+            } else {
+                alert('Could not find a Username and Password combination matching the provided');
+
+            }
             break;
 
         case ActionTypes.LOGOUT:
@@ -457,9 +467,8 @@ export default (state = initialState, action)=>{
             }
 
             break;
-
         default:
+            return state;
     }
-
     return state;
 };

@@ -57,13 +57,13 @@ export function updateTruck(truck) {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function login(username, password) {
+export function login(email, password) {
     return {
         type   : ActionTypes.LOGIN,
         method : Network.POST,
         url    : `${Network.DOMAIN}/signin`,
         body   : {
-            username,
+            email,
             password
         }
     };
