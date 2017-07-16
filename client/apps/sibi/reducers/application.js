@@ -8,10 +8,28 @@ import { browserHistory }       from 'react-router';
 import * as productFunctions    from './application/helper/products';
 
 const initialState = Immutable.fromJS({currLanguage: 'English', activeTab: '', activeOverlay: '', overlayObj: false, activePage: 'products', activePageContent: '',
-    isInStock: true,
+    isInStock: true, activeUser: {},
     states: {'AL':'Alabama','AK':'Alaska','AS':'American Samoa','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'District Of Columbia','FM':'Federated States Of Micronesia','FL':'Florida','GA':'Georgia','GU':'Guam','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MH':'Marshall Islands','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','MP':'Northern Mariana Islands','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PW':'Palau','PA':'Pennsylvania','PR':'Puerto Rico','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VI':'Virgin Islands','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'},
     temp: {docs: {docWorkerComp: '', docW9: '', docInsurance: '', contractGoodman: false,  contractAsure: false}},
-
+    filterPanel: {
+        'hvac equipment': {
+            types: {
+                airConditioners: 'Air Conditioners',
+                heatPumps: 'Heat Pumps',
+                furnaces: 'Furnaces',
+                miniSplits: 'Mini-Splits',
+                humidifiers: 'Humidifiers',
+                coils: 'Coils',
+                packagedUnits: 'Packaged Units'
+            },
+            filters: {
+                seer: {},
+                btu: {},
+                price: {}
+            }
+        },
+        'parts & supplies': {}
+    },
 
 // ****** API information starts here ******
     contracts: {'goodman': './documents/pdf-test.pdf', 'asure': './documents/pdf-test.pdf'},
@@ -25,72 +43,7 @@ const initialState = Immutable.fromJS({currLanguage: 'English', activeTab: '', a
         goalVolumeRebate: {title: 'Goal to Volume Rebate', timeFrame: ['YTD']},
         workOrders: {title: 'Work orders in', timeFrame: ['YTD']}
     },
-    activeUser: {
-        type: '',
-        username: 'JohnDoe',
-        profilePic: './images/profile_pic.jpg',
-        JWT: '',
-        settings: {
-            language: 'English',
-            keyIndicatorBars: {
-                // the ordering here is the exact order that it will show on the keyIndicatorBar e.g. {spot1, spot2, spot3, spot4}
-                // each products page can have there own info bar to show specific things?
-                products: [{equipment: 'YTD'},{warranties: 'YTD'},{goalVolumeRebate: 'YTD'},{workOrders: '3/2017'}],
-                matchups: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
-                equipment: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
-                partsSupplies: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
-            }
-        },
-        myProducts: {
-            mostPurchased: [11, 7, 3, 2]
-        },
-        myMatchups: [
-            {type: 'standard'},
-            {type: 'custom',
-                matchups: [
-                    {id: 0, name: 'Dwight\'s Heat Pump Split-System', price: 1512.25, products: {'0': 1, '1': 2}},
-                    {id: 1, name: 'Dwight\'s Gas Split-System',       price: 1800.20, products: {'4': 1, '5': 3, '6': 1}}
-                ]
-            }
-        ],
-        myLists: [
-            {id: 0, name: 'Dwight\'s List', products: ['7', '6', '10']},
-            {id: 1, name: 'Saved Trucks', products: ['4', '11']},
-            {id: 2, name: 'Supplies', products: []}
-        ],
-        myOrders: {
-            '0': {orderNum: 138992342, orderDate: 1488412800000, totalCost: 5631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'ordered',           products: {'0': 16, '9': 16}},
-            '1': {orderNum: 138992343, orderDate: 1488153600000, totalCost: 876.03,   propertyAddress: '113 Washington Blvd, Ogden, UT, 84414', shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           products: {'4': 2, '2': 2}},
-            '2': {orderNum: 138992344, orderDate: 1487548800000, totalCost: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           products: {'11': 16, '9': 16}},
-            '3': {orderNum: 138992345, orderDate: 1487462400000, totalCost: 22331.76, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Shipped',           products: {'1': 50, '6': 10, '7': 50, '2': 1}},
-            '4': {orderNum: 138992346, orderDate: 1487462400000, totalCost: 1631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Partially Shipped', products: {'0': 3}},
-            '5': {orderNum: 138992347, orderDate: 1487462400000, totalCost: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'2': 4, '5': 1}},
-            '6': {orderNum: 138992348, orderDate: 1486771200000, totalCost: 831.96,   propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'0': 3, '9': 3, '10': 1}},
-            '7': {orderNum: 138992349, orderDate: 1486684800000, totalCost: 18631.92, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Delivered',         products: {'0': 16, '9': 11, '7': 10, '3': 1}},
-            '8': {orderNum: 138992350, orderDate: 1485561600000, totalCost: 13631.91, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'0': 16, '9': 11, '7': 4, '3': 3}},
-        },
-        filterPanel:{
-            'hvac equipment': {
-                types: {
-                    airConditioners: 'Air Conditioners',
-                    heatPumps: 'Heat Pumps',
-                    furnaces: 'Furnaces',
-                    miniSplits: 'Mini-Splits',
-                    humidifiers: 'Humidifiers',
-                    coils: 'Coils',
-                    packagedUnits: 'Packaged Units'
-                },
-                filters: {
-                    seer: {},
-                    btu: {},
-                    price: {}
-                }
-            },
-            'parts & supplies': {}
-        },
-        myTruck: [],
-        myWarranties: [],
-    },
+
     calculations: {
         salesTaxRate: (8.25 / 100)
     },
@@ -164,7 +117,46 @@ export default (state = initialState, action)=>{
 
             if(action.payload.id) {
                 if(!action.payload.disabled) {
-                    state = state.set('activeUser', Immutable.fromJS(action.payload));
+                    let settings = {
+                        language: 'English',
+                        keyIndicatorBars: {
+                            // the ordering here is the exact order that it will show on the keyIndicatorBar e.g. {spot1, spot2, spot3, spot4}
+                            // each products page can have there own info bar to show specific things?
+                            products: [{equipment: 'YTD'},{warranties: 'YTD'},{goalVolumeRebate: 'YTD'},{workOrders: '3/2017'}],
+                            matchups: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
+                            equipment: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
+                            partsSupplies: [{metric1: 'currWeek'},{metric2: 'value'},{metric3: 'value'},{metric4: 'value'}],
+                        }
+                    };
+                    let myProducts = {mostPurchased: [11, 7, 3, 2]};
+                    let myMatchups = [
+                        {type: 'custom',
+                            matchups: [
+                                {id: 0, name: 'Dwight\'s Heat Pump Split-System', price: 1512.25, products: {'0': 1, '1': 2}},
+                                {id: 1, name: 'Dwight\'s Gas Split-System',       price: 1800.20, products: {'4': 1, '5': 3, '6': 1}}
+                            ]
+                        }
+                    ];
+                    let myLists = [
+                        {id: 0, name: 'Dwight\'s List', products: ['7', '6', '10']},
+                        {id: 1, name: 'Saved Trucks', products: ['4', '11']},
+                        {id: 2, name: 'Supplies', products: []}
+                    ];
+                    let myOrders = {
+                        '0': {orderNum: 138992342, orderDate: 1488412800000, totalCost: 5631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'ordered',           products: {'0': 16, '9': 16}},
+                        '1': {orderNum: 138992343, orderDate: 1488153600000, totalCost: 876.03,   propertyAddress: '113 Washington Blvd, Ogden, UT, 84414', shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           products: {'4': 2, '2': 2}},
+                        '2': {orderNum: 138992344, orderDate: 1487548800000, totalCost: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           products: {'11': 16, '9': 16}},
+                        '3': {orderNum: 138992345, orderDate: 1487462400000, totalCost: 22331.76, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Shipped',           products: {'1': 50, '6': 10, '7': 50, '2': 1}},
+                        '4': {orderNum: 138992346, orderDate: 1487462400000, totalCost: 1631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Partially Shipped', products: {'0': 3}},
+                        '5': {orderNum: 138992347, orderDate: 1487462400000, totalCost: 3631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'2': 4, '5': 1}},
+                        '6': {orderNum: 138992348, orderDate: 1486771200000, totalCost: 831.96,   propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'0': 3, '9': 3, '10': 1}},
+                        '7': {orderNum: 138992349, orderDate: 1486684800000, totalCost: 18631.92, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Delivered',         products: {'0': 16, '9': 11, '7': 10, '3': 1}},
+                        '8': {orderNum: 138992350, orderDate: 1485561600000, totalCost: 13631.91, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'0': 16, '9': 11, '7': 4, '3': 3}},
+                    };
+                    let myTruck = [];
+                    let myWarranties = [];
+
+                    state = state.set('activeUser', Immutable.fromJS({...action.payload, settings, myProducts, myMatchups, myLists, myOrders, myTruck, myWarranties}));
                     window.DEFAULT_JWT = action.payload.token;
                     history.pushState(null, '/products');
                 } else {

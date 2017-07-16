@@ -18,9 +18,6 @@ class HeaderBar extends React.Component {
         this.search = this.search.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-    }
-
     search(term) {
         console.log(term);
         this.props.search(term);
@@ -67,7 +64,7 @@ class HeaderBar extends React.Component {
 
         if(!this.props.activeUserType || this.props.activeUserType === 'signUp') {
             loginSection = <div style={styles.loginSection}>
-                <div className="submit-btn" onClick={()=>this.props.showOverlay('login') } >Login</div>
+                <div className="submit-btn" onClick={()=>this.props.showOverlay('login')} >Login</div>
                 <Link className="cancel-btn" to={`/signup`} >Sign Up</Link>
             </div>;
 
@@ -86,9 +83,9 @@ class HeaderBar extends React.Component {
 
         return (
             <div id="header-bar" style={styles.header}>
-                <Tabs type={ this.props.activeUserType }
-                      activeTab={ this.props.activeTab }
-                      setActivateTab={ this.props.setActivateTab } />
+                <Tabs type={this.props.activeUserType}
+                      activeTab={this.props.activeTab}
+                      setActivateTab={this.props.setActivateTab} />
                 { loginSection }
             </div>
         );

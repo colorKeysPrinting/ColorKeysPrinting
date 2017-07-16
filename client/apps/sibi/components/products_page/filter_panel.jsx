@@ -9,19 +9,7 @@ import ReactSlider              from 'react-slider';
 import { setActiveFilters }     from '../../actions/products';
 import { showOverlay }          from '../../actions/application';
 
-let select = (state)=>{
-    return {
-        currLang            : state.application.get('currLanguage'),
-        myMatchups          : state.application.getIn(['activeUser', 'myMatchups']),
-        myLists             : state.application.getIn(['activeUser', 'myLists']),
-        myFilterPanel       : state.application.getIn(['activeUser', 'filterPanel']),
-        availableFilters    : state.application.get('availableFilters'),
-        activeFilters       : state.application.get('activeFilters'),
-    };
-};
-
-@connect(select, {setActiveFilters, showOverlay}, null, {withRef: true})
-export default class FilterPanel extends React.Component {
+class FilterPanel extends React.Component {
 
     constructor(props) {
         super(props);
@@ -66,15 +54,19 @@ export default class FilterPanel extends React.Component {
             }
         };
 
-        let options = _.map(this.props.myMatchups.toJS() || [], (option)=>{ // standard, custom
-            let title = (option.type === 'standard') ? 'Standard' : 'Custom';
-            return (<Link to={'/products/matchup-' + option.type} key={option.type}><div className="options">{ title } Matchups</div></Link>);
+        let types = _.map(this.props.myMatchups.toJS() || [], (option)=>{
+            return (<Link to={'/products/matchup-' + option.type} key={option.type}><div className="options">{ (options.type).toUpperCase() } Matchups</div></Link>);
         });
+
+        let options = <div>
+            <Link to={'/products/matchup-standard'} key={'standard'}><div className="options">{ ('Standard Matchups').toUpperCase() }</div></Link>
+            { types }
+        </div>;
 
         let matchups = <div>
                            <div className={((this.state.activeSection === 'matchups') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('matchups')}>
                                <div id="title">MATCHUPS</div>
-                               <div>{(this.state.activeSection === 'matchups') ? '-' : '+'}</div>
+                               <div>{ (this.state.activeSection === 'matchups') ? '-' : '+' }</div>
                            </div>
                            <div style={{display: (this.state.activeSection === 'matchups') ? 'block' : 'none'}}>{ options }</div>
                        </div>;
@@ -86,7 +78,7 @@ export default class FilterPanel extends React.Component {
         let myLists = <div>
                           <div className={((this.state.activeSection === 'myLists') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('myLists')}>
                               <div id="title">MY LISTS</div>
-                              <div>{(this.state.activeSection === 'myLists') ? '-' : '+'}</div>
+                              <div>{ (this.state.activeSection === 'myLists') ? '-' : '+' }</div>
                           </div>
                           <div style={{display: (this.state.activeSection === 'myLists') ? 'block' : 'none'}}>
                               { options }
@@ -94,7 +86,7 @@ export default class FilterPanel extends React.Component {
                           </div>
                       </div>;
 
-        let filterPanel = _.map(this.props.myFilterPanel.toJS() || [], (section, key)=>{
+        let filterPanel = _.map(this.props.filterPanel.toJS() || [], (section, key)=>{
             let options;
             let isActive = (this.state.activeSection === key);
             let parentId;
@@ -122,7 +114,7 @@ export default class FilterPanel extends React.Component {
                 <div key={key}>
                     <div className={((isActive) ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection(key)}>
                         <div id="title">{key.toUpperCase()}</div>
-                        <div>{(isActive) ? '-' : '+'}</div>
+                        <div>{ (isActive) ? '-' : '+' }</div>
                     </div>
                     <div style={{display: (isActive) ? 'block' : 'none'}}>{ options }</div>
                 </div>
@@ -176,7 +168,7 @@ export default class FilterPanel extends React.Component {
                     <div key={key}>
                         <div className={((this.state.activeFilterSection === filter) ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveFilterSection(filter)}>
                             <div id="title">{ (filter).toUpperCase() }</div>
-                            <div>{(this.state.activeFilterSection === filter) ? '-' : '+'}</div>
+                            <div>{ (this.state.activeFilterSection === filter) ? '-' : '+' }</div>
                         </div>
                         <div style={{display: (this.state.activeFilterSection === filter) ? 'block' : 'none'}}>
                             { options }
@@ -202,5 +194,15 @@ export default class FilterPanel extends React.Component {
     }
 }
 
+let select = (state)=>{
+    return {
+        currLang            : state.application.get('currLanguage'),
+        myMatchups          : state.application.getIn(['activeUser', 'myMatchups']),
+        myLists             : state.application.getIn(['activeUser', 'myLists']),
+        filterPanel         : state.application.get('filterPanel'),
+        availableFilters    : state.application.get('availableFilters'),
+        activeFilters       : state.application.get('activeFilters'),
+    };
+};
 
-
+export default connect(select, {setActiveFilters, showOverlay}, null, {withRef: true})(FilterPanel);
