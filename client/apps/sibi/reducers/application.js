@@ -183,6 +183,47 @@ export default (state = initialState, action)=>{
             // TODO: call API function
             break;
 
+// **** OVERLAY SECTION
+        case ActionTypes.SHOW_OVERLAY:
+            console.log('show overlay', action.overlay);
+            state = state.set('activeOverlay', action.overlay);
+
+            // normal case
+            if(action.obj) {
+                state = state.set('overlayObj', action.obj);
+            }
+
+            break;
+
+        case ActionTypes.SHOW_RADIO_OVERLAY:
+            console.log('show radio overlay', action.overlay);
+            state = state.set('activeOverlay', action.overlay);
+
+            if(action.collectionType) {
+                let collections;
+
+                switch(action.collectionType) {
+                    case 'customMatchups':
+                        let myMatchups = _.find(state.getIn(['activeUser', 'myMatchups']).toJS(), ['type','custom']);
+                        collections = myMatchups.matchups;
+                        break;
+
+                    case 'myLists':
+                        collections = state.getIn(['activeUser', 'myLists']).toJS();
+                        break;
+                    default:
+                }
+
+                state = state.set('overlayObj', {type: action.collectionType, productID: action.productID, collections});
+            }
+            break;
+
+        case ActionTypes.CLOSE_OVERLAY:
+            console.log('close overlay');
+            state = state.set('activeOverlay', '');
+            break;
+
+// signup actions
         case ActionTypes.GET_TRADES_DONE:
             console.log('trades payload:', action.payload);
             state = state.set('trades', Immutable.fromJS(action.payload));
@@ -230,47 +271,6 @@ export default (state = initialState, action)=>{
             // state = state.set('person', action.personDetails);
             break;
 
-// **** OVERLAY SECTION
-        case ActionTypes.SHOW_OVERLAY:
-            console.log('show overlay', action.overlay);
-            state = state.set('activeOverlay', action.overlay);
-
-            // normal case
-            if(action.obj) {
-                state = state.set('overlayObj', action.obj);
-            }
-
-            break;
-
-        case ActionTypes.SHOW_RADIO_OVERLAY:
-            console.log('show radio overlay', action.overlay);
-            state = state.set('activeOverlay', action.overlay);
-
-            if(action.collectionType) {
-                let collections;
-
-                switch(action.collectionType) {
-                    case 'customMatchups':
-                        let myMatchups = _.find(state.getIn(['activeUser', 'myMatchups']).toJS(), ['type','custom']);
-                        collections = myMatchups.matchups;
-                        break;
-
-                    case 'myLists':
-                        collections = state.getIn(['activeUser', 'myLists']).toJS();
-                        break;
-                    default:
-                }
-
-                state = state.set('overlayObj', {type: action.collectionType, productID: action.productID, collections});
-            }
-            break;
-
-        case ActionTypes.CLOSE_OVERLAY:
-            console.log('close overlay');
-            state = state.set('activeOverlay', '');
-            break;
-
-// signup actions
         case ActionTypes.ADD_DOCUMENT:
             console.log('adding document');
             state = state.setIn(['temp', 'docs', action.fileType], action.file);
@@ -282,6 +282,11 @@ export default (state = initialState, action)=>{
             break;
 
 // product actions
+        case ActionTypes.GET_PRODUCTS_DONE:
+            console.log('receiving products', action.payload);
+            state = state.set('products', Immutable.fromJS(action.payload));
+            break;
+
         case ActionTypes.ADD_TO_TRUCK:
             console.log('adding item(s) to truck: ', action.item);
             var item = action.item,

@@ -10,15 +10,7 @@ import MatchupsCustom           from './content_sections/matchups_custom';
 import MyLists                  from './content_sections/my_lists';
 import Equipment                from './content_sections/equipment';
 
-let select = (state)=>{
-    return {
-        currLang        : state.application.get('currLanguage'),
-        activeOverlay   : state.application.get('activeOverlay')
-    };
-};
-
-@connect(select, {closeOverlay}, null, {withRef: true})
-export default withRouter(class ContentPanel extends React.Component {
+class ContentPanel extends React.Component {
 
     componentWillUpdate() {
         const re = /(\w{1,})-([\w|\d]{1,})/;
@@ -70,11 +62,18 @@ export default withRouter(class ContentPanel extends React.Component {
 
         return (
             <div style={styles.container}>
-                {activeSection}
+                { activeSection }
             </div>
         );
     }
-})
+}
 
+let select = (state)=>{
+    return {
+        currLang        : state.application.get('currLanguage'),
+        activeOverlay   : state.application.get('activeOverlay')
+    };
+};
 
+export default connect(select, {closeOverlay}, null, {withRef: true})(withRouter(ContentPanel));
 

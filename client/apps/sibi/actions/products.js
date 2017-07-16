@@ -1,10 +1,21 @@
 'use strict';
 import ActionTypes      from '../constants/action_types';
-
+import Network          from '../../../libs/constants/network';
 
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
+export function getProducts() {
+    return {
+        type    : ActionTypes.GET_PRODUCTS,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/products`,
+        headers : {
+            'x-auth-token': window.DEFAULT_JWT
+        }
+    }
+}
+
 export function setActiveFilters(key, value) {
     return {
         type: ActionTypes.SET_ACTIVE_FILTERS,

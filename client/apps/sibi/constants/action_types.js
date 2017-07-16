@@ -45,7 +45,8 @@ const asyncActionTypes = [
     "PASSWORD_RESET",
 
 // products
-    // "REMOVE_PRODUCT",
+    "GET_PRODUCTS",
+    "REMOVE_PRODUCT",
 ];
 
 export default wrapper(actionTypes, asyncActionTypes);

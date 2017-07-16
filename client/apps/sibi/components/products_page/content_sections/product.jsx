@@ -84,7 +84,7 @@ export default class Product extends React.Component {
                 </div>
                 <div style={{display: 'inline-flex'}}>
                     <div style={styles.prodInfo}>
-                        <div style={styles.price}>${ (product.price).formatMoney(2, '.', ',') }</div>
+                        <div style={styles.price}>${ (parseFloat(product.price)).formatMoney(2, '.', ',') }</div>
                         <div style={styles.modelNum}>#{ product.modelNum }</div>
                     </div>
                     <div className="submit-btn" onClick={()=>{this.props.addToTruck(product)}} style={{width: '140px'}}>Add to truck</div>
