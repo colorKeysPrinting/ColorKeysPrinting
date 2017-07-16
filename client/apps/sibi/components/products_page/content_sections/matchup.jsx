@@ -89,7 +89,7 @@ export default function Matchup(props) {
                 <div style={styles.image}><img src={matchup.image} alt="picture" height="100%" width="100%"/></div>
                 <h2 style={styles.name}>{ matchup.name }</h2>
             </div>
-            {applicationTypeSelect}
+            { applicationTypeSelect }
             <div style={{display: (matchup.applicationType) ? 'inline-flex' : ''}}>
                 { tonnageSelect }
                 { seerSelect }

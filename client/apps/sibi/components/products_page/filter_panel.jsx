@@ -28,13 +28,15 @@ class FilterPanel extends React.Component {
     }
 
     changeActiveSection(section) {
-        let activeSection = (this.state.activeSection === section) ? '' : section;
-        this.setState({activeSection});
+        this.setState((prevState)=>{
+            return {activeSection: (prevState.activeSection === section) ? '' : section};
+        });
     }
 
     changeActiveFilterSection(section) {
-        let activeFilterSection = (this.state.activeFilterSection === section) ? '' : section;
-        this.setState({activeFilterSection});
+        this.setState((prevState)=>{
+            return {activeFilterSection: (prevState.activeFilterSection === section) ? '' : section};
+        });
     }
 
     update(props) {
@@ -42,6 +44,7 @@ class FilterPanel extends React.Component {
     }
 
     render() {
+        let options;
         let styles = {
             container: {
                 backgroundColor: '#FFF',
@@ -54,24 +57,24 @@ class FilterPanel extends React.Component {
             }
         };
 
-        let types = _.map(this.props.myMatchups.toJS() || [], (option)=>{
-            return (<Link to={'/products/matchup-' + option.type} key={option.type}><div className="options">{ (options.type).toUpperCase() } Matchups</div></Link>);
+        let types = _.map(this.props.myMatchups.toJS(), (option)=>{
+            return (<Link to={'/products/matchup-' + option.type} key={option.type}><div className="options">{ (option.type).toUpperCase() } Matchups</div></Link>);
         });
-
-        let options = <div>
-            <Link to={'/products/matchup-standard'} key={'standard'}><div className="options">{ ('Standard Matchups').toUpperCase() }</div></Link>
-            { types }
-        </div>;
 
         let matchups = <div>
                            <div className={((this.state.activeSection === 'matchups') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('matchups')}>
                                <div id="title">MATCHUPS</div>
                                <div>{ (this.state.activeSection === 'matchups') ? '-' : '+' }</div>
                            </div>
-                           <div style={{display: (this.state.activeSection === 'matchups') ? 'block' : 'none'}}>{ options }</div>
+                           <div style={{display: (this.state.activeSection === 'matchups') ? 'block' : 'none'}}>
+                               <div>
+                                   <Link to={'/products/matchup-standard'} key={'standard'}><div className="options">{ ('Standard').toUpperCase() } Matchups</div></Link>
+                                   { types }
+                               </div>
+                           </div>
                        </div>;
 
-        options = _.map(this.props.myLists.toJS() || [], (option)=>{
+        options = _.map(this.props.myLists.toJS(), (option)=>{
             return (<Link to={'/products/myList-' + option.id} key={option.id}><div className="options">{ option.name }</div></Link>);
         });
 
@@ -86,7 +89,7 @@ class FilterPanel extends React.Component {
                           </div>
                       </div>;
 
-        let filterPanel = _.map(this.props.filterPanel.toJS() || [], (section, key)=>{
+        let filterPanel = _.map(this.props.filterPanel.toJS(), (section, key)=>{
             let options;
             let isActive = (this.state.activeSection === key);
             let parentId;
@@ -113,7 +116,7 @@ class FilterPanel extends React.Component {
             return (
                 <div key={key}>
                     <div className={((isActive) ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection(key)}>
-                        <div id="title">{key.toUpperCase()}</div>
+                        <div id="title">{ key.toUpperCase() }</div>
                         <div>{ (isActive) ? '-' : '+' }</div>
                     </div>
                     <div style={{display: (isActive) ? 'block' : 'none'}}>{ options }</div>
@@ -125,7 +128,7 @@ class FilterPanel extends React.Component {
         let availableFilters = (this.props.availableFilters.size > 0) ? this.props.availableFilters.toJS() : {};
 
         if(availableFilters.types[this.state.activeSection]) {
-            filters = _.map(availableFilters.types[this.state.activeSection] || [], (filter, key)=>{
+            filters = _.map(availableFilters.types[this.state.activeSection], (filter, key)=>{
                 let options;
 
                 if(filter === 'btu' || filter === 'seer') {
@@ -145,23 +148,23 @@ class FilterPanel extends React.Component {
                     let filterPriceMin = (this.state.activeFilters.price) ? this.state.activeFilters.price.min : availableFilters.filters.price.min;
                     let filterPriceMax = (this.state.activeFilters.price) ? this.state.activeFilters.price.max : availableFilters.filters.price.max;
 
-                    options = <div id="price-slider" >
-                                  <div>${ filterPriceMin } - ${ filterPriceMax }</div>
-                                  <div>
-                                      <ReactSlider
-                                              className="horizontal-slider"
-                                              min={0}
-                                              max={priceMax}
-                                              minDistance={62}
-                                              defaultValue={[priceMin, priceMax]}
-                                              onChange={this.update}
-                                              withBars
-                                              pearling >
-                                          <div className="my-handle"><img src={assets('./images/oval-1.png')} alt="min" /></div>
-                                          <div className="my-handle"><img src={assets('./images/oval-1.png')} alt="max" /></div>
-                                      </ReactSlider>
-                                  </div>
-                              </div>;
+                    // options = <div id="price-slider" >
+                    //               <div>${ filterPriceMin } - ${ filterPriceMax }</div>
+                    //               <div>
+                    //                   <ReactSlider
+                    //                           className="horizontal-slider"
+                    //                           min={0}
+                    //                           max={priceMax}
+                    //                           minDistance={62}
+                    //                           defaultValue={[priceMin, priceMax]}
+                    //                           onChange={this.update}
+                    //                           withBars
+                    //                           pearling >
+                    //                       <div className="my-handle"><img src={assets('./images/oval-1.png')} alt="min" /></div>
+                    //                       <div className="my-handle"><img src={assets('./images/oval-1.png')} alt="max" /></div>
+                    //                   </ReactSlider>
+                    //               </div>
+                    //           </div>;
                 }
 
                 return (
