@@ -52,7 +52,7 @@ export default class Product extends React.Component {
                 fontSize: '25px',
                 margin: '2px'
             },
-            modelNum: {
+            modelNumber: {
                 color: 'rgba(50, 50, 50, 0.4)',
                 fontSize: '16px',
                 margin: '2px'
@@ -71,10 +71,12 @@ export default class Product extends React.Component {
                                                                  alt="remove"
                                                                  onClick={(e)=>this.props.showOverlay('removeItem', {collectionType: this.props.parent, collectionID: this.props.collectionID, productID: product.id})}
                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />;
+        let price = (product.price) ? <div style={styles.price}>${ (parseFloat(product.price)).formatMoney(2, '.', ',') }</div> : null;
+
         return (
             <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>
                 <div style={styles.productThumbnail}>
-                    <div style={styles.plusBtn} onMouseOver={()=>this.onHover(true)} onMouseOut={()=>this.onHover(false)}>
+                    <div onMouseOver={()=>this.onHover(true)} onMouseOut={()=>this.onHover(false)} style={styles.plusBtn} >
                         { roundBtn }
                     </div>
                     <Link to={`/product-details/${product.id}`}>
@@ -84,10 +86,10 @@ export default class Product extends React.Component {
                 </div>
                 <div style={{display: 'inline-flex'}}>
                     <div style={styles.prodInfo}>
-                        <div style={styles.price}>${ (parseFloat(product.price)).formatMoney(2, '.', ',') }</div>
-                        <div style={styles.modelNum}>#{ product.modelNum }</div>
+                        { price }
+                        <div style={styles.modelNumber}>#{ product.modelNumber }</div>
                     </div>
-                    <div className="submit-btn" onClick={()=>{this.props.addToTruck(product)}} style={{width: '140px'}}>Add to truck</div>
+                    <div className="submit-btn" onClick={()=>this.props.addToTruck(product)} style={{width: '140px'}}>Add to truck</div>
                 </div>
             </div>
         );

@@ -18,8 +18,6 @@ const actionTypes = [
 // products
     "SET_ACTIVE_FILTERS",
     "UPDATE_INFO_BAR",
-    "CREATE_NEW_LIST", // needs to be a async call
-    "ADD_TO_COLLECTION", // needs to be a async call
     "REMOVE_PRODUCT", // needs to be a async call
     "REMOVE_COLLECTION", // needs to be a async call
     "CHECKING_INVENTORY", // needs to be a async call
@@ -46,6 +44,11 @@ const asyncActionTypes = [
 
 // products
     "GET_PRODUCTS",
+    "GET_USER_MATCHUPS",
+    "CREATE_MATCHUP",
+    "CREATE_LIST",
+    "REMOVE_MATCHUP",
+    "REMOVE_LIST",
     "REMOVE_PRODUCT",
 ];
 

@@ -35,7 +35,7 @@ export default function Product(props) {
             fontSize: '25px',
             margin: '2px'
         },
-        modelNum: {
+        modelNumber: {
             color: 'rgba(50, 50, 50, 0.4)',
             fontSize: '16px',
             margin: '2px'
@@ -55,7 +55,7 @@ export default function Product(props) {
             <div style={{display: 'inline-flex'}}>
                 <div style={styles.prodInfo}>
                     <div style={styles.price}>${ (product.price).formatMoney(2, '.', ',') }</div>
-                    <div style={styles.modelNum}>#{ product.modelNum }</div>
+                    <div style={styles.modelNumber}>#{ product.modelNumber }</div>
                 </div>
                 <div className="submit-btn" onClick={()=>{props.addToTruck(product)}} >Add to truck</div>
             </div>

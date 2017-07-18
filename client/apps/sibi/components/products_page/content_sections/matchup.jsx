@@ -83,6 +83,8 @@ export default function Matchup(props) {
                                 </div>;
     }
 
+    let price = (matchup.price) ? <div style={styles.price}>${ (matchup.price).formatMoney(2, '.', ',') }</div> : null;
+
     return (
         <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>
             <div style={styles.productThumbnail}>
@@ -96,7 +98,7 @@ export default function Matchup(props) {
             </div>
             <div style={{display: 'inline-flex'}}>
                 <div style={styles.prodInfo}>
-                    <div style={styles.price}>${ (matchup.price).formatMoney(2, '.', ',') }</div>
+                    { price }
                 </div>
                 <div>
                     <div className="submit-btn" onClick={()=>props.addToTruck(matchup)} >Add to truck</div>

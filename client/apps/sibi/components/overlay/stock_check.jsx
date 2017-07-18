@@ -37,7 +37,7 @@ export default function StockCheck(props) {
             </div>
             <div style={{display: 'inline-flex', width: '100%'}}>
                 <div className="cancel-btn" style={{width: '50%'}} onClick={props.close}>No, Thanks</div>
-                <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.checkingInventory(props.product.modelNum, props.location)}>Check</div>
+                <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.checkingInventory(props.product.modelNumber, props.location)}>Check</div>
             </div>
         </div>
     );

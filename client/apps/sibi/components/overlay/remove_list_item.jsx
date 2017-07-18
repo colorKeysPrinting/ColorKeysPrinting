@@ -53,7 +53,7 @@ export default function RemoveListItem(props) {
         message = `Are you sure you want to remove "${ collection.name }"`;
     }
 
-    let modelNum = (props.product) ? props.product.modelNum : '';
+    let modelNumber = (props.product) ? props.product.modelNumber : '';
     let redirect = (props.overlayObj.redirect) ? props.overlayObj.redirect : '';
 
     return (

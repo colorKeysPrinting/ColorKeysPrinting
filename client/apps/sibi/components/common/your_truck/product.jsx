@@ -21,10 +21,10 @@ export default function Product(props) {
         let warranty = props.product.warranty;
 
         checkboxSection = <div style={{display: 'inline-flex'}}>
-                              <div><img src={assets(warranty.image)} alt={warranty.modelNum}/></div>
+                              <div><img src={assets(warranty.image)} alt={warranty.modelNumber}/></div>
                               <div>
                                   <div>{ warranty.name }</div>
-                                  <div>#{ warranty.modelNum }</div>
+                                  <div>#{ warranty.modelNumber }</div>
                                   <div>${ (warranty.price).formatMoney(2, '.', ',') }</div>
                               </div>
                           </div>;
@@ -35,7 +35,7 @@ export default function Product(props) {
     return (
         <div>
             <div style={{display: 'inline-flex'}} >
-                <div><img src={image} alt={props.product.modelNum} /></div>
+                <div><img src={image} alt={props.product.modelNumber} /></div>
                 <div>
                     <div>{ props.product.name }</div>
                     <div style={{display: 'inline-flex'}}>

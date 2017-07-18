@@ -57,10 +57,6 @@ class FilterPanel extends React.Component {
             }
         };
 
-        let types = _.map(this.props.myMatchups.toJS(), (option)=>{
-            return (<Link to={'/products/matchup-' + option.type} key={option.type}><div className="options">{ (option.type).toUpperCase() } Matchups</div></Link>);
-        });
-
         let matchups = <div>
                            <div className={((this.state.activeSection === 'matchups') ? 'headers-active' : 'headers')} onClick={()=>this.changeActiveSection('matchups')}>
                                <div id="title">MATCHUPS</div>
@@ -68,8 +64,8 @@ class FilterPanel extends React.Component {
                            </div>
                            <div style={{display: (this.state.activeSection === 'matchups') ? 'block' : 'none'}}>
                                <div>
-                                   <Link to={'/products/matchup-standard'} key={'standard'}><div className="options">{ ('Standard').toUpperCase() } Matchups</div></Link>
-                                   { types }
+                                   <Link to={'/products/matchup-standard'}><div className="options">Standard Matchups</div></Link>
+                                   <Link to={'/products/matchup-custom'}  ><div className="options">Custom Matchups</div></Link>
                                </div>
                            </div>
                        </div>;
@@ -200,7 +196,6 @@ class FilterPanel extends React.Component {
 let select = (state)=>{
     return {
         currLang            : state.application.get('currLanguage'),
-        myMatchups          : state.application.getIn(['activeUser', 'myMatchups']),
         myLists             : state.application.getIn(['activeUser', 'myLists']),
         filterPanel         : state.application.get('filterPanel'),
         availableFilters    : state.application.get('availableFilters'),

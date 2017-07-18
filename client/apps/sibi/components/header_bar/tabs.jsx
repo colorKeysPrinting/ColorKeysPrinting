@@ -47,7 +47,7 @@ export default (props)=>{
     let activeTabs;
 
     switch(props.type) {
-        case 'sibi':
+        case 'admin':
             activeTabs = <div style={styles.header}>
                 { tabs['products'] }
                 { tabs['orderHistory'] }
@@ -88,6 +88,7 @@ export default (props)=>{
                 { tabs['reports'] }
             </div>;
             break;
+
         case 'signUp':
             activeTabs = <div style={styles.header}>
                 { tabs['products'] }
@@ -96,6 +97,7 @@ export default (props)=>{
             </div>;
             break;
         default:
+            console.log('no user type provided');
     }
 
     return (

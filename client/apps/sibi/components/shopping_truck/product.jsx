@@ -20,16 +20,16 @@ export default function Product(props) {
         <tr>
             <td>
                 <div style={{display: 'inline-flex'}}>
-                    <div><img src={image} alt={props.product.modelNum} /></div>
+                    <div><img src={image} alt={props.product.modelNumber} /></div>
                     <div>
                         <div>{ props.product.name }</div>
-                        <div>#{ props.product.modelNum }</div>
+                        <div>#{ props.product.modelNumber }</div>
                     </div>
                 </div>
             </td>
             <td><div>Qty: <input type="number" value={props.product.qty} onChange={(e)=>props.update(props.product.id, 'qty', e.target.value)} style={styles.qtyInput} /></div></td>
             <td>
-                <div>${ (props.product.price).formatMoney(2, '.', ',') }</div>
+                <div>${ (parseFloat(props.product.price)).formatMoney(2, '.', ',') }</div>
                 <div className="cancel-btn" onClick={()=>props.removeFromTruck(props.product)}>Remove</div>
             </td>
         </tr>

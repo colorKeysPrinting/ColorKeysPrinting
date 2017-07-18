@@ -7,15 +7,7 @@ import { addToTruck, showOverlay }           from '../../../actions/application'
 
 import Matchup                  from './matchup';
 
-let select = (state)=>{
-    return {
-        currLang        : state.application.get('currLanguage'),
-        matchups        : state.application.get('matchups').toJS()
-    };
-};
-
-@connect(select, {addToTruck, showOverlay}, null, {withRef: true})
-export default class Matchups extends React.Component {
+class Matchups extends React.Component {
 
     constructor(props) {
         super(props);
@@ -114,5 +106,11 @@ export default class Matchups extends React.Component {
     }
 }
 
+let select = (state)=>{
+    return {
+        currLang        : state.application.get('currLanguage'),
+        matchups        : state.application.get('matchups').toJS()
+    };
+};
 
-
+export default connect(select, {addToTruck, showOverlay}, null, {withRef: true})(Matchups);

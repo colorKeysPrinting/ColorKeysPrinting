@@ -107,7 +107,7 @@ export default class Equipment extends React.Component {
             //     sortedProducts = _.sortBy(this.state.products, []);
             //     break;
             case 'modelNumber':
-                sortedProducts = _.sortBy(this.state.products, ['modelNum']);
+                sortedProducts = _.sortBy(this.state.products, ['modelNumber']);
                 break;
             case 'brand':
                 sortedProducts = _.sortBy(this.state.products, ['brand']);

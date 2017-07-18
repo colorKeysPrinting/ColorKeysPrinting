@@ -13,10 +13,10 @@ export default function Warranty(props) {
         <tr>
             <td>
                 <div style={{display: 'inline-flex'}}>
-                    <div><img src={assets(warranty.image)} alt={warranty.modelNum}/></div>
+                    <div><img src={assets(warranty.image)} alt={warranty.modelNumber}/></div>
                     <div>
                         <div>{ warranty.name }</div>
-                        <div>#{ warranty.modelNum }</div>
+                        <div>#{ warranty.modelNumber }</div>
                     </div>
                 </div>
             </td>

@@ -56,10 +56,10 @@ export default function AddToConfirmationOverlay(props) {
             </div>
             <div style={styles.content}>
                 <div style={{display: 'inline-flex'}}>
-                    <div><img src={''} alt={product.modelNum} height="200" width="175" style={styles.image} /></div>
+                    <div><img src={''} alt={product.modelNumber} height="200" width="175" style={styles.image} /></div>
                     <div>
                         <div>{ product.name }</div>
-                        <div>Model # { product.modelNum }</div>
+                        <div>Model # { product.modelNumber }</div>
                     </div>
                 </div>
                 <div style={styles.text} >*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>

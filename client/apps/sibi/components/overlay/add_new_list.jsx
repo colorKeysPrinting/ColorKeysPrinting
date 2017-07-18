@@ -53,14 +53,14 @@ export default function AddNewListOverlay(props) {
 
     return (
         <div style={styles.container}>
-            <div style={ styles.titleBar }>
+            <div style={styles.titleBar}>
                 <div style={styles.title}>Create New { title }</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
             <form onSubmit={()=>props.submitCreateListBtn(props.overlayObj.type)}>
                 <div style={styles.content}>
                     <div style={{width: '95%', margin: 'auto'}}>Name your new {(title).toLowerCase()}</div>
-                    <input type="text" placeholder="My Favorites" value={props.newList} onChange={(e)=>{props.update('newList', e.target.value)}} style={{width: '420px'}} required/>
+                    <input type="text" placeholder="My Favorites" value={props.name} onChange={(e)=>{props.update('name', e.target.value)}} style={{width: '420px'}} required/>
                 </div>
 
                 <input className="submit-btn" type="submit" value="Submit" style={{width: '86%'}} />

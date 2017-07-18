@@ -4,7 +4,7 @@ import _                        from 'lodash';
 
 import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
-import { createNewCollection, addToCollection, removeProduct, checkingInventory }         from '../../actions/products';
+import { createMatchup, createList, addToCollection, removeProduct, checkingInventory }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -23,7 +23,7 @@ class Overlay extends React.Component {
         super(props);
 
         this.state = {
-            activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '',
+            activeUser: this.props.activeUser.toJS(), activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', name: '', newItem: '',
             contractGoodman: false, contractAsure: false
         };
 
@@ -48,11 +48,15 @@ class Overlay extends React.Component {
         if(nextProps.overlayObj) {
             this.setState({overlayObj: nextProps.overlayObj});
         }
+
+        if(nextProps.activeUser) {
+            this.setState({activeUser: nextProps.activeUser.toJS()});
+        }
     }
 
     resetState() {
         this.setState({
-            activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', newList: '', newItem: '',
+            activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', name: '', newItem: '',
             contractGoodman: false, contractAsure: false
         });
     }
@@ -117,16 +121,20 @@ class Overlay extends React.Component {
     submitCreateListBtn(type) {
         console.log('submit add to clicked');
 
-        let productID;
+        let products = [], totalCost;
         if(this.state.overlayObj.productID === undefined) {
-            productID = '';
-        } else if (this.state.overlayObj.productID === undefined) {
-            productID = '0';
+            totalCost = 0;
         } else {
-            productID = this.state.overlayObj.productID.toString();
+            totalCost = _.find(this.props.products, ['id', this.state.overlayObj.productID]).price;
+            products = [this.state.overlayObj.productID];
         }
 
-        this.props.createNewCollection(type, this.state.newList, productID);
+        if(type === 'customMatchups') {
+            this.props.createMatchup({name: this.state.name, totalCost, adminCreated: (this.state.activeUser.type === 'admin') ? true : false, products});
+
+        } else if(type === 'myLists') {
+            this.props.createList({name: this.state.name, products});
+        }
         this.close();
     }
 
@@ -174,8 +182,8 @@ class Overlay extends React.Component {
 
             case 'profile':
                 overlay = <Profile
-                                profilePic={this.props.profilePic}
-                                username={this.props.username}
+                                profilePic={this.state.activeUser.profilePic}
+                                username={this.state.activeUser.username}
                                 changeLanguage={this.props.changeLanguage}
                                 logout={this.props.logout} />;
 
@@ -228,7 +236,7 @@ class Overlay extends React.Component {
 
             case 'addNewList':
                 overlay = <AddNewList
-                                newList={this.state.newList}
+                                name={this.state.name}
                                 overlayObj={this.state.overlayObj}
                                 update={this.update}
                                 close={this.close}
@@ -244,7 +252,7 @@ class Overlay extends React.Component {
             case 'removeItem' :
                 overlay = <RemoveListItem
                                 overlayObj={this.state.overlayObj}
-                                collection={_.find(this.props.myLists.toJS(), ['id', parseInt(this.state.overlayObj.collectionID)])}
+                                collection={_.find(this.state.activeUser.myLists, ['id', parseInt(this.state.overlayObj.collectionID)])}
                                 product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productID)])}
                                 removeProduct={this.props.removeProduct}
                                 close={this.close} />;
@@ -274,9 +282,7 @@ let select = (state)=>{
     return {
         activeOverlay       : state.application.get('activeOverlay'),
         overlayObj          : state.application.get('overlayObj'),
-        username            : state.application.getIn(['activeUser', 'username']),
-        profilePic          : state.application.getIn(['activeUser', 'profilePic']),
-        myLists             : state.application.getIn(['activeUser', 'myLists']),
+        activeUser          : state.application.get('activeUser'),
         products            : state.application.get('products'),
         contractGoodman     : state.application.getIn(['contracts','goodman']),
         contractAsure       : state.application.getIn(['contracts','asure'])
@@ -285,7 +291,7 @@ let select = (state)=>{
 
 let actions = {
     login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement,
-    createNewCollection, addToCollection, changeLanguage, removeProduct, checkingInventory
+    createMatchup, createList, addToCollection, changeLanguage, removeProduct, checkingInventory
 };
 
 export default connect(select, actions, null, {withRef: true})(Overlay);

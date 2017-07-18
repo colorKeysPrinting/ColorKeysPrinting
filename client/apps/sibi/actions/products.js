@@ -16,12 +16,47 @@ export function getProducts() {
     }
 }
 
-export function setActiveFilters(key, value) {
+export function getUserMatchups() {
     return {
-        type: ActionTypes.SET_ACTIVE_FILTERS,
-        key,
-        value
+        type    : ActionTypes.GET_USER_MATCHUPS,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/matchups`,
+        headers : {
+            'x-auth-token': window.DEFAULT_JWT
+        }
     }
+}
+
+export function createMatchup(matchup) {
+    return {
+        type: ActionTypes.CREATE_MATCHUP,
+        method  : Network.POST,
+        url     : `${Network.DOMAIN}/createMatchup`,
+        headers : {
+            'x-auth-token': window.DEFAULT_JWT
+        },
+        body    : {
+            name: matchup.name,
+            totalCost: matchup.totalCost,
+            adminCreated: matchup.adminCreated,
+            products: matchup.products
+        }
+    };
+}
+
+export function createList(list) {
+    return {
+        type: ActionTypes.CREATE_LIST,
+        method  : Network.POST,
+        url     : `${Network.DOMAIN}/createList`,
+        headers : {
+            'x-auth-token': window.DEFAULT_JWT
+        },
+        body    : {
+            name: list.name,
+            products: list.products
+        }
+    };
 }
 
 export function removeProduct(obj) {
@@ -31,13 +66,43 @@ export function removeProduct(obj) {
     };
 }
 
-export function removeCollection(collectionType, collectionID) {
+export function removeMatchup(id) {
     return {
-        type: ActionTypes.REMOVE_COLLECTION,
-        collectionType,
-        collectionID
+        type: ActionTypes.REMOVE_MATCHUP,
+        method  : Network.DEL,
+        url     : `${Network.DOMAIN}/matchups/${id}`,
+        headers : {
+            'x-auth-token': window.DEFAULT_JWT
+        }
     };
 }
+
+export function removeList(id) {
+    return {
+        type: ActionTypes.REMOVE_LIST,
+        method  : Network.DEL,
+        url     : `${Network.DOMAIN}/lists/${id}`,
+        headers : {
+            'x-auth-token': window.DEFAULT_JWT
+        }
+    };
+}
+
+
+
+
+
+export function setActiveFilters(key, value) {
+    return {
+        type: ActionTypes.SET_ACTIVE_FILTERS,
+        key,
+        value
+    }
+}
+
+
+
+
 
 export function addToCollection(collectionType, collectionID, productID) {
     return {
@@ -48,14 +113,7 @@ export function addToCollection(collectionType, collectionID, productID) {
     };
 }
 
-export function createNewCollection(collectionType, collectionName, productID) {
-    return {
-        type: ActionTypes.CREATE_NEW_LIST,
-        collectionType,
-        collectionName,
-        productID
-    };
-}
+
 
 export function updateInfoBar(key) {
     return {

@@ -189,7 +189,7 @@ export default class ViewMatchupOverlay extends React.Component {
                     padding: '10px'
                 }
             },
-            modelNum: {
+            modelNumber: {
                 color: 'rgba(50, 50, 50, 0.4)',
                 fontSize: '16px',
                 margin: '2px'
@@ -203,11 +203,11 @@ export default class ViewMatchupOverlay extends React.Component {
                     <td style={styles.table.col1}>
                         <div style={{display: 'inline-flex'}}>
                             <div>
-                                <img src={''} alt={product.modelNum} style={styles.table.images}/>
+                                <img src={''} alt={product.modelNumber} style={styles.table.images}/>
                             </div>
                             <div>
                                 <h2>{product.name}</h2>
-                                <div style={styles.modelNum}>Model # { product.modelNum }</div>
+                                <div style={styles.modelNumber}>Model # { product.modelNumber }</div>
                             </div>
                         </div>
                     </td>

@@ -94,7 +94,7 @@ class Products extends React.Component {
                 //     sortedProducts = _.sortBy(this.props.products.toJS(), []);
                 //     break;
                 case 'modelNumber':
-                    sortedProducts = _.sortBy(this.props.products.toJS(), ['modelNum']);
+                    sortedProducts = _.sortBy(this.props.products.toJS(), ['modelNumber']);
                     break;
 
                 default:

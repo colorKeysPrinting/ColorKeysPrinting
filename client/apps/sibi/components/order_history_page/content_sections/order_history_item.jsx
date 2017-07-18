@@ -38,7 +38,7 @@ export default function OrderHistoryItem(props) {
             fontSize: '25px',
             margin: '2px'
         },
-        modelNum: {
+        modelNumber: {
             color: 'rgba(50, 50, 50, 0.4)',
             fontSize: '16px',
             margin: '2px'
