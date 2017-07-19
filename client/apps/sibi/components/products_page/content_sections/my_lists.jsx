@@ -48,9 +48,9 @@ export default class MyLists extends React.Component {
             }
         };
 
-        let collection = _.find(this.props.myLists.toJS(), ['id', parseInt(this.props.collectionID)]);
+        let collection = _.find(this.props.myLists.toJS(), ['id', this.props.collectionId]);
 
-        if(_.size(collection.products)> 0) {
+        if(_.size(collection.products) > 0) {
 
             let products = _.map(collection.products,(productId)=>{
 
@@ -60,7 +60,7 @@ export default class MyLists extends React.Component {
                     <Product
                         key={'myListProduct' + product.id}
                         parent="myLists"
-                        collectionID={collection.id}
+                        collectionId={collection.id}
                         product={product}
                         addToTruck={this.props.addToTruck}
                         showOverlay={this.props.showOverlay} />
@@ -82,7 +82,7 @@ export default class MyLists extends React.Component {
             <div style={styles.container}>
                 <div style={styles.titleSection}>
                     <div>{ collection.name }</div>
-                    <div className="cancel-btn" onClick={()=>this.props.showOverlay('removeItem', {collectionType: 'myLists', redirect: `#/products`, collectionID: collection.id})} style={{marginTop: '0px'}}>Delete List</div>
+                    <div className="cancel-btn" onClick={()=>this.props.showOverlay('removeItem', {collectionType: 'myLists', collectionId: collection.id})} style={{marginTop: '0px'}}>Delete List</div>
                 </div>
                 <div>
                     { content }

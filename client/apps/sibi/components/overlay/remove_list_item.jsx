@@ -2,7 +2,7 @@ import React                                     from 'react';
 import assets                                    from '../../libs/assets';
 
 export default function RemoveListItem(props) {
-    let title, message, productId;
+    let title, message, productId, removeBtn;
     let collection = props.collection;
 
     let styles = {
@@ -48,13 +48,14 @@ export default function RemoveListItem(props) {
         title = 'Remove Item from';
         message = `Are you sure you want to remove "${ props.product.name }" from ${ collection.name }`;
         productId = props.product.id;
+        removeBtn = <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeProduct({collectionType: props.overlayObj.collectionType, collectionId: collection.id, productId})}>Remove</div>;
     } else {
         title = 'Delete'
         message = `Are you sure you want to remove "${ collection.name }"`;
+        removeBtn = <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeCollection(collectionType: props.overlayObj.collectionType, collectionId: collection.id)}>Remove</div>;
     }
 
     let modelNumber = (props.product) ? props.product.modelNumber : '';
-    let redirect = (props.overlayObj.redirect) ? props.overlayObj.redirect : '';
 
     return (
         <div style={styles.container}>
@@ -67,7 +68,7 @@ export default function RemoveListItem(props) {
             </div>
             <div style={{display: 'inline-flex', width: '100%'}}>
                 <div className="cancel-btn" style={{width: '50%'}} onClick={props.close}>Cancel</div>
-                <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeProduct({collectionType: props.overlayObj.collectionType, collectionID: collection.id, productId, redirect})}>Remove</div>
+                { removeBtn }
             </div>
         </div>
     );

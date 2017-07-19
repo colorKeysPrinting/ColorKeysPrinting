@@ -69,7 +69,7 @@ export default class Product extends React.Component {
                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
                                                           : <img src={assets('./images/minus_circle.png')}
                                                                  alt="remove"
-                                                                 onClick={(e)=>this.props.showOverlay('removeItem', {collectionType: this.props.parent, collectionID: this.props.collectionID, productId: product.id})}
+                                                                 onClick={(e)=>this.props.showOverlay('removeItem', {collectionType: this.props.parent, collectionId: this.props.collectionId, productId: product.id})}
                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />;
         let price = (product.price) ? <div style={styles.price}>${ (parseFloat(product.price)).formatMoney(2, '.', ',') }</div> : null;
 

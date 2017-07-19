@@ -64,14 +64,14 @@ class FilterPanel extends React.Component {
                            </div>
                            <div style={{display: (this.state.activeSection === 'matchups') ? 'block' : 'none'}}>
                                <div>
-                                   <Link to={'/products/matchup-standard'}><div className="options">Standard Matchups</div></Link>
-                                   <Link to={'/products/matchup-custom'}  ><div className="options">Custom Matchups</div></Link>
+                                   <Link to={'/products/matchup/standard'}><div className="options">Standard Matchups</div></Link>
+                                   <Link to={'/products/matchup/custom'}  ><div className="options">Custom Matchups</div></Link>
                                </div>
                            </div>
                        </div>;
 
         options = _.map(this.props.myLists.toJS(), (option)=>{
-            return (<Link to={'/products/myList-' + option.id} key={option.id}><div className="options">{ option.name }</div></Link>);
+            return (<Link to={'/products/myList/' + option.id} key={option.id}><div className="options">{ option.name }</div></Link>);
         });
 
         let myLists = <div>
@@ -100,12 +100,12 @@ class FilterPanel extends React.Component {
 
             if(key === 'hvac equipment') {
                 options = _.map(section.types, (elem, key)=>{
-                    return (<Link to={`/products/equipment-${key}`} key={key}><div className="options" >{ elem }</div></Link>);
+                    return (<Link to={`/products/equipment/${key}`} key={key}><div className="options" >{ elem }</div></Link>);
                 });
 
             } else {
                 options = _.map(section, (elem, key)=>{
-                    return (<Link to={`/products/supplies-${key}`} key={key}><div className="options" >{ elem }</div></Link>);
+                    return (<Link to={`/products/supplies/${key}`} key={key}><div className="options" >{ elem }</div></Link>);
                 });
             }
 

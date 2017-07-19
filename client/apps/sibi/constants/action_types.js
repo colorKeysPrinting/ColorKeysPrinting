@@ -45,6 +45,7 @@ const asyncActionTypes = [
 // products
     "GET_PRODUCTS",
     "GET_USER_MATCHUPS",
+    "GET_USER_LISTS",
     "CREATE_MATCHUP",
     "CREATE_LIST",
     "REMOVE_MATCHUP",

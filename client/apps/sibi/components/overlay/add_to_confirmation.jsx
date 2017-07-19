@@ -46,7 +46,7 @@ export default function AddToConfirmationOverlay(props) {
     let product = props.product;
     let collection = props.overlayObj.collectionObj;
     let viewType = (props.overlayObj.type === 'Matchup') ? <div className="cancel-btn" onClick={()=>props.changeOverlay('customMatchup')} style={{margin: '7px auto'}} >View Matchup</div>
-                                                         : <Link className="cancel-btn" to={`/products/myList-${ collection.id }`} style={{margin: '7px auto'}} >View List</Link>;
+                                                         : <Link className="cancel-btn" to={`/products/myList/${ collection.id }`} style={{margin: '7px auto'}} >View List</Link>;
 
     return (
         <div style={styles.container}>

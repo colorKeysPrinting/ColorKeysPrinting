@@ -4,7 +4,7 @@ import _                        from 'lodash';
 
 import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
-import { createMatchup, createList, updateMatchup, updateList, removeProduct, checkingInventory }         from '../../actions/products';
+import { createMatchup, createList, updateMatchup, updateList, removeList, removeProduct, checkingInventory }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -35,6 +35,8 @@ class Overlay extends React.Component {
         this.submitLoginBtn = this.submitLoginBtn.bind(this);
         this.submitCreateListBtn = this.submitCreateListBtn.bind(this);
         this.submitAddToBtn = this.submitAddToBtn.bind(this);
+        this.removeProduct = this.removeProduct.bind(this);
+        this.removeCollection = this.removeCollection.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
     }
 
@@ -174,6 +176,14 @@ class Overlay extends React.Component {
         }
     }
 
+    removeProduct(collectionType, collectionId, productId) {
+
+    }
+
+    removeCollection(type, id) {
+
+    }
+
     addToTruck(items) {
         console.log('add to truck: ', items);
     }
@@ -260,7 +270,7 @@ class Overlay extends React.Component {
             case 'addToConfirmation':
                 overlay = <AddToConfirmation
                                 overlayObj={this.state.overlayObj}
-                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productId)])}
+                                product={_.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId])}
                                 changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
                                 close={this.close} />;
                 break;
@@ -283,9 +293,10 @@ class Overlay extends React.Component {
             case 'removeItem' :
                 overlay = <RemoveListItem
                                 overlayObj={this.state.overlayObj}
-                                collection={_.find(this.state.activeUser.myLists, ['id', parseInt(this.state.overlayObj.collectionID)])}
-                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productId)])}
-                                removeProduct={this.props.removeProduct}
+                                collection={_.find(this.state.activeUser.myLists, ['id', this.state.overlayObj.collectionId])}
+                                product={_.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId])}
+                                removeProduct={this.removeProduct}
+                                removeCollection={this.removeCollection}
                                 close={this.close} />;
                 break;
 
@@ -322,7 +333,7 @@ let select = (state)=>{
 
 let actions = {
     login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement,
-    createMatchup, createList, updateMatchup, updateList, removeProduct, checkingInventory
+    createMatchup, createList, updateMatchup, updateList, removeList, removeProduct, checkingInventory
 };
 
 export default connect(select, actions, null, {withRef: true})(Overlay);

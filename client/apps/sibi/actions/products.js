@@ -27,6 +27,17 @@ export function getUserMatchups() {
     }
 }
 
+export function getUserLists() {
+    return {
+        type    : ActionTypes.GET_USER_LISTS,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/lists`,
+        headers : {
+            'x-auth-token': window.DEFAULT_JWT
+        }
+    }
+}
+
 export function createMatchup(matchup) {
     return {
         type: ActionTypes.CREATE_MATCHUP,

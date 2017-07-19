@@ -3,14 +3,14 @@
 import _                        from 'lodash';
 import Immutable                from 'immutable';
 
-export function addToListHelper(state, collectionType, collectionID, productId) {
+export function addToListHelper(state, collectionType, collectionId, productId) {
     if(collectionType === 'customMatchups') {
         let myMatchups = state.getIn(['activeUser', 'myMatchups']).toJS();
         let customMatchups = _.find(myMatchups, ['type', 'custom']);
-        let matchup = _.find(customMatchups.matchups, ['id', collectionID]);
+        let matchup = _.find(customMatchups.matchups, ['id', collectionId]);
 
         myMatchups = _.remove(myMatchups, (matchup)=>{return matchup.type !== 'custom'}); // remove custom match from myMatchups
-        customMatchups.matchups = _.remove(customMatchups.matchups, (matchup)=>{return matchup.id !== collectionID}); // remove matchup from custom matchups
+        customMatchups.matchups = _.remove(customMatchups.matchups, (matchup)=>{return matchup.id !== collectionId}); // remove matchup from custom matchups
 
         if(matchup.products[productId]) {
             matchup.products[productId] += 1;
@@ -30,7 +30,7 @@ export function addToListHelper(state, collectionType, collectionID, productId) 
 
     } else if (collectionType === 'myLists') {
         let myLists = state.getIn(['activeUser', 'myLists']).toJS();
-        let index = _.findIndex(myLists, ['id', collectionID]);
+        let index = _.findIndex(myLists, ['id', collectionId]);
         myLists[index].products.push(productId);
 
         state = state.updateIn(['activeUser', 'myLists'], value=>Immutable.fromJS(myLists));

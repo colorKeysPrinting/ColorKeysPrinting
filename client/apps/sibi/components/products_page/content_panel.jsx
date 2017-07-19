@@ -3,7 +3,7 @@ import { withRouter }           from 'react-router';
 import { connect }              from 'react-redux';
 
 import { closeOverlay }         from '../../actions/application';
-import { getProducts, getUserMatchups }          from '../../actions/products';
+import { getProducts, getUserMatchups, getUserLists }          from '../../actions/products';
 
 import Products                 from './content_sections/products';
 import Matchups                 from './content_sections/matchups';
@@ -16,10 +16,11 @@ class ContentPanel extends React.Component {
     componentWillMount() {
         this.props.getProducts();
         this.props.getUserMatchups();
+        this.props.getUserLists();
     }
 
     componentWillUpdate() {
-        const re = /(\w{1,})-([\w|\d]{1,})/;
+        const re = /\w{1,}\/([\w|\d]{1,})\/([\w|\d|-]{1,})/;
         const type = re.exec(location.hash) || ['',''];
 
         if(type[1] === 'myList') {
@@ -44,7 +45,7 @@ class ContentPanel extends React.Component {
             }
         };
 
-        const re = /(\w{1,})-([\w|\d]{1,})/;
+        const re = /\w{1,}\/([\w|\d]{1,})\/([\w|\d|-]{1,})/;
         const type = re.exec(location.hash) || ['',''];
 
         switch(type[1]) {
@@ -53,7 +54,7 @@ class ContentPanel extends React.Component {
                 break;
             case 'myList':
                 activeSection = <MyLists
-                                    collectionID={type[2]} />;
+                                    collectionId={type[2]} />;
                 break;
             case 'equipment':
                 activeSection = <Equipment
@@ -81,5 +82,5 @@ let select = (state)=>{
     };
 };
 
-export default connect(select, {closeOverlay, getProducts, getUserMatchups}, null, {withRef: true})(withRouter(ContentPanel));
+export default connect(select, {closeOverlay, getProducts, getUserMatchups, getUserLists}, null, {withRef: true})(withRouter(ContentPanel));
 
