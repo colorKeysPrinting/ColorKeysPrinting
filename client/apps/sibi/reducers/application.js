@@ -323,7 +323,7 @@ export default (state = initialState, action)=>{
         case ActionTypes.REMOVE_MATCHUP_DONE:
             if(action.payload.deleted) {
                 alert('matchup has successfully been deleted');
-                state = state.set('isMatchupDeleted', action.payload.deleted);
+                state = state.set('isMatchupDeleted', Immutable.fromJS(action.payload.deleted));
             } else {
                 alert('Error occured, matchup was not deleted');
             }
@@ -332,7 +332,7 @@ export default (state = initialState, action)=>{
         case ActionTypes.REMOVE_LIST_DONE:
             if(action.payload.deleted) {
                 alert('list has successfully been deleted');
-                state = state.set('isListDeleted', action.payload.deleted);
+                state = state.set('isListDeleted', Immutable.fromJS(action.payload.deleted));
             } else {
                 alert('Error occured, list was not deleted');
             }
@@ -341,12 +341,12 @@ export default (state = initialState, action)=>{
         case ActionTypes.UPDATE_MATCHUP_DONE:
             console.log('updated matchup', action.payload);
 
-            let myMatchups = state.getIn(['activeUser','myMatchups']);
-            let index = _.findIndex(myMatchups, ['id', action.payload.id]);
+            let matchups = state.getIn(['activeUser','myMatchups']);
+            let index = _.findIndex(matchups, ['id', action.payload.id]);
 
-            myMatchups[index] = action.payload;
+            matchups[index] = action.payload;
 
-            state = state.updateIn(['activeUser','myMatchups'], value=>myMatchups);
+            state = state.updateIn(['activeUser','myMatchups'], value=>Immutable.fromJS(matchups));
             state = state.set('activeOverlay', '');
             break;
 
@@ -485,7 +485,7 @@ export default (state = initialState, action)=>{
             if(action.location.name === 'West Phoenix') {
                 let locations = state.get('productLocations').toJS();
 
-                var index = _.findIndex(locations, (location)=>{ return location.id === action.location.id });
+                let index = _.findIndex(locations, (location)=>{ return location.id === action.location.id });
                 locations[index].stock = 0;
 
                 state = state.update('productLocations', value=>Immutable.fromJS(locations));

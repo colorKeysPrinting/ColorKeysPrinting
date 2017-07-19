@@ -1,7 +1,6 @@
 import React                    from 'react';
 import _                        from 'lodash';
 
-// TODO: need to fix the submit button becuase it's not sending the connected list
 export default class RadioOverlay extends React.Component {
 
     constructor(props) {
