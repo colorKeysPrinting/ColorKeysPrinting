@@ -7,7 +7,8 @@ export default class RadioOverlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {activeRadio: this.props.overlayObj.collections[0].id};
+        let activeRadio = (_.size(this.props.overlayObj.collections) > 0) ? this.props.overlayObj.collections[0].id : '';
+        this.state = {activeRadio};
 
         this.update = this.update.bind(this);
     }
@@ -101,6 +102,8 @@ export default class RadioOverlay extends React.Component {
             );
         });
 
+        let message = (_.size(this.props.overlayObj.collections) > 0) ? 'Select list to add item to:' : 'You have no matchups. Please Create one';
+
         return (
             <div style={styles.container}>
                 <div style={ styles.titleBar }>
@@ -110,7 +113,7 @@ export default class RadioOverlay extends React.Component {
                 <div style={styles.content}>
                     <div style={styles.content}>
                         <div>
-                            <div style={{textAlign: 'left', padding: '5px'}}>Select list to add item to:</div>
+                            <div style={{textAlign: 'left', padding: '5px'}}>{ message }</div>
                             { collections }
                         </div>
                         <div onClick={()=>{this.props.changeOverlay('addNewList')}} style={styles.options}>

@@ -4,7 +4,7 @@ import _                        from 'lodash';
 
 import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
-import { createMatchup, createList, addToCollection, removeProduct, checkingInventory }         from '../../actions/products';
+import { createMatchup, createList, updateMatchup, updateList, removeProduct, checkingInventory }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -122,11 +122,11 @@ class Overlay extends React.Component {
         console.log('submit add to clicked');
 
         let products = [], totalCost;
-        if(this.state.overlayObj.productID === undefined) {
+        if(this.state.overlayObj.productId === undefined) {
             totalCost = 0;
         } else {
-            totalCost = _.find(this.props.products, ['id', this.state.overlayObj.productID]).price;
-            products = [this.state.overlayObj.productID];
+            totalCost = _.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId]).price;
+            products = [this.state.overlayObj.productId];
         }
 
         if(type === 'customMatchups') {
@@ -138,9 +138,40 @@ class Overlay extends React.Component {
         this.close();
     }
 
-    submitAddToBtn(type, collectionName) {
+    submitAddToBtn(type, collectionId) {
         console.log('submit add to clicked');
-        this.props.addToCollection(type, collectionName, this.state.overlayObj.productID);
+
+        let user = this.props.activeUser.toJS();
+        let product = _.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId]);
+
+        if(type === 'customMatchups') {
+            let matchup = _.find(user.myMatchups, ['id', collectionId]);
+
+            if(product.price) {
+                matchup.totalCost += product.price;
+            }
+
+            let products = _.map(matchup.products, (product)=>{
+                return product.id;
+            });
+
+            products.push(product.id);
+            matchup.products = products;
+
+            this.props.updateMatchup(matchup);
+
+        } else if(type === 'myLists') {
+            let list = _.find(user.myLists, ['id', collectionId]);
+
+            let products = _.map(list.products, (product)=>{
+                return product.id;
+            });
+
+            products.push(product.id);
+            list.products = products
+
+            this.props.updateList(list);
+        }
     }
 
     addToTruck(items) {
@@ -229,7 +260,7 @@ class Overlay extends React.Component {
             case 'addToConfirmation':
                 overlay = <AddToConfirmation
                                 overlayObj={this.state.overlayObj}
-                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productID)])}
+                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productId)])}
                                 changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
                                 close={this.close} />;
                 break;
@@ -253,7 +284,7 @@ class Overlay extends React.Component {
                 overlay = <RemoveListItem
                                 overlayObj={this.state.overlayObj}
                                 collection={_.find(this.state.activeUser.myLists, ['id', parseInt(this.state.overlayObj.collectionID)])}
-                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productID)])}
+                                product={_.find(this.props.products.toJS(), ['id', parseInt(this.state.overlayObj.productId)])}
                                 removeProduct={this.props.removeProduct}
                                 close={this.close} />;
                 break;
@@ -291,7 +322,7 @@ let select = (state)=>{
 
 let actions = {
     login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement,
-    createMatchup, createList, addToCollection, changeLanguage, removeProduct, checkingInventory
+    createMatchup, createList, updateMatchup, updateList, removeProduct, checkingInventory
 };
 
 export default connect(select, actions, null, {withRef: true})(Overlay);

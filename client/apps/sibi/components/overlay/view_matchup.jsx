@@ -20,8 +20,8 @@ export default class ViewMatchupOverlay extends React.Component {
     constructor(props) {
         super(props);
 
-        let products = _.map(this.props.overlayObj.collectionObj.products, (matchupQty, productID)=>{
-            let product = _.find(this.props.products.toJS(), ['id', parseInt(productID)]);
+        let products = _.map(this.props.overlayObj.collectionObj.products, (matchupQty, productId)=>{
+            let product = _.find(this.props.products.toJS(), ['id', parseInt(productId)]);
             let cost = (parseFloat(product.price * matchupQty));
 
             return {...product, matchupQty, cost};
@@ -40,14 +40,14 @@ export default class ViewMatchupOverlay extends React.Component {
         this.share = this.share.bind(this);
     }
 
-    update(productID, matchupQty) {
+    update(productId, matchupQty) {
         let products = this.state.products;
 
-        let product = _.find(products, ['id', productID]);
+        let product = _.find(products, ['id', productId]);
         product.matchupQty = parseInt(matchupQty);
         product.cost = product.price * product.matchupQty;
 
-        let index = _.findIndex(products, (product)=>{ return product.id === productID});
+        let index = _.findIndex(products, (product)=>{ return product.id === productId});
         products[index] = product;
 
         let calc = this.calculate(products);
@@ -81,9 +81,9 @@ export default class ViewMatchupOverlay extends React.Component {
         return parseFloat(result);
     }
 
-    remove(productID) {
-        console.log('removing:', productID);
-        let products = _.remove(this.state.products, (product)=>{return product.id !== productID});
+    remove(productId) {
+        console.log('removing:', productId);
+        let products = _.remove(this.state.products, (product)=>{return product.id !== productId});
 
         let calc = this.calculate(products);
 

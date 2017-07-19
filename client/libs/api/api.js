@@ -63,6 +63,20 @@ export default class Api {
     );
   }
 
+  static patch(url, apiUrl, jwt, csrf, params, headers, timeout = NetworkConstants.TIMEOUT) {
+    return Api.execRequest(
+      NetworkConstants.PATCH,
+      url,
+      apiUrl,
+      jwt,
+      csrf,
+      params,
+      null,
+      headers,
+      timeout,
+    );
+  }
+
   static execRequest(
     method,
     url,
@@ -89,6 +103,9 @@ export default class Api {
           break;
         case NetworkConstants.DEL:
           request = Request.del(fullUrl);
+          break;
+        case NetworkConstants.PATCH:
+          request = Request.patch(fullUrl);
           break;
         default:
           break;

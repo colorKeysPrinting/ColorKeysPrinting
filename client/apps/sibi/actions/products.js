@@ -88,6 +88,37 @@ export function removeList(id) {
     };
 }
 
+export function updateMatchup(matchup) {
+    return {
+        type: ActionTypes.UPDATE_MATCHUP,
+        method  : Network.PATCH,
+        url     : `${Network.DOMAIN}/matchups/${matchup.id}`,
+        headers : {
+            'x-auth-token': window.DEFAULT_JWT
+        },
+        body    : {
+            name: matchup.name,
+            totalCost: matchup.totalCost,
+            adminCreated: matchup.adminCreated,
+            products: matchup.products
+        }
+    };
+}
+
+export function updateList(list) {
+    return {
+        type: ActionTypes.UPDATE_LIST,
+        method  : Network.PATCH,
+        url     : `${Network.DOMAIN}/lists/${list.id}`,
+        headers : {
+            'x-auth-token': window.DEFAULT_JWT
+        },
+        body    : {
+            name: list.name,
+            products: list.products
+        }
+    };
+}
 
 
 
@@ -99,21 +130,6 @@ export function setActiveFilters(key, value) {
         value
     }
 }
-
-
-
-
-
-export function addToCollection(collectionType, collectionID, productID) {
-    return {
-        type: ActionTypes.ADD_TO_COLLECTION,
-        collectionType,
-        collectionID,
-        productID
-    };
-}
-
-
 
 export function updateInfoBar(key) {
     return {

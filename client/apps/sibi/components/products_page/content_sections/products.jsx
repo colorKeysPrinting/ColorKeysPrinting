@@ -4,7 +4,6 @@ import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
 
 import { showOverlay, addToTruck }          from '../../../actions/application';
-import { getProducts }          from '../../../actions/products';
 
 import Product                  from './product';
 
@@ -18,8 +17,6 @@ class Products extends React.Component {
         this.state = {searchTerm: '', sortBy: '',
             sortByOptions: { lowPrice: 'price - low to high', highPrice: 'price - hight to low', nameA: 'name - A to Z', nameZ: 'name - Z to A', rating: 'highest rating', modelNumber: 'Model Number', brand: 'Brand Name'}
         };
-
-        this.props.getProducts();
 
         this.searchTerm = this.searchTerm.bind(this);
         this.sortBy = this.sortBy.bind(this);
@@ -150,5 +147,5 @@ let select = (state)=>{
     };
 };
 
-export default connect(select, {showOverlay, addToTruck, getProducts}, null, {withRef: true})(Products);
+export default connect(select, {showOverlay, addToTruck}, null, {withRef: true})(Products);
 

@@ -19,10 +19,10 @@ class YourTruck extends React.Component {
         this.calcTax = this.calcTax.bind(this);
     }
 
-    update(productID, type, value) {
+    update(productId, type, value) {
         let truck = this.props.truck.toJS();
 
-        let product = _.find(truck, ['id', parseInt(productID)]);
+        let product = _.find(truck, ['id', parseInt(productId)]);
 
         if(type === 'qty') {
             product.qty = parseInt(value);
@@ -39,7 +39,7 @@ class YourTruck extends React.Component {
             product.cost = (product.price * product.qty) + (product.warranty.price * product.qty);
         }
 
-        let index = _.findIndex(truck, (product)=>{return product.id === productID});
+        let index = _.findIndex(truck, (product)=>{return product.id === productId});
         truck[index] = product;
 
         this.props.updateTruck(truck);

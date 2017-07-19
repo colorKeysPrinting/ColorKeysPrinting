@@ -16,11 +16,11 @@ export default function DetailTabs(props) {
         switch(tab) {
             case 'complete the system':
             case 'recommended parts':
-                let products = _.map(content, (productID)=>{
+                let products = _.map(content, (productId)=>{
                     return (
                         <Product
-                            key={productID}
-                            product={_.find(props.products, ['id', parseInt(productID)])}
+                            key={productId}
+                            product={_.find(props.products, ['id', parseInt(productId)])}
                             addToTruck={props.addToTruck} />
                     );
                 });

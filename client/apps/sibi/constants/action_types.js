@@ -49,6 +49,8 @@ const asyncActionTypes = [
     "CREATE_LIST",
     "REMOVE_MATCHUP",
     "REMOVE_LIST",
+    "UPDATE_MATCHUP",
+    "UPDATE_LIST",
     "REMOVE_PRODUCT",
 ];
 

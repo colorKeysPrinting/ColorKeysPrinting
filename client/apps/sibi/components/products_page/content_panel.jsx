@@ -3,6 +3,7 @@ import { withRouter }           from 'react-router';
 import { connect }              from 'react-redux';
 
 import { closeOverlay }         from '../../actions/application';
+import { getProducts, getUserMatchups }          from '../../actions/products';
 
 import Products                 from './content_sections/products';
 import Matchups                 from './content_sections/matchups';
@@ -11,6 +12,11 @@ import MyLists                  from './content_sections/my_lists';
 import Equipment                from './content_sections/equipment';
 
 class ContentPanel extends React.Component {
+
+    componentWillMount() {
+        this.props.getProducts();
+        this.props.getUserMatchups();
+    }
 
     componentWillUpdate() {
         const re = /(\w{1,})-([\w|\d]{1,})/;
@@ -75,5 +81,5 @@ let select = (state)=>{
     };
 };
 
-export default connect(select, {closeOverlay}, null, {withRef: true})(withRouter(ContentPanel));
+export default connect(select, {closeOverlay, getProducts, getUserMatchups}, null, {withRef: true})(withRouter(ContentPanel));
 

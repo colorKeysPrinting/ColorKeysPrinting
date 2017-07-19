@@ -65,11 +65,11 @@ export default class Product extends React.Component {
 
         let roundBtn = (this.props.parent === 'products') ? <img src={assets('./images/plus_circle.png')}
                                                                  alt="add"
-                                                                 onClick={(e)=>this.props.showOverlay('productAddTo', {productID: product.id, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})}
+                                                                 onClick={(e)=>this.props.showOverlay('productAddTo', {productId: product.id, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})}
                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />
                                                           : <img src={assets('./images/minus_circle.png')}
                                                                  alt="remove"
-                                                                 onClick={(e)=>this.props.showOverlay('removeItem', {collectionType: this.props.parent, collectionID: this.props.collectionID, productID: product.id})}
+                                                                 onClick={(e)=>this.props.showOverlay('removeItem', {collectionType: this.props.parent, collectionID: this.props.collectionID, productId: product.id})}
                                                                  style={{display: (this.state.isPlusActive) ? 'block' : 'none'}} />;
         let price = (product.price) ? <div style={styles.price}>${ (parseFloat(product.price)).formatMoney(2, '.', ',') }</div> : null;
 

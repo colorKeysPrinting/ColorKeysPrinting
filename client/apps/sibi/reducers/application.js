@@ -195,8 +195,7 @@ export default (state = initialState, action)=>{
 
                 switch(action.collectionType) {
                     case 'customMatchups':
-                        let myMatchups = _.find(state.getIn(['activeUser', 'myMatchups']).toJS(), ['type','custom']);
-                        collections = myMatchups.matchups;
+                        collections = state.getIn(['activeUser', 'myMatchups']).toJS();
                         break;
 
                     case 'myLists':
@@ -205,7 +204,7 @@ export default (state = initialState, action)=>{
                     default:
                 }
 
-                state = state.set('overlayObj', {type: action.collectionType, productID: action.productID, collections});
+                state = state.set('overlayObj', {type: action.collectionType, productId: action.productId, collections});
             }
             break;
 
@@ -300,15 +299,15 @@ export default (state = initialState, action)=>{
             console.log('delete call back');
 
             let collectionType = action.obj.collectionType;
-            let productID = (action.obj.productID) ? action.obj.productID : '';
+            let productId = (action.obj.productId) ? action.obj.productId : '';
 
             let myList = state.getIn(['activeUser', collectionType]).toJS();
 
-            if(productID.toString()) {
+            if(productId.toString()) {
                 let collection = _.find(myList, ['id', action.obj.collectionID]);
                 myList = _.remove(myList, (collection)=>{return collection.id !== action.obj.collectionID});
 
-                collection.products = _.remove(collection.products, (thisProductID)=>{ return parseInt(thisProductID) !== productID});
+                collection.products = _.remove(collection.products, (thisProductID)=>{ return parseInt(thisProductID) !== productId});
 
                 myList.push(collection);
 
@@ -337,6 +336,22 @@ export default (state = initialState, action)=>{
             } else {
                 alert('Error occured, list was not deleted');
             }
+            break;
+
+        case ActionTypes.UPDATE_MATCHUP_DONE:
+            console.log('updated matchup', action.payload);
+
+            let myMatchups = state.getIn(['activeUser','myMatchups']);
+            let index = _.findIndex(myMatchups, ['id', action.payload.id]);
+
+            myMatchups[index] = action.payload;
+
+            state = state.updateIn(['activeUser','myMatchups'], value=>myMatchups);
+            state = state.set('activeOverlay', '');
+            break;
+
+        case ActionTypes.UPDATE_LIST_DONE:
+            console.log('updated list', action.payload);
             break;
 
         case ActionTypes.ADD_TO_TRUCK:
@@ -439,8 +454,8 @@ export default (state = initialState, action)=>{
                 browserHistory.push({ pathname: `#/products/myList-${ collectionID }` });
             }
 
-            if(action.productID) {
-                state = productFunctions.addToListHelper(state, action.collectionType, collectionID, parseInt(action.productID));
+            if(action.productId) {
+                state = productFunctions.addToListHelper(state, action.collectionType, collectionID, parseInt(action.productId));
             }
             break;
 

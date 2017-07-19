@@ -69,9 +69,8 @@ class MatchupsCustom extends React.Component {
                 let products;
 
                 if(_.size(matchup.products) > 0) {
-
-                    products = _.map(matchup.products, (qty, productID)=>{
-                        let product = _.find(this.props.products.toJS(), (product)=>{ return product.id === parseInt(productID) });
+                    products = _.map(matchup.products, (myProduct)=>{
+                        let product = _.find(this.props.products.toJS(), (product)=>{ return product.id === myProduct.id });
                         return product.modelNumber;
                     });
 

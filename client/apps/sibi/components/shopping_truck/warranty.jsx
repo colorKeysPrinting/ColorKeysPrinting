@@ -23,7 +23,7 @@ export default function Warranty(props) {
             <td>{ warranty.qty }</td>
             <td>
                 <div>${ (props.warranty.price).formatMoney(2, '.', ',') }</div>
-                <div className="cancel-btn" onClick={()=>props.update(props.productID, 'warranty', false)}>Remove</div>
+                <div className="cancel-btn" onClick={()=>props.update(props.productId, 'warranty', false)}>Remove</div>
             </td>
         </tr>
     );

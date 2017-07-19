@@ -10,12 +10,12 @@ export function showOverlay(overlay, obj) {
     };
 }
 
-export function showRadioOverlay(overlay, collectionType, productID) {
+export function showRadioOverlay(overlay, collectionType, productId) {
     return {
         type: ActionTypes.SHOW_RADIO_OVERLAY,
         overlay,
         collectionType,
-        productID
+        productId
     };
 }
 

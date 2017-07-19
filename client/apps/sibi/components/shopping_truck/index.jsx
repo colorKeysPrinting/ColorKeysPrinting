@@ -19,10 +19,10 @@ class ShoppingTruck extends React.Component {
         this.calcTax = this.calcTax.bind(this);
     }
 
-    update(productID, type, value) {
+    update(productId, type, value) {
         let products = this.props.truck.toJS();
 
-        let product = _.find(products, ['id', parseInt(productID)]);
+        let product = _.find(products, ['id', parseInt(productId)]);
 
         if(type === 'qty') {
             product.qty = parseInt(value);
@@ -37,7 +37,7 @@ class ShoppingTruck extends React.Component {
             product.cost = (product.price * product.qty) + product.warrantyPrice;
         }
 
-        let index = _.findIndex(products, (product)=>{return product.id === productID});
+        let index = _.findIndex(products, (product)=>{return product.id === productId});
         products[index] = product;
 
         this.props.updateTruck(products);
@@ -118,7 +118,7 @@ class ShoppingTruck extends React.Component {
                         0,
                         <Warranty
                             key={'warranty' + product.warranty.id}
-                            productID={product.id}
+                            productId={product.id}
                             warranty={product.warranty}
                             update={this.update} />
                     );

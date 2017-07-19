@@ -2,7 +2,7 @@ import React                                     from 'react';
 import assets                                    from '../../libs/assets';
 
 export default function RemoveListItem(props) {
-    let title, message, productID;
+    let title, message, productId;
     let collection = props.collection;
 
     let styles = {
@@ -47,7 +47,7 @@ export default function RemoveListItem(props) {
     if(props.product) {
         title = 'Remove Item from';
         message = `Are you sure you want to remove "${ props.product.name }" from ${ collection.name }`;
-        productID = props.product.id;
+        productId = props.product.id;
     } else {
         title = 'Delete'
         message = `Are you sure you want to remove "${ collection.name }"`;
@@ -67,7 +67,7 @@ export default function RemoveListItem(props) {
             </div>
             <div style={{display: 'inline-flex', width: '100%'}}>
                 <div className="cancel-btn" style={{width: '50%'}} onClick={props.close}>Cancel</div>
-                <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeProduct({collectionType: props.overlayObj.collectionType, collectionID: collection.id, productID, redirect})}>Remove</div>
+                <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeProduct({collectionType: props.overlayObj.collectionType, collectionID: collection.id, productId, redirect})}>Remove</div>
             </div>
         </div>
     );

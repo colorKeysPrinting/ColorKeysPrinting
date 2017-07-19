@@ -27,8 +27,8 @@ export default function addToOverlay(props) {
 
     return (
         <div style={styles.container}>
-            <div onClick={()=>props.showRadioOverlay('radioList', 'customMatchups', props.overlayObj.productID)} style={styles.element}>Add to Custom Matchup</div>
-            <div onClick={()=>props.showRadioOverlay('radioList', 'myLists', props.overlayObj.productID)}        style={styles.element}>Add to List</div>
+            <div onClick={()=>props.showRadioOverlay('radioList', 'customMatchups', props.overlayObj.productId)} style={styles.element}>Add to Custom Matchup</div>
+            <div onClick={()=>props.showRadioOverlay('radioList', 'myLists', props.overlayObj.productId)}        style={styles.element}>Add to List</div>
         </div>
     );
 }

@@ -52,9 +52,9 @@ export default class MyLists extends React.Component {
 
         if(_.size(collection.products)> 0) {
 
-            let products = _.map(collection.products,(productID)=>{
+            let products = _.map(collection.products,(productId)=>{
 
-                let product = _.find(this.props.products.toJS(), ['id', parseInt(productID)]);
+                let product = _.find(this.props.products.toJS(), ['id', parseInt(productId)]);
 
                 return (
                     <Product
