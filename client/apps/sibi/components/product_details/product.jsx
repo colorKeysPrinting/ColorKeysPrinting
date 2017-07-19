@@ -1,5 +1,6 @@
 import '../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
+import assets                   from '../../libs/assets';
 
 export default function Product(props) {
     let product = props.product;
@@ -46,15 +47,18 @@ export default function Product(props) {
         }
     };
 
+    let price = (product.price) ? <div style={styles.price}>${ (product.price).formatMoney(2, '.', ',') }</div> : null;
+    let image = (product.image) ? assets(product.image) : '';
+
     return (
         <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>
             <div style={styles.productThumbnail}>
-                <div style={styles.image}><img src={product.image} alt="picture" height="100%" width="100%"/></div>
-                <h2 style={styles.name}>{product.name}</h2>
+                <div style={styles.image}><img src={image} alt={product.modelNumber} height="100%" width="100%"/></div>
+                <h2 style={styles.name}>{ product.name }</h2>
             </div>
             <div style={{display: 'inline-flex'}}>
                 <div style={styles.prodInfo}>
-                    <div style={styles.price}>${ (product.price).formatMoney(2, '.', ',') }</div>
+                    { price }
                     <div style={styles.modelNumber}>#{ product.modelNumber }</div>
                 </div>
                 <div className="submit-btn" onClick={()=>{props.addToTruck(product)}} >Add to truck</div>

@@ -144,10 +144,10 @@ export default (state = initialState, action)=>{
                         '7': {orderNum: 138992349, orderDate: 1486684800000, totalCost: 18631.92, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'Delivered',         products: {'0': 16, '9': 11, '7': 10, '3': 1}},
                         '8': {orderNum: 138992350, orderDate: 1485561600000, totalCost: 13631.91, propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'Delivered',         products: {'0': 16, '9': 11, '7': 4, '3': 3}},
                     };
-                    let myTruck = [];
+                    let orderTruck = [];
                     let myWarranties = [];
 
-                    state = state.set('activeUser', Immutable.fromJS({...action.payload, settings, myProducts, myMatchups: [], myLists, myOrders, myTruck, myWarranties}));
+                    state = state.set('activeUser', Immutable.fromJS({...action.payload, settings, myProducts, myMatchups: [], myLists, myOrders, orderTruck, myWarranties}));
                     window.DEFAULT_JWT = action.payload.token; window.DEFAULT_JWT = action.payload.token;
                     history.pushState(null, '/products');
                 } else {
@@ -163,7 +163,7 @@ export default (state = initialState, action)=>{
             console.log('logging out user:', action.username);
             history.pushState(null, '/');
 
-            let activeUser = Immutable.fromJS({type: '',username: '',profilePic: '',JWT: '',settings: {language: '',keyIndicatorBars: {}},myProducts: {mostPurchased: []},myMatchups: {},myLists: {},filterPanel:{},myTruck: {}});
+            let activeUser = Immutable.fromJS({type: '',username: '',profilePic: '',JWT: '',settings: {language: '',keyIndicatorBars: {}},myProducts: {mostPurchased: []},myMatchups: {},myLists: {},filterPanel:{},orderTruck: {}});
             state = state.set('activeUser', activeUser);
             state = state.set('activeOverlay', '');
             break;
@@ -357,11 +357,10 @@ export default (state = initialState, action)=>{
         case ActionTypes.ADD_TO_TRUCK:
             console.log('adding item(s) to truck: ', action.item);
             var item = action.item,
-                truck = state.get('truck').toJS(),
+                truck = state.getIn(['activeUser','orderTruck']).toJS(),
                 products = state.get('products').toJS();
 
-            if(typeof(item.id) === 'number') {
-
+            if(item.id) {
                 let index = _.findIndex(truck, ['id', item.id]);
 
                 if(index >= 0) {
@@ -401,7 +400,7 @@ export default (state = initialState, action)=>{
                 });
             }
 
-            state = state.update('truck', value=>Immutable.fromJS(truck));
+            state = state.updateIn(['activeUser','orderTruck'], value=>Immutable.fromJS(truck));
             console.log('current Truck:', state.get('truck').toJS());
             break;
         case ActionTypes.REMOVE_FROM_TRUCK:

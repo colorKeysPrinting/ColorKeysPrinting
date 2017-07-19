@@ -17,7 +17,7 @@ class ProductDetails extends React.Component {
         let location = this.props.productLocations.toJS();
 
         this.state = {
-            product: _.find(this.props.products.toJS(), ['id', parseInt(this.props.params.id)]), qty: 1, location: location[0], warranty: false,
+            product: _.find(this.props.products.toJS(), ['id', this.props.params.id]), qty: 1, location: location[0], warranty: false,
             minStock: 10
         };
 
@@ -46,6 +46,8 @@ class ProductDetails extends React.Component {
     }
 
     render() {
+        let product = this.state.product;
+
         let styles = {
             container: {
                 width: '98%',
@@ -94,19 +96,20 @@ class ProductDetails extends React.Component {
             return <option key={location.id} value={location.id} >{location.name} ({location.stock} in stock)</option>;
         });
 
-        let image = (this.state.product.image) ? assets(this.state.product.image) : '';
+        let image = (product.image) ? assets(product.image) : '';
         let warranty = (this.state.warranty) ? _.find(this.props.warranties.toJS(), ['id', 0]) : false ;
+        let price = (product.price) ? <div style={styles.price} >${ (parseFloat(product.price)).formatMoney(2, '.', ',') }</div> : null;
 
         return (
             <div id="product-details" style={styles.container}>
                 <div style={{width: '80%', fontSize: '24px'}}>
                     <div style={{width: '100%', display: 'inline-flex'}}>
-                        <div style={{margin: '20px'}}><img src={image} alt={this.state.product.modelNumber} width="500" height="600" style={styles.image}/></div>
+                        <div style={{margin: '20px'}}><img src={image} alt={product.modelNumber} width="500" height="600" style={styles.image}/></div>
                         <div style={{margin: '20px', padding: '20px', width: '50%'}}>
-                            <h1>{ this.state.product.name }</h1>
+                            <h1>{ product.name }</h1>
                             <div style={{display: 'inline-flex', width: '100%'}}>
-                                <div style={styles.price} >${ (this.state.product.price).formatMoney(2, '.', ',') }</div>
-                                <div style={styles.modelNumber} >Model #{ this.state.product.modelNumber }</div>
+                                { price }
+                                <div style={styles.modelNumber} >Model #{ product.modelNumber }</div>
                             </div>
                             <div><img src={''} alt="product perks? " width="80%" height="80" style={styles.image}/></div>
                             <div style={{display: 'inline-flex', width: '100%'}}>
@@ -124,13 +127,13 @@ class ProductDetails extends React.Component {
                                        checked={this.state.warranty} />Add 10 Year Parts & Labor Warranty
                             </div>
                             <div style={{display: 'inline-flex', width: '85%'}}>
-                                <div style={{width: '50%'}} ><div className="cancel-btn" onClick={(e)=>this.props.showOverlay('productAddTo', {modelNumber: this.state.product.modelNumber, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} >Save Item</div></div>
-                                <div style={{width: '50%'}} ><div className="submit-btn" onClick={()=>this.props.addToTruck({...this.state.product, qty: this.state.qty, warranty})} >Add to truck</div></div>
+                                <div style={{width: '50%'}} ><div className="cancel-btn" onClick={(e)=>this.props.showOverlay('productAddTo', {productId: product.id, mouseCoord: {mouseX: e.pageX, mouseY: e.pageY}})} >Save Item</div></div>
+                                <div style={{width: '50%'}} ><div className="submit-btn" onClick={()=>this.props.addToTruck({...product, qty: this.state.qty, warranty})} >Add to truck</div></div>
                             </div>
                         </div>
                     </div>
                     <DetailTabs
-                        tabs={this.state.product.tabs}
+                        product={product}
                         products={this.props.products.toJS()}
                         addToTruck={this.props.addToTruck} />
                 </div>
