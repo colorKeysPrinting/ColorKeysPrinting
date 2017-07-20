@@ -6048,9 +6048,9 @@ react-slider@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/react-slider/-/react-slider-0.8.0.tgz#21db048edf28bdf421db052895bae61d1eba9e7e"
 
-react-tabs@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-tabs/-/react-tabs-1.0.0.tgz#f150c9f9102dd65dbc94a5a0e1e019d5e3814a7f"
+react-tabs@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-tabs/-/react-tabs-1.1.0.tgz#f1e3d6136e1d89f70f5ef8835468a2f03a54777a"
   dependencies:
     classnames "^2.2.0"
     prop-types "^15.5.0"

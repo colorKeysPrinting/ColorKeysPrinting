@@ -1,11 +1,11 @@
-import '../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
 import assets                   from '../../libs/assets';
+import '../common/custom_formats.js'                        // adds formatMoney to Number types
 
 export default function Product(props) {
-    let product = props.product;
+    const product = props.product;
 
-    let styles = {
+    const styles = {
         container: {
             border: '1px solid rgba(50, 50, 50, 0.1)',
             backgroundColor: '#FBFBFB'
@@ -47,21 +47,21 @@ export default function Product(props) {
         }
     };
 
-    let price = (product.price) ? <div style={styles.price}>${ (product.price).formatMoney(2, '.', ',') }</div> : null;
-    let image = (product.image) ? assets(product.image) : '';
+    const price = (product.price) ? <div style={styles.price}>${ (product.price).formatMoney(2, '.', ',') }</div> : null;
+    const image = (product.image) ? assets(product.image) : '';
 
     return (
         <div className="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={styles.container}>
             <div style={styles.productThumbnail}>
-                <div style={styles.image}><img src={image} alt={product.modelNumber} height="100%" width="100%"/></div>
+                <div style={styles.image}><img src={image} alt={product.modelNumber} height="100%" width="100%" /></div>
                 <h2 style={styles.name}>{ product.name }</h2>
             </div>
-            <div style={{display: 'inline-flex'}}>
+            <div style={{ display: 'inline-flex' }}>
                 <div style={styles.prodInfo}>
                     { price }
                     <div style={styles.modelNumber}>#{ product.modelNumber }</div>
                 </div>
-                <div className="submit-btn" onClick={()=>{props.addToTruck(product)}} >Add to truck</div>
+                <div className="submit-btn" onClick={() => { props.addToTruck(product) }} >Add to truck</div>
             </div>
         </div>
     );

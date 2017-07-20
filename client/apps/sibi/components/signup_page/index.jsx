@@ -16,15 +16,46 @@ class Signup extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {currentStep: 1, buttonText: 'Create Account', errorMsg: '',
-            email: '', password: '', firstName: '', lastName: '', fundId: '', locationId: '', tradeId: '', companyId: '',
-            docW9: '',  docInsurance: '', docWorkerComp: '', contractGoodman: false,  contractAsure: false,
+        this.state = { currentStep: 1,
+            buttonText: 'Create Account',
+            errorMsg: '',
+            email: '',
+            password: '',
+            firstName: '',
+            lastName: '',
+            fundId: '',
+            locationId: '',
+            tradeId: '',
+            companyId: '',
+            docW9: '',
+            docInsurance: '',
+            docWorkerComp: '',
+            contractGoodman: false,
+            contractAsure: false,
 
-            companyName: '', street: '', city: '', state: '', zipcode: '', phone: '', fax: '', entityTypeId: '',
-            taxPIN: '', requestedRate: '', approvedRate: '', dealerAccountNum: '',
+            companyName: '',
+            street: '',
+            city: '',
+            state: '',
+            zipcode: '',
+            phone: '',
+            fax: '',
+            entityTypeId: '',
+            taxPIN: '',
+            requestedRate: '',
+            approvedRate: '',
+            dealerAccountNum: '',
 
-            cardName: '', cardNumber: '', expDate: '', cvc: '', billName: '', str1: '', str2: '', billCity: '',
-            billState: '', cardZipcode: ''
+            cardName: '',
+            cardNumber: '',
+            expDate: '',
+            cvc: '',
+            billName: '',
+            str1: '',
+            str2: '',
+            billCity: '',
+            billState: '',
+            cardZipcode: ''
         };
 
         this.props.getTrades();
@@ -38,14 +69,14 @@ class Signup extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.docs) {
-            _.each(nextProps.docs.toJS(), (value, key)=>{
-                this.setState({[key]: value});
+        if (nextProps.docs) {
+            _.each(nextProps.docs.toJS(), (value, key) => {
+                this.setState({ [key]: value });
             });
         }
 
-        if(nextProps.locationId) {
-            let company = {
+        if (nextProps.locationId) {
+            const company = {
                 name: this.state.companyName,
                 phoneNumber: this.state.phone,
                 faxNumber: this.state.fax,
@@ -60,8 +91,8 @@ class Signup extends React.Component {
             this.props.createCompany(company);
         }
 
-        if(nextProps.companyId) {
-            let person = {
+        if (nextProps.companyId) {
+            const person = {
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 email: this.state.email,
@@ -81,12 +112,12 @@ class Signup extends React.Component {
     }
 
     update(type, value) {
-        this.setState({[type]: value});
+        this.setState({ [type]: value });
     }
 
     sendInfo() {
-        if(this.state.companyId) {
-            let person = {
+        if (this.state.companyId) {
+            const person = {
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 email: this.state.email,
@@ -104,7 +135,7 @@ class Signup extends React.Component {
             browserHistory.push('/'); // TODO: need to update this reroute to actually re-route
         } else {
             // create location
-            let location = {
+            const location = {
                 addressLineOne: this.state.street,
                 city: this.state.city,
                 state: this.state.state,
@@ -118,7 +149,7 @@ class Signup extends React.Component {
     nextAction(step) {
         let isComplete = true;
 
-        if(step === 'step3') {
+        if (step === 'step3') {
             isComplete = (this.state.docWorkerComp)     ? true : false;
             isComplete = (this.state.docW9)             ? true : false;
             isComplete = (this.state.docInsurance)      ? true : false;
@@ -126,13 +157,13 @@ class Signup extends React.Component {
             isComplete = (this.state.contractAsure)     ? true : false;
         }
 
-        if(isComplete) {
-            let currentStep = (this.state.currentStep + 1);
+        if (isComplete) {
+            const currentStep = (this.state.currentStep + 1);
             console.log('currentStep: ', currentStep);
 
-            this.setState({currentStep});
+            this.setState({ currentStep });
 
-            if(step === 'step4') {
+            if (step === 'step4') {
                 // this.props.getStripeToken({
                 //     cardName: this.state.cardName,
                 //     cardNumber: this.state.cardNumber,
@@ -141,12 +172,12 @@ class Signup extends React.Component {
                 // });
 
                 // remove credit card info from state
-                this.setState({cardName: '', cardNumber: '', expDate: '', cvc: '', billName: '', str1: '', str2: '', billCity: '', billState: '', cardZipcode: ''});
+                this.setState({ cardName: '', cardNumber: '', expDate: '', cvc: '', billName: '', str1: '', str2: '', billCity: '', billState: '', cardZipcode: '' });
             }
         } else {
-            if(step === 'step3') {
-                let errorMsg = "Please complete each document";
-                this.setState({errorMsg});
+            if (step === 'step3') {
+                const errorMsg = "Please complete each document";
+                this.setState({ errorMsg });
             }
         }
     }
@@ -154,7 +185,7 @@ class Signup extends React.Component {
     render() {
         let content, title;
 
-        let styles = {
+        const styles = {
             container: {
                 backgroundColor: '#F9FAFC',
                 borderRadius: '5px',
@@ -201,103 +232,107 @@ class Signup extends React.Component {
             }
         };
 
-        switch(this.state.currentStep) {
-            case 1:
-                let languages = _.map(this.props.languages, (language, key)=>{
-                    return (<option key={ key } value={language} >{ language }</option>);
-                });
+        switch (this.state.currentStep) {
+        case 1:
+            const languages = _.map(this.props.languages, (language, key) => (<option key={key} value={language} >{ language }</option>));
 
-                let languageSelect = <select value={this.props.currLang} onChange={(e)=>this.props.changeLanguage(e.target.value)} required>
-                                         <option disabled value='select'>Language</option>
-                                         { languages }
-                                     </select>;
+            const languageSelect = (<select value={this.props.currLang} onChange={(e) => this.props.changeLanguage(e.target.value)} required>
+                <option disabled value="select">Language</option>
+                { languages }
+            </select>);
 
-                content = <div>
-                              <div style={styles.titleBar }><div style={styles.title}>Sign Up</div><div style={styles.language}>{ languageSelect }</div></div>
-                              <form onSubmit={this.nextAction}>
-                                  <div style={styles.content}>
-                                      <input type="email"     placeholder="Email"     value={this.state.email}    onChange={(e)=>this.update('email', e.target.value)}      style={{width: '435px'}} required/>
-                                      <input type="password"  placeholder="Password"  value={this.state.password} onChange={(e)=>this.update('password', e.target.value)}   style={{width: '435px'}} required/>
-                                  </div>
+            content = (<div>
+                <div style={styles.titleBar}><div style={styles.title}>Sign Up</div><div style={styles.language}>{ languageSelect }</div></div>
+                <form onSubmit={this.nextAction}>
+                    <div style={styles.content}>
+                        <input type="email"     placeholder="Email"     value={this.state.email}    onChange={(e) => this.update('email', e.target.value)}      style={{ width: '435px' }} required />
+                        <input type="password"  placeholder="Password"  value={this.state.password} onChange={(e) => this.update('password', e.target.value)}   style={{ width: '435px' }} required />
+                    </div>
 
-                                  <input className="submit-btn" type="submit" value="Create Account" style={{width: '89%'}} required/>
-                              </form>
-                          </div>;
-                break;
+                    <input className="submit-btn" type="submit" value="Create Account" style={{ width: '89%' }} required />
+                </form>
+            </div>);
+            break;
 
-            case 2:
-                content = <Step2
-                                firstName={this.state.firstName}
-                                lastName={this.state.lastName}
-                                fundId={this.state.fundId}
-                                locationId={this.state.locationId}
-                                tradeId={this.state.tradeId}
+        case 2:
+            content = (
+                <Step2
+                    firstName={this.state.firstName}
+                    lastName={this.state.lastName}
+                    fundId={this.state.fundId}
+                    locationId={this.state.locationId}
+                    tradeId={this.state.tradeId}
 
-                                companyName={this.state.companyName}
-                                street={this.state.street}
-                                city={this.state.city}
-                                state={this.state.state}
-                                zipcode={this.state.zipcode}
-                                phone={this.state.phone}
-                                fax={this.state.fax}
-                                entityTypeId={this.state.entityTypeId}
-                                taxPIN={this.state.taxPIN}
-                                requestedRate={this.state.requestedRate}
-                                approvedRate={this.state.approvedRate}
-                                dealerAccountNum={this.state.dealerAccountNum}
+                    companyName={this.state.companyName}
+                    street={this.state.street}
+                    city={this.state.city}
+                    state={this.state.state}
+                    zipcode={this.state.zipcode}
+                    phone={this.state.phone}
+                    fax={this.state.fax}
+                    entityTypeId={this.state.entityTypeId}
+                    taxPIN={this.state.taxPIN}
+                    requestedRate={this.state.requestedRate}
+                    approvedRate={this.state.approvedRate}
+                    dealerAccountNum={this.state.dealerAccountNum}
 
-                                funds={this.props.funds.toJS()}
-                                trades={this.props.trades.toJS()}
-                                states={this.props.states.toJS()}
-                                entityTypes={this.props.entityTypes.toJS()}
-                                nextAction={this.nextAction}
-                                update={this.update} />;
-                break;
+                    funds={this.props.funds.toJS()}
+                    trades={this.props.trades.toJS()}
+                    states={this.props.states.toJS()}
+                    entityTypes={this.props.entityTypes.toJS()}
+                    nextAction={this.nextAction}
+                    update={this.update}
+                />);
+            break;
 
-            case 3:
-                content = <Step3
-                                errorMsg={this.state.errorMsg}
-                                docWorkerComp={this.state.docWorkerComp}
-                                docW9={this.state.docW9}
-                                docInsurance={this.state.docInsurance}
-                                contractGoodman={this.state.contractGoodman}
-                                contractAsure={this.state.contractAsure}
-                                update={this.update}
-                                showOverlay={this.props.showOverlay}
-                                nextAction={this.nextAction} />;
-                break;
+        case 3:
+            content = (
+                <Step3
+                    errorMsg={this.state.errorMsg}
+                    docWorkerComp={this.state.docWorkerComp}
+                    docW9={this.state.docW9}
+                    docInsurance={this.state.docInsurance}
+                    contractGoodman={this.state.contractGoodman}
+                    contractAsure={this.state.contractAsure}
+                    update={this.update}
+                    showOverlay={this.props.showOverlay}
+                    nextAction={this.nextAction}
+                />);
+            break;
 
-            case 4:
-                content = <Step4
-                                states={this.props.states.toJS()}
-                                cardName={this.state.cardName}
-                                expDate={this.state.expDate}
-                                cardNumber={this.state.cardNumber}
-                                cvc={this.state.cvc}
-                                billName={this.state.billName}
-                                str1={this.state.str1}
-                                str2={this.state.str2}
-                                billCity={this.state.billCity}
-                                billState={this.state.billState}
-                                cardZipcode={this.state.cardZipcode}
-                                update={this.update}
-                                nextAction={this.nextAction} />;
-                break;
+        case 4:
+            content = (
+                <Step4
+                    states={this.props.states.toJS()}
+                    cardName={this.state.cardName}
+                    expDate={this.state.expDate}
+                    cardNumber={this.state.cardNumber}
+                    cvc={this.state.cvc}
+                    billName={this.state.billName}
+                    str1={this.state.str1}
+                    str2={this.state.str2}
+                    billCity={this.state.billCity}
+                    billState={this.state.billState}
+                    cardZipcode={this.state.cardZipcode}
+                    update={this.update}
+                    nextAction={this.nextAction}
+                />);
+            break;
 
-            case 5:
-                content = <div>
-                              <div style={styles.titleBar}><div style={styles.title} >All done</div></div>
-                              <div style={styles.content}>
-                                  <p>Your account must be approved. This typically happens within 24 hours.</p><br/>
-                                  <p>We'll email { this.state.email } when approved.</p>
-                              </div>
+        case 5:
+            content = (<div>
+                <div style={styles.titleBar}><div style={styles.title} >All done</div></div>
+                <div style={styles.content}>
+                    <p>Your account must be approved. This typically happens within 24 hours.</p><br />
+                    <p>We'll email { this.state.email } when approved.</p>
+                </div>
 
-                              <div className="submit-btn" onClick={this.sendInfo} >Got it</div>
-                          </div>;
-                break;
+                <div className="submit-btn" onClick={this.sendInfo} >Got it</div>
+            </div>);
+            break;
         }
 
-        let stepVisualizer = (this.state.currentStep !== 5) ? <StepVisualizer currentStep={this.state.currentStep} /> : null;
+        const stepVisualizer = (this.state.currentStep !== 5) ? <StepVisualizer currentStep={this.state.currentStep} /> : null;
 
         return (
             <div style={styles.container}>
@@ -308,22 +343,20 @@ class Signup extends React.Component {
     }
 }
 
-let select = (state)=>{
-    return {
-        funds               : state.application.get('funds'),
-        locations           : state.application.get('locations'),
-        trades              : state.application.get('trades'),
-        entityTypes         : state.application.get('entityTypes'),
-        companies           : state.application.get('companies'),
-        states              : state.application.get('states'),
+const select = (state) => ({
+    funds               : state.application.get('funds'),
+    locations           : state.application.get('locations'),
+    trades              : state.application.get('trades'),
+    entityTypes         : state.application.get('entityTypes'),
+    companies           : state.application.get('companies'),
+    states              : state.application.get('states'),
 
-        docs                : state.application.getIn(['temp','docs']),
-        companyId           : state.application.getIn(['temp','companyId']),
-        locationId          : state.application.getIn(['temp','locationId']),
+    docs                : state.application.getIn(['temp','docs']),
+    companyId           : state.application.getIn(['temp','companyId']),
+    locationId          : state.application.getIn(['temp','locationId']),
 
-        currLang            : state.application.get('currLanguage'),
-        languages           : state.application.get('language'),
-    };
-};
+    currLang            : state.application.get('currLanguage'),
+    languages           : state.application.get('language'),
+});
 
-export default connect(select, {changeLanguage, showOverlay, ...signup}, null, {withRef: true})(Signup);
+export default connect(select, { changeLanguage, showOverlay, ...signup }, null, { withRef: true })(Signup);

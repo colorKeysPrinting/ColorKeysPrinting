@@ -3,9 +3,9 @@ import assets                                    from '../../libs/assets';
 
 export default function RemoveListItem(props) {
     let title, message, productId, removeBtn;
-    let collection = props.collection;
+    const collection = props.collection;
 
-    let styles = {
+    const styles = {
         container: {
             backgroundColor: '#F9FAFC',
             borderRadius: '5px',
@@ -44,18 +44,18 @@ export default function RemoveListItem(props) {
         }
     };
 
-    if(props.product) {
+    if (props.product) {
         title = 'Remove Item from';
         message = `Are you sure you want to remove "${ props.product.name }" from ${ collection.name }`;
         productId = props.product.id;
-        removeBtn = <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeProduct(props.overlayObj.collectionType, collection.id, productId)}>Remove</div>;
+        removeBtn = <div className="submit-btn" style={{ width: '50%' }} onClick={() => props.removeProduct(props.overlayObj.collectionType, collection.id, productId)}>Remove</div>;
     } else {
         title = 'Delete'
         message = `Are you sure you want to remove "${ collection.name }"`;
-        removeBtn = <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeCollection(props.overlayObj.collectionType, collection.id)}>Remove</div>;
+        removeBtn = <div className="submit-btn" style={{ width: '50%' }} onClick={() => props.removeCollection(props.overlayObj.collectionType, collection.id)}>Remove</div>;
     }
 
-    let modelNumber = (props.product) ? props.product.modelNumber : '';
+    const modelNumber = (props.product) ? props.product.modelNumber : '';
 
     return (
         <div style={styles.container}>
@@ -66,8 +66,8 @@ export default function RemoveListItem(props) {
             <div style={styles.content}>
                 <p>{ message }</p>
             </div>
-            <div style={{display: 'inline-flex', width: '100%'}}>
-                <div className="cancel-btn" style={{width: '50%'}} onClick={props.close}>Cancel</div>
+            <div style={{ display: 'inline-flex', width: '100%' }}>
+                <div className="cancel-btn" style={{ width: '50%' }} onClick={props.close}>Cancel</div>
                 { removeBtn }
             </div>
         </div>

@@ -1,4 +1,5 @@
 'use strict';
+
 import ActionTypes      from '../constants/action_types';
 import Network          from '../../../libs/constants/network';
 

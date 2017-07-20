@@ -1,9 +1,9 @@
-import '../../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
 import { connect }              from 'react-redux';
 import { Link }                 from 'react-router';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
+import '../../common/custom_formats.js'                        // adds formatMoney to Number types
 
 import { showOverlay, addToTruck }          from '../../../actions/application';
 import { removeMatchup, getUserMatchups }          from '../../../actions/products';
@@ -22,7 +22,7 @@ class MatchupsCustom extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        if(nextProps.isMatchupDeleted) {
+        if (nextProps.isMatchupDeleted) {
             this.props.getUserMatchups();
         }
     }
@@ -38,7 +38,7 @@ class MatchupsCustom extends React.Component {
     render() {
         let content;
 
-        let styles = {
+        const styles = {
             container: {
                 width: '98%'
             },
@@ -64,13 +64,13 @@ class MatchupsCustom extends React.Component {
             }
         };
 
-        if(this.props.myMatchups.size > 0) {
-            let myMatchups = _.map(this.props.myMatchups.toJS(), (matchup)=>{
+        if (this.props.myMatchups.size > 0) {
+            const myMatchups = _.map(this.props.myMatchups.toJS(), (matchup) => {
                 let products;
 
-                if(_.size(matchup.products) > 0) {
-                    products = _.map(matchup.products, (myProduct)=>{
-                        let product = _.find(this.props.products.toJS(), (product)=>{ return product.id === myProduct.id });
+                if (_.size(matchup.products) > 0) {
+                    products = _.map(matchup.products, (myProduct) => {
+                        const product = _.find(this.props.products.toJS(), (product) => product.id === myProduct.id);
                         return product.modelNumber;
                     });
 
@@ -84,46 +84,46 @@ class MatchupsCustom extends React.Component {
                     <tr key={matchup.id}>
                         <td>{ matchup.name }</td>
                         <td>{ products }</td>
-                        <td className="text-link" onClick={()=>this.props.showOverlay('customMatchup', {collectionObj: matchup})} >View Products</td>
+                        <td className="text-link" onClick={() => this.props.showOverlay('customMatchup', { collectionObj: matchup })} >View Products</td>
                         <td>${ (parseFloat(matchup.totalCost)).formatMoney(2, '.', ',') }</td>
-                        <td className="text-link" onClick={()=>this.props.addToTruck({products: matchup.products})} >Add to truck</td>
-                        <td><div onClick={()=>this.props.removeMatchup(matchup.id)} style={styles.delete}><img src={''} alt="delete"/></div></td>
+                        <td className="text-link" onClick={() => this.props.addToTruck({ products: matchup.products })} >Add to truck</td>
+                        <td><div onClick={() => this.props.removeMatchup(matchup.id)} style={styles.delete}><img src={''} alt="delete" /></div></td>
                     </tr>
                 );
             });
 
-            content = <div>
-                          <table>
-                              <thead>
-                              <tr>
-                                  <td>MATCHUP NAME</td>
-                                  <td>PRODUCTS</td>
-                                  <td>PRODUCT DETAILS</td>
-                                  <td>TOTAL</td>
-                                  <td>ORDER AGAIN</td>
-                                  <td>DELETE</td>
-                              </tr>
-                              </thead>
-                              <tbody>
-                                  { myMatchups }
-                              </tbody>
-                          </table>
-                      </div>;
+            content = (<div>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>MATCHUP NAME</td>
+                            <td>PRODUCTS</td>
+                            <td>PRODUCT DETAILS</td>
+                            <td>TOTAL</td>
+                            <td>ORDER AGAIN</td>
+                            <td>DELETE</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { myMatchups }
+                    </tbody>
+                </table>
+            </div>);
         } else {
-            content = <div>
+            content = (<div>
                 You do not have any Custom Matchups<br/>
                 Press "New Custom Matchup" to create a new one.
-            </div>;
+            </div>);
         }
 
         return (
             <div style={styles.container}>
                 <div style={styles.titleSection}>
-                    <div style={{padding: '15px'}}>Custom Matchups</div>
-                    <div style={{display: 'inline-flex', marginLeft: '60%'}}>
-                        <div onClick={()=>this.share()}><img src={''} alt="share" style={styles.actions} /></div>
-                        <div onClick={()=>this.download()}><img src={''} alt="download" style={styles.actions} /></div>
-                        <div className="submit-btn" onClick={()=>this.props.showOverlay('addNewList', {type: 'customMatchups'})} style={{marginTop: '7px'}} >New Custom Matchup</div>
+                    <div style={{ padding: '15px' }}>Custom Matchups</div>
+                    <div style={{ display: 'inline-flex', marginLeft: '60%' }}>
+                        <div onClick={() => this.share()}><img src={''} alt="share" style={styles.actions} /></div>
+                        <div onClick={() => this.download()}><img src={''} alt="download" style={styles.actions} /></div>
+                        <div className="submit-btn" onClick={() => this.props.showOverlay('addNewList', { type: 'customMatchups' })} style={{ marginTop: '7px' }} >New Custom Matchup</div>
                     </div>
                 </div>
                 { content }
@@ -132,13 +132,11 @@ class MatchupsCustom extends React.Component {
     }
 }
 
-let select = (state)=>{
-    return {
-        currLang            : state.application.get('currLanguage'),
-        products            : state.application.get('products'),
-        myMatchups          : state.application.getIn(['activeUser', 'myMatchups']),
-        isMatchupDeleted    : state.application.get('isMatchupDeleted')
-    };
-};
+const select = (state) => ({
+    currLang            : state.application.get('currLanguage'),
+    products            : state.application.get('products'),
+    myMatchups          : state.application.getIn(['activeUser', 'myMatchups']),
+    isMatchupDeleted    : state.application.get('isMatchupDeleted')
+});
 
-export default connect(select, { showOverlay, addToTruck, removeMatchup, getUserMatchups }, null, {withRef: true})(MatchupsCustom);
+export default connect(select, { showOverlay, addToTruck, removeMatchup, getUserMatchups }, null, { withRef: true })(MatchupsCustom);

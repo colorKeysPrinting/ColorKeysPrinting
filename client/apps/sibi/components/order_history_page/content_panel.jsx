@@ -5,19 +5,12 @@ import { withRouter }           from 'react-router';
 import OrderHistory             from './content_sections/order_history';
 import Order                    from './content_sections/order';
 
-let select = (state)=>{
-    return {
-        myOrders    : state.application.getIn(['activeUser','myOrders']),
-    };
-};
-
-@connect(select, {}, null, {withRef: true})
-export default withRouter(class ContentPanelOrderHistory extends React.Component {
+class ContentPanelOrderHistory extends React.Component {
 
     render() {
         let activeSection;
 
-        let styles = {
+        const styles = {
             container: {
                 backgroundColor: '#FFF',
                 width: '83%'
@@ -32,13 +25,16 @@ export default withRouter(class ContentPanelOrderHistory extends React.Component
         const re = /(\w{1,})-([\w|\d]{1,})/;
         const type = re.exec(location.hash) || ['',''];
 
-        switch(type[1]) {
-            case 'order':
-                activeSection = <Order
-                                    order={type[2]}/>;
-                break;
-            default:
-                activeSection = <OrderHistory />;
+        switch (type[1]) {
+        case 'order':
+            activeSection = (
+                <Order
+                    order={type[2]}
+                />
+            );
+            break;
+        default:
+            activeSection = <OrderHistory />;
         }
 
         return (
@@ -47,7 +43,10 @@ export default withRouter(class ContentPanelOrderHistory extends React.Component
             </div>
         );
     }
-})
+}
 
+const select = (state) => ({
+    myOrders    : state.application.getIn(['activeUser','myOrders']),
+});
 
-
+export default connect(select, {}, null, { withRef: true })(withRouter(ContentPanelOrderHistory));

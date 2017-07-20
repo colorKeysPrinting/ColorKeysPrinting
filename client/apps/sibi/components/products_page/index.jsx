@@ -6,13 +6,13 @@ import ContentPanel             from './content_panel';
 
 export default function ProductsPage(props) {
 
-    let styles = {
+    const styles = {
     };
 
     return (
         <div>
             <KeyIndicatorsBar />
-            <div style={{display: 'inline-flex', width: '97%'}}>
+            <div style={{ display: 'inline-flex', width: '97%' }}>
                 <FilterPanel />
                 <ContentPanel />
             </div>

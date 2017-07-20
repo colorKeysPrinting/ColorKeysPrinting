@@ -4,7 +4,7 @@ import assets                   from '../../libs/assets';
 export default function fileUploaderOverlay(props) {
     let title, inputs, actionSection, close;
 
-    let styles = {
+    const styles = {
         container: {
             backgroundColor: '#F9FAFC',
             borderRadius: '5px',
@@ -60,20 +60,20 @@ export default function fileUploaderOverlay(props) {
         }
     };
 
-    switch(props.type) {
-        case 'docWorkerComp':
-            title = 'worker\'s comp';
-            break;
-        case 'docW9':
-            title = 'w9';
-            break;
-        case 'docInsurance':
-            title = 'proof of insurance';
-            break;
-        default:
+    switch (props.type) {
+    case 'docWorkerComp':
+        title = 'worker\'s comp';
+        break;
+    case 'docW9':
+        title = 'w9';
+        break;
+    case 'docInsurance':
+        title = 'proof of insurance';
+        break;
+    default:
     }
 
-    let errorMsg = (props.errorMsg) ? <div style={styles.errorMsg}>{ props.errorMsg }</div> : '';
+    const errorMsg = (props.errorMsg) ? <div style={styles.errorMsg}>{ props.errorMsg }</div> : '';
 
     return (
         <div style={styles.container}>
@@ -83,17 +83,21 @@ export default function fileUploaderOverlay(props) {
             </div>
             <div style={styles.content}>
                 { errorMsg }
-                <div style={styles.uploadContainer}
-                     onDrop={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0])}}
-                     onDragOver={(e)=>{e.preventDefault(); e.dropEffect='copy'}}>
+                <div
+                    style={styles.uploadContainer}
+                    onDrop={(e) => { e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0]) }}
+                    onDragOver={(e) => { e.preventDefault(); e.dropEffect='copy' }}
+                >
 
                     <label>Drag and drop a document or</label>
-                    <label htmlFor="file" className="submit-btn" style={{width: '50%'}} >Choose file
-                        <input  id="file"
-                                type="file"
-                                onChange={(e)=>{e.preventDefault(); props.fileDrop(props.type, e.target.files[0])}}
-                                accept=".pdf,.word,.png,.jpg"
-                                style={{display: 'none'}}/>
+                    <label htmlFor="file" className="submit-btn" style={{ width: '50%' }} >Choose file
+                        <input
+                            id="file"
+                            type="file"
+                            onChange={(e) => { e.preventDefault(); props.fileDrop(props.type, e.target.files[0]) }}
+                            accept=".pdf,.word,.png,.jpg"
+                            style={{ display: 'none' }}
+                        />
                     </label>
                 </div>
                 <p style={styles.text}>Choose a PDF, .WORD, PNG or JPG,</p>

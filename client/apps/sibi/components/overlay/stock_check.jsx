@@ -2,7 +2,7 @@ import React    from 'react';
 
 export default function StockCheck(props) {
 
-    let styles = {
+    const styles = {
         container: {
             position: 'absolute',
             top: '190px',
@@ -35,9 +35,9 @@ export default function StockCheck(props) {
             <div style={styles.content}>
                 <div style={styles.text}>The inventory at this location is low.  Would you like to check and make sure the item is still available here?</div>
             </div>
-            <div style={{display: 'inline-flex', width: '100%'}}>
-                <div className="cancel-btn" style={{width: '50%'}} onClick={props.close}>No, Thanks</div>
-                <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.checkingInventory(props.product.modelNumber, props.location)}>Check</div>
+            <div style={{ display: 'inline-flex', width: '100%' }}>
+                <div className="cancel-btn" style={{ width: '50%' }} onClick={props.close}>No, Thanks</div>
+                <div className="submit-btn" style={{ width: '50%' }} onClick={() => props.checkingInventory(props.product.modelNumber, props.location)}>Check</div>
             </div>
         </div>
     );

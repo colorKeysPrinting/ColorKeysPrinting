@@ -1,12 +1,12 @@
-import '../../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
 import { Link }                 from 'react-router';
 import _                        from 'lodash';
 import assets                   from '../../../libs/assets';
+import '../../common/custom_formats.js'                        // adds formatMoney to Number types
 
 export default function OrderHistoryItem(props) {
 
-    let styles = {
+    const styles = {
         container: {
             border: '1px solid rgba(50, 50, 50, 0.1)',
             backgroundColor: '#FBFBFB'
@@ -57,11 +57,11 @@ export default function OrderHistoryItem(props) {
 
     let priceTotal, itemTotal;
 
-    let date = new Date(props.orderDate);
+    const date = new Date(props.orderDate);
 
-    _.each(props.products, (qty, product)=>{
+    _.each(props.products, (qty, product) => {
         itemTotal += qty;
-        let index = _.findIndex()
+        const index = _.findIndex()
 
     });
 
@@ -73,11 +73,11 @@ export default function OrderHistoryItem(props) {
             <td>{ itemTotal }</td>
             <td>{ props.propertyAddress }</td>
             <td>{ props.status }</td>
-            <td><div className="submit-btn" onClick={()=>props.addToTruck('order', props.id)} >Add to truck</div></td>
+            <td><div className="submit-btn" onClick={() => props.addToTruck('order', props.id)} >Add to truck</div></td>
             <td>
-                <div onClick={console.log('TODO: share')}><img src={''} alt="share"/></div>
-                <div onClick={console.log('TODO: export')}><img src={''} alt="export"/></div>
-                <div onClick={console.log('TODO: view')}><img src={''} alt="view"/></div>
+                <div onClick={console.log('TODO: share')}><img src={''} alt="share" /></div>
+                <div onClick={console.log('TODO: export')}><img src={''} alt="export" /></div>
+                <div onClick={console.log('TODO: view')}><img src={''} alt="view" /></div>
             </td>
         </tr>
     );

@@ -4,7 +4,7 @@ import assets                   from '../../libs/assets';
 
 export default function ProfileOverlay(props) {
 
-    let styles = {
+    const styles = {
         container: {
             position: 'absolute',
             top: '80px',
@@ -39,18 +39,18 @@ export default function ProfileOverlay(props) {
         }
     };
 
-    let profilePic = (props.profilePic) ? assets(props.profilePic) : '';
+    const profilePic = (props.profilePic) ? assets(props.profilePic) : '';
 
     return (
         <div style={styles.container}>
-            <div style={{display: 'inline-flex'}}>
+            <div style={{ display: 'inline-flex' }}>
                 <div><img src={profilePic} alt={props.username} height="70px" width="70px" style={styles.profilePic} /></div>
                 <div style={styles.username}>{props.username}</div>
             </div>
             <Link to={`/settings`} style={styles.element} >Settings</Link>
             <Link to={`/support`} style={styles.element} >Support</Link>
-            <div onClick={()=>props.changeLanguage('english')} style={styles.element} >English / Espanol</div>
-            <div onClick={()=>props.logout(props.username)} style={styles.element.logout} >Log out </div>
+            <div onClick={() => props.changeLanguage('english')} style={styles.element} >English / Espanol</div>
+            <div onClick={() => props.logout(props.username)} style={styles.element.logout} >Log out </div>
         </div>
     );
 }

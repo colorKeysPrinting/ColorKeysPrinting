@@ -6,18 +6,18 @@ import assets                               from '../../libs/assets';
 import Product                              from './product';
 
 export default function DetailTabs(props) {
-    let tabTypes = ['', '', '', 'overview', 'specifications', 'faq'];
+    const tabTypes = ['', '', '', 'overview', 'specifications', 'faq'];
 
-    let tabs = _.map(tabTypes, (type)=>{
-        if(props.product[type]) {
+    const tabs = _.map(tabTypes, (type) => {
+        if (props.product[type]) {
             return <Tab key={type}>{ (type).toUpperCase() }</Tab>;
         }
     });
 
-    let tabContent = _.map(tabTypes, (type)=>{
+    const tabContent = _.map(tabTypes, (type) => {
         let content;
 
-        if(props.product[type]) {
+        if (props.product[type]) {
             content = <div key={type}>{ props.product[type] }</div>;
             // switch(type) {
             //     case 'complete the system':
@@ -90,7 +90,7 @@ export default function DetailTabs(props) {
             //         break;
             // }
             return (
-                <TabPanel key={'tabPanel' + type}>
+                <TabPanel key={`tabPanel${  type}`}>
                     { content }
                 </TabPanel>
             );

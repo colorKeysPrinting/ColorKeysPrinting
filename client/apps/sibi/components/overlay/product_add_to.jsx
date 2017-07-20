@@ -4,7 +4,7 @@ import assets                                    from '../../libs/assets';
 export default function addToOverlay(props) {
     let inputs, actionSection, close;
 
-    let styles = {
+    const styles = {
         container: {
             position: 'absolute',
             top: props.overlayObj.mouseCoord.mouseY - 104,
@@ -27,8 +27,8 @@ export default function addToOverlay(props) {
 
     return (
         <div style={styles.container}>
-            <div onClick={()=>props.showRadioOverlay('radioList', 'customMatchups', props.overlayObj.productId)} style={styles.element}>Add to Custom Matchup</div>
-            <div onClick={()=>props.showRadioOverlay('radioList', 'myLists', props.overlayObj.productId)}        style={styles.element}>Add to List</div>
+            <div onClick={() => props.showRadioOverlay('radioList', 'customMatchups', props.overlayObj.productId)} style={styles.element}>Add to Custom Matchup</div>
+            <div onClick={() => props.showRadioOverlay('radioList', 'myLists', props.overlayObj.productId)}        style={styles.element}>Add to List</div>
         </div>
     );
 }

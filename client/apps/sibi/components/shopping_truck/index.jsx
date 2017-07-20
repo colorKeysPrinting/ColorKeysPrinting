@@ -1,8 +1,8 @@
-import '../common/custom_formats.js'                        // adds formatMoney to Number types
 import React                    from 'react';
 import { connect }              from 'react-redux';
-import assets                   from '../../libs/assets';
 import _                        from 'lodash';
+import assets                   from '../../libs/assets';
+import '../common/custom_formats.js'                        // adds formatMoney to Number types
 
 import { updateTruck, removeFromTruck, addToTruck }          from '../../actions/application';
 
@@ -20,24 +20,24 @@ class ShoppingTruck extends React.Component {
     }
 
     update(productId, type, value) {
-        let products = this.props.truck.toJS();
+        const products = this.props.truck.toJS();
 
-        let product = _.find(products, ['id', productId]);
+        const product = _.find(products, ['id', productId]);
 
-        if(type === 'qty') {
+        if (type === 'qty') {
             product.qty = parseInt(value);
             product.cost = product.price * product.qty;
 
-            if(product.warranty) {
+            if (product.warranty) {
                 product.warranty.qty = product.qty;
             }
 
-        } else if(type === 'warranty') {
+        } else if (type === 'warranty') {
             product.warranty = value;
             product.cost = (product.price * product.qty) + product.warrantyPrice;
         }
 
-        let index = _.findIndex(products, (product)=>{return product.id === productId});
+        const index = _.findIndex(products, (product) => product.id === productId);
         products[index] = product;
 
         this.props.updateTruck(products);
@@ -45,15 +45,15 @@ class ShoppingTruck extends React.Component {
 
     calculate(product) {
 
-        let subTotal = parseFloat(product.price * product.qty);
-        let salesTax = this.calcTax(subTotal * this.props.salesTaxRate);
+        const subTotal = parseFloat(product.price * product.qty);
+        const salesTax = this.calcTax(subTotal * this.props.salesTaxRate);
 
-        return {subTotal, salesTax};
+        return { subTotal, salesTax };
     }
 
     calcTax(value) {
-        let result = Math.floor(value) + ".";
-        let cents = 100 * (value - Math.floor(value)) + .5;
+        let result = `${Math.floor(value)  }.`;
+        const cents = 100 * (value - Math.floor(value)) + .5;
 
         result += Math.floor(cents / 10);
         result += Math.floor(cents % 10);
@@ -64,7 +64,7 @@ class ShoppingTruck extends React.Component {
     render() {
         let truck, subTotal = 0, salesTax = 0, total = 0;
 
-        let styles = {
+        const styles = {
             container: {
                 width: '95%',
                 margin: '0 auto',
@@ -85,10 +85,10 @@ class ShoppingTruck extends React.Component {
             }
         };
 
-        if(this.props.truck.size > 0) {
+        if (this.props.truck.size > 0) {
 
-            truck = _.map(this.props.truck.toJS(), (product)=>{
-                let cost = this.calculate(product);
+            truck = _.map(this.props.truck.toJS(), (product) => {
+                const cost = this.calculate(product);
 
                 subTotal += cost.subTotal;
                 salesTax += cost.salesTax;
@@ -101,13 +101,14 @@ class ShoppingTruck extends React.Component {
                         subTotal={cost.subTotal}
                         salesTax={cost.salesTax}
                         update={this.update}
-                        removeFromTruck={this.props.removeFromTruck} />
+                        removeFromTruck={this.props.removeFromTruck}
+                    />
                 );
             });
 
-            _.each(this.props.truck.toJS(), (product, index)=>{
-                if(product.warranty) {
-                    let cost = this.calculate(product.warranty);
+            _.each(this.props.truck.toJS(), (product, index) => {
+                if (product.warranty) {
+                    const cost = this.calculate(product.warranty);
 
                     subTotal += cost.subTotal;
                     salesTax += cost.salesTax;
@@ -117,38 +118,39 @@ class ShoppingTruck extends React.Component {
                         index + 1,
                         0,
                         <Warranty
-                            key={'warranty' + product.warranty.id}
+                            key={`warranty${  product.warranty.id}`}
                             productId={product.id}
                             warranty={product.warranty}
-                            update={this.update} />
+                            update={this.update}
+                        />
                     );
                 }
             });
 
         } else {
 
-            truck = <div>
-                        <div><img src={assets('./images/empty-truck.png')} width="100%"/></div>
-                        <div>Your truck is empty</div>
-                    </div>;
+            truck = (<div>
+                <div><img src={assets('./images/empty-truck.png')} width="100%"/></div>
+                <div>Your truck is empty</div>
+            </div>);
         }
 
         return (
             <div id="my-shopping-truck" style={styles.container}>
                 <div style={styles.title}>Shopping Truck</div>
                 <div>
-                <table style={styles.table}>
-                    <thead>
-                        <tr>
-                            <td>Product</td>
-                            <td>Qty</td>
-                            <td>Price</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { truck }
-                    </tbody>
-                </table>
+                    <table style={styles.table}>
+                        <thead>
+                            <tr>
+                                <td>Product</td>
+                                <td>Qty</td>
+                                <td>Price</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { truck }
+                        </tbody>
+                    </table>
                 </div>
                 <div style={styles.footer}>
                     <div>SUBTOTAL: ${ (subTotal).formatMoney(2, '.', ',') }</div>
@@ -161,12 +163,10 @@ class ShoppingTruck extends React.Component {
     }
 }
 
-let select = (state)=>{
-    return {
-        currLang            : state.application.get('currLanguage'),
-        salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate']),
-        truck               : state.application.get('truck'),
-    };
-};
+const select = (state) => ({
+    currLang            : state.application.get('currLanguage'),
+    salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate']),
+    truck               : state.application.get('truck'),
+});
 
-export default connect(select, {updateTruck, removeFromTruck, addToTruck}, null, {withRef: true})(ShoppingTruck);
+export default connect(select, { updateTruck, removeFromTruck, addToTruck }, null, { withRef: true })(ShoppingTruck);

@@ -2,7 +2,7 @@ import React    from 'react';
 
 export default function AddNewListOverlay(props) {
 
-    let styles = {
+    const styles = {
         container: {
             backgroundColor: '#F9FAFC',
             borderRadius: '5px',
@@ -41,14 +41,14 @@ export default function AddNewListOverlay(props) {
     };
 
     let title;
-    switch(props.overlayObj.type) {
-        case 'customMatchups':
-            title = 'Custom Matchup';
-            break;
-        case 'myLists':
-            title = 'List';
-            break;
-        default:
+    switch (props.overlayObj.type) {
+    case 'customMatchups':
+        title = 'Custom Matchup';
+        break;
+    case 'myLists':
+        title = 'List';
+        break;
+    default:
     }
 
     return (
@@ -57,13 +57,13 @@ export default function AddNewListOverlay(props) {
                 <div style={styles.title}>Create New { title }</div>
                 <div onClick={props.close} style={styles.close}>X</div>
             </div>
-            <form onSubmit={()=>props.submitCreateListBtn(props.overlayObj.type)}>
+            <form onSubmit={() => props.submitCreateListBtn(props.overlayObj.type)}>
                 <div style={styles.content}>
-                    <div style={{width: '95%', margin: 'auto'}}>Name your new {(title).toLowerCase()}</div>
-                    <input type="text" placeholder="My Favorites" value={props.name} onChange={(e)=>{props.update('name', e.target.value)}} style={{width: '420px'}} required/>
+                    <div style={{ width: '95%', margin: 'auto' }}>Name your new {(title).toLowerCase()}</div>
+                    <input type="text" placeholder="My Favorites" value={props.name} onChange={(e) => { props.update('name', e.target.value) }} style={{ width: '420px' }} required />
                 </div>
 
-                <input className="submit-btn" type="submit" value="Submit" style={{width: '86%'}} />
+                <input className="submit-btn" type="submit" value="Submit" style={{ width: '86%' }} />
             </form>
         </div>
     );

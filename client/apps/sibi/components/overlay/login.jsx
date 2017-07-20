@@ -4,7 +4,7 @@ import assets                                    from '../../libs/assets';
 export default function LoginOverlay(props) {
     let inputs, actionSection, close;
 
-    let styles = {
+    const styles = {
         container: {
             backgroundColor: '#F9FAFC',
             borderRadius: '5px',
@@ -43,41 +43,41 @@ export default function LoginOverlay(props) {
         }
     };
 
-    switch(props.type) {
-        case 'login':
-            close = <div onClick={props.close} style={styles.close}>X</div>;
-            inputs = <div style={styles.content}>
-                        <input type="email"     placeholder="Email"     value={props.email.email}       onChange={(e)=>{props.update('email', e.target.value)}}     style={{width: '435px'}} required/>
-                        <input type="password"  placeholder="Password"  value={props.password.password} onChange={(e)=>{props.update('password', e.target.value)}}  style={{width: '435px'}} required/>
-                    </div>;
+    switch (props.type) {
+    case 'login':
+        close = <div onClick={props.close} style={styles.close}>X</div>;
+        inputs = (<div style={styles.content}>
+            <input type="email"     placeholder="Email"     value={props.email.email}       onChange={(e) => { props.update('email', e.target.value) }}     style={{ width: '435px' }} required />
+            <input type="password"  placeholder="Password"  value={props.password.password} onChange={(e) => { props.update('password', e.target.value) }}  style={{ width: '435px' }} required />
+        </div>);
 
-            actionSection = <div style={{columnCount: 2, display: 'inline-flex', width: '435px', textAlign: 'left'}}>
-                                <div className="cancel-btn" onClick={()=>props.changeOverlay('reset')} style={{width: '97%'}} >Forgot password?</div>
-                                <input className="submit-btn" type="submit" value="Login" style={{width: '86%'}} />
-                            </div>;
-            break;
+        actionSection = (<div style={{ columnCount: 2, display: 'inline-flex', width: '435px', textAlign: 'left' }}>
+            <div className="cancel-btn" onClick={() => props.changeOverlay('reset')} style={{ width: '97%' }} >Forgot password?</div>
+            <input className="submit-btn" type="submit" value="Login" style={{ width: '86%' }} />
+        </div>);
+        break;
 
-        case 'reset':
-            close = <div onClick={()=>props.changeOverlay('login')} style={styles.close}>X</div>;
-            inputs = <div>
-                        <div style={styles.text}>Enter your email to reset your password.</div>
-                        <input type="email" placeholder="Email" value={props.email.email} onChange={(e)=>{props.update('email', e.target.value)}} style={{width: '435px'}} required/>
-                    </div>;
+    case 'reset':
+        close = <div onClick={() => props.changeOverlay('login')} style={styles.close}>X</div>;
+        inputs = (<div>
+            <div style={styles.text}>Enter your email to reset your password.</div>
+            <input type="email" placeholder="Email" value={props.email.email} onChange={(e) => { props.update('email', e.target.value) }} style={{ width: '435px' }} required />
+        </div>);
 
-            actionSection = <input className="submit-btn" type="submit" value="Submit" style={{width: '86%'}} />;
-            break;
-        default:
+        actionSection = <input className="submit-btn" type="submit" value="Submit" style={{ width: '86%' }} />;
+        break;
+    default:
     }
 
-    let title = <div style={ styles.titleBar }>
-                    <div style={styles.title}>{(props.type === 'login') ? 'Login': 'Reset password'}</div>
-                    { close }
-                </div>;
+    const title = (<div style={styles.titleBar} >
+        <div style={styles.title}>{(props.type === 'login') ? 'Login': 'Reset password'}</div>
+        { close }
+    </div>);
 
     return (
         <div style={styles.container}>
             {title}
-            <form onSubmit={()=>props.submitLoginBtn(props.type)}>
+            <form onSubmit={() => props.submitLoginBtn(props.type)}>
                 <div style={styles.content}>
                     { inputs }
                 </div>

@@ -8,20 +8,20 @@ export default class AgreementOverlay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {checkbox: false};
+        this.state = { checkbox: false };
 
         this.update = this.update.bind(this);
     }
 
     update() {
-        let checkbox = (this.state.checkbox) ? false : true;
-        this.setState({checkbox});
+        const checkbox = !(this.state.checkbox);
+        this.setState({ checkbox });
     }
 
     render() {
         let inputs, actionSection, close;
 
-        let styles = {
+        const styles = {
             container: {
                 backgroundColor: '#F9FAFC',
                 borderRadius: '5px',
@@ -69,38 +69,44 @@ export default class AgreementOverlay extends React.Component {
         };
 
         let title;
-        switch(this.props.type) {
-            case 'contractGoodman':
-                title = 'Goodman';
-                break;
-            case 'contractAsure':
-                title = 'Asure';
-                break;
-            default:
+        switch (this.props.type) {
+        case 'contractGoodman':
+            title = 'Goodman';
+            break;
+        case 'contractAsure':
+            title = 'Asure';
+            break;
+        default:
         }
 
         return (
             <div style={styles.container}>
-                <div style={ styles.titleBar }>
+                <div style={styles.titleBar}>
                     <div style={styles.title}>Agree to {title} contract</div>
                     <div onClick={this.props.close} style={styles.close}>X</div>
                 </div>
                 <div style={styles.content}>
-                    <object data={assets(this.props.document)}
-                            type="application/pdf"
-                            width="100%"
-                            height="85%">
+                    <object
+                        data={assets(this.props.document)}
+                        type="application/pdf"
+                        width="100%"
+                        height="85%"
+                    >
                     </object>
-                    <div style={{columnCount: 2, display: 'inline-flex', width: '100%'}}>
+                    <div style={{ columnCount: 2, display: 'inline-flex', width: '100%' }}>
                         <div style={styles.checkbox}>
-                            <input  id="checkbox"
-                                    type="checkbox"
-                                    onClick={this.update}
-                                    checked={this.state.checkbox} />I agree
+                            <input
+                                id="checkbox"
+                                type="checkbox"
+                                onClick={this.update}
+                                checked={this.state.checkbox}
+                            />I agree
                         </div>
-                        <div className="submit-btn"
-                             onClick={(e)=>{e.preventDefault(); this.props.acceptAgreement(this.props.type ,this.state.checkbox); this.props.close()}}
-                             style={{paddingTop: '13px', width: '40%'}} >Done</div>
+                        <div
+                            className="submit-btn"
+                            onClick={(e) => { e.preventDefault(); this.props.acceptAgreement(this.props.type ,this.state.checkbox); this.props.close() }}
+                            style={{ paddingTop: '13px', width: '40%' }}
+                        >Done</div>
                     </div>
                 </div>
             </div>

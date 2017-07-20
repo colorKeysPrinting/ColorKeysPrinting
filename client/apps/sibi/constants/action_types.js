@@ -1,7 +1,7 @@
 import wrapper  from './wrapper';
 
 const actionTypes = [
-// application
+    // application
     "SHOW_PRODUCT_DETAILS", // TODO: change this to async, keep here during initial dev
     "SHOW_OVERLAY",
     "SHOW_RADIO_OVERLAY",
@@ -11,25 +11,25 @@ const actionTypes = [
     "REMOVE_FROM_TRUCK", // needs to be a async call
     "UPDATE_TRUCK", // needs to be a async call
 
-// header bar
+    // header bar
     "GO_HOME",
     "SET_ACTIVATE_TAB",
 
-// products
+    // products
     "SET_ACTIVE_FILTERS",
     "UPDATE_INFO_BAR",
     "REMOVE_PRODUCT", // needs to be a async call
     "REMOVE_COLLECTION", // needs to be a async call
     "CHECKING_INVENTORY", // needs to be a async call
 
-// signup
+    // signup
     "ADD_DOCUMENT",
     "ACCEPT_AGREEMENT",
 ];
 
 // These types will receive a _DONE
 const asyncActionTypes = [
-// application
+    // application
     "GET_TRADES",
     "GET_FUNDS",
     "GET_COMPANIES",
@@ -42,7 +42,7 @@ const asyncActionTypes = [
     "SIGNUP",
     "PASSWORD_RESET",
 
-// products
+    // products
     "GET_PRODUCTS",
     "GET_USER_MATCHUPS",
     "GET_USER_LISTS",

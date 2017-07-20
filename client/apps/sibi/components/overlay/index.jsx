@@ -23,8 +23,16 @@ class Overlay extends React.Component {
         super(props);
 
         this.state = {
-            activeUser: this.props.activeUser.toJS(), activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', name: '', newItem: '',
-            contractGoodman: false, contractAsure: false
+            activeUser: this.props.activeUser.toJS(),
+            activeOverlay: '',
+            overlayObj: '',
+            errorMsg: '',
+            email: '',
+            password: '',
+            name: '',
+            newItem: '',
+            contractGoodman: false,
+            contractAsure: false
         };
 
         this.resetState = this.resetState.bind(this);
@@ -41,34 +49,41 @@ class Overlay extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.activeOverlay) {
-            this.setState({activeOverlay: nextProps.activeOverlay});
+        if (nextProps.activeOverlay) {
+            this.setState({ activeOverlay: nextProps.activeOverlay });
         } else if (nextProps.activeOverlay === '') {
-            this.setState({activeOverlay: ''});
+            this.setState({ activeOverlay: '' });
         }
 
-        if(nextProps.overlayObj) {
-            this.setState({overlayObj: nextProps.overlayObj});
+        if (nextProps.overlayObj) {
+            this.setState({ overlayObj: nextProps.overlayObj });
         }
 
-        if(nextProps.activeUser) {
-            this.setState({activeUser: nextProps.activeUser.toJS()});
+        if (nextProps.activeUser) {
+            this.setState({ activeUser: nextProps.activeUser.toJS() });
         }
     }
 
     resetState() {
         this.setState({
-            activeOverlay: '', overlayObj: '', errorMsg: '', email: '', password: '', name: '', newItem: '',
-            contractGoodman: false, contractAsure: false
+            activeOverlay: '',
+            overlayObj: '',
+            errorMsg: '',
+            email: '',
+            password: '',
+            name: '',
+            newItem: '',
+            contractGoodman: false,
+            contractAsure: false
         });
     }
 
     changeOverlay(activeOverlay) {
-        this.setState({password: '', activeOverlay});
+        this.setState({ password: '', activeOverlay });
     }
 
     update(type, value) {
-        this.setState({[type]: value});
+        this.setState({ [type]: value });
     }
 
     close() {
@@ -81,28 +96,28 @@ class Overlay extends React.Component {
 
         console.log(type, value);
 
-        const re = new RegExp('\.(pdf|word|png|jpg|jpeg)', 'i');
+        const re = new RegExp('.(pdf|word|png|jpg|jpeg)', 'i');
         const maxSize = 25000; // 25KB = bytes
 
-        let result = re.exec(value.name);
+        const result = re.exec(value.name);
 
-        if(!result) {
+        if (!result) {
             isCorrect = false;
             errorMsg += "Incorrect file type!\n\tPlease upload a .PDF, .WORD, .PNG or .JPG\n\n"
         }
 
-        if(value.size > maxSize) {
+        if (value.size > maxSize) {
             isCorrect = false;
             errorMsg += "File is too big!\n\tPlease upload a file no larger than 25KB\n\n";
         }
 
-        if(isCorrect) {
+        if (isCorrect) {
             this.props.addDocument(type, value);
             this.close();
             return true;
 
         } else {
-            this.setState({errorMsg});
+            this.setState({ errorMsg });
             return false;
         }
     }
@@ -110,7 +125,7 @@ class Overlay extends React.Component {
     submitLoginBtn(type) {
         console.log('submit login clicked');
 
-        if(type === 'login') {
+        if (type === 'login') {
             this.props.login(this.state.email, this.state.password);
             this.resetState();
 
@@ -124,18 +139,18 @@ class Overlay extends React.Component {
         console.log('submit add to clicked');
 
         let products = [], totalCost;
-        if(this.state.overlayObj.productId === undefined) {
+        if (this.state.overlayObj.productId === undefined) {
             totalCost = 0;
         } else {
             totalCost = _.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId]).price;
             products = [this.state.overlayObj.productId];
         }
 
-        if(type === 'customMatchups') {
-            this.props.createMatchup({name: this.state.name, totalCost, adminCreated: (this.state.activeUser.type === 'admin') ? true : false, products});
+        if (type === 'customMatchups') {
+            this.props.createMatchup({ name: this.state.name, totalCost, adminCreated: (this.state.activeUser.type === 'admin'), products });
 
-        } else if(type === 'myLists') {
-            this.props.createList({name: this.state.name, products});
+        } else if (type === 'myLists') {
+            this.props.createList({ name: this.state.name, products });
         }
         this.close();
     }
@@ -143,31 +158,27 @@ class Overlay extends React.Component {
     submitAddToBtn(type, collectionId) {
         console.log('submit add to clicked');
 
-        let user = this.props.activeUser.toJS();
-        let product = _.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId]);
+        const user = this.props.activeUser.toJS();
+        const product = _.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId]);
 
-        if(type === 'customMatchups') {
-            let matchup = _.find(user.myMatchups, ['id', collectionId]);
+        if (type === 'customMatchups') {
+            const matchup = _.find(user.myMatchups, ['id', collectionId]);
 
-            if(product.price) {
+            if (product.price) {
                 matchup.totalCost += product.price;
             }
 
-            let products = _.map(matchup.products, (product)=>{
-                return product.id;
-            });
+            const products = _.map(matchup.products, (product) => product.id);
 
             products.push(product.id);
             matchup.products = products;
 
             this.props.updateMatchup(matchup);
 
-        } else if(type === 'myLists') {
-            let list = _.find(user.myLists, ['id', collectionId]);
+        } else if (type === 'myLists') {
+            const list = _.find(user.myLists, ['id', collectionId]);
 
-            let products = _.map(list.products, (product)=>{
-                return product.id;
-            });
+            const products = _.map(list.products, (product) => product.id);
 
             products.push(product.id);
             list.products = products
@@ -178,14 +189,14 @@ class Overlay extends React.Component {
 
     removeProduct(collectionType, collectionId, productId) {
 
-        if(collectionType === 'customMatchups') {
-            let collection = _.find(this.props.activeUser.toJS().myMatchups, ['id', collectionId]);
-            collection.products = _.remove(collection.products, (product)=>{return product.id !== productId});
+        if (collectionType === 'customMatchups') {
+            const collection = _.find(this.props.activeUser.toJS().myMatchups, ['id', collectionId]);
+            collection.products = _.remove(collection.products, (product) => product.id !== productId);
             this.props.updateMatchup(collection);
 
-        } else if(collectionType === 'myLists') {
-            let collection = _.find(this.props.activeUser.toJS().myLists, ['id', collectionId]);
-            collection.products = _.remove(collection.products, (product)=>{return product.id !== productId});
+        } else if (collectionType === 'myLists') {
+            const collection = _.find(this.props.activeUser.toJS().myLists, ['id', collectionId]);
+            collection.products = _.remove(collection.products, (product) => product.id !== productId);
             this.props.updateList(collection);
         }
     }
@@ -193,10 +204,10 @@ class Overlay extends React.Component {
     removeCollection(type, id) {
         console.log('delete collection', type, id);
 
-        if(type === 'customMatchups') {
+        if (type === 'customMatchups') {
             this.props.removeMatchup(id);
 
-        } else if(type === 'myLists') {
+        } else if (type === 'myLists') {
             this.props.removeList(id);
         }
     }
@@ -208,7 +219,7 @@ class Overlay extends React.Component {
     render() {
         let overlay, closeSection;
 
-        let styles = {
+        const styles = {
             overlayBackground: {
                 display: (this.state.activeOverlay !== '') ? 'block' : 'none',
                 position: 'absolute',
@@ -225,107 +236,129 @@ class Overlay extends React.Component {
             }
         }
 
-        switch(this.state.activeOverlay) {
-            case 'login':
-            case 'reset':
-                overlay = <Login
-                                type={this.state.activeOverlay}
-                                email={{email:this.state.email, error: this.state.errorEmail}}
-                                password={{password: this.state.password, error: this.state.errorPassword}}
-                                update={this.update}
-                                changeOverlay={this.changeOverlay}
-                                close={this.close}
-                                submitLoginBtn={this.submitLoginBtn} />
-                break;
+        switch (this.state.activeOverlay) {
+        case 'login':
+        case 'reset':
+            overlay = (
+                <Login
+                    type={this.state.activeOverlay}
+                    email={{ email:this.state.email, error: this.state.errorEmail }}
+                    password={{ password: this.state.password, error: this.state.errorPassword }}
+                    update={this.update}
+                    changeOverlay={this.changeOverlay}
+                    close={this.close}
+                    submitLoginBtn={this.submitLoginBtn}
+                />)
+            break;
 
-            case 'profile':
-                overlay = <Profile
-                                profilePic={this.state.activeUser.profilePic}
-                                username={this.state.activeUser.username}
-                                changeLanguage={this.props.changeLanguage}
-                                logout={this.props.logout} />;
+        case 'profile':
+            overlay = (
+                <Profile
+                    profilePic={this.state.activeUser.profilePic}
+                    username={this.state.activeUser.username}
+                    changeLanguage={this.props.changeLanguage}
+                    logout={this.props.logout}
+                />);
 
-                closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
-                break;
+            closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
+            break;
 
-            case 'docWorkerComp':
-            case 'docW9':
-            case 'docInsurance':
-                overlay = <FileUploader
-                                type={this.state.activeOverlay}
-                                fileDrop={this.fileDrop}
-                                close={this.close}
-                                errorMsg={this.state.errorMsg} />
-                break;
+        case 'docWorkerComp':
+        case 'docW9':
+        case 'docInsurance':
+            overlay = (
+                <FileUploader
+                    type={this.state.activeOverlay}
+                    fileDrop={this.fileDrop}
+                    close={this.close}
+                    errorMsg={this.state.errorMsg}
+                />);
+            break;
 
-            case 'contractGoodman':
-            case 'contractAsure':
-                overlay = <Agreement
-                                type={this.state.activeOverlay}
-                                document={(this.state.activeOverlay === 'contractGoodman') ? this.props.contractGoodman : this.props.contractAsure}
-                                acceptAgreement={this.props.acceptAgreement}
-                                close={this.close} />
-                break;
+        case 'contractGoodman':
+        case 'contractAsure':
+            overlay = (
+                <Agreement
+                    type={this.state.activeOverlay}
+                    document={(this.state.activeOverlay === 'contractGoodman') ? this.props.contractGoodman : this.props.contractAsure}
+                    acceptAgreement={this.props.acceptAgreement}
+                    close={this.close}
+                />);
+            break;
 
-            case 'productAddTo':
-                overlay = <ProductAddTo
-                                showRadioOverlay={this.props.showRadioOverlay} // to reducer func
-                                overlayObj={this.state.overlayObj}
-                                close={this.close} />;
+        case 'productAddTo':
+            overlay = (
+                <ProductAddTo
+                    showRadioOverlay={this.props.showRadioOverlay} // to reducer func
+                    overlayObj={this.state.overlayObj}
+                    close={this.close}
+                />);
 
-                closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
-                break;
+            closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
+            break;
 
-            case 'radioList':
-                overlay = <Radio
-                                overlayObj={this.state.overlayObj} // list of selected list elements
-                                changeOverlay={this.changeOverlay} // to local func
-                                close={this.close}
-                                submitAddToBtn={this.submitAddToBtn} />;
-                break;
+        case 'radioList':
+            overlay = (
+                <Radio
+                    overlayObj={this.state.overlayObj} // list of selected list elements
+                    changeOverlay={this.changeOverlay} // to local func
+                    close={this.close}
+                    submitAddToBtn={this.submitAddToBtn}
+                />);
+            break;
 
-            case 'addToConfirmation':
-                overlay = <AddToConfirmation
-                                overlayObj={this.state.overlayObj}
-                                product={_.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId])}
-                                changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
-                                close={this.close} />;
-                break;
+        case 'addToConfirmation':
+            overlay = (
+                <AddToConfirmation
+                    overlayObj={this.state.overlayObj}
+                    product={_.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId])}
+                    changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
+                    close={this.close}
+                />);
+            break;
 
-            case 'addNewList':
-                overlay = <AddNewList
-                                name={this.state.name}
-                                overlayObj={this.state.overlayObj}
-                                update={this.update}
-                                close={this.close}
-                                submitCreateListBtn={this.submitCreateListBtn} />;
-                break;
+        case 'addNewList':
+            overlay = (
+                <AddNewList
+                    name={this.state.name}
+                    overlayObj={this.state.overlayObj}
+                    update={this.update}
+                    close={this.close}
+                    submitCreateListBtn={this.submitCreateListBtn}
+                />);
+            break;
 
-            case 'customMatchup':
-                overlay = <ViewMatchup
-                                overlayObj={this.state.overlayObj}
-                                close={this.close} />;
-                break;
+        case 'customMatchup':
+            overlay = (
+                <ViewMatchup
+                    overlayObj={this.state.overlayObj}
+                    close={this.close}
+                />);
+            break;
 
-            case 'removeItem' :
-                overlay = <RemoveListItem
-                                overlayObj={this.state.overlayObj}
-                                collection={_.find(this.state.activeUser.myLists, ['id', this.state.overlayObj.collectionId])}
-                                product={_.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId])}
-                                removeProduct={this.removeProduct}
-                                removeCollection={this.removeCollection}
-                                close={this.close} />;
-                break;
+        case 'removeItem' :
+            overlay = (
+                <RemoveListItem
+                    overlayObj={this.state.overlayObj}
+                    collection={_.find(this.state.activeUser.myLists, ['id', this.state.overlayObj.collectionId])}
+                    product={_.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId])}
+                    removeProduct={this.removeProduct}
+                    removeCollection={this.removeCollection}
+                    close={this.close}
+                />);
+            break;
 
-            case 'stockCheck' :
-                overlay = <StockCheck
-                                location={this.state.overlayObj.location}
-                                product={this.state.overlayObj.product}
-                                checkingInventory={this.props.checkingInventory}
-                                close={this.close} />;
-                break;
+        case 'stockCheck' :
+            overlay = (
+                <StockCheck
+                    location={this.state.overlayObj.location}
+                    product={this.state.overlayObj.product}
+                    checkingInventory={this.props.checkingInventory}
+                    close={this.close}
+                />);
+            break;
 
-            default:
+        default:
         }
 
         return (
@@ -337,20 +370,24 @@ class Overlay extends React.Component {
     }
 }
 
-let select = (state)=>{
-    return {
-        activeOverlay       : state.application.get('activeOverlay'),
-        overlayObj          : state.application.get('overlayObj'),
-        activeUser          : state.application.get('activeUser'),
-        products            : state.application.get('products'),
-        contractGoodman     : state.application.getIn(['contracts','goodman']),
-        contractAsure       : state.application.getIn(['contracts','asure'])
-    }
-};
+const select = (state) => ({
+    activeOverlay       : state.application.get('activeOverlay'),
+    overlayObj          : state.application.get('overlayObj'),
+    activeUser          : state.application.get('activeUser'),
+    products            : state.application.get('products'),
+    contractGoodman     : state.application.getIn(['contracts','goodman']),
+    contractAsure       : state.application.getIn(['contracts','asure'])
+});
 
-let actions = {
-    login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement,
+const actions = {
+    login,
+    logout,
+    showRadioOverlay,
+    closeOverlay,
+    passwordReset,
+    addDocument,
+    acceptAgreement,
     ...productActions
 };
 
-export default connect(select, actions, null, {withRef: true})(Overlay);
+export default connect(select, actions, null, { withRef: true })(Overlay);

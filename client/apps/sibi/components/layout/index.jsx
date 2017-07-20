@@ -7,26 +7,26 @@ import Overlay      from '../overlay';
 export default class Index extends React.Component {
 
   static propTypes = {
-    children: PropTypes.node,
+      children: PropTypes.node,
   };
 
   static defaultProps = {
-    children: '',
+      children: '',
   }
 
   constructor() {
-    super();
-    this.state = {};
+      super();
+      this.state = {};
   }
 
   render() {
-    return (
-      <div>
-        <HeaderBar />
-        {this.props.children}
-        <Overlay/>
-      </div>
-    );
+      return (
+          <div>
+              <HeaderBar />
+              {this.props.children}
+              <Overlay />
+          </div>
+      );
   }
 
 }

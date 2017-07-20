@@ -23,8 +23,8 @@ class ContentPanel extends React.Component {
         const re = /\w{1,}\/([\w|\d]{1,})\/([\w|\d|-]{1,})/;
         const type = re.exec(location.hash) || ['',''];
 
-        if(type[1] === 'myList') {
-            if(this.props.activeOverlay === 'addToConfirmation') {
+        if (type[1] === 'myList') {
+            if (this.props.activeOverlay === 'addToConfirmation') {
                 this.props.closeOverlay();
             }
         }
@@ -33,7 +33,7 @@ class ContentPanel extends React.Component {
     render() {
         let activeSection;
 
-        let styles = {
+        const styles = {
             container: {
                 backgroundColor: '#FFF',
                 width: '83%'
@@ -48,23 +48,27 @@ class ContentPanel extends React.Component {
         const re = /\w{1,}\/([\w|\d]{1,})\/([\w|\d|-]{1,})/;
         const type = re.exec(location.hash) || ['',''];
 
-        switch(type[1]) {
-            case 'matchup':
-                activeSection = (type[2] === 'standard') ? <Matchups /> : <MatchupsCustom />;
-                break;
-            case 'myList':
-                activeSection = <MyLists
-                                    collectionId={type[2]} />;
-                break;
-            case 'equipment':
-                activeSection = <Equipment
-                                    type={type[2]} />;
-                break;
+        switch (type[1]) {
+        case 'matchup':
+            activeSection = (type[2] === 'standard') ? <Matchups /> : <MatchupsCustom />;
+            break;
+        case 'myList':
+            activeSection = (
+                <MyLists
+                    collectionId={type[2]}
+                />);
+            break;
+        case 'equipment':
+            activeSection = (
+                <Equipment
+                    type={type[2]}
+                />);
+            break;
             // case 'partsSupplies':
             //     activeSection = <Products />;
             //     break;
-            default:
-                activeSection = <Products />;
+        default:
+            activeSection = <Products />;
         }
 
         return (
@@ -75,12 +79,10 @@ class ContentPanel extends React.Component {
     }
 }
 
-let select = (state)=>{
-    return {
-        currLang        : state.application.get('currLanguage'),
-        activeOverlay   : state.application.get('activeOverlay')
-    };
-};
+const select = (state) => ({
+    currLang        : state.application.get('currLanguage'),
+    activeOverlay   : state.application.get('activeOverlay')
+});
 
-export default connect(select, {closeOverlay, getProducts, getUserMatchups, getUserLists}, null, {withRef: true})(withRouter(ContentPanel));
+export default connect(select, { closeOverlay, getProducts, getUserMatchups, getUserLists }, null, { withRef: true })(withRouter(ContentPanel));
 
