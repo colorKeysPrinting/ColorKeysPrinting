@@ -22,7 +22,7 @@ class ShoppingTruck extends React.Component {
     update(productId, type, value) {
         let products = this.props.truck.toJS();
 
-        let product = _.find(products, ['id', parseInt(productId)]);
+        let product = _.find(products, ['id', productId]);
 
         if(type === 'qty') {
             product.qty = parseInt(value);

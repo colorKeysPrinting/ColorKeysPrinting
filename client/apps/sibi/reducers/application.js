@@ -403,13 +403,13 @@ export default (state = initialState, action)=>{
                 }
             } else {
                 _.each(item.products, (qty, id)=>{
-                    let index = _.findIndex(truck, ['id', parseInt(id)]);
+                    let index = _.findIndex(truck, ['id', id]);
 
                     if(index >= 0) {
                         truck[index].qty += qty;
                         truck[index].warranty = item.warranty;
                     } else {
-                        let product = _.find(products, ['id', parseInt(id)]);
+                        let product = _.find(products, ['id', id]);
                         product['qty'] = qty;
                         truck.push(product);
                     }

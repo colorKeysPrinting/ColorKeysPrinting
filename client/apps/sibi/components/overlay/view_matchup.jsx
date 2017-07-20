@@ -6,22 +6,13 @@ import assets                   from '../../libs/assets';
 
 import { addToTruck }           from '../../actions/application';
 
-let select = (state)=>{
-    return {
-        currLang            : state.application.get('currLanguage'),
-        products            : state.application.get('products'),
-        salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate'])
-    };
-};
-
-@connect(select, {addToTruck}, null, {withRef: true})
-export default class ViewMatchupOverlay extends React.Component {
+class ViewMatchupOverlay extends React.Component {
 
     constructor(props) {
         super(props);
 
         let products = _.map(this.props.overlayObj.collectionObj.products, (matchupQty, productId)=>{
-            let product = _.find(this.props.products.toJS(), ['id', parseInt(productId)]);
+            let product = _.find(this.props.products.toJS(), ['id', productId]);
             let cost = (parseFloat(product.price * matchupQty));
 
             return {...product, matchupQty, cost};
@@ -259,3 +250,13 @@ export default class ViewMatchupOverlay extends React.Component {
         );
     }
 }
+
+let select = (state)=>{
+    return {
+        currLang            : state.application.get('currLanguage'),
+        products            : state.application.get('products'),
+        salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate'])
+    };
+};
+
+export default connect(select, {addToTruck}, null, {withRef: true})(ViewMatchupOverlay);

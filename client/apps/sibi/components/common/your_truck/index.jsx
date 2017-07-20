@@ -22,7 +22,7 @@ class YourTruck extends React.Component {
     update(productId, type, value) {
         let truck = this.props.truck.toJS();
 
-        let product = _.find(truck, ['id', parseInt(productId)]);
+        let product = _.find(truck, ['id', productId]);
 
         if(type === 'qty') {
             product.qty = parseInt(value);
@@ -34,7 +34,7 @@ class YourTruck extends React.Component {
             }
 
         } else if(type === 'warranty') {
-            product.warranty = _.find(this.props.warranties.toJS(), ['id', parseInt(value)]);
+            product.warranty = _.find(this.props.warranties.toJS(), ['id', value]);
             product.warranty.qty = product.qty;
             product.cost = (product.price * product.qty) + (product.warranty.price * product.qty);
         }

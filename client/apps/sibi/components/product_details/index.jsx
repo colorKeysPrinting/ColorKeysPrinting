@@ -38,7 +38,7 @@ class ProductDetails extends React.Component {
     }
 
     checkInventory(id) {
-        let location = _.find(this.props.productLocations.toJS(), ['id', parseInt(id)]);
+        let location = _.find(this.props.productLocations.toJS(), ['id', id]);
 
         if(location.stock < this.state.minStock) {
             this.props.showOverlay('stockCheck', {product: this.state.product, location});

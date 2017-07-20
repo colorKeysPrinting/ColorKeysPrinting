@@ -26,7 +26,7 @@ export default function DetailTabs(props) {
             //             return (
             //                 <Product
             //                     key={productId}
-            //                     product={_.find(props.products, ['id', parseInt(productId)])}
+            //                     product={_.find(props.products, ['id', productId])}
             //                     addToTruck={props.addToTruck} />
             //             );
             //         });

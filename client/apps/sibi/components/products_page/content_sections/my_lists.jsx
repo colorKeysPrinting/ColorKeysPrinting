@@ -8,16 +8,7 @@ import { addToTruck, showOverlay }           from '../../../actions/application'
 
 import Product                  from './product';
 
-let select = (state)=>{
-    return {
-        currLang   : state.application.get('currLanguage'),
-        myLists    : state.application.getIn(['activeUser','myLists']),
-        products   : state.application.get('products')
-    };
-};
-
-@connect(select, {addToTruck, showOverlay}, null, {withRef: true})
-export default class MyLists extends React.Component {
+class MyLists extends React.Component {
 
     render() {
         let content;
@@ -54,7 +45,7 @@ export default class MyLists extends React.Component {
 
             let products = _.map(collection.products,(productId)=>{
 
-                let product = _.find(this.props.products.toJS(), ['id', parseInt(productId)]);
+                let product = _.find(this.props.products.toJS(), ['id', productId]);
 
                 return (
                     <Product
@@ -92,5 +83,13 @@ export default class MyLists extends React.Component {
     }
 }
 
+let select = (state)=>{
+    return {
+        currLang   : state.application.get('currLanguage'),
+        myLists    : state.application.getIn(['activeUser', 'myLists']),
+        products   : state.application.get('products')
+    };
+};
 
+exprot default connect(select, {addToTruck, showOverlay}, null, {withRef: true})(MyLists);
 

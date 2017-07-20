@@ -83,7 +83,7 @@ class Matchups extends React.Component {
             return (
                 <Matchup
                     key={key}
-                    matchup={_.find(this.props.matchups, ['id', parseInt(id)])}
+                    matchup={_.find(this.props.matchups, ['id', id])}
                     tonnage={this.state.tonnage}
                     seer={this.state.seer}
                     applicationType={this.state.applicationType}
