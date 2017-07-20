@@ -43,9 +43,9 @@ class MyLists extends React.Component {
 
         if(_.size(collection.products) > 0) {
 
-            let products = _.map(collection.products,(productId)=>{
+            var products = _.map(collection.products, (product)=>{
 
-                let product = _.find(this.props.products.toJS(), ['id', productId]);
+                product = _.find(this.props.products.toJS(), ['id', product.id]);
 
                 return (
                     <Product
@@ -91,5 +91,5 @@ let select = (state)=>{
     };
 };
 
-exprot default connect(select, {addToTruck, showOverlay}, null, {withRef: true})(MyLists);
+export default connect(select, {addToTruck, showOverlay}, null, {withRef: true})(MyLists);
 

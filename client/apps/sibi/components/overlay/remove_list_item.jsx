@@ -48,11 +48,11 @@ export default function RemoveListItem(props) {
         title = 'Remove Item from';
         message = `Are you sure you want to remove "${ props.product.name }" from ${ collection.name }`;
         productId = props.product.id;
-        removeBtn = <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeProduct({collectionType: props.overlayObj.collectionType, collectionId: collection.id, productId})}>Remove</div>;
+        removeBtn = <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeProduct(props.overlayObj.collectionType, collection.id, productId)}>Remove</div>;
     } else {
         title = 'Delete'
         message = `Are you sure you want to remove "${ collection.name }"`;
-        removeBtn = <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeCollection(collectionType: props.overlayObj.collectionType, collectionId: collection.id)}>Remove</div>;
+        removeBtn = <div className="submit-btn" style={{width: '50%'}} onClick={()=>props.removeCollection(props.overlayObj.collectionType, collection.id)}>Remove</div>;
     }
 
     let modelNumber = (props.product) ? props.product.modelNumber : '';

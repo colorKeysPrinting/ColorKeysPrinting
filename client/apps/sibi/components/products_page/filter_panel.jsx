@@ -6,7 +6,7 @@ import assets                   from '../../libs/assets';
 
 import ReactSlider              from 'react-slider';
 
-import { setActiveFilters }     from '../../actions/products';
+import { setActiveFilters, getUserLists }     from '../../actions/products';
 import { showOverlay }          from '../../actions/application';
 
 class FilterPanel extends React.Component {
@@ -24,6 +24,12 @@ class FilterPanel extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.activeFilters) {
             this.setState({activeFilters: nextProps.activeFilters.toJS()});
+        }
+    }
+
+    componentWillUpdate(nextProps) {
+        if(nextProps.isListDeleted) {
+            this.props.getUserLists();
         }
     }
 
@@ -197,10 +203,11 @@ let select = (state)=>{
     return {
         currLang            : state.application.get('currLanguage'),
         myLists             : state.application.getIn(['activeUser', 'myLists']),
+        isListDeleted       : state.application.get('isListDeleted'),
         filterPanel         : state.application.get('filterPanel'),
         availableFilters    : state.application.get('availableFilters'),
         activeFilters       : state.application.get('activeFilters'),
     };
 };
 
-export default connect(select, {setActiveFilters, showOverlay}, null, {withRef: true})(FilterPanel);
+export default connect(select, {setActiveFilters, getUserLists, showOverlay}, null, {withRef: true})(FilterPanel);

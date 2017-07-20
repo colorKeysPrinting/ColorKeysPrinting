@@ -2,9 +2,9 @@ import React                    from 'react';
 import { connect }              from 'react-redux';
 import _                        from 'lodash';
 
+import * as productActions      from '../../actions/products';
 import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 import { addDocument, acceptAgreement }         from '../../actions/signup';
-import { createMatchup, createList, updateMatchup, updateList, removeList, removeProduct, checkingInventory }         from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -178,10 +178,27 @@ class Overlay extends React.Component {
 
     removeProduct(collectionType, collectionId, productId) {
 
+        if(collectionType === 'customMatchups') {
+            let collection = _.find(this.props.activeUser.toJS().myMatchups, ['id', collectionId]);
+            collection.products = _.remove(collection.products, (product)=>{return product.id !== productId});
+            this.props.updateMatchup(collection);
+
+        } else if(collectionType === 'myLists') {
+            let collection = _.find(this.props.activeUser.toJS().myLists, ['id', collectionId]);
+            collection.products = _.remove(collection.products, (product)=>{return product.id !== productId});
+            this.props.updateList(collection);
+        }
     }
 
     removeCollection(type, id) {
+        console.log('delete collection', type, id);
 
+        if(type === 'customMatchups') {
+            this.props.removeMatchup(id);
+
+        } else if(type === 'myLists') {
+            this.props.removeList(id);
+        }
     }
 
     addToTruck(items) {
@@ -333,7 +350,7 @@ let select = (state)=>{
 
 let actions = {
     login, logout, showRadioOverlay, closeOverlay, passwordReset, addDocument, acceptAgreement,
-    createMatchup, createList, updateMatchup, updateList, removeList, removeProduct, checkingInventory
+    ...productActions
 };
 
 export default connect(select, actions, null, {withRef: true})(Overlay);
