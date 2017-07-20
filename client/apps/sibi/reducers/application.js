@@ -126,11 +126,6 @@ export default (state = initialState, action) => {
                     }
                 };
                 const myProducts = { mostPurchased: [11, 7, 3, 2] };
-                const myLists = [
-                    { id: 0, name: 'Dwight\'s List', products: ['7', '6', '10'] },
-                    { id: 1, name: 'Saved Trucks', products: ['4', '11'] },
-                    { id: 2, name: 'Supplies', products: [] }
-                ];
                 const myOrders = {
                     '0': { orderNum: 138992342, orderDate: 1488412800000, totalCost: 5631.96,  propertyAddress: '2182 N Grant Ave, Ogden, UT, 84414',    shippedTo: '4228 Spruce Ave, Phoenix, AZ 85001', status: 'ordered',           products: { '0': 16, '9': 16 } },
                     '1': { orderNum: 138992343, orderDate: 1488153600000, totalCost: 876.03,   propertyAddress: '113 Washington Blvd, Ogden, UT, 84414', shippedTo: '400 N Blvd, Idaho Falls, ID 83401',  status: 'ordered',           products: { '4': 2, '2': 2 } },
@@ -145,15 +140,15 @@ export default (state = initialState, action) => {
                 const orderTruck = [];
                 const myWarranties = [];
 
-                state = state.set('activeUser', Immutable.fromJS({ ...action.payload, settings, myProducts, myMatchups: [], myLists, myOrders, orderTruck, myWarranties }));
+                state = state.set('activeUser', Immutable.fromJS({ ...action.payload, settings, myProducts, myMatchups: [], myLists: [], myOrders, orderTruck, myWarranties }));
+
                 window.DEFAULT_JWT = action.payload.token; window.DEFAULT_JWT = action.payload.token;
-                history.pushState(null, '/products');
+                browserHistory.push({ pathname: `#/products/` });
             } else {
                 alert('Your account has been disabled!\nIf you find this to be an error please contact your fund');
             }
         } else {
             alert('Could not find a Username and Password combination matching the provided');
-
         }
         break;
 

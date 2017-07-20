@@ -12,22 +12,22 @@ import ShoppingTruck                  from './components/shopping_truck';
 import NotFound                       from './components/common/not_found';
 
 export default (
-  <Router history={appHistory}>
-    <Route path="/" component={Index}>
-      <IndexRoute component={Home} />
-    </Route>
-    <Route path="/signup" component={Index}>
-      <IndexRoute component={SignUpPage} />
-    </Route>
-    <Route path="/products(/:activePage/:id)" component={Index}>
-      <IndexRoute component={ProductsPage} />
-    </Route>
-    <Route path="/product-details/:id" component={Index}>
-      <IndexRoute component={ProductDetails} />
-    </Route>
-    <Route path="/shopping-truck" component={Index}>
-      <IndexRoute component={ShoppingTruck} />
-    </Route>
-    <Route path="*" component={NotFound} />
-  </Router>
+    <Router history={appHistory}>
+        <Route path="/" component={Index}>
+            <IndexRoute component={Home} />
+        </Route>
+        <Route path="/signup" component={Index}>
+            <IndexRoute component={SignUpPage} />
+        </Route>
+        <Route path="/products(/:activePage/:id)" component={Index}>
+            <IndexRoute component={ProductsPage} />
+        </Route>
+        <Route path="/product-details/:id" component={Index}>
+            <IndexRoute component={ProductDetails} />
+        </Route>
+        <Route path="/shopping-truck" component={Index}>
+            <IndexRoute component={ShoppingTruck} />
+        </Route>
+        <Route path="*" component={NotFound} />
+    </Router>
 );

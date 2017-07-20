@@ -6,15 +6,15 @@ const actions = [];
 
 // Actions that make an api request
 const requests = [
-  'REFRESH_JWT',
+    'REFRESH_JWT',
 ];
 
 export const Constants = wrapper(actions, requests);
 
 export function refreshJwt(userId) {
-  return {
-    type   : Constants.REFRESH_JWT,
-    method : Network.GET,
-    url    : `api/jwts/${userId}`,
-  };
+    return {
+        type   : Constants.REFRESH_JWT,
+        method : Network.GET,
+        url    : `api/jwts/${userId}`,
+    };
 }

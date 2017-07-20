@@ -4,8 +4,7 @@
     "nuke": "rm -rf node_modules && for dir in apps/*; do cd \"$dir\" || continue; rm -rf node_modules; cd ..; cd ..; done"
   },
   "dependencies": {
-    "react-slider": "^0.8.0",
-    "react-tabs": "^1.1.0",
+    "lodash": "^4.17.4",
     "superagent": "^3.5.0"
   },
   "devDependencies": {
@@ -53,7 +52,6 @@
     "jasmine-core": "^2.6.1",
     "less": "2.7.2",
     "less-loader": "^4.0.3",
-    "lodash": "^4.17.4",
     "marked": "^0.3.6",
     "minimist": "1.2.0",
     "node-sass": "^4.5.2",
