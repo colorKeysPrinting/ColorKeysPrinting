@@ -1,12 +1,12 @@
-## SIBI - FrontEnd
+## SIBI ADMIN - FrontEnd
 
 
-# Getting Started Docker:
+<!-- # Getting Started Docker:
 -----------------------
 
-1. docker build -t sibi-app .
+1. docker build -t sibi-fe-app .
 
-2. docker run -d -p 8443:8443 sibi-app
+2. docker run -d -p 8443:8443 sibi-fe-app -->
 
 #Getting Started:
 -----------------------
@@ -14,7 +14,7 @@
 
 Make sure to install git, npm before you start then:
 
-1. git clone https://bitbucket.org/HQ-Team/sibi-fe my_project_name
+1. git clone https://bitbucket.org/HQ-Team/sibi_fe_admin my_project_name
 2. Rename .env.example to .env. This file contains the port the server will use.
    - The default 8080 should be fine, but you can also use a local domain or ngrok if you wish.
    - To change the default port uncomment `ASSETS_PORT=` and set it to the desired port.
@@ -34,7 +34,7 @@ each new application that is started.
 
 If you have multiple applications you can run them one at a time with the application name:
 
-  `npm run hot sibi`
+  `npm run hot sibi_fe_admin`
 
 then `visit http://localhost:8080`
 
@@ -42,7 +42,7 @@ then `visit http://localhost:8080`
 # Using the SIBI App
 -----------------------
 The starter app is setup to serve multiple isolated client applications each with their own package.json. You will find
-an example "hello world" application in client/apps/sibi
+an example "hello world" application in client/apps/sibi_fe_admin
 Modify html and js files in that directory to build your application or copy paste that directory to build additional
 applications. The build process will automatically add a new webpack entry point for each folder in that directory.
 
@@ -57,7 +57,7 @@ React code can be found in client/js. We use Redux and the React-Router.
 All html files live in client/apps/[app name]/html. The build process will properly process ejs in any html files as well
 as process markdown for files that end in .md. All front matter in .md files will be available to
 the ejs templates and will be used when generating html. For example, you can set a custom layout for the html
-file by setting `layout: custom_layout` in the front matter. See apps/sibi/html/about.md for an example.
+file by setting `layout: custom_layout` in the front matter. See apps/sibi_fe_admin/html/about.md for an example.
 
 
 ## Assets

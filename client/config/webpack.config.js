@@ -9,9 +9,9 @@ const _                    = require('lodash');
 //
 // Generates a webpack config file based on an app.
 // app:
-//    name: The name of the application i.e. sibi
+//    name: The name of the application i.e. sibi_fe_admin
 //    app: An object containing the path and file name of the entry
-//         i.e. path: client/apps/sibi, file: app.jsx
+//         i.e. path: client/apps/sibi_fe_admin, file: app.jsx
 //    buildSuffix: The suffix to append onto the end of the build. i.e. _bundle.js
 //    stage:
 //      'production'
