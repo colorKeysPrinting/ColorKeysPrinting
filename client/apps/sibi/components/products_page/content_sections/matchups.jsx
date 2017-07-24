@@ -7,20 +7,12 @@ import { addToTruck, showOverlay }           from '../../../actions/application'
 
 import Matchup                  from './matchup';
 
-let select = (state)=>{
-    return {
-        currLang        : state.application.get('currLanguage'),
-        matchups        : state.application.get('matchups').toJS()
-    };
-};
-
-@connect(select, {addToTruck, showOverlay}, null, {withRef: true})
-export default class Matchups extends React.Component {
+class Matchups extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {matchups: _.find(this.props.matchups, ['matchup', 'standard']).matchups, tonnage: '', seer: '', applicationType: ''};
+        this.state = { matchups: _.find(this.props.matchups, ['matchup', 'standard']).matchups, tonnage: '', seer: '', applicationType: '' };
 
         this.update = this.update.bind(this);
         this.addToTruck = this.addToTruck.bind(this);
@@ -29,26 +21,26 @@ export default class Matchups extends React.Component {
     update(type, value) {
         console.log('element: ',type, value);
 
-        this.setState({[type]: value});
+        this.setState({ [type]: value });
     }
 
     addToTruck(matchup) {
         console.log('matchup: ', matchup);
-        let tonnage, seer, applicationType;
+        let applicationType;
 
-        tonnage = (this.state.tonnage) ? this.state.tonnage : matchup.tonnageOptions[0];
-        seer = (this.state.seer) ? this.state.seer : matchup.seerOptions[0];
+        const tonnage = (this.state.tonnage) ? this.state.tonnage : matchup.tonnageOptions[0];
+        const seer = (this.state.seer) ? this.state.seer : matchup.seerOptions[0];
 
-        if(matchup.applicationTypeOptions) {
+        if (matchup.applicationTypeOptions) {
             applicationType = (this.state.applicationType) ? this.state.applicationType : matchup.applicationTypeOptions[0];
         }
 
-        this.props.addToTruck({products: matchup.products, tonnage, seer, applicationType}); // TODO: need to make sure this is choosing the correct products
+        this.props.addToTruck({ products: matchup.products, tonnage, seer, applicationType }); // TODO: need to make sure this is choosing the correct products
     }
 
     render() {
 
-        let styles = {
+        const styles = {
             container: {
                 width: '98%'
             },
@@ -87,26 +79,24 @@ export default class Matchups extends React.Component {
             }
         };
 
-        let matchups = _.map(this.state.matchups, (id, key)=>{
-            return (
-                <Matchup
-                    key={key}
-                    matchup={_.find(this.props.matchups, ['id', parseInt(id)])}
-                    tonnage={this.state.tonnage}
-                    seer={this.state.seer}
-                    applicationType={this.state.applicationType}
-                    update={this.update}
-                    addToTruck={this.addToTruck}
-                    showOverlay={this.props.showOverlay} />
-            );
-        });
+        const matchups = _.map(this.state.matchups, (id, key) => (
+            <Matchup
+                key={key}
+                matchup={_.find(this.props.matchups, ['id', id])}
+                tonnage={this.state.tonnage}
+                seer={this.state.seer}
+                applicationType={this.state.applicationType}
+                update={this.update}
+                addToTruck={this.addToTruck}
+                showOverlay={this.props.showOverlay} />
+        ));
 
         return (
             <div style={styles.container}>
                 <div style={styles.titleSection}>
                     Standard Matchups
                 </div>
-                <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
+                <div className="pure-g" /* TODO: need to figure out why the grid isn't being displayed correctly*/>
                     { matchups }
                 </div>
             </div>
@@ -114,5 +104,9 @@ export default class Matchups extends React.Component {
     }
 }
 
+const select = (state) => ({
+    currLang        : state.application.get('currLanguage'),
+    matchups        : state.application.get('matchups').toJS()
+});
 
-
+export default connect(select, { addToTruck, showOverlay }, null, { withRef: true })(Matchups);

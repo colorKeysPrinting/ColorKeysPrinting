@@ -6,13 +6,13 @@ import ContentPanel             from './content_panel';
 
 export default function OrderHistoryPage(props) {
 
-    let styles = {
+    const styles = {
     };
 
     return (
         <div>
             <KeyIndicatorsBar />
-            <div style={{display: 'inline-flex', width: '97%'}}>
+            <div style={{ display: 'inline-flex', width: '97%' }}>
                 <ContentPanel />
             </div>
         </div>

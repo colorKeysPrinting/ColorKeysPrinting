@@ -3,7 +3,7 @@ import { Link }         from 'react-router';
 
 export default function AddToConfirmationOverlay(props) {
 
-    let styles = {
+    const styles = {
         container: {
             backgroundColor: '#F9FAFC',
             borderRadius: '5px',
@@ -43,10 +43,10 @@ export default function AddToConfirmationOverlay(props) {
     };
 
     let title;
-    let product = props.product;
-    let collection = props.overlayObj.collectionObj;
-    let viewType = (props.overlayObj.type === 'Matchup') ? <div className="cancel-btn" onClick={()=>props.changeOverlay('customMatchup')} style={{margin: '7px auto'}} >View Matchup</div>
-                                                         : <Link className="cancel-btn" to={`/products/myList-${ collection.id }`} style={{margin: '7px auto'}} >View List</Link>;
+    const product = props.product;
+    const collection = props.overlayObj.collectionObj;
+    const viewType = (props.overlayObj.type === 'Matchup') ? <div className="cancel-btn" onClick={() => props.changeOverlay('customMatchup')} style={{ margin: '7px auto' }} >View Matchup</div>
+        : <Link className="cancel-btn" to={`/products/myList/${ collection.id }`} style={{ margin: '7px auto' }} >View List</Link>;
 
     return (
         <div style={styles.container}>
@@ -55,17 +55,17 @@ export default function AddToConfirmationOverlay(props) {
                 <div style={styles.title} >{ collection.name }</div>
             </div>
             <div style={styles.content}>
-                <div style={{display: 'inline-flex'}}>
-                    <div><img src={''} alt={product.modelNum} height="200" width="175" style={styles.image} /></div>
+                <div style={{ display: 'inline-flex' }}>
+                    <div><img src={''} alt={product.modelNumber} height="200" width="175" style={styles.image} /></div>
                     <div>
                         <div>{ product.name }</div>
-                        <div>Model # { product.modelNum }</div>
+                        <div>Model # { product.modelNumber }</div>
                     </div>
                 </div>
                 <div style={styles.text} >*SIBI does not guarantee the products you add to a custom matchup will function together properly.</div>
-                <div style={{display: 'inline-flex', width: '100%'}}>
+                <div style={{ display: 'inline-flex', width: '100%' }}>
                     { viewType }
-                    <div className="submit-btn" onClick={props.close} style={{margin: '7px auto'}} >Continue Shopping</div>
+                    <div className="submit-btn" onClick={props.close} style={{ margin: '7px auto' }} >Continue Shopping</div>
                 </div>
             </div>
         </div>

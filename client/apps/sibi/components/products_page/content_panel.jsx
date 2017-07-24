@@ -3,6 +3,7 @@ import { withRouter }           from 'react-router';
 import { connect }              from 'react-redux';
 
 import { closeOverlay }         from '../../actions/application';
+import { getProducts, getUserMatchups, getUserLists }          from '../../actions/products';
 
 import Products                 from './content_sections/products';
 import Matchups                 from './content_sections/matchups';
@@ -10,22 +11,20 @@ import MatchupsCustom           from './content_sections/matchups_custom';
 import MyLists                  from './content_sections/my_lists';
 import Equipment                from './content_sections/equipment';
 
-let select = (state)=>{
-    return {
-        currLang        : state.application.get('currLanguage'),
-        activeOverlay   : state.application.get('activeOverlay')
-    };
-};
+class ContentPanel extends React.Component {
 
-@connect(select, {closeOverlay}, null, {withRef: true})
-export default withRouter(class ContentPanel extends React.Component {
+    componentWillMount() {
+        this.props.getProducts();
+        this.props.getUserMatchups();
+        this.props.getUserLists();
+    }
 
     componentWillUpdate() {
-        const re = /(\w{1,})-([\w|\d]{1,})/;
+        const re = /\w{1,}\/([\w|\d]{1,})\/([\w|\d|-]{1,})/;
         const type = re.exec(location.hash) || ['',''];
 
-        if(type[1] === 'myList') {
-            if(this.props.activeOverlay === 'addToConfirmation') {
+        if (type[1] === 'myList') {
+            if (this.props.activeOverlay === 'addToConfirmation') {
                 this.props.closeOverlay();
             }
         }
@@ -34,7 +33,7 @@ export default withRouter(class ContentPanel extends React.Component {
     render() {
         let activeSection;
 
-        let styles = {
+        const styles = {
             container: {
                 backgroundColor: '#FFF',
                 width: '83%'
@@ -46,35 +45,44 @@ export default withRouter(class ContentPanel extends React.Component {
             }
         };
 
-        const re = /(\w{1,})-([\w|\d]{1,})/;
+        const re = /\w{1,}\/([\w|\d]{1,})\/([\w|\d|-]{1,})/;
         const type = re.exec(location.hash) || ['',''];
 
-        switch(type[1]) {
-            case 'matchup':
-                activeSection = (type[2] === 'standard') ? <Matchups /> : <MatchupsCustom />;
-                break;
-            case 'myList':
-                activeSection = <MyLists
-                                    collectionID={type[2]} />;
-                break;
-            case 'equipment':
-                activeSection = <Equipment
-                                    type={type[2]} />;
-                break;
+        switch (type[1]) {
+        case 'matchup':
+            activeSection = (type[2] === 'standard') ? <Matchups /> : <MatchupsCustom />;
+            break;
+        case 'myList':
+            activeSection = (
+                <MyLists
+                    collectionId={type[2]}
+                />);
+            break;
+        case 'equipment':
+            activeSection = (
+                <Equipment
+                    type={type[2]}
+                />);
+            break;
             // case 'partsSupplies':
             //     activeSection = <Products />;
             //     break;
-            default:
-                activeSection = <Products />;
+        default:
+            activeSection = <Products />;
         }
 
         return (
             <div style={styles.container}>
-                {activeSection}
+                { activeSection }
             </div>
         );
     }
-})
+}
 
+const select = (state) => ({
+    currLang        : state.application.get('currLanguage'),
+    activeOverlay   : state.application.get('activeOverlay')
+});
 
+export default connect(select, { closeOverlay, getProducts, getUserMatchups, getUserLists }, null, { withRef: true })(withRouter(ContentPanel));
 

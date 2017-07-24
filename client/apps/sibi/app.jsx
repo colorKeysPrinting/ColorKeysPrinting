@@ -5,6 +5,7 @@ import ReactDOM                     from 'react-dom';
 import PropTypes                    from 'prop-types';
 import { Provider }                 from 'react-redux';
 import injectTapEventPlugin         from 'react-tap-event-plugin';
+import { CookiesProvider, Cookies } from 'react-cookie';
 import DevTools                     from '../../libs/dev/dev_tools';
 import { getInitialSettings }       from '../../libs/reducers/settings';
 import configureStore               from './store/configure_store';
@@ -24,31 +25,39 @@ injectTapEventPlugin();
 
 
 class Root extends React.PureComponent {
-  static propTypes = {
-    store: PropTypes.object.isRequired,
-  };
+    static propTypes = {
+        store: PropTypes.object.isRequired,
+        cookies: PropTypes.instanceOf(Cookies).isRequired
+    };
 
-  render() {
-    const devTools = __DEV__ ? <DevTools /> : null;
-    const { store } = this.props;
-    return (
-      <Provider store={store}>
-        <div>
-          {routes}
-          {devTools}
-        </div>
-      </Provider>
-    );
-  }
+    componentWillMount() {
+        const { cookies } = this.props;
+
+        window.DEFAULT_JWT = cookies.get('sibi-jwt') || '';
+        window.DEFAULT_SETTINGS.userId = cookies.get('sibi-user') || 0;
+    }
+
+    render() {
+        const devTools = __DEV__ ? <DevTools /> : null;
+        const { store } = this.props;
+        return (
+            <Provider store={store}>
+                <div>
+                    { routes }
+                    { devTools }
+                </div>
+            </Provider>
+        );
+    }
 }
 
 const settings = getInitialSettings(window.DEFAULT_SETTINGS);
 const store = configureStore({ settings, jwt: window.DEFAULT_JWT });
 if (window.DEFAULT_JWT) { // Setup JWT refresh
-  jwt(store.dispatch, settings.userId);
+    jwt(store.dispatch, settings.userId);
 }
 
 ReactDOM.render(
-  <Root store={store} />,
-  document.getElementById('main-app'),
+    <Root store={store} />,
+    document.getElementById('main-app'),
 );

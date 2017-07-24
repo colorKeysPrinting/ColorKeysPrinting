@@ -7,25 +7,16 @@ import { showOverlay, addToTruck }          from '../../../actions/application';
 
 import Product                  from './product';
 
-let select = (state)=>{
-    return {
-        currLang        : state.application.get('currLanguage'),
-        products        : state.application.get('products').toJS(),
-        mostPurchased   : state.application.getIn(['activeUser','myProducts','mostPurchased']),
-    };
-};
-
-@connect(select, {showOverlay, addToTruck}, null, {withRef: true})
-export default class Products extends React.Component {
+class Products extends React.Component {
 
     constructor(props) {
         super(props);
 
         // activePage: products, matchups, equipment, partsSupplies
         // products is the default to be loaded
-        this.state = {searchTerm: '', sortBy: 'brand', products: this.props.products,
-            sortByOptions: { lowPrice: 'price - low to high', highPrice: 'price - hight to low', nameA: 'name - A to Z', nameZ: 'name - Z to A', rating: 'highest rating', modelNumber: 'Model Number', brand: 'Brand Name'},
-
+        this.state = { searchTerm: '',
+            sortBy: '',
+            sortByOptions: { lowPrice: 'price - low to high', highPrice: 'price - hight to low', nameA: 'name - A to Z', nameZ: 'name - Z to A', rating: 'highest rating', modelNumber: 'Model Number', brand: 'Brand Name' }
         };
 
         this.searchTerm = this.searchTerm.bind(this);
@@ -34,18 +25,18 @@ export default class Products extends React.Component {
 
     searchTerm(searchTerm) {
         console.log(searchTerm);
-        this.setState({searchTerm});
+        this.setState({ searchTerm });
     }
 
     sortBy(sortBy) {
         console.log(sortBy);
-        this.setState({sortBy});
+        this.setState({ sortBy });
     }
 
     render() {
-        let products, mostPurchased, sortedProducts, productAmount;
+        let products, mostPurchased, sortedProducts;
 
-        let styles = {
+        const styles = {
             container: {
                 width: '98%'
             },
@@ -81,65 +72,65 @@ export default class Products extends React.Component {
             }
         };
 
-        let sortBy = _.map(this.state.sortByOptions, (value, key)=>{
-            return (<option key={key} value={key}>{value}</option>);
-        });
+        const sortBy = _.map(this.state.sortByOptions, (value, key) => (<option key={key} value={key}>{value}</option>));
 
-        switch(this.state.sortBy) {
+        if (this.props.products.size > 0) {
+            switch (this.state.sortBy) {
             case 'lowPrice':
             case 'highPrice':
-                sortedProducts = _.sortBy(this.state.products, ['price']);
+                sortedProducts = _.sortBy(this.props.products.toJS(), ['price']);
                 sortedProducts = (this.state.sortBy === 'highPrice') ? _.reverse(sortedProducts) : sortedProducts;
                 break;
             case 'nameA':
             case 'nameZ':
-                sortedProducts = _.sortBy(this.state.products, ['name']);
+                sortedProducts = _.sortBy(this.props.products.toJS(), ['name']);
                 sortedProducts = (this.state.sortBy === 'nameZ') ? _.reverse(sortedProducts) : sortedProducts;
                 break;
-            // case 'rating':
-            //     sortedProducts = _.sortBy(this.state.products, []);
-            //     break;
+                // case 'rating':
+                //     sortedProducts = _.sortBy(this.props.products.toJS(), []);
+                //     break;
             case 'modelNumber':
-                sortedProducts = _.sortBy(this.state.products, ['modelNum']);
+                sortedProducts = _.sortBy(this.props.products.toJS(), ['modelNumber']);
                 break;
-            case 'brand':
-                sortedProducts = _.sortBy(this.state.products, ['brand']);
-                break;
+
             default:
-        }
+                sortedProducts = _.sortBy(this.props.products.toJS(), ['brand']);
+            }
 
-        if(this.state.searchTerm) {
-            console.log('TODO: may need to have a call to the server for this to be handled on the backend?');
+            if (this.state.searchTerm) {
+                console.log('TODO: may need to have a call to the server for this to be handled on the backend?');
 
-        } else if(this.props.mostPurchased) {
+            } else if (this.props.myMostPurchased) {
 
-            mostPurchased = _.map(sortedProducts, (product, key)=>{
-                let isMostPurchased = (_.indexOf(this.props.mostPurchased.toJS(), product.id)) ? true : false;
-                if(isMostPurchased) {
-                    return (
-                        <Product
-                            key={key + 'mostPurchased'}
-                            parent="products"
-                            product={product}
-                            addToTruck={this.props.addToTruck}
-                            showOverlay={this.props.showOverlay} />
-                    );
-                }
-            });
+                mostPurchased = _.map(sortedProducts, (product, key) => {
+                    const isMostPurchased = (_.indexOf(this.props.myMostPurchased.toJS(), product.id)) ? true : false;
+                    if (isMostPurchased) {
+                        return (
+                            <Product
+                                key={`${key  }mostPurchased`}
+                                parent="products"
+                                product={product}
+                                addToTruck={this.props.addToTruck}
+                                showOverlay={this.props.showOverlay}
+                            />
+                        );
+                    }
+                });
+            }
         }
 
         return (
             <div style={styles.container}>
                 <div style={styles.searchSection}>
-                    <input id="productSearchBox" type="text" value={this.state.searchTerm} placeholder="Search for a product by name, brand, or model number" onChange={(e)=>this.searchTerm(e.target.value)} style={styles.searchBox}/>
-                    <select id="productSortByDropdown" value={ this.state.sortBy } onChange={ (e)=>this.sortBy(e.target.value) } style={styles.dropdown}>
+                    <input id="productSearchBox" type="text" value={this.state.searchTerm} placeholder="Search for a product by name, brand, or model number" onChange={(e) => this.searchTerm(e.target.value)} style={styles.searchBox} />
+                    <select id="productSortByDropdown" value={this.state.sortBy} onChange={(e) => this.sortBy(e.target.value)} style={styles.dropdown}>
                         <option disabled >Sort By</option>
                         { sortBy }
                     </select>
                 </div>
                 <div>
-                    <div style={styles.headers}>YOUR MOST ORDERED PRODUCTS ({ this.props.mostPurchased.size })</div>
-                    <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
+                    <div style={styles.headers}>YOUR MOST ORDERED PRODUCTS ({ this.props.myMostPurchased.size })</div>
+                    <div className="pure-g" /* TODO: need to figure out why the grid isn't being displayed correctly*/>
                         { mostPurchased }
                     </div>
                 </div>
@@ -148,5 +139,11 @@ export default class Products extends React.Component {
     }
 }
 
+const select = (state) => ({
+    currLang          : state.application.get('currLanguage'),
+    products          : state.application.get('products'),
+    myMostPurchased   : state.application.getIn(['activeUser','myProducts','mostPurchased']),
+});
 
+export default connect(select, { showOverlay, addToTruck }, null, { withRef: true })(Products);
 

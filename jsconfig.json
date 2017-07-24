@@ -6,8 +6,8 @@
         "jsx": "react"
     },
     "exclude": [
-        "node_modules",
-        "build"
+        "node_modules/*",
+        "build/*"
     ],
     "include": [
         "client/**/*"

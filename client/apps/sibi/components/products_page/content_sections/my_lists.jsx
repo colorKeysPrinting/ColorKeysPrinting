@@ -8,21 +8,12 @@ import { addToTruck, showOverlay }           from '../../../actions/application'
 
 import Product                  from './product';
 
-let select = (state)=>{
-    return {
-        currLang   : state.application.get('currLanguage'),
-        myLists    : state.application.getIn(['activeUser','myLists']),
-        products   : state.application.get('products')
-    };
-};
-
-@connect(select, {addToTruck, showOverlay}, null, {withRef: true})
-export default class MyLists extends React.Component {
+class MyLists extends React.Component {
 
     render() {
         let content;
 
-        let styles = {
+        const styles = {
             container: {
                 width: '98%'
             },
@@ -48,41 +39,42 @@ export default class MyLists extends React.Component {
             }
         };
 
-        let collection = _.find(this.props.myLists.toJS(), ['id', parseInt(this.props.collectionID)]);
+        const collection = _.find(this.props.myLists.toJS(), ['id', this.props.collectionId]);
 
-        if(_.size(collection.products)> 0) {
+        if (_.size(collection.products) > 0) {
 
-            let products = _.map(collection.products,(productID)=>{
+            const products = _.map(collection.products, (product) => {
 
-                let product = _.find(this.props.products.toJS(), ['id', parseInt(productID)]);
+                product = _.find(this.props.products.toJS(), ['id', product.id]);
 
                 return (
                     <Product
-                        key={'myListProduct' + product.id}
+                        key={`myListProduct${  product.id}`}
                         parent="myLists"
-                        collectionID={collection.id}
+                        collectionId={collection.id}
                         product={product}
                         addToTruck={this.props.addToTruck}
-                        showOverlay={this.props.showOverlay} />
+                        showOverlay={this.props.showOverlay}
+                    />
                 );
             });
 
-            content = <div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
-                          { products }
-                      </div>;
+            content = (<div className="pure-g" /*TODO: need to figure out why the grid isn't being displayed correctly*/>
+                { products }
+            </div>);
         } else {
-            content = <div style={styles.content}>
-                          <h2>This list is empty</h2>
-                          <div>Click the "+" icon while viewing a product to add it to your list.</div>
-                          <Link to={`/products`} ><div className="submit-btn" >Browse Products</div></Link>
-                      </div>
+            content = (<div style={styles.content}>
+                <h2>This list is empty</h2>
+                <div>Click the "+" icon while viewing a product to add it to your list.</div>
+                <Link to={`/products`} ><div className="submit-btn" >Browse Products</div></Link>
+            </div>)
         }
 
         return (
             <div style={styles.container}>
                 <div style={styles.titleSection}>
                     <div>{ collection.name }</div>
-                    <div className="cancel-btn" onClick={()=>this.props.showOverlay('removeItem', {collectionType: 'myLists', redirect: `#/products`, collectionID: collection.id})} style={{marginTop: '0px'}}>Delete List</div>
+                    <div className="cancel-btn" onClick={() => this.props.showOverlay('removeItem', { collectionType: 'myLists', collectionId: collection.id })} style={{ marginTop: '0px' }}>Delete List</div>
                 </div>
                 <div>
                     { content }
@@ -92,5 +84,11 @@ export default class MyLists extends React.Component {
     }
 }
 
+const select = (state) => ({
+    currLang   : state.application.get('currLanguage'),
+    myLists    : state.application.getIn(['activeUser', 'myLists']),
+    products   : state.application.get('products')
+});
 
+export default connect(select, { addToTruck, showOverlay }, null, { withRef: true })(MyLists);
 

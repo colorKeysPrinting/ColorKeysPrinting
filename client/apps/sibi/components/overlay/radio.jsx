@@ -1,25 +1,25 @@
 import React                    from 'react';
 import _                        from 'lodash';
 
-// TODO: need to fix the submit button becuase it's not sending the connected list
 export default class RadioOverlay extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {activeRadio: this.props.overlayObj.collections[0].id};
+        const activeRadio = (_.size(this.props.overlayObj.collections) > 0) ? this.props.overlayObj.collections[0].id : '';
+        this.state = { activeRadio };
 
         this.update = this.update.bind(this);
     }
 
     update(activeRadio) {
-        this.setState({activeRadio});
+        this.setState({ activeRadio });
     }
 
     render() {
         let inputs, actionSection, close, content;
 
-        let styles = {
+        const styles = {
             container: {
                 backgroundColor: '#F9FAFC',
                 borderRadius: '5px',
@@ -78,45 +78,45 @@ export default class RadioOverlay extends React.Component {
         };
 
         let title, btnText;
-        switch(this.props.overlayObj.type) {
-            case 'customMatchups':
-                title = 'Custom Matchup';
-                btnText = 'Add to Matchup';
-                break;
+        switch (this.props.overlayObj.type) {
+        case 'customMatchups':
+            title = 'Custom Matchup';
+            btnText = 'Add to Matchup';
+            break;
 
-            case 'myLists':
-                title = 'List';
-                btnText = 'Add to List';
-                break;
+        case 'myLists':
+            title = 'List';
+            btnText = 'Add to List';
+            break;
 
-            default:
+        default:
         }
 
-        let collections = _.map(this.props.overlayObj.collections, (collection)=>{
-            return (
-                <div key={collection.id} onClick={()=>{this.setState({activeRadio: collection.id})}} style={styles.options}>
-                    <input type="radio" name={this.props.overlayObj.type} onChange={()=>this.update(collection.id)} style={styles.radio} checked={this.state.activeRadio === collection.id} />
-                    <div style={{margin: '15px'}}>{ collection.name }</div>
-                </div>
-            );
-        });
+        const collections = _.map(this.props.overlayObj.collections, (collection) => (
+            <div key={collection.id} onClick={() => { this.setState({ activeRadio: collection.id }) }} style={styles.options}>
+                <input type="radio" name={this.props.overlayObj.type} onChange={() => this.update(collection.id)} style={styles.radio} checked={this.state.activeRadio === collection.id} />
+                <div style={{ margin: '15px' }}>{ collection.name }</div>
+            </div>
+        ));
+
+        const message = (_.size(this.props.overlayObj.collections) > 0) ? 'Select list to add item to:' : 'You have no matchups. Please Create one';
 
         return (
             <div style={styles.container}>
-                <div style={ styles.titleBar }>
+                <div style={styles.titleBar}>
                     <div style={styles.title}>Add to { title }</div>
                     <div onClick={this.props.close} style={styles.close}>X</div>
                 </div>
                 <div style={styles.content}>
                     <div style={styles.content}>
                         <div>
-                            <div style={{textAlign: 'left', padding: '5px'}}>Select list to add item to:</div>
+                            <div style={{ textAlign: 'left', padding: '5px' }}>{ message }</div>
                             { collections }
                         </div>
-                        <div onClick={()=>{this.props.changeOverlay('addNewList')}} style={styles.options}>
+                        <div onClick={() => { this.props.changeOverlay('addNewList') }} style={styles.options}>
                             <div style={styles.createNew}>Create a New { title }</div>
                         </div>
-                        <div className="submit-btn" onClick={()=>this.props.submitAddToBtn(this.props.overlayObj.type, this.state.activeRadio)} style={{width: '100%', margin: '7px auto'}} >{ btnText }</div>
+                        <div className="submit-btn" onClick={() => this.props.submitAddToBtn(this.props.overlayObj.type, this.state.activeRadio)} style={{ width: '100%', margin: '7px auto' }} >{ btnText }</div>
                     </div>
                 </div>
             </div>

@@ -1,9 +1,9 @@
-import '../custom_formats.js'                        // adds formatMoney to Number types
-import React                    from 'react';
-import { connect }              from 'react-redux';
 import { Link }                 from 'react-router';
-import assets                   from '../../../libs/assets';
+import { connect }              from 'react-redux';
 import _                        from 'lodash';
+import React                    from 'react';
+import assets                   from '../../../libs/assets';
+import '../custom_formats.js'                        // adds formatMoney to Number types
 
 import { updateTruck }          from '../../../actions/application';
 
@@ -19,27 +19,27 @@ class YourTruck extends React.Component {
         this.calcTax = this.calcTax.bind(this);
     }
 
-    update(productID, type, value) {
-        let truck = this.props.truck.toJS();
+    update(productId, type, value) {
+        const truck = this.props.truck.toJS();
 
-        let product = _.find(truck, ['id', parseInt(productID)]);
+        const product = _.find(truck, ['id', productId]);
 
-        if(type === 'qty') {
+        if (type === 'qty') {
             product.qty = parseInt(value);
             product.cost = product.price * product.qty;
 
-            if(product.warranty) {
+            if (product.warranty) {
                 product.warranty.qty = product.qty;
                 product.cost += product.warranty.price * product.qty;
             }
 
-        } else if(type === 'warranty') {
-            product.warranty = _.find(this.props.warranties.toJS(), ['id', parseInt(value)]);
+        } else if (type === 'warranty') {
+            product.warranty = _.find(this.props.warranties.toJS(), ['id', value]);
             product.warranty.qty = product.qty;
             product.cost = (product.price * product.qty) + (product.warranty.price * product.qty);
         }
 
-        let index = _.findIndex(truck, (product)=>{return product.id === productID});
+        const index = _.findIndex(truck, (product) => product.id === productId);
         truck[index] = product;
 
         this.props.updateTruck(truck);
@@ -50,17 +50,17 @@ class YourTruck extends React.Component {
         let subTotal = parseFloat(product.price * product.qty);
         let salesTax = this.calcTax(subTotal * this.props.salesTaxRate);
 
-        if(product.warranty) {
+        if (product.warranty) {
             subTotal += parseFloat(product.warranty.price * product.warranty.qty);
             salesTax += this.calcTax(product.warranty.price * this.props.salesTaxRate);
         }
 
-        return {subTotal, salesTax};
+        return { subTotal, salesTax };
     }
 
     calcTax(value) {
-        let result = Math.floor(value) + ".";
-        let cents = 100 * (value - Math.floor(value)) + .5;
+        let result = `${Math.floor(value)  }.`;
+        const cents = 100 * (value - Math.floor(value)) + .5;
 
         result += Math.floor(cents / 10);
         result += Math.floor(cents % 10);
@@ -71,9 +71,9 @@ class YourTruck extends React.Component {
     render() {
         let truck, total = 0;
 
-        let height = ("innerHeight" in window) ? window.innerHeight : document.documentElement.offsetHeight;
+        const height = ("innerHeight" in window) ? window.innerHeight : document.documentElement.offsetHeight;
 
-        let styles = {
+        const styles = {
             container: {
                 height,
                 width: '20%',
@@ -89,10 +89,10 @@ class YourTruck extends React.Component {
             }
         };
 
-        if(this.props.truck.size > 0) {
+        if (this.props.truck.size > 0) {
 
-            truck = _.map(this.props.truck.toJS(), (product)=>{
-                let cost = this.calculate(product);
+            truck = _.map(this.props.truck.toJS(), (product) => {
+                const cost = this.calculate(product);
 
                 total += (cost.subTotal + cost.salesTax);
                 return (
@@ -102,16 +102,17 @@ class YourTruck extends React.Component {
                         subTotal={cost.subTotal}
                         salesTax={cost.salesTax}
                         update={this.update}
-                        calculate={this.calculate} />
+                        calculate={this.calculate}
+                    />
                 );
             });
 
         } else {
 
-            truck = <div>
-                        <div><img src={assets('./images/empty-truck.png')} width="100%"/></div>
-                        <div>Your truck is empty</div>
-                    </div>;
+            truck = (<div>
+                <div><img src={assets('./images/empty-truck.png')} alt="empty-truck" width="100%" /></div>
+                <div>Your truck is empty</div>
+            </div>);
         }
 
         return (
@@ -121,7 +122,7 @@ class YourTruck extends React.Component {
                 <div >
                     { truck }
                 </div>
-                <div style={{display: (this.props.truck.size > 0) ? 'block' : 'none'}}>
+                <div style={{ display: (this.props.truck.size > 0) ? 'block' : 'none' }}>
                     <hr />
                     <div>TOTAL: ${ (total).formatMoney(2, '.', ',') }</div>
 
@@ -133,13 +134,11 @@ class YourTruck extends React.Component {
     }
 }
 
-let select = (state)=>{
-    return {
-        currLang            : state.application.get('currLanguage'),
-        salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate']),
-        truck               : state.application.get('truck'),
-        warranties          : state.application.get('warranties'),
-    };
-};
+const select = (state) => ({
+    currLang            : state.application.get('currLanguage'),
+    salesTaxRate        : state.application.getIn(['calculations', 'salesTaxRate']),
+    truck               : state.application.get('truck'),
+    warranties          : state.application.get('warranties'),
+});
 
-export default connect(select, {updateTruck}, null, {withRef: true})(YourTruck);
+export default connect(select, { updateTruck }, null, { withRef: true })(YourTruck);

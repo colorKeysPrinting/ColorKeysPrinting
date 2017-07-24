@@ -7,198 +7,215 @@ const pendingRequests = {};
 
 export default class Api {
 
-  static get(url, apiUrl, jwt, csrf, params, headers, timeout = NetworkConstants.TIMEOUT) {
-    return Api.execRequest(
-      NetworkConstants.GET,
-      url,
-      apiUrl,
-      jwt,
-      csrf,
-      params,
-      null,
-      headers,
-      timeout,
-    );
-  }
+    static get(url, apiUrl, jwt, csrf, params, headers, timeout = NetworkConstants.TIMEOUT) {
+        return Api.execRequest(
+            NetworkConstants.GET,
+            url,
+            apiUrl,
+            jwt,
+            csrf,
+            params,
+            null,
+            headers,
+            timeout,
+        );
+    }
 
-  static post(url, apiUrl, jwt, csrf, params, body, headers, timeout = NetworkConstants.TIMEOUT) {
-    return Api.execRequest(
-      NetworkConstants.POST,
-      url,
-      apiUrl,
-      jwt,
-      csrf,
-      params,
-      body,
-      headers,
-      timeout,
-    );
-  }
+    static post(url, apiUrl, jwt, csrf, params, body, headers, timeout = NetworkConstants.TIMEOUT) {
+        return Api.execRequest(
+            NetworkConstants.POST,
+            url,
+            apiUrl,
+            jwt,
+            csrf,
+            params,
+            body,
+            headers,
+            timeout,
+        );
+    }
 
-  static put(url, apiUrl, jwt, csrf, params, body, headers, timeout = NetworkConstants.TIMEOUT) {
-    return Api.execRequest(
-      NetworkConstants.PUT,
-      url,
-      apiUrl,
-      jwt,
-      csrf,
-      params,
-      body,
-      headers,
-      timeout,
-    );
-  }
+    static put(url, apiUrl, jwt, csrf, params, body, headers, timeout = NetworkConstants.TIMEOUT) {
+        return Api.execRequest(
+            NetworkConstants.PUT,
+            url,
+            apiUrl,
+            jwt,
+            csrf,
+            params,
+            body,
+            headers,
+            timeout,
+        );
+    }
 
-  static del(url, apiUrl, jwt, csrf, params, headers, timeout = NetworkConstants.TIMEOUT) {
-    return Api.execRequest(
-      NetworkConstants.DEL,
-      url,
-      apiUrl,
-      jwt,
-      csrf,
-      params,
-      null,
-      headers,
-      timeout,
-    );
-  }
+    static del(url, apiUrl, jwt, csrf, params, headers, timeout = NetworkConstants.TIMEOUT) {
+        return Api.execRequest(
+            NetworkConstants.DEL,
+            url,
+            apiUrl,
+            jwt,
+            csrf,
+            params,
+            null,
+            headers,
+            timeout,
+        );
+    }
 
-  static execRequest(
-    method,
-    url,
-    apiUrl,
-    jwt,
-    csrf,
-    params,
-    body,
-    headers,
-    timeout = NetworkConstants.TIMEOUT,
-  ) {
-    return Api.doRequest(Api.makeUrl(`${url}${Api.queryStringFrom(params)}`, apiUrl), (fullUrl) => {
-      let request;
+    static patch(url, apiUrl, jwt, csrf, params, headers, timeout = NetworkConstants.TIMEOUT) {
+        return Api.execRequest(
+            NetworkConstants.PATCH,
+            url,
+            apiUrl,
+            jwt,
+            csrf,
+            params,
+            null,
+            headers,
+            timeout,
+        );
+    }
 
-      switch (method) {
-        case NetworkConstants.GET:
-          request = Request.get(fullUrl);
-          break;
-        case NetworkConstants.POST:
-          request = Request.post(fullUrl).send(body);
-          break;
-        case NetworkConstants.PUT:
-          request = Request.put(fullUrl).send(body);
-          break;
-        case NetworkConstants.DEL:
-          request = Request.del(fullUrl);
-          break;
-        default:
-          break;
-      }
+    static execRequest(
+        method,
+        url,
+        apiUrl,
+        jwt,
+        csrf,
+        params,
+        body,
+        headers,
+        timeout = NetworkConstants.TIMEOUT,
+    ) {
+        return Api.doRequest(Api.makeUrl(`${url}${Api.queryStringFrom(params)}`, apiUrl), (fullUrl) => {
+            let request;
 
-      request.set('Accept', 'application/json');
-      request.timeout(timeout);
+            switch (method) {
+            case NetworkConstants.GET:
+                request = Request.get(fullUrl);
+                break;
+            case NetworkConstants.POST:
+                request = Request.post(fullUrl).send(body);
+                break;
+            case NetworkConstants.PUT:
+                request = Request.put(fullUrl).send(body);
+                break;
+            case NetworkConstants.DEL:
+                request = Request.del(fullUrl);
+                break;
+            case NetworkConstants.PATCH:
+                request = Request.patch(fullUrl);
+                break;
+            default:
+                break;
+            }
 
-      if (!_.isNil(jwt)) { request.set('Authorization', `Bearer ${jwt}`); }
-      if (!_.isNil(csrf)) { request.set('X-CSRF-Token', csrf); }
+            request.set('Accept', 'application/json');
+            request.timeout(timeout);
 
-      if (!_.isNil(headers)) {
-        _.each(headers, (headerValue, headerKey) => {
-          request.set(headerKey, headerValue);
-        });
-      }
+            if (!_.isNil(jwt)) { request.set('Authorization', `Bearer ${jwt}`); }
+            if (!_.isNil(csrf)) { request.set('X-CSRF-Token', csrf); }
 
-      return request;
-    }, method);
-  }
+            if (!_.isNil(headers)) {
+                _.each(headers, (headerValue, headerKey) => {
+                    request.set(headerKey, headerValue);
+                });
+            }
 
-  /**
+            return request;
+        }, method);
+    }
+
+    /**
    * Returns a complete, absolute URL by conditionally appending `path` to
    * `apiUrl`.  If `path` already contains "http", it is returned as-is.
    */
-  static makeUrl(part, apiUrl) {
-    if (part.indexOf('http') >= 0) {
-      return part;
-    }
-
-    if(apiUrl) {
-      const slash = _.last(apiUrl.split('')) === '/' ? '' : '/';
-      let newPart = part;
-      if (part[0] === '/') {
-        newPart = part.slice(1);
-      }
-      return apiUrl + slash + newPart;
-    }
-  }
-
-  static doRequest(url, requestMethod, requestType) {
-    // Prevent duplicate requests
-    const wrapper = Api.wrapRequest(url, requestMethod, requestType);
-    if (wrapper.promise) {
-      // Existing request was found. Return promise from request
-      return wrapper.promise;
-    }
-
-    // No request was found. Generate a promise, add it to the wrapper and return the promise.
-    wrapper.promise = Api.promisify(wrapper.request, url);
-
-    // Dispose of the request when the call is complete
-    wrapper.promise.then(() => {
-      Api.disposeRequest(url);
-    }, () => {
-      Api.disposeRequest(url);
-    });
-
-    return wrapper.promise;
-  }
-
-  static wrapRequest(url, requestMethod, requestType) {
-    if (requestType === NetworkConstants.GET) {
-      if (!pendingRequests[url]) {
-        pendingRequests[url] = {
-          request: requestMethod(url),
-        };
-      }
-      return pendingRequests[url];
-    }
-    return {
-      request: requestMethod(url),
-    };
-  }
-
-  static disposeRequest(url) {
-    delete pendingRequests[url];
-  }
-
-  static promisify(request) {
-    return new Promise((resolve, reject) => {
-      request.end((error, res) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(res);
+    static makeUrl(part, apiUrl) {
+        if (part.indexOf('http') >= 0) {
+            return part;
         }
-      });
-    });
-  }
 
-  static queryStringFrom(params) {
-    const query = _.chain(params)
-      .map((val, key) => {
-        if (val) {
-          if (_.isArray(val)) {
-            return _.map(val, subVal => `${key}[]=${subVal}`).join('&');
-          }
-          return `${key}=${val}`;
+        if (apiUrl) {
+            const slash = _.last(apiUrl.split('')) === '/' ? '' : '/';
+            let newPart = part;
+            if (part[0] === '/') {
+                newPart = part.slice(1);
+            }
+            return apiUrl + slash + newPart;
+        }
+    }
+
+    static doRequest(url, requestMethod, requestType) {
+    // Prevent duplicate requests
+        const wrapper = Api.wrapRequest(url, requestMethod, requestType);
+        if (wrapper.promise) {
+            // Existing request was found. Return promise from request
+            return wrapper.promise;
+        }
+
+        // No request was found. Generate a promise, add it to the wrapper and return the promise.
+        wrapper.promise = Api.promisify(wrapper.request, url);
+
+        // Dispose of the request when the call is complete
+        wrapper.promise.then(() => {
+            Api.disposeRequest(url);
+        }, () => {
+            Api.disposeRequest(url);
+        });
+
+        return wrapper.promise;
+    }
+
+    static wrapRequest(url, requestMethod, requestType) {
+        if (requestType === NetworkConstants.GET) {
+            if (!pendingRequests[url]) {
+                pendingRequests[url] = {
+                    request: requestMethod(url),
+                };
+            }
+            return pendingRequests[url];
+        }
+        return {
+            request: requestMethod(url),
+        };
+    }
+
+    static disposeRequest(url) {
+        delete pendingRequests[url];
+    }
+
+    static promisify(request) {
+        return new Promise((resolve, reject) => {
+            request.end((error, res) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(res);
+                }
+            });
+        });
+    }
+
+    static queryStringFrom(params) {
+        const query = _.chain(params)
+            .map((val, key) => {
+                if (val) {
+                    if (_.isArray(val)) {
+                        return _.map(val, subVal => `${key}[]=${subVal}`).join('&');
+                    }
+                    return `${key}=${val}`;
+                }
+                return '';
+            })
+            .compact()
+            .value();
+
+        if (query.length > 0) {
+            return `?${query.join('&')}`;
         }
         return '';
-      })
-      .compact()
-      .value();
-
-    if (query.length > 0) {
-      return `?${query.join('&')}`;
     }
-    return '';
-  }
 }
 
 

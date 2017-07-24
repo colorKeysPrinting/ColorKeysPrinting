@@ -1,7 +1,7 @@
 import React                    from 'react';
 import { Link }                 from 'react-router';
 
-export default (props)=>{
+export default (props) => {
 
     const styles = {
         header: {
@@ -46,56 +46,58 @@ export default (props)=>{
 
     let activeTabs;
 
-    switch(props.type) {
-        case 'sibi':
-            activeTabs = <div style={styles.header}>
-                { tabs['products'] }
-                { tabs['orderHistory'] }
-                { tabs['warranties'] }
-                { tabs['reports'] }
-            </div>;
-            break;
+    switch (props.type) {
+    case 'admin':
+        activeTabs = (<div style={styles.header}>
+            { tabs['products'] }
+            { tabs['orderHistory'] }
+            { tabs['warranties'] }
+            { tabs['reports'] }
+        </div>);
+        break;
 
-        case 'vendor':
-            activeTabs = <div style={styles.header}>
-                { tabs['products'] }
-                { tabs['orderHistory'] }
-                { tabs['warranties'] }
-                { tabs['reports'] }
-            </div>;
-            break;
+    case 'vendor':
+        activeTabs = (<div style={styles.header}>
+            { tabs['products'] }
+            { tabs['orderHistory'] }
+            { tabs['warranties'] }
+            { tabs['reports'] }
+        </div>);
+        break;
 
-        case 'landlord':
-            activeTabs = <div style={styles.header}>
-                { tabs['dashboard'] }
-                { tabs['products'] }
-                { tabs['warranties'] }
-                { tabs['rebates'] }
-                { tabs['vendors'] }
-                { tabs['reports'] }
-                { tabs['support'] }
-            </div>;
-            break;
+    case 'landlord':
+        activeTabs = (<div style={styles.header}>
+            { tabs['dashboard'] }
+            { tabs['products'] }
+            { tabs['warranties'] }
+            { tabs['rebates'] }
+            { tabs['vendors'] }
+            { tabs['reports'] }
+            { tabs['support'] }
+        </div>);
+        break;
 
-        case 'manufacturer':
-            activeTabs = <div style={styles.header}>
-                { tabs['dashboard'] }
-                { tabs['products'] }
-                { tabs['warranties'] }
-                { tabs['rebates'] }
-                { tabs['dealers'] }
-                { tabs['funds'] }
-                { tabs['reports'] }
-            </div>;
-            break;
-        case 'signUp':
-            activeTabs = <div style={styles.header}>
-                { tabs['products'] }
-                { tabs['features'] }
-                { tabs['support'] }
-            </div>;
-            break;
-        default:
+    case 'manufacturer':
+        activeTabs = (<div style={styles.header}>
+            { tabs['dashboard'] }
+            { tabs['products'] }
+            { tabs['warranties'] }
+            { tabs['rebates'] }
+            { tabs['dealers'] }
+            { tabs['funds'] }
+            { tabs['reports'] }
+        </div>);
+        break;
+
+    case 'signUp':
+        activeTabs = (<div style={styles.header}>
+            { tabs['products'] }
+            { tabs['features'] }
+            { tabs['support'] }
+        </div>);
+        break;
+    default:
+        console.log('no user type provided');
     }
 
     return (
