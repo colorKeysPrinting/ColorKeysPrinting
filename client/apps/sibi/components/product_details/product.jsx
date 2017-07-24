@@ -61,7 +61,6 @@ export default function Product(props) {
                     { price }
                     <div style={styles.modelNumber}>#{ product.modelNumber }</div>
                 </div>
-                <div className="submit-btn" onClick={() => { props.addToTruck(product) }} >Add to truck</div>
             </div>
         </div>
     );

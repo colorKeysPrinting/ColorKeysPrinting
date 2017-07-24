@@ -4,10 +4,9 @@ import _                        from 'lodash';
 import assets                   from '../../libs/assets';
 import '../common/custom_formats.js'                        // adds formatMoney to Number types
 
-import { addToTruck, showOverlay }           from '../../actions/application';
+import { showOverlay }           from '../../actions/application';
 
 import DetailTabs               from './detail_tabs';
-import YourTruck                from '../common/your_truck';
 
 class ProductDetails extends React.Component {
 
@@ -131,17 +130,14 @@ class ProductDetails extends React.Component {
                             </div>
                             <div style={{ display: 'inline-flex', width: '85%' }}>
                                 <div style={{ width: '50%' }} ><div className="cancel-btn" onClick={(e) => this.props.showOverlay('productAddTo', { productId: product.id, mouseCoord: { mouseX: e.pageX, mouseY: e.pageY } })} >Save Item</div></div>
-                                <div style={{ width: '50%' }} ><div className="submit-btn" onClick={() => this.props.addToTruck({ ...product, qty: this.state.qty, warranty })} >Add to truck</div></div>
                             </div>
                         </div>
                     </div>
                     <DetailTabs
                         product={product}
                         products={this.props.products.toJS()}
-                        addToTruck={this.props.addToTruck}
                     />
                 </div>
-                <YourTruck />
             </div>
         );
     }
@@ -155,4 +151,4 @@ const select = (state) => ({
     warranties        : state.application.get('warranties'),
 });
 
-export default connect(select, { addToTruck, showOverlay }, null, { withRef: true })(ProductDetails);
+export default connect(select, { showOverlay }, null, { withRef: true })(ProductDetails);

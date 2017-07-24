@@ -3,12 +3,10 @@ import { connect }              from 'react-redux';
 import _                        from 'lodash';
 
 import * as productActions      from '../../actions/products';
-import { login, logout, showRadioOverlay, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
-import { addDocument, acceptAgreement }         from '../../actions/signup';
+import { login, logout, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
-import Agreement                from './agreement';
 import ProductAddTo             from './product_add_to'
 import Radio                    from './radio';
 import AddToConfirmation        from './add_to_confirmation';
@@ -112,7 +110,7 @@ class Overlay extends React.Component {
         }
 
         if (isCorrect) {
-            this.props.addDocument(type, value);
+            // this.props.addDocument(type, value);
             this.close();
             return true;
 
@@ -275,17 +273,6 @@ class Overlay extends React.Component {
                 />);
             break;
 
-        case 'contractGoodman':
-        case 'contractAsure':
-            overlay = (
-                <Agreement
-                    type={this.state.activeOverlay}
-                    document={(this.state.activeOverlay === 'contractGoodman') ? this.props.contractGoodman : this.props.contractAsure}
-                    acceptAgreement={this.props.acceptAgreement}
-                    close={this.close}
-                />);
-            break;
-
         case 'productAddTo':
             overlay = (
                 <ProductAddTo
@@ -375,18 +362,13 @@ const select = (state) => ({
     overlayObj          : state.application.get('overlayObj'),
     activeUser          : state.application.get('activeUser'),
     products            : state.application.get('products'),
-    contractGoodman     : state.application.getIn(['contracts','goodman']),
-    contractAsure       : state.application.getIn(['contracts','asure'])
 });
 
 const actions = {
     login,
     logout,
-    showRadioOverlay,
     closeOverlay,
     passwordReset,
-    addDocument,
-    acceptAgreement,
     ...productActions
 };
 

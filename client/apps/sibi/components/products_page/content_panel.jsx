@@ -3,12 +3,10 @@ import { withRouter }           from 'react-router';
 import { connect }              from 'react-redux';
 
 import { closeOverlay }         from '../../actions/application';
-import { getProducts, getUserMatchups, getUserLists }          from '../../actions/products';
+import { getProducts, getUserMatchups }          from '../../actions/products';
 
 import Products                 from './content_sections/products';
 import Matchups                 from './content_sections/matchups';
-import MatchupsCustom           from './content_sections/matchups_custom';
-import MyLists                  from './content_sections/my_lists';
 import Equipment                from './content_sections/equipment';
 
 class ContentPanel extends React.Component {
@@ -16,18 +14,6 @@ class ContentPanel extends React.Component {
     componentWillMount() {
         this.props.getProducts();
         this.props.getUserMatchups();
-        this.props.getUserLists();
-    }
-
-    componentWillUpdate() {
-        const re = /\w{1,}\/([\w|\d]{1,})\/([\w|\d|-]{1,})/;
-        const type = re.exec(location.hash) || ['',''];
-
-        if (type[1] === 'myList') {
-            if (this.props.activeOverlay === 'addToConfirmation') {
-                this.props.closeOverlay();
-            }
-        }
     }
 
     render() {
@@ -50,13 +36,7 @@ class ContentPanel extends React.Component {
 
         switch (type[1]) {
         case 'matchup':
-            activeSection = (type[2] === 'standard') ? <Matchups /> : <MatchupsCustom />;
-            break;
-        case 'myList':
-            activeSection = (
-                <MyLists
-                    collectionId={type[2]}
-                />);
+            activeSection = <Matchups />;
             break;
         case 'equipment':
             activeSection = (
@@ -64,9 +44,6 @@ class ContentPanel extends React.Component {
                     type={type[2]}
                 />);
             break;
-            // case 'partsSupplies':
-            //     activeSection = <Products />;
-            //     break;
         default:
             activeSection = <Products />;
         }
@@ -84,5 +61,5 @@ const select = (state) => ({
     activeOverlay   : state.application.get('activeOverlay')
 });
 
-export default connect(select, { closeOverlay, getProducts, getUserMatchups, getUserLists }, null, { withRef: true })(withRouter(ContentPanel));
+export default connect(select, { closeOverlay, getProducts, getUserMatchups }, null, { withRef: true })(withRouter(ContentPanel));
 

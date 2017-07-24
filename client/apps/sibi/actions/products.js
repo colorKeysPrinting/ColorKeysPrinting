@@ -28,17 +28,6 @@ export function getUserMatchups() {
     }
 }
 
-export function getUserLists() {
-    return {
-        type    : ActionTypes.GET_USER_LISTS,
-        method  : Network.GET,
-        url     : `${Network.DOMAIN}/lists`,
-        headers : {
-            'x-auth-token': window.DEFAULT_JWT
-        }
-    }
-}
-
 export function createMatchup(matchup) {
     return {
         type: ActionTypes.CREATE_MATCHUP,
@@ -56,21 +45,6 @@ export function createMatchup(matchup) {
     };
 }
 
-export function createList(list) {
-    return {
-        type: ActionTypes.CREATE_LIST,
-        method  : Network.POST,
-        url     : `${Network.DOMAIN}/createList`,
-        headers : {
-            'x-auth-token': window.DEFAULT_JWT
-        },
-        body    : {
-            name: list.name,
-            products: list.products
-        }
-    };
-}
-
 export function removeProduct(obj) {
     return {
         type: ActionTypes.REMOVE_PRODUCT,
@@ -83,17 +57,6 @@ export function removeMatchup(id) {
         type: ActionTypes.REMOVE_MATCHUP,
         method  : Network.DEL,
         url     : `${Network.DOMAIN}/matchups/${id}`,
-        headers : {
-            'x-auth-token': window.DEFAULT_JWT
-        }
-    };
-}
-
-export function removeList(id) {
-    return {
-        type: ActionTypes.REMOVE_LIST,
-        method  : Network.DEL,
-        url     : `${Network.DOMAIN}/lists/${id}`,
         headers : {
             'x-auth-token': window.DEFAULT_JWT
         }
@@ -117,43 +80,10 @@ export function updateMatchup(matchup) {
     };
 }
 
-export function updateList(list) {
-    return {
-        type: ActionTypes.UPDATE_LIST,
-        method  : Network.PATCH,
-        url     : `${Network.DOMAIN}/lists/${list.id}`,
-        headers : {
-            'x-auth-token': window.DEFAULT_JWT
-        },
-        body    : {
-            name: list.name,
-            products: list.products
-        }
-    };
-}
-
-
-
-
 export function setActiveFilters(key, value) {
     return {
         type: ActionTypes.SET_ACTIVE_FILTERS,
         key,
         value
     }
-}
-
-export function updateInfoBar(key) {
-    return {
-        type: ActionTypes.UPDATE_INFO_BAR,
-        key
-    };
-}
-
-export function checkingInventory(product, location) {
-    return {
-        type: ActionTypes.CHECKING_INVENTORY,
-        product,
-        location
-    };
 }

@@ -11,15 +11,6 @@ export function showOverlay(overlay, obj) {
     };
 }
 
-export function showRadioOverlay(overlay, collectionType, productId) {
-    return {
-        type: ActionTypes.SHOW_RADIO_OVERLAY,
-        overlay,
-        collectionType,
-        productId
-    };
-}
-
 export function closeOverlay() {
     return {
         type: ActionTypes.CLOSE_OVERLAY
@@ -30,28 +21,6 @@ export function changeLanguage(language) {
     return {
         type: ActionTypes.CHANGE_LANGUAGE,
         language
-    }
-}
-
-export function addToTruck(item) {
-    return {
-        type: ActionTypes.ADD_TO_TRUCK,
-        item
-    }
-}
-
-export function removeFromTruck(item) {
-    return {
-        type: ActionTypes.REMOVE_FROM_TRUCK,
-        item
-    }
-}
-
-
-export function updateTruck(truck) {
-    return {
-        type: ActionTypes.UPDATE_TRUCK,
-        truck
     }
 }
 
