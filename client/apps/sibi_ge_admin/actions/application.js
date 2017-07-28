@@ -34,7 +34,8 @@ export function login(email, password) {
         url    : `${Network.DOMAIN}/signin`,
         body   : {
             email,
-            password
+            password,
+            isApplianceApp: false
         }
     };
 }
