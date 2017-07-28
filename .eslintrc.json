@@ -145,14 +145,15 @@
         "import/no-extraneous-dependencies": 1,
         "jsx-a11y/no-static-element-interactions": 0,
         "jsx-a11y/href-no-hash": 0,
+        "jsx-a11y/label-has-for": 0,
         "react/require-default-props": 0,
         "react/prefer-stateless-function": 0,
         "react/forbid-prop-types": 0,
         "react/prop-types": 0,
         "react/jsx-indent": ["error", 4],
         "react/jsx-indent-props": ["error", 4],
-        "jsx-a11y/label-has-for": 0,
         "react/self-closing-comp": 0,
+        "react/no-will-update-set-state": 0,
 
         ////////// Strict Mode //////////
 

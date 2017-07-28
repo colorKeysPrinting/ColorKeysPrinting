@@ -39,13 +39,6 @@ export function login(email, password) {
     };
 }
 
-export function logout(username) {
-    return {
-        type: ActionTypes.LOGOUT,
-        username
-    };
-}
-
 export function passwordReset(email) {
     // needs to be a async call
     return {

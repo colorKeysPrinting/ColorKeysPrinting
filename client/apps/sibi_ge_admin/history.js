@@ -1,4 +1,4 @@
-import { hashHistory } from 'react-router';
+// import { hashHistory } from 'react-router';
 
 // Uncomment these lines if you would like to remove
 // the query key from your uri's when using hash history.
@@ -8,7 +8,8 @@ import { hashHistory } from 'react-router';
 // const appHistory = useRouterHistory(createHashHistory)({ queryKey: false });
 
 // Uncomment this if you want to use browser history instead.
-// import { browserHistory }  from 'react-router';
-// export default browserHistory;
+import { browserHistory }  from 'react-router';
 
-export default hashHistory;
+export default browserHistory;
+
+// export default hashHistory;

@@ -19,62 +19,62 @@ const shouldLint = argv.lint;
 
 function setupMiddleware(apps) {
 
-  const webpackConfigs = _.map(apps, app => webpackConfigBuilder(app));
+    const webpackConfigs = _.map(apps, app => webpackConfigBuilder(app));
 
-  const compiler = webpack(webpackConfigs);
+    const compiler = webpack(webpackConfigs);
 
-  const webpackMiddlewareInstance = webpackMiddleware(compiler, {
-    noInfo: true,
-    watch: true,
-    headers: { 'Access-Control-Allow-Origin': '*' }
-  });
-  serverApp.use(webpackMiddlewareInstance);
-  serverApp.use(webpackHotMiddleware(compiler, {
-    log: false,
-    heartbeat: 2000,
-    timeout: 20000,
-    reload: true
-  }));
+    const webpackMiddlewareInstance = webpackMiddleware(compiler, {
+        noInfo: true,
+        watch: true,
+        headers: { 'Access-Control-Allow-Origin': '*' }
+    });
+    serverApp.use(webpackMiddlewareInstance);
+    serverApp.use(webpackHotMiddleware(compiler, {
+        log: false,
+        heartbeat: 2000,
+        timeout: 20000,
+        reload: true
+    }));
 
 }
 
 function runServer(port, servePath) {
-  serverApp.use(express.static(servePath));
-  serverApp.get('*', (req, res) => {
-    res.sendFile(path.join(servePath, req.url));
-  });
-  serverApp.listen(port, localIp, (err) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.log(`Listening on: http://${localIp}:${port}`);
-    console.log(`Serving content from: ${servePath}`);
-  });
+    serverApp.use(express.static(servePath));
+    serverApp.get('*', (req, res) => {
+        res.sendFile(path.join(servePath, req.url));
+    });
+    serverApp.listen(port, localIp, (err) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log(`Listening on: http://${localIp}:${port}`);
+        console.log(`Serving content from: ${servePath}`);
+    });
 }
 
 function launch(app) {
-  setupMiddleware([app]);
-  runServer(app.port, app.outputPath);
+    setupMiddleware([app]);
+    runServer(app.port, app.outputPath);
 }
 
 const options = { hotPack, shouldLint, stage: 'hot', onlyPack: false, port: settings.hotPort, appPerPort: true };
 
 if (appName) {
-  const result = clientApps.buildApp(appName, options);
-  result.buildPromise.then(() => launch(result.app));
-} else if (hotPack) {
-  options.onlyPack = true;
-  options.appPerPort = false;
-  const results = clientApps.buildApps(options);
-  const apps = _.map(results, result => result.app);
-  const promises = _.map(results, result => result.buildPromise);
-  Promise.all(promises).then(() => {
-    setupMiddleware(apps);
-    runServer(settings.hotPort, settings.paths.devOutput);
-  });
-} else {
-  _.each(clientApps.buildApps(options), (result) => {
+    const result = clientApps.buildApp(appName, options);
     result.buildPromise.then(() => launch(result.app));
-  });
+} else if (hotPack) {
+    options.onlyPack = true;
+    options.appPerPort = false;
+    const results = clientApps.buildApps(options);
+    const apps = _.map(results, result => result.app);
+    const promises = _.map(results, result => result.buildPromise);
+    Promise.all(promises).then(() => {
+        setupMiddleware(apps);
+        runServer(settings.hotPort, settings.paths.devOutput);
+    });
+} else {
+    _.each(clientApps.buildApps(options), (result) => {
+        result.buildPromise.then(() => launch(result.app));
+    });
 }

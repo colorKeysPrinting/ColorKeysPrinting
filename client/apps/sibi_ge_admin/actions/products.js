@@ -6,77 +6,36 @@ import Network          from '../../../libs/constants/network';
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getProducts() {
+// *************** product section ***************
+export function getProducts(token) {
     return {
         type    : ActionTypes.GET_PRODUCTS,
         method  : Network.GET,
         url     : `${Network.DOMAIN}/products`,
         headers : {
-            'x-auth-token': window.DEFAULT_JWT
+            'x-auth-token': token
         }
     }
 }
 
-export function getUserMatchups() {
+export function createProduct(token, product) {
     return {
-        type    : ActionTypes.GET_USER_MATCHUPS,
-        method  : Network.GET,
-        url     : `${Network.DOMAIN}/matchups`,
-        headers : {
-            'x-auth-token': window.DEFAULT_JWT
-        }
-    }
-}
-
-export function createMatchup(matchup) {
-    return {
-        type: ActionTypes.CREATE_MATCHUP,
+        type    : ActionTypes.CREATE_PRODUCTS,
         method  : Network.POST,
-        url     : `${Network.DOMAIN}/createMatchup`,
+        url     : `${Network.DOMAIN}/createProduct`,
         headers : {
-            'x-auth-token': window.DEFAULT_JWT
+            'x-auth-token': token
         },
-        body    : {
-            name: matchup.name,
-            totalCost: matchup.totalCost,
-            adminCreated: matchup.adminCreated,
-            products: matchup.products
+        body: {
+            product
         }
-    };
+    }
 }
 
 export function removeProduct(obj) {
     return {
         type: ActionTypes.REMOVE_PRODUCT,
         obj
-    };
-}
-
-export function removeMatchup(id) {
-    return {
-        type: ActionTypes.REMOVE_MATCHUP,
-        method  : Network.DEL,
-        url     : `${Network.DOMAIN}/matchups/${id}`,
-        headers : {
-            'x-auth-token': window.DEFAULT_JWT
-        }
-    };
-}
-
-export function updateMatchup(matchup) {
-    return {
-        type: ActionTypes.UPDATE_MATCHUP,
-        method  : Network.PATCH,
-        url     : `${Network.DOMAIN}/matchups/${matchup.id}`,
-        headers : {
-            'x-auth-token': window.DEFAULT_JWT
-        },
-        body    : {
-            name: matchup.name,
-            totalCost: matchup.totalCost,
-            adminCreated: matchup.adminCreated,
-            products: matchup.products
-        }
     };
 }
 

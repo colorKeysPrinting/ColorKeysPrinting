@@ -19,10 +19,10 @@ const devOutput  = path.join(__dirname, '../../build/dev', devRelativeOutput);
 const prodOutput = path.join(__dirname, '../../build/prod', prodRelativeOutput);
 
 // const prodAssetsUrl = ''; // Set this to the url where the assets will be deployed.
-                          // If you want the paths to be relative to the deploy then leave this
-                          // value as an empty string. This value could also be a CDN or
-                          // it could be the ssl version of your S3 bucket ie:
-                          // https://s3.amazonaws.com/' + deployConfig.domain;
+// If you want the paths to be relative to the deploy then leave this
+// value as an empty string. This value could also be a CDN or
+// it could be the ssl version of your S3 bucket ie:
+// https://s3.amazonaws.com/' + deployConfig.domain;
 
 const prodAssetsUrl = `http://${deployConfig.domain}`;
 
@@ -35,36 +35,36 @@ const appsDir = path.join(__dirname, '../apps/');
 const buildSuffix = '_bundle.js';
 
 const htmlOptions = { // Options for building html files
-  truncateSummaryAt: 1000,
-  buildExtensions: ['.html', '.htm', '.md', '.markdown'], // file types to build (others will just be copied)
-  markdownExtensions: ['.md', '.markdown'], // file types to process markdown
+    truncateSummaryAt: 1000,
+    buildExtensions: ['.html', '.htm', '.md', '.markdown'], // file types to build (others will just be copied)
+    markdownExtensions: ['.md', '.markdown'], // file types to process markdown
 };
 
 // -----------------------------------------------------------------------------
 // Main paths for the application. Includes production and development paths.
 // -----------------------------------------------------------------------------
 const paths = {
-  devRelativeOutput,
-  prodRelativeOutput,
-  devOutput,
-  prodOutput,
-  prodAssetsUrl,
-  devAssetsUrl,
-  appsDir,
+    devRelativeOutput,
+    prodRelativeOutput,
+    devOutput,
+    prodOutput,
+    prodAssetsUrl,
+    devAssetsUrl,
+    appsDir,
 };
 
 // -----------------------------------------------------------------------------
 // Helper function to generate full template paths for the given app
 // -----------------------------------------------------------------------------
 function templateDirs(app, dirs) {
-  return _.map(dirs, templateDir => path.join(app.htmlPath, templateDir));
+    return _.map(dirs, templateDir => path.join(app.htmlPath, templateDir));
 }
 
 // -----------------------------------------------------------------------------
 // Helper to determine if we should do a production build or not
 // -----------------------------------------------------------------------------
 function isProduction(stage) {
-  return stage === 'production' || stage === 'staging';
+    return stage === 'production' || stage === 'staging';
 }
 
 // -----------------------------------------------------------------------------
@@ -72,40 +72,40 @@ function isProduction(stage) {
 // -----------------------------------------------------------------------------
 function outputPaths(name, port, options) {
 
-  let rootOutputPath = devOutput;
-  let outputPath = options.onlyPack ? devOutput : path.join(devOutput, name);
-  // Public path indicates where the assets will be served from. In dev this will likely be
-  // localhost or a local domain. In production this could be a CDN. In development this will
-  // point to whatever public url is serving dev assets.
-  let publicPath = `${devAssetsUrl}${devRelativeOutput}`;
+    let rootOutputPath = devOutput;
+    let outputPath = options.onlyPack ? devOutput : path.join(devOutput, name);
+    // Public path indicates where the assets will be served from. In dev this will likely be
+    // localhost or a local domain. In production this could be a CDN. In development this will
+    // point to whatever public url is serving dev assets.
+    let publicPath = `${devAssetsUrl}${devRelativeOutput}`;
 
-  if (isProduction(options.stage)) {
-    rootOutputPath = prodOutput;
-    outputPath = options.onlyPack ? prodOutput : path.join(prodOutput, name);
-    publicPath = prodAssetsUrl + prodRelativeOutput;
-  }
+    if (isProduction(options.stage)) {
+        rootOutputPath = prodOutput;
+        outputPath = options.onlyPack ? prodOutput : path.join(prodOutput, name);
+        publicPath = prodAssetsUrl + prodRelativeOutput;
+    }
 
-  return {
-    rootOutputPath,
-    outputPath,
-    publicPath
-  };
+    return {
+        rootOutputPath,
+        outputPath,
+        publicPath
+    };
 }
 
 // -----------------------------------------------------------------------------
 // Generate settings needed for webpack
 // -----------------------------------------------------------------------------
 function webpackSettings(name, file, appPath, port, options) {
-  return {
-    name,
-    file,
-    path: appPath,
-    shouldLint: options.shouldLint,
-    stage: options.stage,
-    production: isProduction(options.stage),
-    buildSuffix,
-    port,
-  };
+    return {
+        name,
+        file,
+        path: appPath,
+        shouldLint: options.shouldLint,
+        stage: options.stage,
+        production: isProduction(options.stage),
+        buildSuffix,
+        port,
+    };
 }
 
 // -----------------------------------------------------------------------------
@@ -113,50 +113,50 @@ function webpackSettings(name, file, appPath, port, options) {
 // -----------------------------------------------------------------------------
 function appSettings(name, port, options) {
 
-  const appPath = path.join(appsDir, name);
-  const htmlPath = path.join(appPath, 'html');
-  const staticPath = path.join(appPath, 'static');
+    const appPath = path.join(appsDir, name);
+    const htmlPath = path.join(appPath, 'html');
+    const staticPath = path.join(appPath, 'static');
 
-  const app = _.merge({
-    htmlPath,
-    staticPath,
-    templateData: {}, // Object that will be passed to every page as it is rendered
-    templateMap: {}, // Used to specify specific templates on a per file basis
-    htmlOptions,
-  }, webpackSettings(name, 'app.jsx', appPath, port, options),
-     outputPaths(name, port, options));
+    const app = _.merge({
+        htmlPath,
+        staticPath,
+        templateData: {}, // Object that will be passed to every page as it is rendered
+        templateMap: {}, // Used to specify specific templates on a per file basis
+        htmlOptions,
+    }, webpackSettings(name, 'app.jsx', appPath, port, options),
+    outputPaths(name, port, options));
 
-  app.templateDirs = templateDirs(app, ['layouts']);
-  return {
-    [name] : app
-  };
+    app.templateDirs = templateDirs(app, ['layouts']);
+    return {
+        [name] : app
+    };
 }
 
 // -----------------------------------------------------------------------------
 // Iterate a given directory to generate app or webpack settings
 // -----------------------------------------------------------------------------
 function iterateDirAndPorts(dir, options, cb) {
-  let port = options.port;
-  return fs.readdirSync(dir)
-    .filter(file => fs.statSync(path.join(dir, file)).isDirectory())
-    .reduce((result, appName) => {
-      const app = cb(appName, port, options);
-      port = options.appPerPort ? port + 1 : options.port;
-      return _.merge(result, app);
-    }, {});
+    let port = options.port;
+    return fs.readdirSync(dir)
+        .filter(file => fs.statSync(path.join(dir, file)).isDirectory())
+        .reduce((result, appName) => {
+            const app = cb(appName, port, options);
+            port = options.appPerPort ? port + 1 : options.port;
+            return _.merge(result, app);
+        }, {});
 }
 
 // -----------------------------------------------------------------------------
 // Generates an app setting for all applications found in the client directory
 // -----------------------------------------------------------------------------
 function apps(options) {
-  return iterateDirAndPorts(appsDir, options, appSettings);
+    return iterateDirAndPorts(appsDir, options, appSettings);
 }
 
 module.exports = {
-  paths,
-  hotPort,
-  outputPaths,
-  apps,
-  isProduction
+    paths,
+    hotPort,
+    outputPaths,
+    apps,
+    isProduction
 };
