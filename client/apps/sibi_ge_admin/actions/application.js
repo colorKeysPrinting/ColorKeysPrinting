@@ -31,11 +31,10 @@ export function login(email, password) {
     return {
         type   : ActionTypes.LOGIN,
         method : Network.POST,
-        url    : `${Network.DOMAIN}/signin`,
+        url    : `${Network.DOMAIN}/adminsignin`,
         body   : {
             email,
-            password,
-            isApplianceApp: false
+            password
         }
     };
 }

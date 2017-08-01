@@ -11,6 +11,11 @@ const initialState = Immutable.fromJS({ currLanguage: 'English',
     activeTab: '',
     activeOverlay: '',
     overlayObj: false,
+    orders: [],
+    users: [],
+    products: [],
+    fundProperties: [],
+    isOrderDeleted: false
 });
 
 export default (state = initialState, action) => {
@@ -23,6 +28,7 @@ export default (state = initialState, action) => {
 
         state = state.set('activeUser', Immutable.fromJS({ ...action.payload, settings }));
         break;
+
     case ActionTypes.GO_HOME:
         console.log('going home');
         break;
@@ -100,12 +106,21 @@ export default (state = initialState, action) => {
         state = state.set('products', Immutable.fromJS(action.payload));
         break;
 
-    case ActionTypes.GET_USER_MATCHUPS_DONE:
-        console.log('receiving user matchups', action.payload);
-        state = state.set('isMatchupDeleted', false);
-        state = state.setIn(['activeUser', 'myMatchups'], Immutable.fromJS(action.payload));
+    case ActionTypes.CREATE_PRODUCTS_DONE:
+        console.log('receiving products', action.payload);
+        state = state.set('products', Immutable.fromJS(action.payload));
         break;
 
+    case ActionTypes.REMOVE_PRODUCT_DONE:
+        console.log('receiving products', action.payload);
+        state = state.set('products', Immutable.fromJS(action.payload));
+        break;
+
+    case ActionTypes.GET_ORDERS_DONE:
+        console.log('receiving orders', action.payload);
+        // state = state.set('isOrderDeleted', false);
+        state = state.set('orders', Immutable.fromJS(action.payload));
+        break;
 
     case ActionTypes.REMOVE_PRODUCT_DONE:
         console.log('delete call back');
@@ -129,6 +144,16 @@ export default (state = initialState, action) => {
 
         state = state.updateIn(['activeUser', collectionType], value => Immutable.fromJS(myList));
         state = state.set('activeOverlay', '');
+        break;
+
+    case ActionTypes.GET_USERS_DONE:
+        console.log('receiving users');
+        state = state.set('users', Immutable.fromJS(action.payload));
+        break;
+
+    case ActionTypes.GET_FUND_PROPERTIES_DONE:
+        console.log('receiving fund properties');
+        state = state.set('fundProperties', Immutable.fromJS(action.payload));
         break;
 
     default:

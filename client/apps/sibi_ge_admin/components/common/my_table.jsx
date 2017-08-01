@@ -21,7 +21,16 @@ export default class MyTable extends React.Component {
         this.handleAction = this.handleAction.bind(this);
     }
 
-    orderby(value, isAscending) {
+    componentWillReceiveProps(nextProps) {
+        console.log('nextProps:', nextProps);
+        const token = nextProps.token;
+        const headers = nextProps.headers;
+        const data = nextProps.data;
+
+        this.setState({ token, headers, data });
+    }
+
+    orderBy(value, isAscending) {
         const data = _.orderBy(this.state.data, [value], [(isAscending) ? 'asc' : 'desc']);
         this.setState({ data });
     }
@@ -33,7 +42,7 @@ export default class MyTable extends React.Component {
     handleItem(item) {
         switch (this.props.type) {
         case 'orders':
-            browserHistory.push({ pathName: `/order/${item.id}`, state: { id: item.id } });
+            browserHistory.push({ pathName: `/order_details`, state: { id: item.id } });
             break;
 
         default:
@@ -60,6 +69,8 @@ export default class MyTable extends React.Component {
     }
 
     render() {
+        let title;
+
         const headers = _.map(this.state.headers, (header, id) => {
             return (<td key={`table-header-${id}`} ><div onClick={() => this.orderby(header, (this.state.isAscending) ? false : true)}>{ header }</div></td>);
         });
@@ -67,7 +78,7 @@ export default class MyTable extends React.Component {
         const data = _.map(this.state.data, (item) => {
             let actionText;
 
-            const col = _.map(item.data, (col, id) => {
+            const col = _.map(item, (col, id) => {
                 return (<td key={id} >{ col }</td>)
             });
 

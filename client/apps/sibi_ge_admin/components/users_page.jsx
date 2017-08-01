@@ -1,10 +1,11 @@
 import React                    from 'react';
+import _                        from 'lodash';
 import { connect }              from 'react-redux';
 import { browserHistory, Link } from 'react-router';
-import _                        from 'lodash';
 import { withCookies }          from 'react-cookie';
 import assets                   from '../libs/assets';
 
+import { showOverlay }          from '../actions/application';
 import { logout }               from '../actions/header';
 import { getOrders, updateOrderStatus }          from '../actions/products';
 
@@ -25,7 +26,7 @@ class UsersPage extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (nextProps.activeUser) {
-            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
+            const path = (nextProps.activeUser.size > 0) ? `/users` : `/`;
             browserHistory.push(path);
         }
 
@@ -41,7 +42,7 @@ class UsersPage extends React.Component {
         return (
             <div id="orders-page" >
                 <MyTable
-                    type="orders"
+                    type="users"
                     token={jwt.token}
                     headers={['Order #','Order Date','Items','Property address','Ordered by','Email','Status']}
                     data={this.props.orders}

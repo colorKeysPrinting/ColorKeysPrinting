@@ -5,10 +5,10 @@ import { Router, Route, IndexRoute }    from 'react-router';
 import appHistory                       from './history';
 import Index                            from './components/layout/index';
 import Home                             from './components/home';
-import OrderPage                        from './components/order_page';
+import OrdersPage                        from './components/orders_page';
 import UsersPage                        from './components/users_page';
 import ProductsPage                     from './components/products_page';
-import OrderDetails                     from './order_details';
+import OrderDetails                     from './components/order_details';
 import NotFound                         from './components/common/not_found';
 
 export default (
@@ -17,7 +17,7 @@ export default (
             <IndexRoute component={Home} />
         </Route>
         <Route path="/orders" component={Index}>
-            <IndexRoute component={OrderPage} />
+            <IndexRoute component={OrdersPage} />
         </Route>
         <Route path="/users" component={Index}>
             <IndexRoute component={UsersPage} />

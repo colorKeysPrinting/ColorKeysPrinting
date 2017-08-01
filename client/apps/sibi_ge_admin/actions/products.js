@@ -41,11 +41,11 @@ export function removeProduct(obj) {
 }
 
 // *************** order section ***************
-export function getOrders(token) {
+export function getOrders({ token, orders }) {
     return {
-        type    : ActionTypes.GET_ORDER_STATUS,
+        type    : ActionTypes.GET_ORDERS,
         method  : Network.GET,
-        url     : `${Network.DOMAIN}/orderStatus`, // TODO: wrong api call, hasn't been created yet
+        url     : `${Network.DOMAIN}/${orders}`,
         headers : {
             'x-auth-token': token
         }
@@ -66,11 +66,72 @@ export function updateOrderStatus({ token, id, status }) {
     }
 }
 
+export function updateOrder({ token, id, status }) {
+    return {
+        type    : ActionTypes.UPDATE_ORDER,
+        method  : Network.PATCH,
+        url     : `${Network.DOMAIN}/order/${id}`,
+        headers : {
+            'x-auth-token': token
+        },
+        body: {
+            productsAndDestinations,
+            fundPropertyId,
+            tenantFirstName,
+            tenantLastName,
+            tenantPhone,
+            tenantEmail,
+            lockBoxCode,
+            specialInstructions,
+            customerPONumber,
+            occupied,
+            isApplianceHotShotDelivery,
+            installDate,
+            applianceDeliveryTime,
+            installDate,
+            applianceDeliveryTime
+        }
+    }
+}
+
+export function createOrder() {
+    return {
+        type    : ActionTypes.CREATE_ORDER,
+        method  : Network.POST,
+        url     : `${Network.DOMAIN}/createOrder`,
+        headers : {
+            'x-auth-token': token
+        }
+    }
+}
+
 export function removeOrder(token, id) {
     return {
         type    : ActionTypes.REMOVE_ORDER,
         method  : Network.DEL,
-        url     : `${Network.DOMAIN}/createOrderStatus/${id}`,
+        url     : `${Network.DOMAIN}/order/${id}`,
+        headers : {
+            'x-auth-token': token
+        }
+    }
+}
+
+export function getUsers({ token, users }) {
+    return {
+        type    : ActionTypes.GET_USERS,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/usersForFund`,
+        headers : {
+            'x-auth-token': token
+        }
+    }
+}
+
+export function getFundProperties({ token }) {
+    return {
+        type    : ActionTypes.GET_FUND_PROPERTIES,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/fundsProperties`,
         headers : {
             'x-auth-token': token
         }

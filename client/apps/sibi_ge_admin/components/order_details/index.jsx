@@ -1,14 +1,15 @@
 import React                    from 'react';
+import _                        from 'lodash';
 import { connect }              from 'react-redux';
 import { browserHistory, Link } from 'react-router';
-import _                        from 'lodash';
 import { withCookies }          from 'react-cookie';
 import assets                   from '../../libs/assets';
 
+import { showOverlay }          from '../../actions/application';
 import { logout }               from '../../actions/header';
 import { getOrders, updateOrderStatus }          from '../../actions/products';
 
-import MyTable                  from './common/my_table';
+import MyTable                  from '../common/my_table';
 
 class OrderDetails extends React.Component {
 

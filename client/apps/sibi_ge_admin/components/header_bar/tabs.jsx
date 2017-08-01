@@ -39,11 +39,17 @@ export default function Tabs(props) {
     let activeTabs;
 
     switch (props.type) {
-    case 'admin':
+    case 'superAdmin':
         activeTabs = (<div style={styles.header}>
             { tabs['orders'] }
             { tabs['users'] }
             { tabs['products'] }
+        </div>);
+        break;
+    case 'admin':
+        activeTabs = (<div style={styles.header}>
+            { tabs['orders'] }
+            { tabs['users'] }
         </div>);
         break;
     default:
