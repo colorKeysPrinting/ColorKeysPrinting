@@ -78,10 +78,6 @@ export default class MyTable extends React.Component {
         const data = _.map(this.state.data, (item) => {
             let actionText;
 
-            const col = _.map(item, (col, id) => {
-                return (<td key={id} >{ col }</td>)
-            });
-
             switch (this.props.type) {
             case 'orders':
                 actionText = 'approve';
@@ -99,7 +95,20 @@ export default class MyTable extends React.Component {
                 console.log('no action for:', this.props.type);
             }
 
-            return (<tr key={item.id} onClick={() => this.handleItem(item)}>{ col }<td onClick={() => this.props.handleAction(item)}>{ actionText }</td></tr>)
+            const col = _.map(item, (col, id) => {
+                if (id === 'orderStatus') {
+                    let action;
+
+                    if (col === 'pending') {
+                        action = <td onClick={() => this.props.handleAction(item)}>{ actionText }</td>;
+                    }
+                    return (<td key={id} ><td>{ col }</td>{ action }</td>);
+                } else {
+                    return (<td key={id} >{ col }</td>)
+                }
+            });
+
+            return (<tr key={item.id} onClick={() => this.handleItem(item)}>{ col }</tr>)
         });
 
         return (

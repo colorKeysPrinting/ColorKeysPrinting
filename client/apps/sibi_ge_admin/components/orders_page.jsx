@@ -77,6 +77,12 @@ class OrdersPage extends React.Component {
 
                 return cols;
             });
+
+            // this initially sets the "Pending" orders before everything and "Approved" orders at the end
+            data = _.partition(data, ['orderStatus', 'pending']);
+            data = data[0].concat(data[1]);
+            data = _.partition(data, ['orderStatus', 'Approved']);
+            data = data[1].concat(data[0]);
         }
 
         return (
