@@ -33,6 +33,9 @@ const asyncActionTypes = [
 
     // products
     'GET_PRODUCTS',
+    'GET_PRODUCT_CATEGORIES',
+    'GET_PRODUCTS_FOR_CATEGORY',
+    'GET_PRODUCTS_FOR_SUB_CATEGORY',
     'CREATE_PRODUCTS',
     'REMOVE_PRODUCT',
     'GET_ORDERS',

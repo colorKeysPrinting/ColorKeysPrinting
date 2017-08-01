@@ -8,11 +8,44 @@ import Network          from '../../../libs/constants/network';
 // /////////////////////////////////////
 
 // *************** product section ***************
-export function getProducts(token) {
+export function getProducts({ token }) {
     return {
         type    : ActionTypes.GET_PRODUCTS,
         method  : Network.GET,
         url     : `${Network.DOMAIN}/products`,
+        headers : {
+            'x-auth-token': token
+        }
+    }
+}
+
+export function getProductCategories({ token }) {
+    return {
+        type    : ActionTypes.GET_PRODUCT_CATEGORIES,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/productCategoriesForUser`,
+        headers : {
+            'x-auth-token': token
+        }
+    }
+}
+
+export function getProductsForCategory({ token, category }) {
+    return {
+        type    : ActionTypes.GET_PRODUCTS_FOR_CATEGORY,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/productsForCategory?categoryId=${category}`,
+        headers : {
+            'x-auth-token': token
+        }
+    }
+}
+
+export function getProductsForSubCategory({ token, category }) {
+    return {
+        type    : ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/productsForCategory?subcategoryId=${category}`,
         headers : {
             'x-auth-token': token
         }

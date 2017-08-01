@@ -70,7 +70,7 @@ export default class MyTable extends React.Component {
 
     render() {
         let title;
-
+        
         const headers = _.map(this.state.headers, (header, id) => {
             return (<td key={`table-header-${id}`} ><div onClick={() => this.orderBy(header, (this.state.isAscending) ? false : true)}>{ header }</div></td>);
         });

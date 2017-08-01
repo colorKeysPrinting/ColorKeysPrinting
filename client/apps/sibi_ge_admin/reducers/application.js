@@ -15,6 +15,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English',
     users: [],
     products: [],
     fundProperties: [],
+    productCategories: [],
     isOrderDeleted: false
 });
 
@@ -105,16 +106,31 @@ export default (state = initialState, action) => {
         console.log('receiving products', action.payload);
         state = state.set('products', Immutable.fromJS(action.payload));
         break;
+    
+    case ActionTypes.GET_PRODUCT_CATEGORIES_DONE:
+        console.log('receiving product categories', action.payload);
+        state = state.set('productCategories', Immutable.fromJS(action.payload));
+        break;
+
+    case ActionTypes.GET_PRODUCTS_FOR_CATEGORY_DONE:
+        console.log('receiving products for category', action.payload);
+        state = state.set('products', Immutable.fromJS(action.payload));
+        break;
+
+    case ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_DONE:
+        console.log('receiving products for sub category', action.payload);
+        state = state.set('products', Immutable.fromJS(action.payload));
+        break;
 
     case ActionTypes.CREATE_PRODUCTS_DONE:
-        console.log('receiving products', action.payload);
+        console.log('created product', action.payload);
         state = state.set('products', Immutable.fromJS(action.payload));
         break;
 
-    case ActionTypes.REMOVE_PRODUCT_DONE:
-        console.log('receiving products', action.payload);
-        state = state.set('products', Immutable.fromJS(action.payload));
-        break;
+    // case ActionTypes.REMOVE_PRODUCT_DONE:
+    //     console.log('removed products', action.payload);
+    //     state = state.set('products', Immutable.fromJS(action.payload));
+    //     break;
 
     case ActionTypes.REMOVE_PRODUCT_DONE:
         console.log('delete call back');
