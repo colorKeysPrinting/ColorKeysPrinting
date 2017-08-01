@@ -57,6 +57,9 @@ class UsersPage extends React.Component {
 
                     } else if (key === 'email') {
                         value = user['email'];
+
+                    } else if (key === 'status') {
+                        value = (user['type'] === 'Pending') ? 'Pending' : 'Approved';
                     }
 
                     cols[key] = value;
@@ -65,11 +68,9 @@ class UsersPage extends React.Component {
                 return cols;
             });
 
-            // this initially sets the "Pending" orders before everything and "Approved" orders at the end
-            // data = _.partition(data, ['orderStatus', 'Pending']);
-            // data = data[0].concat(data[1]);
-            // data = _.partition(data, ['orderStatus', 'Approved']);
-            // data = data[1].concat(data[0]);
+            // this initially sets the "Pending" users before everything
+            data = _.partition(data, ['status', 'Pending']);
+            data = data[0].concat(data[1]);
         }
 
         return (
