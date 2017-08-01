@@ -116,28 +116,6 @@ export function removeOrder(token, id) {
     }
 }
 
-export function getUsers({ token, users }) {
-    return {
-        type    : ActionTypes.GET_USERS,
-        method  : Network.GET,
-        url     : `${Network.DOMAIN}/usersForFund`,
-        headers : {
-            'x-auth-token': token
-        }
-    }
-}
-
-export function getFundProperties({ token }) {
-    return {
-        type    : ActionTypes.GET_FUND_PROPERTIES,
-        method  : Network.GET,
-        url     : `${Network.DOMAIN}/fundsProperties`,
-        headers : {
-            'x-auth-token': token
-        }
-    }
-}
-
 export function setActiveFilters(key, value) {
     return {
         type: ActionTypes.SET_ACTIVE_FILTERS,

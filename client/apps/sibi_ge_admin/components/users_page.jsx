@@ -7,7 +7,7 @@ import assets                   from '../libs/assets';
 
 import { showOverlay }          from '../actions/application';
 import { logout }               from '../actions/header';
-import { getOrders, updateOrderStatus }          from '../actions/products';
+import { getUsers }      from '../actions/users';
 
 import MyTable                  from './common/my_table';
 
@@ -18,7 +18,7 @@ class UsersPage extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
-            this.props.getOrders(jwt.token);
+            this.props.getUsers({ token: jwt.token });
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
@@ -36,16 +36,49 @@ class UsersPage extends React.Component {
     }
 
     render() {
+        let data = [];
+
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
+        const headers = { name: 'Name', office: 'PM Office', email: 'Email', phone: 'Phone', createdAt: 'Acount Created', status: 'Status' };
+
+        if (this.props.users.size > 0) {
+
+            const users = this.props.users.toJS();
+
+            data = _.map(users, (user) => {
+                const cols = {};
+
+                _.each(headers, (value, key) => {
+                    value = user[key];
+
+                    if (key === 'name') {
+                        value = `${user['firstName']} ${user['lastName']}`;
+
+                    } else if (key === 'email') {
+                        value = user['email'];
+                    }
+
+                    cols[key] = value;
+                });
+
+                return cols;
+            });
+
+            // this initially sets the "Pending" orders before everything and "Approved" orders at the end
+            // data = _.partition(data, ['orderStatus', 'Pending']);
+            // data = data[0].concat(data[1]);
+            // data = _.partition(data, ['orderStatus', 'Approved']);
+            // data = data[1].concat(data[0]);
+        }
 
         return (
             <div id="orders-page" >
                 <MyTable
                     type="users"
                     token={jwt.token}
-                    headers={['Order #','Order Date','Items','Property address','Ordered by','Email','Status']}
-                    data={this.props.orders}
+                    headers={headers}
+                    data={data}
                 />
             </div>
         );
@@ -53,7 +86,7 @@ class UsersPage extends React.Component {
 }
 
 const select = (state) => ({
-    orders          : state.application.get('orders')
+    users          : state.application.get('users')
 });
 
-export default connect(select, { showOverlay, getOrders, updateOrderStatus }, null, { withRef: true })(withCookies(UsersPage));
+export default connect(select, { showOverlay, getUsers }, null, { withRef: true })(withCookies(UsersPage));

@@ -72,10 +72,10 @@ export default class MyTable extends React.Component {
         let title;
 
         const headers = _.map(this.state.headers, (header, id) => {
-            return (<td key={`table-header-${id}`} ><div onClick={() => this.orderby(header, (this.state.isAscending) ? false : true)}>{ header }</div></td>);
+            return (<td key={`table-header-${id}`} ><div onClick={() => this.orderBy(header, (this.state.isAscending) ? false : true)}>{ header }</div></td>);
         });
 
-        const data = _.map(this.state.data, (item) => {
+        const data = _.map(this.state.data, (item, id) => {
             let actionText;
 
             switch (this.props.type) {
@@ -99,16 +99,16 @@ export default class MyTable extends React.Component {
                 if (id === 'orderStatus') {
                     let action;
 
-                    if (col === 'pending') {
-                        action = <td onClick={() => this.props.handleAction(item)}>{ actionText }</td>;
+                    if (col === 'Pending') {
+                        action = <div onClick={() => this.handleAction(item)}>{ actionText }</div>;
                     }
-                    return (<td key={id} ><td>{ col }</td>{ action }</td>);
+                    return (<td key={`table-item-${id}`} ><div>{ col }</div>{ action }</td>);
                 } else {
-                    return (<td key={id} >{ col }</td>)
+                    return (<td key={`table-item-${id}`} >{ col }</td>);
                 }
             });
 
-            return (<tr key={item.id} onClick={() => this.handleItem(item)}>{ col }</tr>)
+            return (<tr key={`table-row-${id}`} onClick={() => this.handleItem(item)}>{ col }</tr>);
         });
 
         return (
