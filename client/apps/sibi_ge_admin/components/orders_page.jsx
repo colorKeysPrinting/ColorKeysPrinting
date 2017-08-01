@@ -7,7 +7,7 @@ import assets                   from '../libs/assets';
 
 import { showOverlay }          from '../actions/application';
 import { logout }               from '../actions/header';
-import { getOrders, getUsers, getFundProperties, updateOrderStatus }          from '../actions/products';
+import { getOrders, getUsers, getFundProperties, approveOrder }          from '../actions/products';
 
 import MyTable                  from './common/my_table';
 
@@ -92,7 +92,7 @@ class OrdersPage extends React.Component {
                     token={jwt.token}
                     headers={headers}
                     data={data}
-                    updateOrderStatus={this.props.updateOrderStatus}
+                    approveOrder={this.props.approveOrder}
                 />
             </div>
         );
@@ -106,4 +106,4 @@ const select = (state) => ({
     fundProperties  : state.application.get('fundProperties'),
 });
 
-export default connect(select, { getOrders, getUsers, getFundProperties, updateOrderStatus }, null, { withRef: true })(withCookies(OrdersPage));
+export default connect(select, { getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));

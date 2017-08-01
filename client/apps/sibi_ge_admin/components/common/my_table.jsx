@@ -53,7 +53,7 @@ export default class MyTable extends React.Component {
     handleAction(item) {
         switch (this.props.type) {
         case 'orders':
-            this.props.updateOrderStatus({ token: this.props.token, id: item.id, status: true });
+            this.props.approveOrder({ token: this.props.token, id: item.id, status: true });
             break;
 
         case 'users':

@@ -52,9 +52,9 @@ export function getOrders({ token, orders }) {
     }
 }
 
-export function updateOrderStatus({ token, id, status }) {
+export function approveOrder({ token, id }) {
     return {
-        type    : ActionTypes.UPDATE_ORDER_STATUS,
+        type    : ActionTypes.APPROVE_ORDER,
         method  : Network.PATCH,
         url     : `${Network.DOMAIN}/orderStatus/${id}`,
         headers : {

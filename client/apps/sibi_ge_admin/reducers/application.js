@@ -116,12 +116,6 @@ export default (state = initialState, action) => {
         state = state.set('products', Immutable.fromJS(action.payload));
         break;
 
-    case ActionTypes.GET_ORDERS_DONE:
-        console.log('receiving orders', action.payload);
-        // state = state.set('isOrderDeleted', false);
-        state = state.set('orders', Immutable.fromJS(action.payload));
-        break;
-
     case ActionTypes.REMOVE_PRODUCT_DONE:
         console.log('delete call back');
 
@@ -144,6 +138,32 @@ export default (state = initialState, action) => {
 
         state = state.updateIn(['activeUser', collectionType], value => Immutable.fromJS(myList));
         state = state.set('activeOverlay', '');
+        break;
+
+    case ActionTypes.GET_ORDERS_DONE:
+        console.log('receiving orders', action.payload);
+        // state = state.set('isOrderDeleted', false);
+        state = state.set('orders', Immutable.fromJS(action.payload));
+        break;
+
+    case ActionTypes.APPROVE_ORDER_DONE:
+        console.log('approved order', action.payload);
+
+        break;
+
+    case ActionTypes.UPDATE_ORDER_DONE:
+        console.log('update order', action.payload);
+
+        break;
+
+    case ActionTypes.CREATE_ORDER_DONE:
+        console.log('create order', action.payload);
+
+        break;
+
+    case ActionTypes.REMOVE_ORDER_DONE:
+        console.log('remove order', action.payload);
+
         break;
 
     case ActionTypes.GET_USERS_DONE:
