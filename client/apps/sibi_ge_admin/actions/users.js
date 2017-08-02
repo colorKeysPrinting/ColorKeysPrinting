@@ -40,7 +40,16 @@ export function disableUser({ token, id }) {
     };
 }
 
-
+export function getFunds({ token, emailDomain }) {
+    return {
+        type    : ActionTypes.GET_FUNDS,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/funds?fundEmailDomain=${emailDomain}`,
+        headers : {
+            'x-auth-token': token
+        }
+    }
+}
 
 export function getFundProperties({ token }) {
     return {

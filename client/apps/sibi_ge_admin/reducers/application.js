@@ -14,6 +14,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English',
     orders: [],
     users: [],
     products: [],
+    funds: [],
     fundProperties: [],
     isOrderDeleted: false
 });
@@ -169,6 +170,11 @@ export default (state = initialState, action) => {
     case ActionTypes.GET_USERS_DONE:
         console.log('receiving users');
         state = state.set('users', Immutable.fromJS(action.payload));
+        break;
+    
+    case ActionTypes.GET_FUNDS_DONE:
+        console.log('receiving funds');
+        state = state.set('funds', Immutable.fromJS(action.payload));
         break;
 
     case ActionTypes.GET_FUND_PROPERTIES_DONE:

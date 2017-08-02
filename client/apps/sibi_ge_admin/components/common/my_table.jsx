@@ -72,7 +72,7 @@ export default class MyTable extends React.Component {
         let title;
 
         const headers = _.map(this.state.headers, (header, id) => {
-            return (<td key={`table-header-${id}`} ><div onClick={() => this.orderBy(header, (this.state.isAscending) ? false : true)}>{ header }</div></td>);
+            return (<td key={`table-header-${id}`} ><div onClick={() => this.orderBy(header, (this.state.isAscending) ? false : true)} style={{ cursor: 'pointer' }}>{ header }</div></td>);
         });
 
         const data = _.map(this.state.data, (item, id) => {
@@ -97,7 +97,7 @@ export default class MyTable extends React.Component {
 
             const col = _.map(item, (col, id) => {
                 if (id === 'orderStatus' || id === 'status') {
-                    const action = (col === 'Pending') ? <div onClick={() => this.handleAction(item)}>{ actionText }</div> : null;
+                    const action = (col === 'Pending') ? <div className="text-link" onClick={() => this.handleAction(item)} style={{ cursor: 'pointer' }}>{ actionText }</div> : null;
 
                     return (<td key={`table-item-${id}`} ><div>{ col }</div>{ action }</td>);
                 } else {
