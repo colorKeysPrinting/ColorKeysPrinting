@@ -30,13 +30,14 @@ export function getProductCategories({ token }) {
     }
 }
 
-export function getProductsForCategory({ token, category }) {
+export function getProductsForCategory({ token, categoryId, category }) {
     return {
         type    : ActionTypes.GET_PRODUCTS_FOR_CATEGORY,
         method  : Network.GET,
-        url     : `${Network.DOMAIN}/productsForCategory?categoryId=${category}`,
+        url     : `${Network.DOMAIN}/productsForCategory?categoryId=${categoryId}`,
         headers : {
-            'x-auth-token': token
+            'x-auth-token': token,
+            category
         }
     }
 }
@@ -47,7 +48,8 @@ export function getProductsForSubCategory({ token, category }) {
         method  : Network.GET,
         url     : `${Network.DOMAIN}/productsForCategory?subcategoryId=${category}`,
         headers : {
-            'x-auth-token': token
+            'x-auth-token': token,
+            category
         }
     }
 }

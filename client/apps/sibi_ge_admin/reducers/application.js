@@ -13,7 +13,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English',
     overlayObj: false,
     orders: [],
     users: [],
-    products: [],
+    products: {},
     fundProperties: [],
     productCategories: [],
     isOrderDeleted: false
@@ -114,7 +114,7 @@ export default (state = initialState, action) => {
 
     case ActionTypes.GET_PRODUCTS_FOR_CATEGORY_DONE:
         console.log('receiving products for category', action.payload);
-        state = state.set('products', Immutable.fromJS(action.payload));
+        state = state.setIn(['products', action.original.headers.category], Immutable.fromJS(action.payload));
         break;
 
     case ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_DONE:

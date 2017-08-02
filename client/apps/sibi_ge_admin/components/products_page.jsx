@@ -8,7 +8,7 @@ import assets                   from '../libs/assets';
 
 import { showOverlay }          from '../actions/application';
 import { logout }               from '../actions/header';
-import { getProducts, getProductCategories }          from '../actions/products';
+import { getProducts, getProductCategories, getProductsForCategory }          from '../actions/products';
 
 import MyTable                  from './common/my_table';
 
@@ -16,7 +16,7 @@ class ProductsPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.changeCategory = this.changeCategory.bind(this);
+        this.handleAction = this.handleAction.bind(this);
     }
 
     componentWillMount() {
@@ -29,59 +29,83 @@ class ProductsPage extends React.Component {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
     }
-
-    componentWillUpdate(nextProps) {
-        if (nextProps.activeUser) {
-            const path = (nextProps.activeUser.size > 0) ? `/products` : `/`;
-            browserHistory.push(path);
-        }
-
-        if (nextProps.isLogout) {
-            this.props.logout();
-        }
+    
+    handleAction({ item }) {
+        console.log('product action:', item.id.product);
+        this.props.showOverlay('editProduct', { product: item.id.product });
     }
 
-    changeCategory(category) {
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+    componentWillUpdate(nextProps) {
+        if (!_.isEqual(this.props.productCategories, nextProps.productCategories)) {
+            const productCategories = nextProps.productCategories.toJS();
 
-        this.props.getProductsForCategory({ token: jwt.token, category });
+            const { cookies } = this.props;
+            const jwt = cookies.get('sibi-admin-jwt');
+            
+            _.each(productCategories, (category) => {
+                this.props.getProductsForCategory({ token: jwt.token, categoryId: category.id, category: category.name });
+            });
+        }
     }
 
     render() {
+        let tabs, tabContent;
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        const tabs = _.map(this.props.productCategories.toJS(), (type) => {
-            if (props.product[type]) {
-                return (<Tab 
-                    key={type} 
-                    onClick={() => this.props.getProductsForCategory({ token: jwt.token, category: type })} 
-                >{ (type).toUpperCase() }</Tab>);
-            }
-        });
+        if (this.props.productCategories.size > 0 &&
+            this.props.products.size > 0) {
+            
+            const productCategories = this.props.productCategories.toJS();
+            const products = this.props.products.toJS();
 
-        const tabContent = _.map(tabTypes, (type) => {
-            if (props.product[type]) {
-                content = <div key={type}>{ props.product[type] }</div>;
-                let data = [];
-                
+            tabs = _.map(productCategories, (type) => {
                 return (
-                    <TabPanel key={`tabPanel${type}`}>
+                    <Tab key={type.id} >{ (type.name).toUpperCase() }</Tab>
+                );
+            });
+
+            tabContent = _.map(productCategories, (type) => {
+
+                const data = _.map(products[type.name], (product) => {
+                    const cols = {};
+
+                    _.each(['id','name','action'], (key) => {
+                        let value = product[key];
+
+                        if (key === 'action') {
+                            value = 'Edit';
+
+                        } else if (key === 'id') {
+                            value = { product };
+                        }
+
+                        cols[key] = value;
+                    });
+
+                    return cols;
+                });
+
+                return (
+                    <TabPanel key={`tabPanel${type.name}`}>
                         <MyTable
                             type="products"
-                            token={jwt.token}
-                            headers={headers}
+                            tab={type.name}
                             data={data}
+                            handleAction={this.handleAction}
                         />
                     </TabPanel>
                 );
-            }
-        });
+            });
+        }
 
         return (
             <div id="products-page" >
+                <div>
+                    <div>Products</div>
+                    <div className="submit-btn" onClick={() => this.props.showOverlay('editProduct')}>Add</div>
+                </div>
                 <Tabs defaultIndex={0} >
                     <TabList>
                         { tabs }
@@ -98,4 +122,11 @@ const select = (state) => ({
     productCategories   : state.application.get('productCategories')
 });
 
-export default connect(select, { showOverlay, getProducts }, null, { withRef: true })(withCookies(ProductsPage));
+const actions = {
+    showOverlay, 
+    getProducts, 
+    getProductCategories, 
+    getProductsForCategory
+};
+
+export default connect(select, actions, null, { withRef: true })(withCookies(ProductsPage));
