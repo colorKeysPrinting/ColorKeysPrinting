@@ -117,6 +117,10 @@ class Overlay extends React.Component {
         }
     }
 
+    saveProduct() {
+        console.log('save product');
+    }
+
     render() {
         let overlay, closeSection;
 
@@ -195,6 +199,7 @@ const select = (state) => ({
     activeOverlay       : state.application.get('activeOverlay'),
     overlayObj          : state.application.get('overlayObj'),
     activeUser          : state.application.get('activeUser'),
+    productCategories   : state.application.get('productCategories'),
 });
 
 const actions = {

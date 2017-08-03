@@ -43,46 +43,29 @@ export default function EditProduct(props) {
         }
     };
 
-    switch (props.type) {
-    case 'login':
-        close = <div onClick={props.close} style={styles.close}>X</div>;
-        inputs = (<div style={styles.content}>
-            <input type="email"     placeholder="Email"     value={props.email.email}       onChange={(e) => { props.update('email', e.target.value) }}     style={{ width: '435px' }} required />
-            <input type="password"  placeholder="Password"  value={props.password.password} onChange={(e) => { props.update('password', e.target.value) }}  style={{ width: '435px' }} required />
-        </div>);
+    const title = (props.overlayObj) ? 'Edit Product' : 'Add Product';
 
-        actionSection = (<div style={{ columnCount: 2, display: 'inline-flex', width: '435px', textAlign: 'left' }}>
-            <div className="cancel-btn" onClick={() => props.changeOverlay('reset')} style={{ width: '97%' }} >Forgot password?</div>
-            <input className="submit-btn" type="submit" value="Login" style={{ width: '86%' }} />
-        </div>);
-        break;
+    const categories = _.map(props.productCategories, (category) => (<option key={category.id} value={category.id}>{ category.name }</option>));
 
-    case 'reset':
-        close = <div onClick={() => props.changeOverlay('login')} style={styles.close}>X</div>;
-        inputs = (<div>
-            <div style={styles.text}>Enter your email to reset your password.</div>
-            <input type="email" placeholder="Email" value={props.email.email} onChange={(e) => { props.update('email', e.target.value) }} style={{ width: '435px' }} required />
-        </div>);
-
-        actionSection = <input className="submit-btn" type="submit" value="Submit" style={{ width: '86%' }} />;
-        break;
-    default:
-    }
-
-    const title = (<div style={styles.titleBar} >
-        <div style={styles.title}>{(props.type === 'login') ? 'Login': 'Reset password'}</div>
-        { close }
-    </div>);
+    const content = (<form onSubmit={props.saveProduct}>
+        <div style={styles.content}>
+            <div style={{ columnCount: 2, display: 'inline-flex', width: '540px' }}>
+                <select value={props.category} onChange={(e) => props.update('category', e.target.value)} required >
+                    <option disabled selected value="" >Select category</option>
+                    { categories }
+                </select>
+                <input type="text" placeholder="Product name" value={props.productName} onChange={(e) => props.update('productName', e.target.value)} required />
+                <input type="text" placeholder="Classification"  value={props.classification}  onChange={(e) => props.update('classification', e.target.value)}  required />
+            </div>
+            <div><input type="checkbox" /></div>
+        </div>
+        <input className="submit-btn" type="submit" value="add" style={{ width: '89%' }} />
+    </form>);
 
     return (
         <div style={styles.container}>
-            {title}
-            <form onSubmit={() => props.submitLoginBtn(props.type)}>
-                <div style={styles.content}>
-                    { inputs }
-                </div>
-                { actionSection }
-            </form>
+            { title }
+            { content }
         </div>
     );
 }
