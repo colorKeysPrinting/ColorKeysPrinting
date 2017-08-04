@@ -129,7 +129,7 @@ export default (state = initialState, action) => {
         const index = _.findIndex(products, ['id', action.payload.id]);
         products[index] = action.payload;
         
-        state = state.updateIn(['products', action.original.headers.category], value => products);
+        state = state.updateIn(['products', action.original.headers.category], value => Immutable.fromJS(products));
         break;
 
     case ActionTypes.CREATE_PRODUCTS_DONE:
@@ -147,7 +147,7 @@ export default (state = initialState, action) => {
         products = state.getIn(['products', action.original.headers.category]).toJS();
         products = _.remove(products, (product) => { return product.id === action.payload.id });
         
-        state = state.updateIn(['products', action.original.headers.category], value => products);
+        state = state.updateIn(['products', action.original.headers.category], value => Immutable.fromJS(products));
         break;
 
     case ActionTypes.GET_ORDERS_DONE:
