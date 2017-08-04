@@ -24,7 +24,8 @@ export function approveUser({ token, id }) {
         method  : Network.POST,
         url     : `${Network.DOMAIN}/users/${id}/undisable`,
         headers : {
-            'x-auth-token': token
+            'x-auth-token': token,
+            'userId': id
         }
     };
 }

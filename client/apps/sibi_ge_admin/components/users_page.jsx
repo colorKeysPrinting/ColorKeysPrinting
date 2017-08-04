@@ -8,11 +8,16 @@ import assets                   from '../libs/assets';
 
 import { showOverlay }          from '../actions/application';
 import { logout }               from '../actions/header';
-import { getUsers }             from '../actions/users';
+import { getUsers, approveUser }    from '../actions/users';
 
 import MyTable                  from './common/my_table';
 
 class UsersPage extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleAction = this.handleAction.bind(this);
+    }
 
     componentWillMount() {
         const { cookies } = this.props;
@@ -39,12 +44,20 @@ class UsersPage extends React.Component {
         }
     }
 
+    handleAction({ item }) {
+        console.log('user action:', item.id);
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+
+        this.props.approveUser({ token: jwt.token, id: item.id });
+    }
+
     render() {
         let data = [];
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        const headers = { name: 'Name', office: 'PM Office', email: 'Email', phoneNumber: 'Phone', createdAt: 'Acount Created', status: 'Status' };
+        const headers = { id: '', name: 'Name', office: 'PM Office', email: 'Email', phoneNumber: 'Phone', createdAt: 'Acount Created', status: 'Status', action: '' };
 
         if (this.props.users.size > 0 ) {
 
@@ -56,20 +69,26 @@ class UsersPage extends React.Component {
                 _.each(headers, (value, key) => {
                     value = user[key];
 
-                    if (key === 'name') {
+                    if (key === 'id') {
+                        value = user.id;
+
+                    } else if (key === 'name') {
                         value = `${user['firstName']} ${user['lastName']}`;
-
-                    } else if (key === 'email') {
-                        value = user['email'];
-
-                    } else if (key === 'status') {
-                        value = (user['type'] === 'Pending') ? 'Pending' : 'Approved';
 
                     } else if (key === 'office') {
                         value = user.fundLocation.city
 
+                    } else if (key === 'email') {
+                        value = user['email'];
+
                     } else if (key === 'createdAt') {
                         value = dateformat(new Date(value), 'mmmm dd, yyyy');
+
+                    } else if (key === 'status') {
+                        value = (user['type'] === 'pending') ? 'Pending' : 'Approved';
+
+                    } else if (key === 'action') {
+                        value = (user['type'] === 'pending') ? 'approve' : '';
                     }
 
                     cols[key] = value;
@@ -87,9 +106,9 @@ class UsersPage extends React.Component {
             <div id="orders-page" >
                 <MyTable
                     type="users"
-                    token={jwt.token}
                     headers={headers}
                     data={data}
+                    handleAction={this.handleAction}
                 />
             </div>
         );
@@ -100,4 +119,4 @@ const select = (state) => ({
     users           : state.application.get('users')
 });
 
-export default connect(select, { showOverlay, getUsers }, null, { withRef: true })(withCookies(UsersPage));
+export default connect(select, { showOverlay, getUsers, approveUser }, null, { withRef: true })(withCookies(UsersPage));

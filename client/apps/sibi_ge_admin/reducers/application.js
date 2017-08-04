@@ -171,6 +171,15 @@ export default (state = initialState, action) => {
         console.log('receiving users');
         state = state.set('users', Immutable.fromJS(action.payload));
         break;
+
+    case ActionTypes.APPROVE_USER_DONE:
+        console.log('receiving approved user');
+        const users = state.get('users').toJS();
+        const index = _.findIndex(users, ['id', action.original.headers.userId]);
+        users[index].type = 'approved';
+
+        state = state.set('users', Immutable.fromJS(users));
+        break;
     
     case ActionTypes.GET_FUNDS_DONE:
         console.log('receiving funds');

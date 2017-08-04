@@ -41,6 +41,7 @@ const asyncActionTypes = [
     'CREATE_ORDER',,
     'REMOVE_ORDER',
     'GET_USERS',
+    'APPROVE_USER',
     'GET_FUNDS',
     'GET_FUND_PROPERTIES',
     'SET_ACTIVE_FILTERS', // currently not hooked up
