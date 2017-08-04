@@ -36,30 +36,6 @@ export default class MyTable extends React.Component {
         this.setState({ [type]: value });
     }
 
-    // handleItem(item) {
-    //     switch (this.props.type) {
-    //     case 'orders':
-    //         browserHistory.push({ pathName: `/order_details`, state: { id: item.id } });
-    //         break;
-
-    //     default:
-    //         console.log('no action for:', this.props.type);
-    //     }
-    // }
-
-    // handleAction(item) {
-    //     switch (this.props.type) {
-    //     case 'orders':
-    //         this.props.approveOrder({ token: this.props.token, id: item.id, status: true });
-    //         break;
-
-    //     case 'users':
-    //         this.props.approveUser({ token: this.props.token, id: item.id });
-    //         break;
-
-    //     }
-    // }
-
     render() {
         let title, headers = [], search = '';
         

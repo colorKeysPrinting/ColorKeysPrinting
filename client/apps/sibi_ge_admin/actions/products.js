@@ -54,25 +54,46 @@ export function getProductsForSubCategory({ token, categoryId, category }) {
     }
 }
 
-export function createProduct(token, product) {
+export function updateProduct({ token, category, product }) {
+    return {
+        type    : ActionTypes.UPDATE_PRODUCTS,
+        method  : Network.PATCH,
+        url     : `${Network.DOMAIN}/products/${product.id}`,
+        headers : {
+            'x-auth-token': token,
+            category
+        },
+        body: {
+            ...product
+        }
+    }
+}
+
+export function createProduct({ token, category, product }) {
     return {
         type    : ActionTypes.CREATE_PRODUCTS,
         method  : Network.POST,
         url     : `${Network.DOMAIN}/createProduct`,
         headers : {
-            'x-auth-token': token
+            'x-auth-token': token,
+            category
         },
         body: {
-            product
+            ...product
         }
     }
 }
 
-export function removeProduct(obj) {
+export function removeProduct({ token, category, id }) {
     return {
-        type: ActionTypes.REMOVE_PRODUCT,
-        obj
-    };
+        type    : ActionTypes.REMOVE_PRODUCT,
+        method  : Network.DEL,
+        url     : `${Network.DOMAIN}/products/${id}`,
+        headers : {
+            'x-auth-token': token,
+            category
+        }
+    }
 }
 
 // *************** order section ***************

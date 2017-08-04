@@ -1,10 +1,12 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
-import { browserHistory }       from 'react-router';
 import _                        from 'lodash';
+import { withCookies }          from 'react-cookie';
 import '../common/custom_formats';
 
-import { login, logout, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
+import { login, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
+import { logout }      from '../../actions/header';
+import { updateProduct, createProduct }      from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
@@ -41,7 +43,7 @@ class Overlay extends React.Component {
         this.close = this.close.bind(this);
         this.submitLoginBtn = this.submitLoginBtn.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
-        this.deleteProduct = this.deleteProduct.bind(this);
+        this.archiveProduct = this.archiveProduct.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -159,12 +161,60 @@ class Overlay extends React.Component {
 
     saveProduct(id) {
         console.log('save product', id);
-        browserHistory.push(`/products`);
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.category]);
+
+        const product = {
+            name: this.state.productName,
+            // manufacturerModelNumber: this.state.,    // not in application
+            // serialNumber: this.state.,               // not in application
+            // shortDescription: this.state.,           // not in application
+            // sku: this.state.,                        // not in application
+            // overview: this.state.,                   // not in application
+            // specifications: this.state.,             // not in application
+            // faq: this.state.,                        // not in application
+            // videos: this.state.,                     // not in application
+            productCategoryId: this.props.activeUser.toJS().tradeId,
+            productSubcategoryId: this.state.category,
+            // applianceType: this.state.,              // not in application
+            applianceSize: this.state.size,
+            applianceDescription: this.state.classification,
+            // sibiModelNumber: this.state.,                // not in application
+            // applianceFuelType: this.state.,              // not in application
+            // applianceWidth: this.state.,                 // not in application
+            // applianceHeight: this.state.,                // not in application
+            // applianceDepth: this.state.,                 // not in application
+            // applianceInstallDescription: this.state.,    // not in application
+            applianceInstallPrice: this.state.installPrice,
+            applianceInstallCode: this.state.installCode,
+            applianceColorsAndImages: this.state.pictures,
+            applianceAssociatedParts: this.state.parts,     // *** missing from api ***
+            // applianceSpecSheetUrl: this.state.,          // not in application
+            // applianceRemovalDescription: this.state.,    // not in application
+            applianceRemovalCode: this.state.removalCode,
+            applianceRemovalPrice: this.state.removalPrice,
+        };
+
+        if (id) {
+            product['id'] = id;
+            
+            this.props.updateProduct({ token: jwt.token, category: category.name, product });
+        } else {
+
+            this.props.createProduct({ token: jwt.token, category: category.name, product })
+        }
+        this.close();
     }
 
-    deleteProduct(id) {
+    archiveProduct(id) {
         console.log('deleteProduct', id);
-        browserHistory.push(`/products`);
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.category]);
+
+        // this.props.removeProduct({ token: jwt.token, category: category.name, id });
+        this.close();
     }
 
     render() {
@@ -247,7 +297,7 @@ class Overlay extends React.Component {
                 close={this.close}
                 changeOverlay={this.changeOverlay}
                 saveProduct={this.saveProduct}
-                deleteProduct={this.deleteProduct}
+                archiveProduct={this.archiveProduct}
             />);
             break;
 
@@ -274,7 +324,9 @@ const actions = {
     login,
     logout,
     closeOverlay,
-    passwordReset
+    passwordReset,
+    updateProduct, 
+    createProduct
 };
 
-export default connect(select, actions, null, { withRef: true })(Overlay);
+export default connect(select, actions, null, { withRef: true })(withCookies(Overlay));

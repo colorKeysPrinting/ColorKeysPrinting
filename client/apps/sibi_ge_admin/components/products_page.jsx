@@ -1,7 +1,6 @@
 import React                    from 'react';
 import _                        from 'lodash';
 import { connect }              from 'react-redux';
-import { browserHistory, Link } from 'react-router';
 import { withCookies }          from 'react-cookie';
 import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                   from '../libs/assets';

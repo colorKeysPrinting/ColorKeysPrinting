@@ -68,8 +68,9 @@ export default class EditProduct extends React.Component {
 
         const categories = _.map(this.props.productCategories, (category) => (<option key={category.id} value={category.id}>{ category.name }</option>));
         const deleteBtn = (this.props.id) ? <div className="remove-btn" onClick={() => this.props.deleteProduct(this.props.id)}>Remove Product</div> : null;
+        const buttonTxt = (this.props.id) ? 'Update' : 'Add';
 
-        const content = (<form onSubmit={this.props.saveProduct}>
+        const content = (<form onSubmit={() => this.props.saveProduct(this.props.id)}>
             <div style={styles.content}>
                 <div style={{ columnCount: 2, display: 'inline-flex', width: '540px' }}>
                     <div>
@@ -79,6 +80,8 @@ export default class EditProduct extends React.Component {
                         </select>
                     </div>
                     <div><input type="text" placeholder="Product name"   value={this.props.productName}    onChange={(e) => this.props.update('productName', e.target.value)}    required /></div>
+                </div>
+                <div style={{ columnCount: 2, display: 'inline-flex', width: '540px' }}>
                     <div><input type="text" placeholder="Classification" value={this.props.classification} onChange={(e) => this.props.update('classification', e.target.value)} required /></div>
                     <div><input type="text" placeholder="Size"           value={this.props.size}           onChange={(e) => this.props.update('size', e.target.value)}           required /></div>
                 </div>
@@ -119,7 +122,7 @@ export default class EditProduct extends React.Component {
                     <div><input type="number" placeholder="removal value (e.g. 0.00)" value={this.props.removalPrice} onChange={(e) => this.props.update('removalPrice', e.target.value)} /></div>
                 </div>
             </div>
-            <input className="submit-btn" type="submit" value="add" style={{ width: '89%' }} />
+            <input className="submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
             { deleteBtn }
         </form>);
 

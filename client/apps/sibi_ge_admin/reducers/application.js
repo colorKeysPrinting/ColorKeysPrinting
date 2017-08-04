@@ -20,7 +20,8 @@ const initialState = Immutable.fromJS({ currLanguage: 'English',
 });
 
 export default (state = initialState, action) => {
-
+    let products;
+    
     switch (action.type) {
     case ActionTypes.GET_CURRENT_USER_DONE:
         const settings = {
@@ -121,6 +122,15 @@ export default (state = initialState, action) => {
         console.log('receiving products for sub category', action.payload);
         state = state.setIn(['products', action.original.headers.category], Immutable.fromJS(action.payload));
         break;
+    
+    case ActionTypes.UPDATE_PRODUCTS_DONE: 
+        console.log('receiving updated product');
+        products = state.getIn(['products', action.original.headers.category]).toJS();
+        const index = _.findIndex(products, ['id', action.payload.id]);
+        products[index] = action.payload;
+        
+        state = state.updateIn(['products', action.original.headers.category], value => products);
+        break;
 
     case ActionTypes.CREATE_PRODUCTS_DONE:
         console.log('created product', action.payload);
@@ -134,26 +144,10 @@ export default (state = initialState, action) => {
 
     case ActionTypes.REMOVE_PRODUCT_DONE:
         console.log('delete call back');
-
-        const collectionType = action.obj.collectionType;
-        const productId = (action.obj.productId) ? action.obj.productId : '';
-
-        let myList = state.getIn(['activeUser', collectionType]).toJS();
-
-        if (productId.toString()) {
-            const collection = _.find(myList, ['id', action.obj.collectionId]);
-            myList = _.remove(myList, (collection) => collection.id !== action.obj.collectionId);
-
-            collection.products = _.remove(collection.products, (thisProductID) => parseInt(thisProductID) !== productId);
-
-            myList.push(collection);
-
-        } else {
-            myList = _.remove(myList, (collection) => collection.id !== parseInt(action.obj.collectionId));
-        }
-
-        state = state.updateIn(['activeUser', collectionType], value => Immutable.fromJS(myList));
-        state = state.set('activeOverlay', '');
+        products = state.getIn(['products', action.original.headers.category]).toJS();
+        products = _.remove(products, (product) => { return product.id === action.payload.id });
+        
+        state = state.updateIn(['products', action.original.headers.category], value => products);
         break;
 
     case ActionTypes.GET_ORDERS_DONE:
