@@ -14,6 +14,12 @@ import { getUsers, getFundProperties }      from '../actions/users';
 import MyTable                  from './common/my_table';
 
 class OrdersPage extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleAction = this.handleAction.bind(this);
+        this.handleItem = this.handleItem.bind(this);
+    }
 
     componentWillMount() {
         const { cookies } = this.props;
@@ -39,12 +45,36 @@ class OrdersPage extends React.Component {
         }
     }
 
+    handleAction({ item }) {
+        console.log('user action:', item.id);
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+
+        this.props.approveOrder({ token: jwt.token, id: item.id });
+    }
+
+    handleItem({ item }) {
+        console.log('item pressed');
+    }
+
     render() {
         let data = [];
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        const headers = { orderNumber: 'Order #', createdAt: 'Order Date', productsAndDestinations: 'Items', address: 'Property address', userId: 'Ordered by', email: 'Email', orderStatus: 'Status' };
+        const headers = { 
+            id: '', 
+            office: 'PM Office', 
+            propertyId: 'Property ID',  
+            address: 'Property address', 
+            occupied: 'Occupancy', 
+            userId: 'Ordered by', 
+            orderNumber: 'GE Order #', 
+            createdAt: 'Order Date', 
+            totalCost: 'Cost', 
+            orderStatus: 'Status', 
+            action: '' 
+        };
 
         if (this.props.orders.size > 0 &&
             this.props.users.size > 0 &&
@@ -62,7 +92,22 @@ class OrdersPage extends React.Component {
                 _.each(headers, (value, key) => {
                     value = item[key];
 
-                    if (key === 'userId') {
+                    if (key === 'id') {
+                        value = item.id;
+
+                    } else if (key === 'office') {
+                        value = user.fundLocation.city
+
+                    } else if (key ==='propertyId') {
+                        value = fundProperty.id;
+
+                    } else if (key === 'address') {
+                        value = `${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
+
+                    } else if (key === 'occupied') {
+                        value = (item[key]) ? 'Occupied' : 'Vacant';
+
+                    } else if (key === 'userId') {
                         value = `${user['firstName']} ${user['lastName']}`;
 
                     } else if (key === 'email') {
@@ -71,11 +116,16 @@ class OrdersPage extends React.Component {
                     } else if (key === 'productsAndDestinations') {
                         value = _.size(value);
 
-                    } else if (key === 'address') {
-                        value = `${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
                     } else if (key === 'createdAt') {
                         value = dateformat(new Date(value), 'mmmm dd, yyyy');
+
+                    } else if (key === 'totalCost') {
+                        value = `$ ${item[key]}`;
+
+                    } else if (key === 'action') {
+                        value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
                     }
+
                     cols[key] = value;
                 });
 
@@ -93,10 +143,10 @@ class OrdersPage extends React.Component {
             <div id="orders-page" >
                 <MyTable
                     type="orders"
-                    token={jwt.token}
                     headers={headers}
                     data={data}
-                    approveOrder={this.props.approveOrder}
+                    handleAction={this.handleAction}
+                    handleItem={this.handleItem}
                 />
             </div>
         );
@@ -110,4 +160,4 @@ const select = (state) => ({
     fundProperties  : state.application.get('fundProperties'),
 });
 
-export default connect(select, { getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));
+export default connect(select, { showOverlay, logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));
