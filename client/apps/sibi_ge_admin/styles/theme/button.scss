@@ -1,4 +1,5 @@
 $blue-color: #06cfe5;
+$red-color: #F00;
 $gray-color: rgba(50,50,50,0.1);
 $white: #FFF;
 
@@ -23,6 +24,25 @@ $white: #FFF;
     border: 1px solid $gray-color;
     border-radius: 5px;
     color: $blue-color;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    margin: auto;
+    padding: 10px;
+    width: 200px;
+    height: 46px;
+    font-size: 18px;
+
+    margin: 20px auto;
+    padding-top: 14px;
+}
+
+.remove-btn {
+    border: 1px solid $gray-color;
+    border-radius: 5px;
+    color: $red-color;
     cursor: pointer;
     font-weight: bold;
     text-align: center;
