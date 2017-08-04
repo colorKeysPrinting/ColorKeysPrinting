@@ -14,13 +14,14 @@ const initialState = Immutable.fromJS({ currLanguage: 'English',
     orders: [],
     users: [],
     products: {},
+    funds: [],
     fundProperties: [],
     productCategories: [],
     isOrderDeleted: false
 });
 
 export default (state = initialState, action) => {
-    let products;
+    let products, index;
     
     switch (action.type) {
     case ActionTypes.GET_CURRENT_USER_DONE:
@@ -126,7 +127,7 @@ export default (state = initialState, action) => {
     case ActionTypes.UPDATE_PRODUCTS_DONE: 
         console.log('receiving updated product');
         products = state.getIn(['products', action.original.headers.category]).toJS();
-        const index = _.findIndex(products, ['id', action.payload.id]);
+        index = _.findIndex(products, ['id', action.payload.id]);
         products[index] = action.payload;
         
         state = state.updateIn(['products', action.original.headers.category], value => Immutable.fromJS(products));
@@ -179,6 +180,20 @@ export default (state = initialState, action) => {
     case ActionTypes.GET_USERS_DONE:
         console.log('receiving users');
         state = state.set('users', Immutable.fromJS(action.payload));
+        break;
+
+    case ActionTypes.APPROVE_USER_DONE:
+        console.log('receiving approved user');
+        const users = state.get('users').toJS();
+        index = _.findIndex(users, ['id', action.original.headers.userId]);
+        users[index].type = 'approved';
+
+        state = state.set('users', Immutable.fromJS(users));
+        break;
+    
+    case ActionTypes.GET_FUNDS_DONE:
+        console.log('receiving funds');
+        state = state.set('funds', Immutable.fromJS(action.payload));
         break;
 
     case ActionTypes.GET_FUND_PROPERTIES_DONE:

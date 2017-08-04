@@ -61,7 +61,7 @@ export default class MyTable extends React.Component {
             const col = _.map(item, (col, id) => {
                 if (id !== 'id') {
                     if (id === 'action') {
-                        return (col === 'pending' || col === 'Pending' || this.props.type === 'products') ? <td key={`table-item-${id}`} ><div onClick={() => this.state.handleAction({ item })}>{ col }</div></td> : <td></td>;
+                        return (col === 'approve' || this.props.type === 'products') ? <td key={`table-item-${id}`} ><div onClick={() => this.state.handleAction({ item })}>{ col }</div></td> : <td></td>;
                     } else {
                         return (<td key={`table-item-${id}`} ><div onClick={() => this.state.handleItem(item)}>{ col }</div></td>);
                     }
