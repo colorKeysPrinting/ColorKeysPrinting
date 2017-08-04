@@ -21,7 +21,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English',
 });
 
 export default (state = initialState, action) => {
-    let products;
+    let products, index;
     
     switch (action.type) {
     case ActionTypes.GET_CURRENT_USER_DONE:
@@ -127,7 +127,7 @@ export default (state = initialState, action) => {
     case ActionTypes.UPDATE_PRODUCTS_DONE: 
         console.log('receiving updated product');
         products = state.getIn(['products', action.original.headers.category]).toJS();
-        const index = _.findIndex(products, ['id', action.payload.id]);
+        index = _.findIndex(products, ['id', action.payload.id]);
         products[index] = action.payload;
         
         state = state.updateIn(['products', action.original.headers.category], value => Immutable.fromJS(products));
@@ -185,7 +185,7 @@ export default (state = initialState, action) => {
     case ActionTypes.APPROVE_USER_DONE:
         console.log('receiving approved user');
         const users = state.get('users').toJS();
-        const index = _.findIndex(users, ['id', action.original.headers.userId]);
+        index = _.findIndex(users, ['id', action.original.headers.userId]);
         users[index].type = 'approved';
 
         state = state.set('users', Immutable.fromJS(users));
