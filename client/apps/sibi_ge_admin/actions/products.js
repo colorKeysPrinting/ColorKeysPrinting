@@ -111,13 +111,11 @@ export function getOrders({ token, orders }) {
 export function approveOrder({ token, id }) {
     return {
         type    : ActionTypes.APPROVE_ORDER,
-        method  : Network.PATCH,
-        url     : `${Network.DOMAIN}/orderStatus/${id}`,
+        method  : Network.POST,
+        url     : `${Network.DOMAIN}/order/${id}/approve`,
         headers : {
-            'x-auth-token': token
-        },
-        body: {
-            status
+            'x-auth-token': token,
+            orderId: id
         }
     }
 }

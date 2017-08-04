@@ -153,13 +153,16 @@ export default (state = initialState, action) => {
 
     case ActionTypes.GET_ORDERS_DONE:
         console.log('receiving orders', action.payload);
-        // state = state.set('isOrderDeleted', false);
         state = state.set('orders', Immutable.fromJS(action.payload));
         break;
 
     case ActionTypes.APPROVE_ORDER_DONE:
         console.log('approved order', action.payload);
+        const orders = state.get('orders').toJS();
+        index = _.findIndex(orders, ['id', action.original.headers.orderId]);
+        orders[index] = action.payload;
 
+        state = state.set('orders', Immutable.fromJS(orders));
         break;
 
     case ActionTypes.UPDATE_ORDER_DONE:
