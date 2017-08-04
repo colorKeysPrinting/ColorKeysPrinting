@@ -42,11 +42,11 @@ export function getProductsForCategory({ token, categoryId, category }) {
     }
 }
 
-export function getProductsForSubCategory({ token, category }) {
+export function getProductsForSubCategory({ token, categoryId, category }) {
     return {
         type    : ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY,
         method  : Network.GET,
-        url     : `${Network.DOMAIN}/productsForCategory?subcategoryId=${category}`,
+        url     : `${Network.DOMAIN}/productsForSubcategory?subcategoryId=${categoryId}`,
         headers : {
             'x-auth-token': token,
             category

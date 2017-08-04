@@ -109,7 +109,7 @@ export default (state = initialState, action) => {
     
     case ActionTypes.GET_PRODUCT_CATEGORIES_DONE:
         console.log('receiving product categories', action.payload);
-        state = state.set('productCategories', Immutable.fromJS(action.payload));
+        state = state.set('productCategories', Immutable.fromJS(action.payload[0].subcategories));
         break;
 
     case ActionTypes.GET_PRODUCTS_FOR_CATEGORY_DONE:
@@ -119,7 +119,7 @@ export default (state = initialState, action) => {
 
     case ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_DONE:
         console.log('receiving products for sub category', action.payload);
-        state = state.set('products', Immutable.fromJS(action.payload));
+        state = state.setIn(['products', action.original.headers.category], Immutable.fromJS(action.payload));
         break;
 
     case ActionTypes.CREATE_PRODUCTS_DONE:

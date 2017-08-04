@@ -1,6 +1,8 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
+import { browserHistory }       from 'react-router';
 import _                        from 'lodash';
+import '../common/custom_formats';
 
 import { login, logout, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
 
@@ -20,6 +22,16 @@ class Overlay extends React.Component {
             errorMsg: '',
             email: '',
             password: '',
+            category: '',
+            productName: '',
+            classification: '',
+            size: '',
+            pictures: [],
+            parts: [],
+            installCode: '',
+            installPrice: '',
+            removalCode: '',
+            removalPrice: ''
         };
 
         this.resetState = this.resetState.bind(this);
@@ -28,17 +40,36 @@ class Overlay extends React.Component {
         this.fileDrop = this.fileDrop.bind(this);
         this.close = this.close.bind(this);
         this.submitLoginBtn = this.submitLoginBtn.bind(this);
+        this.saveProduct = this.saveProduct.bind(this);
+        this.deleteProduct = this.deleteProduct.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.activeOverlay) {
             this.setState({ activeOverlay: nextProps.activeOverlay });
+
         } else if (nextProps.activeOverlay === '') {
             this.setState({ activeOverlay: '' });
         }
 
         if (nextProps.overlayObj) {
-            this.setState({ overlayObj: nextProps.overlayObj });
+            if (nextProps.activeOverlay === 'editProduct') {
+                const type = 'appliance';
+                const category      = nextProps.overlayObj.category,
+                    productName     = nextProps.overlayObj.name,
+                    classification  = nextProps.overlayObj[`${type}Description`],
+                    size            = nextProps.overlayObj[`${type}Size`],
+                    pictures        = nextProps.overlayObj[`${type}ColorsAndImages`],
+                    parts           = nextProps.overlayObj[`${type}AssociatedParts`],
+                    installCode     = nextProps.overlayObj[`${type}InstallCode`],
+                    installPrice    = nextProps.overlayObj[`${type}InstallPrice`],
+                    removalCode     = nextProps.overlayObj[`${type}RemovalCode`],
+                    removalPrice    = nextProps.overlayObj[`${type}RemovalPrice`];
+
+                this.setState({ category, productName, classification, size, pictures, parts, installCode, installPrice, removalCode, removalPrice, overlayObj: nextProps.overlayObj });
+            } else {
+                this.setState({ overlayObj: nextProps.overlayObj });
+            }
         }
 
         if (nextProps.activeUser) {
@@ -53,10 +84,16 @@ class Overlay extends React.Component {
             errorMsg: '',
             email: '',
             password: '',
-            name: '',
-            newItem: '',
-            contractGoodman: false,
-            contractAsure: false
+            category: '',
+            productName: '',
+            classification: '',
+            size: '',
+            pictures: [],
+            parts: [],
+            installCode: '',
+            installPrice: '',
+            removalCode: '',
+            removalPrice: ''
         });
     }
 
@@ -78,14 +115,14 @@ class Overlay extends React.Component {
 
         console.log(type, value);
 
-        const re = new RegExp('.(pdf|word|png|jpg|jpeg)', 'i');
+        const re = new RegExp('.(png|jpg|jpeg)', 'i');
         const maxSize = 25000; // 25KB = bytes
 
         const result = re.exec(value.name);
 
         if (!result) {
             isCorrect = false;
-            errorMsg += "Incorrect file type!\n\tPlease upload a .PDF, .WORD, .PNG or .JPG\n\n"
+            errorMsg += "Incorrect file type!\n\tPlease upload a .PNG or .JPG\n\n"
         }
 
         if (value.size > maxSize) {
@@ -94,8 +131,11 @@ class Overlay extends React.Component {
         }
 
         if (isCorrect) {
-            // this.props.addDocument(type, value);
-            this.close();
+            this.setState((prevState) => {
+                prevState.pictures.push(value);
+                return { pictures: prevState.pictures };
+            });
+            this.changeOverlay('editProduct');
             return true;
 
         } else {
@@ -117,8 +157,14 @@ class Overlay extends React.Component {
         }
     }
 
-    saveProduct() {
-        console.log('save product');
+    saveProduct(id) {
+        console.log('save product', id);
+        browserHistory.push(`/products`);
+    }
+
+    deleteProduct(id) {
+        console.log('deleteProduct', id);
+        browserHistory.push(`/products`);
     }
 
     render() {
@@ -153,7 +199,7 @@ class Overlay extends React.Component {
                     changeOverlay={this.changeOverlay}
                     close={this.close}
                     submitLoginBtn={this.submitLoginBtn}
-                />)
+                />);
             break;
 
         case 'profile':
@@ -168,7 +214,7 @@ class Overlay extends React.Component {
             closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
             break;
 
-        case 'docWorkerComp':
+        case 'filePhotos':
             overlay = (
                 <FileUploader
                     type={this.state.activeOverlay}
@@ -179,8 +225,30 @@ class Overlay extends React.Component {
             break;
         
         case 'editProduct':
-            overlay = (<div></div>);
-            console.log('show editProduct overlay');
+
+            const title = (this.state.overlayObj) ? 'Edit Product' : 'Add Product';
+            const id = (this.state.overlayObj) ? this.state.overlayObj.id : null;
+
+            overlay = (<EditProduct 
+                title={title}
+                id={id}
+                category={this.state.category}
+                productName={this.state.productName}
+                classification={this.state.classification}
+                size={this.state.size}
+                pictures={this.state.pictures}
+                parts={this.state.parts}
+                installCode={this.state.installCode}
+                installPrice={this.state.installPrice}
+                removalCode={this.state.removalCode}
+                removalPrice={this.state.removalPrice}
+                productCategories={this.props.productCategories.toJS()}
+                update={this.update}
+                close={this.close}
+                changeOverlay={this.changeOverlay}
+                saveProduct={this.saveProduct}
+                deleteProduct={this.deleteProduct}
+            />);
             break;
 
         default:

@@ -8,7 +8,7 @@ import assets                   from '../libs/assets';
 
 import { showOverlay }          from '../actions/application';
 import { logout }               from '../actions/header';
-import { getProducts, getProductCategories, getProductsForCategory }          from '../actions/products';
+import { getProducts, getProductCategories, getProductsForSubCategory }          from '../actions/products';
 
 import MyTable                  from './common/my_table';
 
@@ -32,7 +32,7 @@ class ProductsPage extends React.Component {
     
     handleAction({ item }) {
         console.log('product action:', item.id.product);
-        this.props.showOverlay('editProduct', { product: item.id.product });
+        this.props.showOverlay('editProduct', { ...item.id });
     }
 
     componentWillUpdate(nextProps) {
@@ -43,7 +43,7 @@ class ProductsPage extends React.Component {
             const jwt = cookies.get('sibi-admin-jwt');
             
             _.each(productCategories, (category) => {
-                this.props.getProductsForCategory({ token: jwt.token, categoryId: category.id, category: category.name });
+                this.props.getProductsForSubCategory({ token: jwt.token, categoryId: category.id, category: category.name });
             });
         }
     }
@@ -78,7 +78,7 @@ class ProductsPage extends React.Component {
                             value = 'Edit';
 
                         } else if (key === 'id') {
-                            value = { product };
+                            value = { ...product, category: type.id };
                         }
 
                         cols[key] = value;
@@ -126,7 +126,7 @@ const actions = {
     showOverlay, 
     getProducts, 
     getProductCategories, 
-    getProductsForCategory
+    getProductsForSubCategory
 };
 
 export default connect(select, actions, null, { withRef: true })(withCookies(ProductsPage));
