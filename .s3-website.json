@@ -21,6 +21,6 @@
    ],
    "enableCloudfront": true,
    "retries": 20,
-   "domain": "sibi-ge-admin-dev.s3-website-us-west-2.amazonaws.com",
+   "domain": "sibi-ge-admin.s3-website-us-west-2.amazonaws.com",
    "configFile": ".s3-website.json"
 }
