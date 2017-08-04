@@ -1,20 +1,17 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
 import _                        from 'lodash';
+import { withCookies }          from 'react-cookie';
+import '../common/custom_formats';
 
-import * as productActions      from '../../actions/products';
-import { login, logout, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
+import { login, closeOverlay, passwordReset, changeLanguage }      from '../../actions/application';
+import { logout }      from '../../actions/header';
+import { updateProduct, createProduct }      from '../../actions/products';
 
 import Login                    from './login';
 import FileUploader             from './file_uploader';
-import ProductAddTo             from './product_add_to'
-import Radio                    from './radio';
-import AddToConfirmation        from './add_to_confirmation';
-import AddNewList               from './add_new_list';
-import ViewMatchup              from './view_matchup';
 import Profile                  from './profile';
-import RemoveListItem           from './remove_list_item';
-import StockCheck               from './stock_check';
+import EditProduct              from './edit_product';
 
 class Overlay extends React.Component {
     constructor(props) {
@@ -27,10 +24,16 @@ class Overlay extends React.Component {
             errorMsg: '',
             email: '',
             password: '',
-            name: '',
-            newItem: '',
-            contractGoodman: false,
-            contractAsure: false
+            category: '',
+            productName: '',
+            classification: '',
+            size: '',
+            pictures: [],
+            parts: [],
+            installCode: '',
+            installPrice: '',
+            removalCode: '',
+            removalPrice: ''
         };
 
         this.resetState = this.resetState.bind(this);
@@ -39,22 +42,36 @@ class Overlay extends React.Component {
         this.fileDrop = this.fileDrop.bind(this);
         this.close = this.close.bind(this);
         this.submitLoginBtn = this.submitLoginBtn.bind(this);
-        this.submitCreateListBtn = this.submitCreateListBtn.bind(this);
-        this.submitAddToBtn = this.submitAddToBtn.bind(this);
-        this.removeProduct = this.removeProduct.bind(this);
-        this.removeCollection = this.removeCollection.bind(this);
-        this.addToTruck = this.addToTruck.bind(this);
+        this.saveProduct = this.saveProduct.bind(this);
+        this.archiveProduct = this.archiveProduct.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.activeOverlay) {
             this.setState({ activeOverlay: nextProps.activeOverlay });
+
         } else if (nextProps.activeOverlay === '') {
             this.setState({ activeOverlay: '' });
         }
 
         if (nextProps.overlayObj) {
-            this.setState({ overlayObj: nextProps.overlayObj });
+            if (nextProps.activeOverlay === 'editProduct') {
+                const type = 'appliance';
+                const category      = nextProps.overlayObj.category,
+                    productName     = nextProps.overlayObj.name,
+                    classification  = nextProps.overlayObj[`${type}Description`],
+                    size            = nextProps.overlayObj[`${type}Size`],
+                    pictures        = nextProps.overlayObj[`${type}ColorsAndImages`],
+                    parts           = nextProps.overlayObj[`${type}AssociatedParts`],
+                    installCode     = nextProps.overlayObj[`${type}InstallCode`],
+                    installPrice    = nextProps.overlayObj[`${type}InstallPrice`],
+                    removalCode     = nextProps.overlayObj[`${type}RemovalCode`],
+                    removalPrice    = nextProps.overlayObj[`${type}RemovalPrice`];
+
+                this.setState({ category, productName, classification, size, pictures, parts, installCode, installPrice, removalCode, removalPrice, overlayObj: nextProps.overlayObj });
+            } else {
+                this.setState({ overlayObj: nextProps.overlayObj });
+            }
         }
 
         if (nextProps.activeUser) {
@@ -69,10 +86,16 @@ class Overlay extends React.Component {
             errorMsg: '',
             email: '',
             password: '',
-            name: '',
-            newItem: '',
-            contractGoodman: false,
-            contractAsure: false
+            category: '',
+            productName: '',
+            classification: '',
+            size: '',
+            pictures: [],
+            parts: [],
+            installCode: '',
+            installPrice: '',
+            removalCode: '',
+            removalPrice: ''
         });
     }
 
@@ -94,14 +117,14 @@ class Overlay extends React.Component {
 
         console.log(type, value);
 
-        const re = new RegExp('.(pdf|word|png|jpg|jpeg)', 'i');
+        const re = new RegExp('.(png|jpg|jpeg)', 'i');
         const maxSize = 25000; // 25KB = bytes
 
         const result = re.exec(value.name);
 
         if (!result) {
             isCorrect = false;
-            errorMsg += "Incorrect file type!\n\tPlease upload a .PDF, .WORD, .PNG or .JPG\n\n"
+            errorMsg += "Incorrect file type!\n\tPlease upload a .PNG or .JPG\n\n"
         }
 
         if (value.size > maxSize) {
@@ -110,8 +133,11 @@ class Overlay extends React.Component {
         }
 
         if (isCorrect) {
-            // this.props.addDocument(type, value);
-            this.close();
+            this.setState((prevState) => {
+                prevState.pictures.push(value);
+                return { pictures: prevState.pictures };
+            });
+            this.changeOverlay('editProduct');
             return true;
 
         } else {
@@ -133,85 +159,62 @@ class Overlay extends React.Component {
         }
     }
 
-    submitCreateListBtn(type) {
-        console.log('submit add to clicked');
+    saveProduct(id) {
+        console.log('save product', id);
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.category]);
 
-        let products = [], totalCost;
-        if (this.state.overlayObj.productId === undefined) {
-            totalCost = 0;
+        const product = {
+            name: this.state.productName,
+            // manufacturerModelNumber: this.state.,    // not in application
+            // serialNumber: this.state.,               // not in application
+            // shortDescription: this.state.,           // not in application
+            // sku: this.state.,                        // not in application
+            // overview: this.state.,                   // not in application
+            // specifications: this.state.,             // not in application
+            // faq: this.state.,                        // not in application
+            // videos: this.state.,                     // not in application
+            productCategoryId: this.props.activeUser.toJS().tradeId,
+            productSubcategoryId: this.state.category,
+            // applianceType: this.state.,              // not in application
+            applianceSize: this.state.size,
+            applianceDescription: this.state.classification,
+            // sibiModelNumber: this.state.,                // not in application
+            // applianceFuelType: this.state.,              // not in application
+            // applianceWidth: this.state.,                 // not in application
+            // applianceHeight: this.state.,                // not in application
+            // applianceDepth: this.state.,                 // not in application
+            // applianceInstallDescription: this.state.,    // not in application
+            applianceInstallPrice: this.state.installPrice,
+            applianceInstallCode: this.state.installCode,
+            applianceColorsAndImages: this.state.pictures,
+            applianceAssociatedParts: this.state.parts,     // *** missing from api ***
+            // applianceSpecSheetUrl: this.state.,          // not in application
+            // applianceRemovalDescription: this.state.,    // not in application
+            applianceRemovalCode: this.state.removalCode,
+            applianceRemovalPrice: this.state.removalPrice,
+        };
+
+        if (id) {
+            product['id'] = id;
+            
+            this.props.updateProduct({ token: jwt.token, category: category.name, product });
         } else {
-            totalCost = _.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId]).price;
-            products = [this.state.overlayObj.productId];
-        }
 
-        if (type === 'customMatchups') {
-            this.props.createMatchup({ name: this.state.name, totalCost, adminCreated: (this.state.activeUser.type === 'admin'), products });
-
-        } else if (type === 'myLists') {
-            this.props.createList({ name: this.state.name, products });
+            this.props.createProduct({ token: jwt.token, category: category.name, product })
         }
         this.close();
     }
 
-    submitAddToBtn(type, collectionId) {
-        console.log('submit add to clicked');
+    archiveProduct(id) {
+        console.log('deleteProduct', id);
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.category]);
 
-        const user = this.props.activeUser.toJS();
-        const product = _.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId]);
-
-        if (type === 'customMatchups') {
-            const matchup = _.find(user.myMatchups, ['id', collectionId]);
-
-            if (product.price) {
-                matchup.totalCost += product.price;
-            }
-
-            const products = _.map(matchup.products, (product) => product.id);
-
-            products.push(product.id);
-            matchup.products = products;
-
-            this.props.updateMatchup(matchup);
-
-        } else if (type === 'myLists') {
-            const list = _.find(user.myLists, ['id', collectionId]);
-
-            const products = _.map(list.products, (product) => product.id);
-
-            products.push(product.id);
-            list.products = products
-
-            this.props.updateList(list);
-        }
-    }
-
-    removeProduct(collectionType, collectionId, productId) {
-
-        if (collectionType === 'customMatchups') {
-            const collection = _.find(this.props.activeUser.toJS().myMatchups, ['id', collectionId]);
-            collection.products = _.remove(collection.products, (product) => product.id !== productId);
-            this.props.updateMatchup(collection);
-
-        } else if (collectionType === 'myLists') {
-            const collection = _.find(this.props.activeUser.toJS().myLists, ['id', collectionId]);
-            collection.products = _.remove(collection.products, (product) => product.id !== productId);
-            this.props.updateList(collection);
-        }
-    }
-
-    removeCollection(type, id) {
-        console.log('delete collection', type, id);
-
-        if (type === 'customMatchups') {
-            this.props.removeMatchup(id);
-
-        } else if (type === 'myLists') {
-            this.props.removeList(id);
-        }
-    }
-
-    addToTruck(items) {
-        console.log('add to truck: ', items);
+        // this.props.removeProduct({ token: jwt.token, category: category.name, id });
+        this.close();
     }
 
     render() {
@@ -246,7 +249,7 @@ class Overlay extends React.Component {
                     changeOverlay={this.changeOverlay}
                     close={this.close}
                     submitLoginBtn={this.submitLoginBtn}
-                />)
+                />);
             break;
 
         case 'profile':
@@ -261,9 +264,7 @@ class Overlay extends React.Component {
             closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
             break;
 
-        case 'docWorkerComp':
-        case 'docW9':
-        case 'docInsurance':
+        case 'filePhotos':
             overlay = (
                 <FileUploader
                     type={this.state.activeOverlay}
@@ -272,77 +273,32 @@ class Overlay extends React.Component {
                     errorMsg={this.state.errorMsg}
                 />);
             break;
+        
+        case 'editProduct':
 
-        case 'productAddTo':
-            overlay = (
-                <ProductAddTo
-                    showRadioOverlay={this.props.showRadioOverlay} // to reducer func
-                    overlayObj={this.state.overlayObj}
-                    close={this.close}
-                />);
+            const title = (this.state.overlayObj) ? 'Edit Product' : 'Add Product';
+            const id = (this.state.overlayObj) ? this.state.overlayObj.id : null;
 
-            closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
-            break;
-
-        case 'radioList':
-            overlay = (
-                <Radio
-                    overlayObj={this.state.overlayObj} // list of selected list elements
-                    changeOverlay={this.changeOverlay} // to local func
-                    close={this.close}
-                    submitAddToBtn={this.submitAddToBtn}
-                />);
-            break;
-
-        case 'addToConfirmation':
-            overlay = (
-                <AddToConfirmation
-                    overlayObj={this.state.overlayObj}
-                    product={_.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId])}
-                    changeOverlay={this.changeOverlay}  // for changing to customMatchupOverlay
-                    close={this.close}
-                />);
-            break;
-
-        case 'addNewList':
-            overlay = (
-                <AddNewList
-                    name={this.state.name}
-                    overlayObj={this.state.overlayObj}
-                    update={this.update}
-                    close={this.close}
-                    submitCreateListBtn={this.submitCreateListBtn}
-                />);
-            break;
-
-        case 'customMatchup':
-            overlay = (
-                <ViewMatchup
-                    overlayObj={this.state.overlayObj}
-                    close={this.close}
-                />);
-            break;
-
-        case 'removeItem' :
-            overlay = (
-                <RemoveListItem
-                    overlayObj={this.state.overlayObj}
-                    collection={_.find(this.state.activeUser.myLists, ['id', this.state.overlayObj.collectionId])}
-                    product={_.find(this.props.products.toJS(), ['id', this.state.overlayObj.productId])}
-                    removeProduct={this.removeProduct}
-                    removeCollection={this.removeCollection}
-                    close={this.close}
-                />);
-            break;
-
-        case 'stockCheck' :
-            overlay = (
-                <StockCheck
-                    location={this.state.overlayObj.location}
-                    product={this.state.overlayObj.product}
-                    checkingInventory={this.props.checkingInventory}
-                    close={this.close}
-                />);
+            overlay = (<EditProduct 
+                title={title}
+                id={id}
+                category={this.state.category}
+                productName={this.state.productName}
+                classification={this.state.classification}
+                size={this.state.size}
+                pictures={this.state.pictures}
+                parts={this.state.parts}
+                installCode={this.state.installCode}
+                installPrice={this.state.installPrice}
+                removalCode={this.state.removalCode}
+                removalPrice={this.state.removalPrice}
+                productCategories={this.props.productCategories.toJS()}
+                update={this.update}
+                close={this.close}
+                changeOverlay={this.changeOverlay}
+                saveProduct={this.saveProduct}
+                archiveProduct={this.archiveProduct}
+            />);
             break;
 
         default:
@@ -361,7 +317,7 @@ const select = (state) => ({
     activeOverlay       : state.application.get('activeOverlay'),
     overlayObj          : state.application.get('overlayObj'),
     activeUser          : state.application.get('activeUser'),
-    products            : state.application.get('products'),
+    productCategories   : state.application.get('productCategories'),
 });
 
 const actions = {
@@ -369,7 +325,8 @@ const actions = {
     logout,
     closeOverlay,
     passwordReset,
-    ...productActions
+    updateProduct, 
+    createProduct
 };
 
-export default connect(select, actions, null, { withRef: true })(Overlay);
+export default connect(select, actions, null, { withRef: true })(withCookies(Overlay));

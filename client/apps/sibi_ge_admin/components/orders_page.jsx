@@ -7,7 +7,8 @@ import assets                   from '../libs/assets';
 
 import { showOverlay }          from '../actions/application';
 import { logout }               from '../actions/header';
-import { getOrders, getUsers, getFundProperties, approveOrder }          from '../actions/products';
+import { getOrders, approveOrder }          from '../actions/products';
+import { getUsers, getFundProperties }      from '../actions/users';
 
 import MyTable                  from './common/my_table';
 
@@ -55,7 +56,7 @@ class OrdersPage extends React.Component {
             data = _.map(orders, (item) => {
                 const cols = {};
                 const user = _.find(users, ['id', item['userId']]);
-                const fundProperty = _.find(fundProperties, ['id', item['fundPropertyId']])
+                const fundProperty = _.find(fundProperties, ['id', item['fundPropertyId']]);
 
                 _.each(headers, (value, key) => {
                     value = item[key];
@@ -79,7 +80,7 @@ class OrdersPage extends React.Component {
             });
 
             // this initially sets the "Pending" orders before everything and "Approved" orders at the end
-            data = _.partition(data, ['orderStatus', 'pending']);
+            data = _.partition(data, ['orderStatus', 'Pending']);
             data = data[0].concat(data[1]);
             data = _.partition(data, ['orderStatus', 'Approved']);
             data = data[1].concat(data[0]);

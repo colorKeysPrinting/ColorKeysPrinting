@@ -8,7 +8,7 @@ import Network          from '../../../libs/constants/network';
 // /////////////////////////////////////
 
 // *************** product section ***************
-export function getProducts(token) {
+export function getProducts({ token }) {
     return {
         type    : ActionTypes.GET_PRODUCTS,
         method  : Network.GET,
@@ -19,25 +19,81 @@ export function getProducts(token) {
     }
 }
 
-export function createProduct(token, product) {
+export function getProductCategories({ token }) {
+    return {
+        type    : ActionTypes.GET_PRODUCT_CATEGORIES,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/productCategoriesForUser`,
+        headers : {
+            'x-auth-token': token
+        }
+    }
+}
+
+export function getProductsForCategory({ token, categoryId, category }) {
+    return {
+        type    : ActionTypes.GET_PRODUCTS_FOR_CATEGORY,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/productsForCategory?categoryId=${categoryId}`,
+        headers : {
+            'x-auth-token': token,
+            category
+        }
+    }
+}
+
+export function getProductsForSubCategory({ token, categoryId, category }) {
+    return {
+        type    : ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY,
+        method  : Network.GET,
+        url     : `${Network.DOMAIN}/productsForSubcategory?subcategoryId=${categoryId}`,
+        headers : {
+            'x-auth-token': token,
+            category
+        }
+    }
+}
+
+export function updateProduct({ token, category, product }) {
+    return {
+        type    : ActionTypes.UPDATE_PRODUCTS,
+        method  : Network.PATCH,
+        url     : `${Network.DOMAIN}/products/${product.id}`,
+        headers : {
+            'x-auth-token': token,
+            category
+        },
+        body: {
+            ...product
+        }
+    }
+}
+
+export function createProduct({ token, category, product }) {
     return {
         type    : ActionTypes.CREATE_PRODUCTS,
         method  : Network.POST,
         url     : `${Network.DOMAIN}/createProduct`,
         headers : {
-            'x-auth-token': token
+            'x-auth-token': token,
+            category
         },
         body: {
-            product
+            ...product
         }
     }
 }
 
-export function removeProduct(obj) {
+export function removeProduct({ token, category, id }) {
     return {
-        type: ActionTypes.REMOVE_PRODUCT,
-        obj
-    };
+        type    : ActionTypes.REMOVE_PRODUCT,
+        method  : Network.DEL,
+        url     : `${Network.DOMAIN}/products/${id}`,
+        headers : {
+            'x-auth-token': token,
+            category
+        }
+    }
 }
 
 // *************** order section ***************
@@ -110,28 +166,6 @@ export function removeOrder(token, id) {
         type    : ActionTypes.REMOVE_ORDER,
         method  : Network.DEL,
         url     : `${Network.DOMAIN}/order/${id}`,
-        headers : {
-            'x-auth-token': token
-        }
-    }
-}
-
-export function getUsers({ token, users }) {
-    return {
-        type    : ActionTypes.GET_USERS,
-        method  : Network.GET,
-        url     : `${Network.DOMAIN}/usersForFund`,
-        headers : {
-            'x-auth-token': token
-        }
-    }
-}
-
-export function getFundProperties({ token }) {
-    return {
-        type    : ActionTypes.GET_FUND_PROPERTIES,
-        method  : Network.GET,
-        url     : `${Network.DOMAIN}/fundsProperties`,
         headers : {
             'x-auth-token': token
         }
