@@ -6,6 +6,7 @@
         "nuke": "rm -rf node_modules && for dir in apps/*; do cd \"$dir\" || continue; rm -rf node_modules; cd ..; cd ..; done"
     },
     "dependencies": {
+        "dateformat": "^2.0.0",
         "express": "^4.15.3",
         "lodash": "^4.17.4",
         "minimist": "^1.2.0",

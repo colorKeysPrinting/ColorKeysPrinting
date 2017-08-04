@@ -3,6 +3,7 @@ import _                        from 'lodash';
 import { connect }              from 'react-redux';
 import { browserHistory, Link } from 'react-router';
 import { withCookies }          from 'react-cookie';
+import dateformat               from 'dateformat';
 import assets                   from '../libs/assets';
 
 import { showOverlay }          from '../actions/application';
@@ -72,6 +73,8 @@ class OrdersPage extends React.Component {
 
                     } else if (key === 'address') {
                         value = `${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
+                    } else if (key === 'createdAt') {
+                        value = dateformat(new Date(value), 'mmmm dd, yyyy');
                     }
                     cols[key] = value;
                 });

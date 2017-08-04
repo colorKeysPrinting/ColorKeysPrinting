@@ -1,7 +1,7 @@
 
-
 //
-//
+// currency formatter
+// 
 // example: (1000).formatMoney(2, '.', ',') => 1,000.00
 // example: (1000).formatMoney(2, '.')      => 1,000.00
 // example: (1000).formatMoney(2)           => 1,000.00
