@@ -11,23 +11,20 @@ export default class MyTable extends React.Component {
         this.state = {
             searchTerm: '',
             isAscending: false,
-            headers: this.props.headers,
-            data: this.props.data
+            data: this.props.data,
+            handleAction: (this.props.handleAction) ? this.props.handleAction : () => {},
+            handleItem: (this.props.handleItem) ? this.props.handleItem : () => {}
         };
 
         this.orderBy = this.orderBy.bind(this);
         this.update = this.update.bind(this);
-        this.handleItem = this.handleItem.bind(this);
-        this.handleAction = this.handleAction.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
         console.log('nextProps:', nextProps);
-        const token = nextProps.token;
-        const headers = nextProps.headers;
-        const data = nextProps.data;
-
-        this.setState({ token, headers, data });
+        const data = (nextProps.data) ? nextProps.data : [];
+    
+        this.setState({ data });
     }
 
     orderBy(value, isAscending) {
@@ -39,85 +36,48 @@ export default class MyTable extends React.Component {
         this.setState({ [type]: value });
     }
 
-    handleItem(item) {
-        switch (this.props.type) {
-        case 'orders':
-            browserHistory.push({ pathName: `/order_details`, state: { id: item.id } });
-            break;
-
-        default:
-            console.log('no action for:', this.props.type);
-        }
-    }
-
-    handleAction(item) {
-        switch (this.props.type) {
-        case 'orders':
-            this.props.approveOrder({ token: this.props.token, id: item.id, status: true });
-            break;
-
-        case 'users':
-            this.props.approveUser({ token: this.props.token, id: item.id });
-            break;
-
-        case 'products':
-
-            break;
-        default:
-            console.log('no action for:', this.props.type);
-        }
-    }
-
     render() {
-        let title;
+        let title, headers = [], search = '';
+        
+        if (this.props.headers) {
+            headers = _.map(this.props.headers, (header, id) => {
+                if (id !== 'id') {
+                    if (id !== 'action') {
+                        return (<td key={`table-header-${id}`} ><div onClick={() => this.orderBy(header, (this.state.isAscending) ? false : true)}>{ header }</div></td>);
 
-        const headers = _.map(this.state.headers, (header, id) => {
-            return (<td key={`table-header-${id}`} ><div onClick={() => this.orderby(header, (this.state.isAscending) ? false : true)}>{ header }</div></td>);
-        });
-
-        const data = _.map(this.state.data, (item) => {
-            let actionText;
-
-            switch (this.props.type) {
-            case 'orders':
-                actionText = 'approve';
-                break;
-
-            case 'users':
-                actionText = <img src={assets('./images/icons-check-small.png')} alt="checkmark" />;
-                break;
-
-            case 'products':
-                actionText = 'Edit';
-                break;
-
-            default:
-                console.log('no action for:', this.props.type);
-            }
-
-            const col = _.map(item, (col, id) => {
-                if (id === 'orderStatus') {
-                    let action;
-
-                    if (col === 'pending') {
-                        action = <td onClick={() => this.props.handleAction(item)}>{ actionText }</td>;
+                    } else if (id !== 'id') {
+                        return (<td></td>);
                     }
-                    return (<td key={id} ><td>{ col }</td>{ action }</td>);
-                } else {
-                    return (<td key={id} >{ col }</td>)
+                }
+            });
+        }
+
+        if (this.props.hasSearch) {
+            search = <td><input type="text" onChange={(e) => this.update('searchTerm', e.target.value)} value={this.state.searchTerm} /></td>;
+        }
+
+        const data = _.map(this.state.data, (item, id) => {
+        
+            const col = _.map(item, (col, id) => {
+                if (id !== 'id') {
+                    if (id === 'action') {
+                        return (col === 'pending' || col === 'Pending' || this.props.type === 'products') ? <td key={`table-item-${id}`} ><div onClick={() => this.state.handleAction({ item })}>{ col }</div></td> : <td></td>;
+                    } else {
+                        return (<td key={`table-item-${id}`} ><div onClick={() => this.state.handleItem(item)}>{ col }</div></td>);
+                    }
                 }
             });
 
-            return (<tr key={item.id} onClick={() => this.handleItem(item)}>{ col }</tr>)
+            return (<tr key={`table-row-${id}`}>{ col }</tr>);
         });
-
+    
         return (
             <div id="admin-table" >
                 <table>
                     <thead>
                         <tr>
                             <td>{ title }</td>
-                            <td><input type="text" onChange={(e) => this.update('searchTerm', e.target.value)} value={this.state.searchTerm} /></td>
+                            { search }
                         </tr>
                         <tr>
                             { headers }
