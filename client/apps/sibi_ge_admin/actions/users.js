@@ -22,10 +22,9 @@ export function approveUser({ token, id }) {
     return {
         type    : ActionTypes.APPROVE_USER,
         method  : Network.POST,
-        url     : `${Network.DOMAIN}/users/${id}/undisable`,
+        url     : `${Network.DOMAIN}/users/${id}/approve`,
         headers : {
-            'x-auth-token': token,
-            'userId': id
+            'x-auth-token': token
         }
     };
 }
