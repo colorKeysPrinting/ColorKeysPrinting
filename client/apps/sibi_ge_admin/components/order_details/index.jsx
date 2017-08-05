@@ -1,13 +1,13 @@
 import React                    from 'react';
 import _                        from 'lodash';
 import { connect }              from 'react-redux';
-import { browserHistory, Link } from 'react-router';
+import { withRouter }           from 'react-router';
 import { withCookies }          from 'react-cookie';
 import assets                   from '../../libs/assets';
 
 import { showOverlay }          from '../../actions/application';
 import { logout }               from '../../actions/header';
-import { getOrders, updateOrderStatus }          from '../../actions/products';
+import { getOrders, approveOrder }          from '../../actions/products';
 
 import MyTable                  from '../common/my_table';
 
@@ -18,7 +18,7 @@ class OrderDetails extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
-            this.props.getOrders(jwt.token);
+            // this.props.getOrders(jwt.token);
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
@@ -26,7 +26,7 @@ class OrderDetails extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (nextProps.activeUser) {
-            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
+            const path = (nextProps.activeUser.size > 0) ? `/order_details` : `/`;
             browserHistory.push(path);
         }
 
@@ -39,13 +39,45 @@ class OrderDetails extends React.Component {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
+        const orderHeaders = { 
+            id: '', 
+            orderStatus: 'Order Status', 
+            deliveryDate: 'Delivery Date', 
+            installTime: 'Preferred Install Time', 
+            occupied: 'Occupancy', 
+            lockboxCode: 'Lockbox Code', 
+            propertyManager: 'Property Manager' 
+        };
+
+        const productHeaders = {
+            id: '',
+            product: 'Product',
+            address: 'Shipped to',
+            qty: 'Qty',
+            totalCost: 'Cost'
+        };
+        
+        const order = this.props.router.state;
+
+        const orderData = _.map(orderHeaders, (header) => {
+
+        });
+
+        const productData = _.map(productHeaders, (header) => {
+
+        });
+
         return (
             <div id="orders-page" >
                 <MyTable
-                    type="orders"
-                    token={jwt.token}
-                    headers={['Order #','Order Date','Items','Property address','Ordered by','Email','Status']}
-                    data={this.props.orders}
+                    type="orderDetails"
+                    headers={orderHeaders}
+                    data={orderData}
+                />
+                <MyTable
+                    type="productDetails"
+                    headers={productHeaders}
+                    data={productData}
                 />
             </div>
         );
@@ -53,7 +85,13 @@ class OrderDetails extends React.Component {
 }
 
 const select = (state) => ({
-    orders          : state.application.get('orders')
+    products        : state.application.get('products')
 });
 
-export default connect(select, { showOverlay, getOrders, updateOrderStatus }, null, { withRef: true })(withCookies(OrderDetails));
+const actions = {
+    showOverlay, 
+    logout, 
+    approveOrder
+}
+
+export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(OrderDetails)));

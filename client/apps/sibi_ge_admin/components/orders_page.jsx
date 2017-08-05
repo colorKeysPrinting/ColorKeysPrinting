@@ -1,7 +1,7 @@
 import React                    from 'react';
 import _                        from 'lodash';
 import { connect }              from 'react-redux';
-import { browserHistory, Link } from 'react-router';
+import { browserHistory }       from 'react-router';
 import { withCookies }          from 'react-cookie';
 import dateformat               from 'dateformat';
 import assets                   from '../libs/assets';
@@ -54,7 +54,8 @@ class OrdersPage extends React.Component {
     }
 
     handleItem({ item }) {
-        console.log('item pressed');
+        console.log('routing to order');
+        browserHistory.push({ pathName: `/order_details`, state: { ...item } });
     }
 
     render() {
