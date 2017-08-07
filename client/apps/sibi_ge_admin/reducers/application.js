@@ -78,6 +78,9 @@ export default (state = initialState, action) => {
 
         state = state.set('activeUser', Immutable.fromJS({}));
         state = state.set('activeOverlay', '');
+
+        const _cookies = new Cookies();
+        _cookies.set('sibi-admin-jwt', { token: '', email: '' }, { path: '/' });
         break;
 
     case ActionTypes.PASSWORD_RESET:
