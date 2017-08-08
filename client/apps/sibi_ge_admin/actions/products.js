@@ -3,6 +3,7 @@
 import ActionTypes      from '../constants/action_types';
 import Network          from '../../../libs/constants/network';
 
+
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
@@ -97,6 +98,19 @@ export function removeProduct({ token, category, id }) {
 }
 
 // *************** order section ***************
+export function getOrderById({ token, id }) {
+  console.log('Running this', token, id);
+    return {
+      type    : ActionTypes.GET_ORDER_BY_ID,
+      method  : Network.GET,
+      url     : `${Network.DOMAIN}/order/${id}`,
+      headers : {
+          'x-auth-token': token
+      }
+    }
+}
+
+
 export function getOrders({ token, orders }) {
     return {
         type    : ActionTypes.GET_ORDERS,

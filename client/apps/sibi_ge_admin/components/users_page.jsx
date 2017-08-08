@@ -45,7 +45,6 @@ class UsersPage extends React.Component {
     }
 
     handleAction({ item }) {
-        console.log('user action:', item.id);
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
@@ -65,10 +64,11 @@ class UsersPage extends React.Component {
 
             data = _.map(users, (user) => {
                 const cols = {};
-
+                console.log('COLS IN USER', cols);
                 _.each(headers, (value, key) => {
                     value = user[key];
-
+                    console.log('KEY IN USERS EACH', key);
+                    console.log('VALUE IN USERS EACH', value);
                     if (key === 'id') {
                         value = user.id;
 

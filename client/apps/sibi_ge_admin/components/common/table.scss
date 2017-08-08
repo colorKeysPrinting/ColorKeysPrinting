@@ -1,0 +1,73 @@
+#admin-table {
+  max-width: 90%;
+  border-radius: 7px;
+  margin: 40px auto;
+  border: 1px solid #ddd;
+  div {
+    font-family: 'Lato', sans-serif;
+    color: #4B4D62;
+  }
+  img {
+    width: 150px;
+    // vertical-align: top !important;
+  }
+  table {
+    width: 100%;
+    padding: 0 20px;
+    line-height: 1.5;
+  }
+}
+.table-header {
+  font-weight: 700;
+  background: #F9FAFC;
+  padding: 24px 0 24px 18px;
+}
+
+.table-cell {
+  padding: 40px 0;
+}
+.table-cell-title {
+  font-weight: 700;
+  font-size: 20px;
+}
+.table-cell-details {
+  color: #ddd !important;
+}
+
+#orders-page {
+  div {
+    font-family: 'Lato', sans-serif;
+    color: #4B4D62;
+  }
+  .details-header {
+    width: 90%;
+    margin: 80px 0 40px;
+    .header-property {
+      width: 50%;
+      display: inline-block;
+      text-align: left;
+      .property-address {
+        width: 100%;
+        font-size: 28px;
+      }
+      .property-manager {
+        width: 100%;
+        color: #F9FAFC;
+      }
+    }
+    .button-container {
+      width: 40%;
+      display: inline-block;
+      .button {
+        display: inherit;
+        margin: 20px;
+        background: #00D2E8;
+        width: 180px;
+        padding: 12px 0;
+        color: white;
+        border-radius: 5px;
+        font-weight: 400;
+      }
+    }
+  }
+}

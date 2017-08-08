@@ -6,6 +6,9 @@ const actionTypes = [
     'CLOSE_OVERLAY',
     'CHANGE_LANGUAGE',
 
+    // products
+    'LOAD_ORDER_DETAILS',
+
     // header bar
     'LOGOUT',
     'GO_HOME',
@@ -39,6 +42,7 @@ const asyncActionTypes = [
     'UPDATE_PRODUCTS',
     'CREATE_PRODUCTS',
     'REMOVE_PRODUCT',
+    'GET_ORDER_BY_ID',
     'GET_ORDERS',
     'APPROVE_ORDER',
     'UPDATE_ORDER',

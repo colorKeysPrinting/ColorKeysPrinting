@@ -16,7 +16,6 @@ import MyTable                  from './common/my_table';
 class OrdersPage extends React.Component {
     constructor(props) {
         super(props);
-
         this.handleAction = this.handleAction.bind(this);
         this.handleItem = this.handleItem.bind(this);
     }
@@ -55,7 +54,7 @@ class OrdersPage extends React.Component {
 
     handleItem({ item }) {
         console.log('routing to order');
-        browserHistory.push({ pathName: `/order_details`, state: { ...item } });
+        browserHistory.push({pathname:`/order_details`, state: { ...item }});
     }
 
     render() {
@@ -63,18 +62,18 @@ class OrdersPage extends React.Component {
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        const headers = { 
-            id: '', 
-            office: 'PM Office', 
-            propertyId: 'Property ID',  
-            address: 'Property address', 
-            occupied: 'Occupancy', 
-            userId: 'Ordered by', 
-            orderNumber: 'GE Order #', 
-            createdAt: 'Order Date', 
-            totalCost: 'Cost', 
-            orderStatus: 'Status', 
-            action: '' 
+        const headers = {
+            id: '',
+            office: 'PM Office',
+            propertyId: 'Property ID',
+            address: 'Property address',
+            occupied: 'Occupancy',
+            userId: 'Ordered by',
+            orderNumber: 'GE Order #',
+            createdAt: 'Order Date',
+            totalCost: 'Cost',
+            orderStatus: 'Status',
+            action: ''
         };
 
         if (this.props.orders.size > 0 &&
@@ -159,6 +158,17 @@ const select = (state) => ({
     orders          : state.application.get('orders'),
     users           : state.application.get('users'),
     fundProperties  : state.application.get('fundProperties'),
+    orderDetails     : state.application.get('orderDetails')
 });
 
-export default connect(select, { showOverlay, logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));
+
+const actions = {
+    showOverlay,
+    logout,
+    getOrders,
+    getUsers,
+    getFundProperties,
+    approveOrder
+}
+
+export default connect(select, actions, null, { withRef: true })(withCookies(OrdersPage));

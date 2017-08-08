@@ -11,18 +11,20 @@ const initialState = Immutable.fromJS({ currLanguage: 'English',
     activeTab: '',
     activeOverlay: '',
     overlayObj: false,
+    order: '',
     orders: [],
     users: [],
     products: {},
     funds: [],
     fundProperties: [],
     productCategories: [],
-    isOrderDeleted: false
+    isOrderDeleted: false,
+    orderDetails: '',
 });
 
 export default (state = initialState, action) => {
     let products, index;
-    
+
     switch (action.type) {
     case ActionTypes.GET_CURRENT_USER_DONE:
         const settings = {
@@ -108,7 +110,7 @@ export default (state = initialState, action) => {
         console.log('receiving products', action.payload);
         state = state.set('products', Immutable.fromJS(action.payload));
         break;
-    
+
     case ActionTypes.GET_PRODUCT_CATEGORIES_DONE:
         console.log('receiving product categories', action.payload);
         state = state.set('productCategories', Immutable.fromJS(action.payload[0].subcategories));
@@ -123,13 +125,13 @@ export default (state = initialState, action) => {
         console.log('receiving products for sub category', action.payload);
         state = state.setIn(['products', action.original.headers.category], Immutable.fromJS(action.payload));
         break;
-    
-    case ActionTypes.UPDATE_PRODUCTS_DONE: 
+
+    case ActionTypes.UPDATE_PRODUCTS_DONE:
         console.log('receiving updated product');
         products = state.getIn(['products', action.original.headers.category]).toJS();
         index = _.findIndex(products, ['id', action.payload.id]);
         products[index] = action.payload;
-        
+
         state = state.updateIn(['products', action.original.headers.category], value => Immutable.fromJS(products));
         break;
 
@@ -147,9 +149,15 @@ export default (state = initialState, action) => {
         console.log('delete call back');
         products = state.getIn(['products', action.original.headers.category]).toJS();
         products = _.remove(products, (product) => { return product.id === action.payload.id });
-        
+
         state = state.updateIn(['products', action.original.headers.category], value => Immutable.fromJS(products));
         break;
+
+    case ActionTypes.GET_ORDER_BY_ID_DONE:
+      console.log('get order by id', action);
+        state = state.set('order', Immutable.fromJS(action.payload));
+        break;
+
 
     case ActionTypes.GET_ORDERS_DONE:
         console.log('receiving orders', action.payload);
@@ -193,7 +201,7 @@ export default (state = initialState, action) => {
 
         state = state.set('users', Immutable.fromJS(users));
         break;
-    
+
     case ActionTypes.GET_FUNDS_DONE:
         console.log('receiving funds');
         state = state.set('funds', Immutable.fromJS(action.payload));
@@ -202,6 +210,11 @@ export default (state = initialState, action) => {
     case ActionTypes.GET_FUND_PROPERTIES_DONE:
         console.log('receiving fund properties');
         state = state.set('fundProperties', Immutable.fromJS(action.payload));
+        break;
+
+    case ActionTypes.LOAD_ORDER_DETAILS:
+        console.log('loading order details');
+        state = state.set('orderDetails', Immutable.fromJS(action.order))
         break;
 
     default:
