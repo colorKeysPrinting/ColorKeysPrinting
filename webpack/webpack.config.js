@@ -2,6 +2,7 @@ const webpack               = require('webpack');
 const path                  = require('path');
 const HtmlWebpackPlugin     = require('html-webpack-plugin');
 const ExtractTextPlugin     = require('extract-text-webpack-plugin');
+const AssetsPlugin          = require('assets-webpack-plugin');
 
 module.exports = WebpackConfig = (app) => {
 
@@ -17,23 +18,20 @@ module.exports = WebpackConfig = (app) => {
             filename: 'index.html',
             template: '../src/html/index.html'
         }),
+        // new AssetsPlugin({
+        //     path: app.outputPath,
+        //     fullPath: false,
+        //     filename: `${app.APP_NAME}.assets.json`
+        // }),
         (app.env === 'production') ? new webpack.LoaderOptionsPlugin({
             minimize: true,
             debug: false
-        }) : null,
-        (app.env === 'production') ? new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            comments: false,
-            compress: { warnings: false, screw_ie8: true },
-            mangle: { screw_ie8: true },
-            output: { comments: false }
         }) : null
     ].filter(Boolean);
 
     const loaders = [
         { test: /\.(js|jsx)$/, use: 'babel-loader', exclude: /node_modules/ },
-        // { test: /\.html$/, use: 'html-loader' },
-        { test: /\.scss$/, loaders: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')},
+        { test: /\.scss$/, loaders: ExtractTextPlugin.extract('css-loader!autoprefixer-loader!sass-loader')},
         { test: /.*\.(pdf|gif|png|jpg|jpeg|svg)$/, use: ['file-loader?name=[hash].[ext]'] },
         { test: /.*\.(eot|woff2|woff|ttf)$/,       use: ['file-loader?name=[hash].[ext]'] }
     ];
@@ -56,6 +54,7 @@ module.exports = WebpackConfig = (app) => {
         },
         plugins,
         module: { loaders },
+        devtool: 'source-map',
         devServer: {
             contentBase: '../src',
             historyApiFallback: true,

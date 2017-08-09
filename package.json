@@ -6,7 +6,7 @@
     "license": "MIT",
     "homepage": "https://bitbucket.org/HQ-Team/sibi_ge_admin",
     "scripts": {
-        "hot": "webpack-dev-server --config ./webpack/webpack.dev.js",
+        "hot": "webpack-dev-server --hot --config ./webpack/webpack.dev.js",
         "build": "webpack -p --config ./webpack/webpack.prod.js",
         "nuke": "rm -rf node_modules"
     },
@@ -20,11 +20,9 @@
     "dependencies": {
         "dateformat": "^2.0.0",
         "del": "^2.2.2",
-        "dotenv": "^4.0.0",
         "es6-promise": "^4.1.0",
         "immutable": "^3.8.1",
         "lodash": "^4.17.4",
-        "minimist": "^1.2.0",
         "prop-types": "^15.5.10",
         "react": "^15.5.4",
         "react-cookie": "^2.0.8",
@@ -34,10 +32,7 @@
         "react-tabs": "^1.1.0",
         "react-tap-event-plugin": "2.0.1",
         "redux": "3.6.0",
-        "superagent": "^3.5.0",
-        "universal-cookie-express": "^2.0.6",
-        "webpack": "^3.5.1",
-        "webpack-dev-server": "^2.7.0"
+        "superagent": "^3.5.0"
     },
     "devDependencies": {
         "assets-webpack-plugin": "^3.5.1",
@@ -52,7 +47,6 @@
         "babel-runtime": "^6.25.0",
         "bootstrap-sass": "^3.3.7",
         "css-loader": "^0.28.1",
-        "dotenv-webpack": "^1.5.4",
         "eslint": "^4.2.0",
         "eslint-plugin-import": "^2.7.0",
         "eslint-plugin-jsx-a11y": "^6.0.2",
@@ -61,7 +55,6 @@
         "file-loader": "^0.11.1",
         "html-loader": "^0.5.1",
         "html-webpack-plugin": "^2.30.1",
-        "immutable": "^3.8.1",
         "imports-loader": "^0.7.1",
         "jasmine": "^2.6.0",
         "jasmine-core": "^2.6.1",
@@ -77,6 +70,8 @@
         "strip-loader": "^0.1.2",
         "style-loader": "^0.17.0",
         "url-loader": "^0.5.8",
-        "webpack-bundle-analyzer": "^2.7.0"
+        "webpack": "^3.5.2",
+        "webpack-bundle-analyzer": "^2.7.0",
+        "webpack-dev-server": "^2.7.1"
     }
 }

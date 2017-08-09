@@ -1,5 +1,5 @@
 
-import es6Promise                   from 'es6-promise';
+// import es6Promise                   from 'es6-promise';
 import React                        from 'react';
 import ReactDOM                     from 'react-dom';
 import { Provider }                 from 'react-redux';
@@ -12,10 +12,9 @@ import routes                       from './routes';
 import RootReducer                  from './reducers'
 
 import './styles/styles.scss';
-// import './html/index.html';
 
 // Polyfill es6 promises for IE
-es6Promise.polyfill();
+// es6Promise.polyfill();
 
 // Needed for onTouchTap
 // Can go away when react 1.0 release
@@ -51,7 +50,6 @@ if (cookie) { // Setup JWT refresh
     jwt({ dispatch: store.dispatch, token: cookie.token });
 }
 
-debugger
 ReactDOM.render(
     <Root store={store} />,
     document.getElementById('main-app')
