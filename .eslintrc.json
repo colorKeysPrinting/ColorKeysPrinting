@@ -34,7 +34,6 @@
         "shelljs": false     // shelljs global variables.
     },
 
-    "extends": "airbnb",
     "parser": "babel-eslint",
 
     "globals": {

@@ -1,0 +1,18 @@
+
+// @import './theme/colors';
+@import './theme/button';
+@import './theme/forms';
+// @import './theme/layout';
+
+// HQ STYLES
+@import './pure-min';
+@import './pure-responsive-min';
+@import './reset';
+
+// @import '../../../node_modules/react-tabs/style/react-tabs'; //TODO: figure out why this style sheat won't add
+
+// APP STYLES (need to include each file one by one)
+// @import './pages/*';
+@import './partials/accordion';
+@import './partials/slider';
+// @import './responsive/*';
