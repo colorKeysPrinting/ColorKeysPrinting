@@ -3,7 +3,8 @@
         "target": "ES6",
         "checkJs": false,
         "jsx": "react",
-        "sourceMap": true
+        "sourceMap": true,
+        "sourceRoot": "./src/"
     },
     "exclude": [
         "**/node_modules/*",

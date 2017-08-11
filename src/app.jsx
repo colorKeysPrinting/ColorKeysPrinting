@@ -1,15 +1,15 @@
 
 // import es6Promise                   from 'es6-promise';
-import React                        from 'react';
-import ReactDOM                     from 'react-dom';
-import { Provider }                 from 'react-redux';
-import { CookiesProvider, Cookies } from 'react-cookie';
-import injectTapEventPlugin         from 'react-tap-event-plugin';
-import { createStore }              from 'redux';
-import { PropTypes }                from 'prop-types';
-import jwt                          from './libs/loaders/jwt';
-import routes                       from './routes';
-import RootReducer                  from './reducers'
+import React                            from 'react';
+import ReactDOM                         from 'react-dom';
+import { Provider }                     from 'react-redux';
+import { CookiesProvider, Cookies }     from 'react-cookie';
+import injectTapEventPlugin             from 'react-tap-event-plugin';
+import { createStore }                  from 'redux';
+import { PropTypes }                    from 'prop-types';
+import jwt                              from './libs/loaders/jwt';
+import routes                           from './routes';
+import RootReducer                      from './reducers'
 
 import './styles/styles.scss';
 
@@ -22,7 +22,6 @@ import './styles/styles.scss';
 // https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
-
 class Root extends React.PureComponent {
     static propTypes = {
         store: PropTypes.object.isRequired
@@ -33,9 +32,7 @@ class Root extends React.PureComponent {
         return (
             <CookiesProvider>
                 <Provider store={store}>
-                    <div>
-                        { routes }
-                    </div>
+                    { routes }
                 </Provider>
             </CookiesProvider>
         );

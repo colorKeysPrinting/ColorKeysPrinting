@@ -16,7 +16,7 @@ module.exports = WebpackConfig = (app) => {
         new HtmlWebpackPlugin({
             title: JSON.stringify(app.name),
             filename: 'index.html',
-            template: '../src/html/index.html'
+            template: '../src/index.html'
         }),
         // new AssetsPlugin({
         //     path: app.outputPath,
@@ -42,7 +42,7 @@ module.exports = WebpackConfig = (app) => {
         output: {
             path: path.resolve(__dirname, `../build/${app.env}`),
             filename: `${app.APP_NAME}.bundle.js`,
-            sourceMapFilename: `${app.APP_NAME}.map`,
+            sourceMapFilename: `${app.APP_NAME}.bundle.map`,
             publicPath: '/'
         },
         resolve: {
@@ -54,7 +54,7 @@ module.exports = WebpackConfig = (app) => {
         },
         plugins,
         module: { loaders },
-        devtool: 'source-map',
+        devtool: '#source-map',
         devServer: {
             contentBase: '../src',
             historyApiFallback: true,

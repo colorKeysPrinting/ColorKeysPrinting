@@ -1,6 +1,6 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
-import { browserHistory, Link } from 'react-router';
+import { Link }                 from 'react-router-dom';
 import _                        from 'lodash';
 import { withCookies }          from 'react-cookie';
 import assets                   from 'libs/assets';
@@ -33,7 +33,7 @@ class HeaderBar extends React.Component {
     componentWillUpdate(nextProps) {
         if (nextProps.activeUser) {
             const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
-            browserHistory.push(path);
+            // browserHistory.push(path);  //TODO: figure out how to push history now with react-router v4
         }
 
         if (nextProps.isLogout) {
@@ -89,14 +89,14 @@ class HeaderBar extends React.Component {
 
         if (!activeUser.type || activeUser.type === 'signUp') {
             loginSection = (<div style={styles.loginSection}>
-                <div className="submit-btn" onClick={() => this.props.showOverlay('login')} >Login</div>
+                <Link to={`/login`} className="submit-btn" >Login</Link>
             </div>);
 
         } else {
             const profilePic = (activeUser.profilePicture) ? assets(activeUser.profilePicture) : assets('./images/profile_pic.jpg');
 
             loginSection = (<div style={styles.profileSection}>
-                <div onClick={() => this.props.showOverlay('profile')}><img src={profilePic} alt="profilePicture" width="40px" height="40px" style={styles.profileSection.profilePic} /></div>
+                <Link to={`/profile`} ><img src={profilePic} alt="profilePicture" width="40px" height="40px" style={styles.profileSection.profilePic} /></Link>
             </div>);
         }
 

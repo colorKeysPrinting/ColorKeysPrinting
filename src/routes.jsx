@@ -1,34 +1,36 @@
 // if you use jsx, you have to import React
 import React                            from 'react';
-import { Router, browserHistory, Route, IndexRoute }    from 'react-router';
+import { BrowserRouter as Router, Route }         from 'react-router-dom';
 
-import Index                            from './components/layout/index';
-import Home                             from './components/home';
-import OrdersPage                       from './components/orders_page';
-import UsersPage                        from './components/users_page';
-import ProductsPage                     from './components/products_page';
-import OrderDetails                     from './components/order_details';
-import NotFound                         from './components/common/not_found';
+import Home                             from 'screens/home';
+import OrdersPage                       from 'screens/orders_page';
+import UsersPage                        from 'screens/users_page';
+import ProductsPage                     from 'screens/products_page';
+import OrderDetails                     from 'screens/order_details';
 
-export default () => {
-    return (
-        <Router history={browserHistory}>
-            <Route path="/" component={Index}>
-                <IndexRoute component={Home} />
-            </Route>
-            <Route path="/orders" component={Index}>
-                <IndexRoute component={OrdersPage} />
-            </Route>
-            <Route path="/users" component={Index}>
-                <IndexRoute component={UsersPage} />
-            </Route>
-            <Route path="/products" component={Index}>
-                <IndexRoute component={ProductsPage} />
-            </Route>
-            <Route path="/order_details" component={Index}>
-                <IndexRoute component={OrderDetails} />
-            </Route>
+// overlays
+import LoginOverlay                     from 'screens/overlays/login';
+import EditProductOverlay               from 'screens/overlays/edit_product';
+import FileUploaderOverlay              from 'screens/overlays/file_uploader';
+import ProfileOverlay                   from 'screens/overlays/profile';
+
+import NotFound                         from 'components/common/not_found';
+
+export default (
+    <Router>
+        <div>
+            <Route path="/" component={Home} />
+            <Route path="/orders" component={OrdersPage} />
+            <Route path="/users" component={UsersPage} />
+            <Route path="/products" component={ProductsPage} />
+            <Route path="/order_details" component={OrderDetails} />
+
+            <Route path="/login" component={LoginOverlay} />
+            <Route path="/edit_product" component={EditProductOverlay} />
+            <Route path="/file_uploader" component={FileUploaderOverlay} />
+            <Route path="/profile" component={ProfileOverlay} />
+
             <Route path="*" component={NotFound} />
-        </Router>
-    )
-}
+        </div>
+    </Router>
+)
