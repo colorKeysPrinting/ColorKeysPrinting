@@ -67,7 +67,6 @@ export default class MyTable extends React.Component {
                       return (<td key={`table-item-${id}`} ><img src={col}></img></td>)
                     }
                     else if (typeof col === "object") {
-                      console.log('youre here', typeof col, col);
                       let productTitle = '';
                       let productDescription = [];
                       if (id === 'productDescription'){

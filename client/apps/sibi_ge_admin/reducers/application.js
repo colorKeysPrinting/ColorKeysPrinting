@@ -171,6 +171,7 @@ export default (state = initialState, action) => {
         orders[index] = action.payload;
 
         state = state.set('orders', Immutable.fromJS(orders));
+        // state = state.set('order', Immutable.fromJS(action.payload));
         break;
 
     case ActionTypes.UPDATE_ORDER_DONE:

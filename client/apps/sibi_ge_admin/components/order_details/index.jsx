@@ -3,11 +3,12 @@ import _                        from 'lodash';
 import { connect }              from 'react-redux';
 import { withRouter }           from 'react-router';
 import { withCookies }          from 'react-cookie';
+import dateformat               from 'dateformat';
 import assets                   from '../../libs/assets';
 
 import { showOverlay }          from '../../actions/application';
 import { logout }               from '../../actions/header';
-import { getOrderById, approveOrder, getProducts}          from '../../actions/products';
+import { getOrderById, approveOrder, getProducts, getOrder}          from '../../actions/products';
 
 import MyTable                  from '../common/my_table';
 
@@ -22,6 +23,11 @@ import MyTable                  from '../common/my_table';
 
 
 class OrderDetails extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleAction = this.handleAction.bind(this);
+    }
+
 
     componentWillMount() {
         const { cookies } = this.props;
@@ -46,95 +52,153 @@ class OrderDetails extends React.Component {
         }
     }
 
+    handleAction({orderId}) {
+        console.log('user action:', orderId);
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+
+        this.props.approveOrder({ token: jwt.token, id: orderId });
+    }
+
     render() {
-        const styles = {
-          header: {
-            color: "red",
-            fontSize: "40px"
-          }
+        function Header() {
+          return(
+            <div className="details-header">
+              <div className="header-property">
+                <div className="property-address">{orderDetailsPageHeading.orderNumber}</div>
+                <div className="property-manager">{orderDetailsPageHeading.address} ● PM Office: {orderDetailsPageHeading.PM}</div>
+              </div>
+              {orderStatus == "Pending" ?
+                <div className="button-container">
+                  <div className="button">Edit</div>
+                  <div className="button" onClick={() => this.handleAction({orderId})}>Approve</div>
+                </div>
+              : <div className="button-container"></div>
+              }
+            </div>
+
+          )
+        }
+
+        function TenantInfo() {
+          return (
+            <div className="box">
+              <div className="title">Tenant Info: </div>
+              <div className="body"> {tenantInfo.tenantName ? tenantInfo.tenantName : "...coming soon"} ∙ {tenantInfo.tenantPhoneNumber ? tenantInfo.tenantPhoneNumber : "...coming soon"} ∙ {tenantInfo.tenantEmail ? tenantInfo.tenantEmail : "...coming soon"}</div>
+            </div>
+          )
         }
 
         let productData = [];
         let orderData = [];
-        let orderDetailsHeading = ' ';
+        let orderDetailsPageHeading = {};
+        let orderStatus = '';
+        let orderId = '';
+        let tenantInfo = {};
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        const orderHeaders = {
-            // id: 'ID',
-            orderStatus: 'Order Status',
-            deliveryDate: 'Delivery Date',
-            installTime: 'Preferred Install Time',
-            occupied: 'Occupancy',
-            lockboxCode: 'Lockbox Code',
-            propertyManager: 'Property Manager'
-        };
+        let orderHeaders = {};
 
         const productHeaders = {
             productImage: 'Product',
             productDescription: '',
-            address: 'Shipped to',                sd  f                                                                     
+            address: 'Shipped to',
             qty: 'Qty',
             price: 'Cost'
         };
 
-        if (this.props.order.size > 0) {
-          const order = this.props.order.toJS();
+        if (this.props.order.size > 0 && this.props.orders.size) {
+          // ORDERDETAILS WILL BE GENERATED FROM THE GETORDERBYID FUNCTION
+          // ORDER WILL BE GENERATED FROM THE GETORDER FUNCTION
 
+          const orderDetails = this.props.order.toJS();
+          const order = _.find(this.props.orders.toJS(), ['id', this.props.location.state.id])
+          console.log('ORDER DETAILS', orderDetails, 'ORDER', order);
 
-          orderDetailsHeader = order.fundProperty.addressLineOne + " " + order.fundProperty.addressLineTwo + " " + order.fundProperty.addressLineThree + ", " + order.fundProperty.city + ", " + order.fundProperty.state + ", " + order.fundProperty.zipcode
+          orderId = order.id
+          orderStatus = orderDetails.orderStatus
+          orderDetailsPageHeading = {
+            address: order.fundProperty.addressLineOne + " " + order.fundProperty.addressLineTwo + " " + order.fundProperty.addressLineThree + ", " + order.fundProperty.city + ", " + order.fundProperty.state + ", " + order.fundProperty.zipcode,
+            PM: "...order.fundLocation",
+            orderNumber: orderDetails.orderNumber
+          };
+          tenantInfo = {
+            tenantName: order.tenantFirstName + " " + order.tenantLastName,
+            tenantPhoneNumber: order.tenantPhone,
+            tenantEmail: order.tenantEmail
+          }
 
-          console.log('ORDER', order);
-          const products = order.productsAndDestinations
+          orderHeaders = {
+              orderStatus: 'Order Status',
+              orderNumber: 'Order Number',
+              deliveryDate: 'Delivery Date',
+              installTime: 'Preferred Install Time',
+              occupied: 'Occupancy',
+              lockBoxCode: (order.lockBoxCode ? 'Lockbox Code' : 'Tenant'),
+              orderedBy: 'Ordered By'
+          };
 
           const cols = {};
 
           _.each(orderHeaders, (value, key) => {
-              value = order[key]
+              value = orderDetails[key]
               if (key === 'orderStatus') {
-                value = order.orderStatus ;
-              } else if (key === 'deliveryDate') {
-                value = order.installDate;
+                value = orderDetails.orderStatus;
+
+              } else if (key === 'orderNumber'){
+                value = orderDetails.orderNumber;
+
+              }else if (key === 'deliveryDate') {
+                value = orderDetails.installDate;
+                value = dateformat(orderDetails.installDate, "mm/dd/yy");
+
               } else if (key === 'installTime') {
-                value = order.applianceDeliveryTime;
+                value = orderDetails.applianceDeliveryTime ? order.applianceDeliveryTime : "Not Specified";
+
               } else if (key === 'occupied') {
-                value = (order['occupied'] === false) ? 'Vacant' : 'Occupied';
-              } else if (key === 'lockboxCode') {
-                value = order.lockBoxCode;
-              } else if (key === 'propertyManager') {
-                value = 'Property Manager' ;
+                value = (order['occupied'] === false) ? 'Unoccupied' : 'Occupied';
+
+              } else if (key === 'lockBoxCode') {
+                value = order.lockBoxCode ? order.lockBoxCode : '...Coming Soon';
+
+              } else if (key === 'orderedBy') {
+                value = '...order.orderedBy' ;
               }
+
               cols[key] = value;
           });
 
         orderData = {cols};
 
 
-          productData = _.map(products, (product) => {
+          productData = _.map(orderDetails.productsAndDestinations, (orderDetail) => {
+              const detail = orderDetail.product
+
+              console.log('DETAIL', detail);
+
               const cols = {};
 
-              product = _.find(this.props.products.toJS(), ['id', product.productId])
-              console.log('PRODUCT AFTER FIND', product);
               _.each(productHeaders, (value,key) => {
 
-                value = product[key];
+                value = detail[key];
 
                 if (key === 'productImage') {
-                    value = product.applianceColorsAndImages[0].imageUrl;
+                    value = detail.applianceColorsAndImages[0].imageUrl;
 
                 } else if (key === 'productDescription') {
                     value = [
-                    product.applianceDescription,
-                    "SIBI Model Number: " + product.sibiModelNumber,
-                    "Manufacturer's Model Number" + product.manufacturerModelNumber,
-                    // "Colors: " + product.color,
-                    "Fuel Type: " + product.applianceFuelType,
-                    "Width: " + product.applianceWidth,
-                    "Height: " + product.applianceHeight,
-                    "Depth: " + product.applianceDepth,
-                    "Install Instructions: ",
-                    "Remove Old Appliance: "
+                    detail.applianceDescription,
+                    "SIBI Model Number: " + detail.sibiModelNumber,
+                    "Manufacturer's Model Number" + detail.manufacturerModelNumber,
+                    "Colors: detail.selectProductColor",
+                    "Fuel Type: " + detail.applianceFuelType,
+                    "Width: " + detail.applianceWidth,
+                    "Height: " + detail.applianceHeight,
+                    "Depth: " + detail.applianceDepth,
+                    "Install Instructions: " + (detail.applianceInstallDescription ? detail.applianceInstallDescription : "Not Specified"),
+                    "Remove Old Appliance: " + (detail.applianceRemovalDescription ? detail.applianceRemovalDescription : "Not Specified")
                     ]
 
                 } else if (key === 'address') {
@@ -144,10 +208,10 @@ class OrderDetails extends React.Component {
                   ]
 
                 } else if (key === 'qty') {
-                    value = '##';
+                    value = orderDetail.qty;
 
                 } else if (key === 'price') {
-                    value = product.price;
+                    value = "$" + orderDetail.ProductPrice.price;
                 }
 
                 cols[key] = value;
@@ -156,27 +220,15 @@ class OrderDetails extends React.Component {
           });
         }
 
-        console.log('PD',productData);
         return (
             <div id="orders-page" >
-                {/* <Header
-                  data = {orderAddress}
-                /> */}
-                <div className="details-header">
-                  <div className="header-property">
-                    <div className="property-address">Order: {orderDetailsHeading}</div>
-                    <div className="property-manager">PM Office: Coming Soon</div>
-                  </div>
-                  <div className="button-container">
-                    <div className="button">Edit</div>
-                    <div className="button">Approve Order</div>
-                  </div>
-                </div>
+                <Header />
                 <MyTable
                     type="orderDetails"
                     headers={orderHeaders}
                     data={orderData}
                 />
+                <TenantInfo />
                 <MyTable
                     type="productDetails"
                     headers={productHeaders}
@@ -188,14 +240,16 @@ class OrderDetails extends React.Component {
 }
 
 const select = (state) => ({
-    order          : state.application.get('order')
+    order          : state.application.get('order'),
+    orders         : state.application.get('orders')
 });
 
 const actions = {
     showOverlay,
     logout,
     approveOrder,
-    getOrderById
+    getOrderById,
+    getOrder
 }
 
 export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(OrderDetails)));

@@ -41,33 +41,56 @@
   }
   .details-header {
     width: 90%;
-    margin: 80px 0 40px;
+    margin: 80px auto 40px;
     .header-property {
-      width: 50%;
+      width: 55%;
       display: inline-block;
       text-align: left;
       .property-address {
         width: 100%;
-        font-size: 28px;
+        font-size: 25px;
+        line-height: 2.2;
+        font-weight: 700;
       }
       .property-manager {
         width: 100%;
-        color: #F9FAFC;
+        color: #ddd;
+        font-weight: 700;
       }
     }
     .button-container {
-      width: 40%;
+      width: 45%;
       display: inline-block;
+      text-align: right;
+      margin-bottom: 15px;
       .button {
+        text-align: center;
         display: inherit;
-        margin: 20px;
+        margin-left: 40px;
         background: #00D2E8;
-        width: 180px;
-        padding: 12px 0;
+        width: 160px;
+        padding: 21px 0;
         color: white;
         border-radius: 5px;
         font-weight: 400;
       }
+    }
+  }
+
+  .box {
+    background: #F9FAFC;
+    border: 1px solid #ddd;
+    max-width: 90%;
+    border-radius: 7px;
+    margin: 40px auto;
+    text-align: left;
+    padding: 24px 0 24px 18px;
+    .title {
+      display: inline;
+      font-weight: 700;
+    }
+    .body {
+      display: inline;
     }
   }
 }
