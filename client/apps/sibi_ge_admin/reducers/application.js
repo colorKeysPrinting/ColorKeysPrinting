@@ -80,6 +80,9 @@ export default (state = initialState, action) => {
 
         state = state.set('activeUser', Immutable.fromJS({}));
         state = state.set('activeOverlay', '');
+
+        const _cookies = new Cookies();
+        _cookies.set('sibi-admin-jwt', { token: '', email: '' }, { path: '/' });
         break;
 
     case ActionTypes.PASSWORD_RESET:
@@ -197,8 +200,8 @@ export default (state = initialState, action) => {
     case ActionTypes.APPROVE_USER_DONE:
         console.log('receiving approved user');
         const users = state.get('users').toJS();
-        index = _.findIndex(users, ['id', action.original.headers.userId]);
-        users[index].type = 'approved';
+        index = _.findIndex(users, ['id', action.payload.id]);
+        users[index] = action.payload;
 
         state = state.set('users', Immutable.fromJS(users));
         break;
