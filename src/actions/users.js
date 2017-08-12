@@ -69,7 +69,7 @@ export function approveUser({ token, id }) {
             }
         })
             .then(payload => {
-                dispatch(getapproveUserSuccess(payload));
+                dispatch(approveUserSuccess(payload));
             })
             .catch(error => {
                 throw(error);
@@ -87,7 +87,7 @@ export function disableUser({ token, id }) {
             }
         })
             .then(payload => {
-                dispatch(getdisableUserSuccess(payload));
+                dispatch(disableUserSuccess(payload));
             })
             .catch(error => {
                 throw(error);

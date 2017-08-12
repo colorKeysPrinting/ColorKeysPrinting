@@ -160,6 +160,7 @@ export function getProductsForCategory({ token, categoryId, category }) {
 }
 
 export function getProductsForSubCategory({ token, categoryId, category }) {
+    console.log(category);
     return (dispatch) => {
         return axios({
             method  : Network.GET,
