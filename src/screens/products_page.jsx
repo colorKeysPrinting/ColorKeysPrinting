@@ -7,7 +7,6 @@ import { Link }                             from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                               from 'libs/assets';
 
-import { showOverlay }                      from 'actions/application';
 import { logout }                           from 'actions/header';
 import { getProducts, getProductCategories, getProductsForSubCategory }          from 'actions/products';
 
@@ -93,7 +92,7 @@ class ProductsPage extends React.Component {
             <div id="products-page" >
                 <div>
                     <div>Products</div>
-                    <div className="submit-btn" onClick={() => this.props.showOverlay('editProduct')}>Add</div>
+                    <Link to={`/edit_product`} className="submit-btn" >Add</Link>
                 </div>
                 <Tabs defaultIndex={0} >
                     <TabList>
@@ -112,7 +111,6 @@ const select = (state) => ({
 });
 
 const actions = {
-    showOverlay, 
     getProducts, 
     getProductCategories, 
     getProductsForSubCategory

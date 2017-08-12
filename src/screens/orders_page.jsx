@@ -5,7 +5,6 @@ import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import assets                               from 'libs/assets';
 
-import { showOverlay }                      from 'actions/application';
 import { logout }                           from 'actions/header';
 import { getOrders, approveOrder }          from 'actions/products';
 import { getUsers, getFundProperties }      from 'actions/users';
@@ -159,4 +158,4 @@ const select = (state) => ({
     fundProperties  : state.application.get('fundProperties'),
 });
 
-export default connect(select, { showOverlay, logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));
+export default connect(select, { logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));

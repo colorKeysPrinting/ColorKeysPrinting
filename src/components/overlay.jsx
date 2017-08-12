@@ -51,17 +51,6 @@ export default class Overlay extends React.Component {
                 width: '100%'
             }
         }
-        // case 'profile':
-        //     overlay = (
-        //         <Profile
-        //             profilePic={this.state.activeUser.profilePic}
-        //             username={this.state.activeUser.username}
-        //             changeLanguage={this.props.changeLanguage}
-        //             logout={this.props.logout}
-        //         />);
-
-        //     closeSection = <div onClick={this.close} style={styles.closeSection}></div>;
-        //     break;
 
         // case 'filePhotos':
         //     overlay = (

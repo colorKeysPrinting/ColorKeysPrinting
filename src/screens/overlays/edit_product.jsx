@@ -13,12 +13,42 @@ class EditProduct extends React.Component {
     constructor(props) {
         super(props);
 
+        const product = (this.props.location.state) ? this.props.location.state.product : {
+            name: '',
+            manufacturerModelNumber: '',
+            serialNumber: '',
+            shortDescription: '',
+            sku: '',
+            overview: '',
+            specifications: '',
+            faq: '',
+            videos: [],
+            productCategoryId: this.props.activeUser.tradeId,
+            productSubcategoryId: '',
+            applianceType: '',
+            applianceSize: '',
+            applianceDescription: '',
+            sibiModelNumber: '',
+            applianceFuelType: '',
+            applianceWidth: '',
+            applianceHeight: '',
+            applianceDepth: '',
+            applianceInstallDescription: '',
+            applianceInstallPrice: '',
+            applianceInstallCode: '',
+            applianceColorsAndImages: [],
+            applianceAssociatedParts: [],
+            applianceSpecSheetUrl: '',
+            applianceRemovalDescription: '',
+            applianceRemovalCode: '',
+            applianceRemovalPrice: '',
+        };
+
         this.state = { 
             activeSection: '', 
             isInstall: false, 
             isRemoval: false,
-            category: this.props.location.state.category || '',
-            ...this.props.location.state.product 
+            ...product 
         };
 
         this.update = this.update.bind(this);
@@ -47,35 +77,35 @@ class EditProduct extends React.Component {
         console.log('save product', id);
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.category]);
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
 
         const product = {
             name: this.state.name,
-            manufacturerModelNumber: this.state.manufacturerModelNumber || '',  // not in application
-            serialNumber: this.state.serialNumber || '',                        // not in application
-            shortDescription: this.state.shortDescription || '',                // not in application
-            sku: this.state.sku || '',                                          // not in application
-            overview: this.state.overview || '',                                // not in application
-            specifications: this.state.specifications || '',                    // not in application
-            faq: this.state.faq || '',                                          // not in application
-            videos: this.state.videos || [],                                    // not in application
+            manufacturerModelNumber: this.state.manufacturerModelNumber || '',  // not in invision
+            serialNumber: this.state.serialNumber || '',                        // not in invision
+            shortDescription: this.state.shortDescription || '',                // not in invision
+            sku: this.state.sku || '',                                          // not in invision
+            overview: this.state.overview || '',                                // not in invision
+            specifications: this.state.specifications || '',                    // not in invision
+            faq: this.state.faq || '',                                          // not in invision
+            videos: this.state.videos || [],                                    // not in invision
             productCategoryId: activeUser.tradeId,
-            productSubcategoryId: this.state.category,
-            applianceType: this.state.applianceType || '',                      // not in application
+            productSubcategoryId: this.state.productSubcategoryId,
+            applianceType: this.state.applianceType || '',                      // not in invision
             applianceSize: this.state.size,
-            applianceDescription: this.state.applianceDescription,
-            sibiModelNumber: this.state.sibiModelNumber || '',                  // not in application
-            applianceFuelType: this.state.applianceFuelType || '',              // not in application
-            applianceWidth: this.state.applianceWidth || '',                    // not in application
-            applianceHeight: this.state.applianceHeight || '',                  // not in application
-            applianceDepth: this.state.applianceDepth || '',                    // not in application
-            applianceInstallDescription: this.state.applianceInstallDescription || '',    // not in application
+            applianceDescription: this.state.applianceDescription || '',
+            sibiModelNumber: this.state.sibiModelNumber || '',                  // not in invision
+            applianceFuelType: this.state.applianceFuelType || '',              // not in invision
+            applianceWidth: this.state.applianceWidth || '',                    // not in invision
+            applianceHeight: this.state.applianceHeight || '',                  // not in invision
+            applianceDepth: this.state.applianceDepth || '',                    // not in invision
+            applianceInstallDescription: this.state.applianceInstallDescription || '',    // not in invision
             applianceInstallPrice: this.state.applianceInstallPrice,
             applianceInstallCode: this.state.applianceInstallCode,
             applianceColorsAndImages: this.state.applianceColorsAndImages || [],
             applianceAssociatedParts: this.state.applianceAssociatedParts || [],
-            applianceSpecSheetUrl: this.state.applianceSpecSheetUrl || '',              // not in application
-            applianceRemovalDescription: this.state.applianceRemovalDescription || '',  // not in application
+            applianceSpecSheetUrl: this.state.applianceSpecSheetUrl || '',              // not in invision
+            applianceRemovalDescription: this.state.applianceRemovalDescription || '',  // not in invision
             applianceRemovalCode: this.state.applianceRemovalCode,
             applianceRemovalPrice: this.state.applianceRemovalPrice,
         };
@@ -139,16 +169,16 @@ class EditProduct extends React.Component {
             }
         };
 
-        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.category]);
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
         const categories = _.map(this.props.productCategories.toJS(), (category) => {
             return <option key={category.id} value={category.id}>{ category.name }</option>;
         });
-        const title = (this.props.location.state.product) ? 'Edit' : 'Add';
+        const title = (this.props.location.state) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
         const deleteBtn = (this.state.id) ? <div className="remove-btn" onClick={() => this.props.archiveProduct({ token: jwt.token, category, id: this.state.id })}>Remove Product</div> : null;
         
         return (
-            <Overlay type="">
+            <Overlay type="editProduct">
                 <div style={styles.container}>
                     <div style={styles.titleBar} >
                         <div style={styles.title}>{ title } Product</div>
@@ -158,7 +188,7 @@ class EditProduct extends React.Component {
                         <div style={styles.content}>
                             <div style={{ columnCount: 2, display: 'inline-flex', width: '540px' }}>
                                 <div>
-                                    <select value={this.state.category} onChange={(e) => this.update('category', e.target.value)} required >
+                                    <select value={this.state.productSubcategoryId} onChange={(e) => this.update('productSubcategoryId', e.target.value)} required >
                                         <option disabled selected value="" >Select category</option>
                                         { categories }
                                     </select>
@@ -166,8 +196,8 @@ class EditProduct extends React.Component {
                                 <div><input type="text" placeholder="Product name"   value={this.state.name} onChange={(e) => this.update('name', e.target.value)}    required /></div>
                             </div>
                             <div style={{ columnCount: 2, display: 'inline-flex', width: '540px' }}>
-                                <div><input type="text" placeholder="Classification" value={this.state.applianceDescription} onChange={(e) => this.update('classification', e.target.value)} required /></div>
-                                <div><input type="text" placeholder="Size"           value={this.state.applianceSize}        onChange={(e) => this.update('size', e.target.value)}           required /></div>
+                                <div><input type="text" placeholder="Classification" value={this.state.applianceDescription} onChange={(e) => this.update('applianceDescription', e.target.value)} required /></div>
+                                <div><input type="text" placeholder="Size"           value={this.state.applianceSize}        onChange={(e) => this.update('applianceSize', e.target.value)}           required /></div>
                             </div>
                             <div id="accordion">
                                 <div id="accordion-pictures" onClick={() => this.changeActiveSection('pictures')}>
@@ -189,8 +219,8 @@ class EditProduct extends React.Component {
                                 />Option for GE to install
                             </div>
                             <div style={{ display: (this.state.isInstall) ? 'block' : 'none' }} >
-                                <div><input type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update('installCode', e.target.value)} /></div>
-                                <div><input type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update('installPrice', e.target.value)} /></div>
+                                <div><input type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update('applianceInstallCode', e.target.value)} /></div>
+                                <div><input type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update('applianceInstallPrice', e.target.value)} /></div>
                             </div>
                             <div style={styles.checkbox}>
                                 <input
@@ -202,8 +232,8 @@ class EditProduct extends React.Component {
                                 />Option for GE to remove old appliance
                             </div>
                             <div style={{ display: (this.state.isRemoval) ? 'block' : 'none' }} >
-                                <div><input type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update('removalCode', e.target.value)} /></div>
-                                <div><input type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update('removalPrice', e.target.value)} /></div>
+                                <div><input type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update('applianceRemovalCode', e.target.value)} /></div>
+                                <div><input type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update('applianceRemovalPrice', e.target.value)} /></div>
                             </div>
                         </div>
                         <input className="submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />

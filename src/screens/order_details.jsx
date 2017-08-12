@@ -5,7 +5,6 @@ import { browserHistory, Link } from 'react-router';
 import { withCookies }          from 'react-cookie';
 import assets                   from 'libs/assets';
 
-import { showOverlay }          from 'actions/application';
 import { logout }               from 'actions/header';
 import { getOrders, updateOrderStatus }          from 'actions/products';
 
@@ -56,4 +55,4 @@ const select = (state) => ({
     orders          : state.application.get('orders')
 });
 
-export default connect(select, { showOverlay, getOrders, updateOrderStatus }, null, { withRef: true })(withCookies(OrderDetails));
+export default connect(select, { getOrders, updateOrderStatus }, null, { withRef: true })(withCookies(OrderDetails));

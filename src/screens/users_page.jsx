@@ -5,7 +5,6 @@ import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import assets                               from 'libs/assets';
 
-import { showOverlay }                      from 'actions/application';
 import { logout }                           from 'actions/header';
 import { getUsers, approveUser }            from 'actions/users';
 
@@ -118,4 +117,4 @@ const select = (state) => ({
     users           : state.application.get('users')
 });
 
-export default connect(select, { showOverlay, getUsers, approveUser }, null, { withRef: true })(withCookies(UsersPage));
+export default connect(select, { getUsers, approveUser }, null, { withRef: true })(withCookies(UsersPage));
