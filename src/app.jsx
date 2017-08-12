@@ -5,16 +5,12 @@ import ReactDOM                         from 'react-dom';
 import { Provider }                     from 'react-redux';
 import { CookiesProvider, Cookies }     from 'react-cookie';
 import injectTapEventPlugin             from 'react-tap-event-plugin';
-import { createStore }                  from 'redux';
 import { PropTypes }                    from 'prop-types';
+import configureStore                   from './store';
 import jwt                              from './libs/loaders/jwt';
 import routes                           from './routes';
-import RootReducer                      from './reducers'
 
 import './styles/styles.scss';
-
-// Polyfill es6 promises for IE
-// es6Promise.polyfill();
 
 // Needed for onTouchTap
 // Can go away when react 1.0 release
@@ -39,7 +35,8 @@ class Root extends React.PureComponent {
     }
 }
 
-const store = createStore(RootReducer);
+const store = configureStore();
+
 let cookie = new Cookies();
 cookie = cookie.get('sibi-admin-jwt');
 

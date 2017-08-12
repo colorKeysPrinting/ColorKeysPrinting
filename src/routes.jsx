@@ -2,6 +2,7 @@
 import React                            from 'react';
 import { BrowserRouter as Router, Route }         from 'react-router-dom';
 
+import HeaderBar                        from 'components/header_bar';
 import Home                             from 'screens/home';
 import OrdersPage                       from 'screens/orders_page';
 import UsersPage                        from 'screens/users_page';
@@ -19,6 +20,7 @@ import NotFound                         from 'components/common/not_found';
 export default (
     <Router>
         <div>
+            <HeaderBar />
             <Route path="/" component={Home} />
             <Route path="/orders" component={OrdersPage} />
             <Route path="/users" component={UsersPage} />
@@ -29,8 +31,6 @@ export default (
             <Route path="/edit_product" component={EditProductOverlay} />
             <Route path="/file_uploader" component={FileUploaderOverlay} />
             <Route path="/profile" component={ProfileOverlay} />
-
-            <Route path="*" component={NotFound} />
         </div>
     </Router>
 )

@@ -4,26 +4,17 @@ import React                    from 'react';
 // import { withCookies }          from 'react-cookie';
 // import 'components/common/custom_formats';
 
-// import { login, closeOverlay, passwordReset, changeLanguage }      from 'actions/application';
-// import { logout }      from 'actions/header';
 // import { updateProduct, createProduct }      from 'actions/products';
 
-// import Login                    from './login';
 // import FileUploader             from './file_uploader';
 // import Profile                  from './profile';
 // import EditProduct              from './edit_product';
 
-class Overlay extends React.Component {
+export default class Overlay extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            activeUser: this.props.activeUser.toJS(),
-            activeOverlay: '',
-            overlayObj: '',
-            errorMsg: '',
-            email: '',
-            password: '',
             category: '',
             productName: '',
             classification: '',
@@ -200,12 +191,11 @@ class Overlay extends React.Component {
     // }
 
     render() {
-
         const styles = {
             overlayBackground: {
-                display: (this.state.activeOverlay !== '') ? 'block' : 'none',
+                display: 'block',
                 position: 'absolute',
-                backgroundColor: (this.state.activeOverlay !== 'productAddTo' && this.state.activeOverlay !== 'profile') ? 'rgba(50, 50, 50, 0.4)' : '',
+                backgroundColor: (this.props.type !== 'productAddTo' && this.props.type !== 'profile') ? 'rgba(50, 50, 50, 0.4)' : '',
                 height: '100%',
                 width: '100%',
                 top: '0',

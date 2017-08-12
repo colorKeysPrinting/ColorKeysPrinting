@@ -5,7 +5,6 @@ import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import assets                               from 'libs/assets';
 
-import HeaderBar                            from 'components/header_bar';
 import { showOverlay }                      from 'actions/application';
 import { logout }                           from 'actions/header';
 import { getOrders, approveOrder }          from 'actions/products';
@@ -141,7 +140,6 @@ class OrdersPage extends React.Component {
 
         return (
             <div id="orders-page" >
-                <HeaderBar />
                 <MyTable
                     type="orders"
                     headers={headers}

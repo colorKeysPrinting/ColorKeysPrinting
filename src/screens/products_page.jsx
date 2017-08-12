@@ -5,7 +5,6 @@ import { withCookies }                      from 'react-cookie';
 import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                               from 'libs/assets';
 
-import HeaderBar                            from 'components/header_bar';
 import { showOverlay }                      from 'actions/application';
 import { logout }                           from 'actions/header';
 import { getProducts, getProductCategories, getProductsForSubCategory }          from 'actions/products';
@@ -102,7 +101,6 @@ class ProductsPage extends React.Component {
 
         return (
             <div id="products-page" >
-                <HeaderBar />
                 <div>
                     <div>Products</div>
                     <div className="submit-btn" onClick={() => this.props.showOverlay('editProduct')}>Add</div>

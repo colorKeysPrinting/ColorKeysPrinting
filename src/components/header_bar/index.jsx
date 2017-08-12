@@ -1,5 +1,6 @@
 import React                    from 'react';
 import { connect }              from 'react-redux';
+import { withRouter }           from 'react-router';
 import { Link }                 from 'react-router-dom';
 import _                        from 'lodash';
 import { withCookies }          from 'react-cookie';
@@ -88,16 +89,12 @@ class HeaderBar extends React.Component {
         const activeUser = this.props.activeUser.toJS();
 
         if (!activeUser.type || activeUser.type === 'signUp') {
-            loginSection = (<div style={styles.loginSection}>
-                <Link to={`/login`} className="submit-btn" >Login</Link>
-            </div>);
+            loginSection = <Link to={`/login`} className="submit-btn" >Login</Link>;
 
         } else {
             const profilePic = (activeUser.profilePicture) ? assets(activeUser.profilePicture) : assets('./images/profile_pic.jpg');
 
-            loginSection = (<div style={styles.profileSection}>
-                <Link to={`/profile`} ><img src={profilePic} alt="profilePicture" width="40px" height="40px" style={styles.profileSection.profilePic} /></Link>
-            </div>);
+            loginSection = <Link to={{ pathname: `/profile`, state: { prevPath: this.props.location.pathname }}} ><img src={profilePic} alt="profilePicture" width="40px" height="40px" style={styles.profileSection.profilePic} /></Link>;
         }
 
         // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <img src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
@@ -109,7 +106,9 @@ class HeaderBar extends React.Component {
                     activeTab={this.props.activeTab}
                     setActivateTab={this.props.setActivateTab}
                 />
-                { loginSection }
+                <div style={styles.loginSection}>
+                    { loginSection }
+                </div>
             </div>
         );
     }
@@ -121,4 +120,4 @@ const select = (state) => ({
     activeTab       : state.application.get('activeTab')
 });
 
-export default connect(select, { ...HeaderActions, showOverlay }, null, { withRef: true })(withCookies(HeaderBar));
+export default connect(select, { ...HeaderActions, showOverlay }, null, { withRef: true })(withRouter(withCookies(HeaderBar)));

@@ -30,23 +30,27 @@ module.exports = WebpackConfig = (app) => {
     ].filter(Boolean);
 
     const loaders = [
-        { test: /\.(js|jsx)$/, use: 'babel-loader', exclude: /node_modules/ },
-        { test: /\.scss$/, loaders: ExtractTextPlugin.extract('css-loader!autoprefixer-loader!sass-loader')},
-        { test: /.*\.(pdf|gif|png|jpg|jpeg|svg)$/, use: ['file-loader?name=[hash].[ext]'] },
-        { test: /.*\.(eot|woff2|woff|ttf)$/,       use: ['file-loader?name=[hash].[ext]'] }
+        { test: /\.(js|jsx)$/,                      use: 'babel-loader',        exclude: /node_modules/ },
+        { test: /\.(js|jsx)$/,                      use: 'source-map-loader',   exclude: /node_modules/, enforce: 'pre' },
+        { test: /\.scss$/,                          use: ExtractTextPlugin.extract('css-loader!autoprefixer-loader!sass-loader')},
+        { test: /.*\.(pdf|gif|png|jpg|jpeg|svg)$/,  use: ['file-loader?name=[hash].[ext]'] },
+        { test: /.*\.(eot|woff2|woff|ttf)$/,        use: ['file-loader?name=[hash].[ext]'] }
     ];
 
     return {
         context: path.resolve(__dirname, '../src'),
         entry: 'app',
         output: {
-            path: path.resolve(__dirname, `../build/${app.env}`),
+            path: path.resolve(__dirname, `../dist`),
             filename: `${app.APP_NAME}.bundle.js`,
-            sourceMapFilename: `${app.APP_NAME}.bundle.map`,
+            sourceMapFilename: `[file].map`,
+            devtoolModuleFilenameTemplate: (info) => {
+                return `webpack:///${info.resourcePath}`
+            },
             publicPath: '/'
         },
         resolve: {
-            extensions: ['.js', '.json', '.jsx', '.scss', '.less', '.css'],
+            extensions: ['.js', '.json', '.jsx', '.scss', '.pdf', '.gif', '.png', '.jpg', '.jpeg', '.svg', '.eot', '.woff2', '.woff', '.ttf'],
             modules: [
                 path.resolve(__dirname, '../node_modules'),
                 path.resolve(__dirname, '../src')
@@ -54,11 +58,12 @@ module.exports = WebpackConfig = (app) => {
         },
         plugins,
         module: { loaders },
-        devtool: '#source-map',
+        devtool: 'source-map',
         devServer: {
             contentBase: '../src',
             historyApiFallback: true,
             inline: true,
+            host: app.HOST,
             port: parseInt(app.ASSETS_PORT, 10) || 8080,
             stats: {
                 cached: false,

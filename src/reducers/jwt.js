@@ -1,15 +1,12 @@
 import { Cookies }                      from 'react-cookie';
-import { Constants as JwtConstants }    from 'actions/jwt';
 
 const initialState = { isLogout: false };
 
 export default (state = initialState, action) => {
     switch (action.type) {
-
-    case JwtConstants.REFRESH_JWT:
-        // return action.payload.jwt;
+    case 'REFRESH_JWT':
         const _cookies = new Cookies();
-        const jwt = _cookies.get('sibi-jwt');
+        const jwt = _cookies.get('sibi-admin-jwt');
 
         if (!jwt) {
             state = { ...state, isLogout: true };

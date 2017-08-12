@@ -1,4 +1,5 @@
 import React                        from 'react';
+import { withRouter }               from 'react-router';
 import { connect }                  from 'react-redux';
 import assets                       from 'libs/assets';
 
@@ -28,21 +29,21 @@ class LoginOverlay extends React.Component {
     }
 
     close() {
-        this.resetState();
-        this.props.closeOverlay();
+        this.props.history.goBack();
     }
 
     changeOverlay(type) {
         this.setState({ type, password: '' });
     }
 
-    submitLoginBtn() {
-        if (this.state.type === 'login') {
-            this.props.login(this.state.email, this.state.password);
+    submitLoginBtn(type) {
+        if (type === 'login') {
+            this.props.login({ email: this.state.email, password: this.state.password});
 
-        } else if (this.state.type === 'reset') {
-            this.props.passwordReset(this.state.email);
+        } else if (type === 'reset') {
+            this.props.passwordReset({ email: this.state.email });
         }
+        this.props.history.push('/');
     }
 
     render() {
@@ -103,20 +104,20 @@ class LoginOverlay extends React.Component {
             close = <div onClick={() => this.changeOverlay('login')} style={styles.close}>X</div>;
             inputs = (<div>
                 <div style={styles.text}>Enter your email to reset your password.</div>
-                <input type="email" placeholder="Email" value={this.email.email} onChange={(e) => { this.update('email', e.target.value) }} style={{ width: '435px' }} required />
+                <input type="email" placeholder="Email" value={this.state.email} onChange={(e) => { this.update('email', e.target.value) }} style={{ width: '435px' }} required />
             </div>);
 
             actionSection = <input className="submit-btn" type="submit" value="Submit" style={{ width: '86%' }} />;
         }
 
         return (
-            <Overlay>
+            <Overlay type="login">
                 <div style={styles.container}>
                     <div style={styles.titleBar} >
                         <div style={styles.title}>{(this.state.type === 'login') ? 'Login': 'Reset password'}</div>
                         { close }
                     </div>
-                    <form onSubmit={() => this.submitLoginBtn()}>
+                    <form onSubmit={() => this.submitLoginBtn(this.state.type)} >
                         <div style={styles.content}>
                             { inputs }
                         </div>
@@ -133,7 +134,8 @@ const select = (state) => ({});
 const actions = {
     login,
     logout,
+    passwordReset,
     closeOverlay
 };
 
-export default connect(select, actions, null, { withRef: true })(LoginOverlay);
+export default connect(select, actions, null, { withRef: true })(withRouter(LoginOverlay));
