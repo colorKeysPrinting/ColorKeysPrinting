@@ -2,6 +2,8 @@ import React                                from 'react';
 import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
+import { withRouter }                       from 'react-router';
+import { Link }                             from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                               from 'libs/assets';
 
@@ -12,12 +14,6 @@ import { getProducts, getProductCategories, getProductsForSubCategory }         
 import MyTable                              from 'components/my_table';
 
 class ProductsPage extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.handleAction = this.handleAction.bind(this);
-    }
-
     componentWillMount() {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
@@ -27,11 +23,6 @@ class ProductsPage extends React.Component {
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
-    }
-    
-    handleAction({ item }) {
-        console.log('product action:', item.id.product);
-        this.props.showOverlay('editProduct', { ...item.id });
     }
 
     componentWillUpdate(nextProps) {
@@ -74,7 +65,7 @@ class ProductsPage extends React.Component {
                         let value = product[key];
 
                         if (key === 'action') {
-                            value = 'Edit';
+                            value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} >Edit</Link>;
 
                         } else if (key === 'id') {
                             value = { ...product, category: type.id };
@@ -92,7 +83,6 @@ class ProductsPage extends React.Component {
                             type="products"
                             tab={type.name}
                             data={data}
-                            handleAction={this.handleAction}
                         />
                     </TabPanel>
                 );
@@ -128,4 +118,4 @@ const actions = {
     getProductsForSubCategory
 };
 
-export default connect(select, actions, null, { withRef: true })(withCookies(ProductsPage));
+export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(ProductsPage)));

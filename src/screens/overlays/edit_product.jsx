@@ -1,30 +1,101 @@
 import React                    from 'react';
+import { connect }              from 'react-redux';
+import { withRouter }           from 'react-router';
+import { withCookies }          from 'react-cookie';
 import _                        from 'lodash';
 import assets                   from 'libs/assets';
 
+import { updateProduct, createProduct, archiveProduct }      from 'actions/products';
+
 import Overlay                  from 'components/overlay';
 
-export default class EditProduct extends React.Component {
+class EditProduct extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { activeSection: '', isInstall: false, isRemoval: false };
+        this.state = { 
+            activeSection: '', 
+            isInstall: false, 
+            isRemoval: false,
+            category: this.props.location.state.category || '',
+            ...this.props.location.state.product 
+        };
 
         this.update = this.update.bind(this);
+        this.close = this.close.bind(this);
         this.changeActiveSection = this.changeActiveSection.bind(this);
+        this.saveProduct = this.saveProduct.bind(this);
     }
 
     update(type, value) {
         this.setState({ [type]: value });
     }
 
+    close() {
+        this.props.history.goBack();
+    }
+
     changeActiveSection(activeSection) {
-        this.setState({ activeSection });
+        this.setState((prevState) => { 
+            activeSection = (prevState.activeSection !== activeSection) ? activeSection : '';
+
+            return { activeSection };
+        });
+    }
+
+    saveProduct({ id, activeUser }) {
+        console.log('save product', id);
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.category]);
+
+        const product = {
+            name: this.state.name,
+            manufacturerModelNumber: this.state.manufacturerModelNumber || '',  // not in application
+            serialNumber: this.state.serialNumber || '',                        // not in application
+            shortDescription: this.state.shortDescription || '',                // not in application
+            sku: this.state.sku || '',                                          // not in application
+            overview: this.state.overview || '',                                // not in application
+            specifications: this.state.specifications || '',                    // not in application
+            faq: this.state.faq || '',                                          // not in application
+            videos: this.state.videos || [],                                    // not in application
+            productCategoryId: activeUser.tradeId,
+            productSubcategoryId: this.state.category,
+            applianceType: this.state.applianceType || '',                      // not in application
+            applianceSize: this.state.size,
+            applianceDescription: this.state.applianceDescription,
+            sibiModelNumber: this.state.sibiModelNumber || '',                  // not in application
+            applianceFuelType: this.state.applianceFuelType || '',              // not in application
+            applianceWidth: this.state.applianceWidth || '',                    // not in application
+            applianceHeight: this.state.applianceHeight || '',                  // not in application
+            applianceDepth: this.state.applianceDepth || '',                    // not in application
+            applianceInstallDescription: this.state.applianceInstallDescription || '',    // not in application
+            applianceInstallPrice: this.state.applianceInstallPrice,
+            applianceInstallCode: this.state.applianceInstallCode,
+            applianceColorsAndImages: this.state.applianceColorsAndImages || [],
+            applianceAssociatedParts: this.state.applianceAssociatedParts || [],
+            applianceSpecSheetUrl: this.state.applianceSpecSheetUrl || '',              // not in application
+            applianceRemovalDescription: this.state.applianceRemovalDescription || '',  // not in application
+            applianceRemovalCode: this.state.applianceRemovalCode,
+            applianceRemovalPrice: this.state.applianceRemovalPrice,
+        };
+
+        if (id) {
+            product['id'] = id;
+            
+            this.props.updateProduct({ token: jwt.token, category: category.name, product });
+        } else {
+
+            this.props.createProduct({ token: jwt.token, category: category.name, product })
+        }
+
+        this.props.history.push(`/products`);
     }
 
     render() {
-        let inputs, actionSection, close;
-
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        
         const styles = {
             container: {
                 backgroundColor: '#F9FAFC',
@@ -68,76 +139,91 @@ export default class EditProduct extends React.Component {
             }
         };
 
-        const categories = _.map(this.props.productCategories, (category) => (<option key={category.id} value={category.id}>{ category.name }</option>));
-        const deleteBtn = (this.props.id) ? <div className="remove-btn" onClick={() => this.props.deleteProduct(this.props.id)}>Remove Product</div> : null;
-        const buttonTxt = (this.props.id) ? 'Update' : 'Add';
-
-        const content = (<form onSubmit={() => this.props.saveProduct(this.props.id)}>
-            <div style={styles.content}>
-                <div style={{ columnCount: 2, display: 'inline-flex', width: '540px' }}>
-                    <div>
-                        <select value={this.props.category} onChange={(e) => this.props.update('category', e.target.value)} required >
-                            <option disabled selected value="" >Select category</option>
-                            { categories }
-                        </select>
-                    </div>
-                    <div><input type="text" placeholder="Product name"   value={this.props.productName}    onChange={(e) => this.props.update('productName', e.target.value)}    required /></div>
-                </div>
-                <div style={{ columnCount: 2, display: 'inline-flex', width: '540px' }}>
-                    <div><input type="text" placeholder="Classification" value={this.props.classification} onChange={(e) => this.props.update('classification', e.target.value)} required /></div>
-                    <div><input type="text" placeholder="Size"           value={this.props.size}           onChange={(e) => this.props.update('size', e.target.value)}           required /></div>
-                </div>
-                <div id="accordion">
-                    <div id="accordion-pictures" onClick={() => this.changeActiveSection('pictures')}>
-                        <div>{ _.size(this.props.pictures) } Photos</div>
-                    </div>
-                    <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} > showing pictures </div>
-                    <div id="accordion-parts" onClick={() => this.changeActiveSection('parts')} >
-                        <div>{ _.size(this.props.parts) } Parts</div>
-                    </div>
-                    <div style={{ display: (this.state.activeSection === 'parts') ? 'block' : 'none' }} > showing parts </div>
-                </div>
-                <div style={styles.checkbox}>
-                    <input
-                        id="checkbox-is-ge-install"
-                        type="checkbox"
-                        onClick={() => this.update('isInstall', !(this.state.isInstall))}
-                        checked={this.state.isInstall}
-                        style={{ height: '15px', width: '30px' }}
-                    />Option for GE to install
-                </div>
-                <div style={{ display: (this.state.isInstall) ? 'block' : 'none' }} >
-                    <div><input type="text" placeholder="install code (e.g. M106)" value={this.props.installCode} onChange={(e) => this.props.update('installCode', e.target.value)} /></div>
-                    <div><input type="number" placeholder="install value (e.g. 0.00)" value={this.props.installPrice} onChange={(e) => this.props.update('installPrice', e.target.value)} /></div>
-                </div>
-                <div style={styles.checkbox}>
-                    <input
-                        id="checkbox-is-ge-remove-old"
-                        type="checkbox"
-                        onClick={() => this.update('isRemoval', !(this.state.isRemoval))}
-                        checked={this.state.isRemoval}
-                        style={{ height: '15px', width: '30px' }}
-                    />Option for GE to remove old appliance
-                </div>
-                <div style={{ display: (this.state.isRemoval) ? 'block' : 'none' }} >
-                    <div><input type="text" placeholder="removal code (e.g. M106)" value={this.props.removalCode} onChange={(e) => this.props.update('removalCode', e.target.value)} /></div>
-                    <div><input type="number" placeholder="removal value (e.g. 0.00)" value={this.props.removalPrice} onChange={(e) => this.props.update('removalPrice', e.target.value)} /></div>
-                </div>
-            </div>
-            <input className="submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
-            { deleteBtn }
-        </form>);
-
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.category]);
+        const categories = _.map(this.props.productCategories.toJS(), (category) => {
+            return <option key={category.id} value={category.id}>{ category.name }</option>;
+        });
+        const title = (this.props.location.state.product) ? 'Edit' : 'Add';
+        const buttonTxt = (this.state.id) ? 'Update' : 'Add';
+        const deleteBtn = (this.state.id) ? <div className="remove-btn" onClick={() => this.props.archiveProduct({ token: jwt.token, category, id: this.state.id })}>Remove Product</div> : null;
+        
         return (
-            <Overlay>
+            <Overlay type="">
                 <div style={styles.container}>
                     <div style={styles.titleBar} >
-                        <div style={styles.title}>{ this.props.title }</div>
-                        <div onClick={this.props.close} style={styles.close}>X</div>
+                        <div style={styles.title}>{ title } Product</div>
+                        <div onClick={this.close} style={styles.close}>X</div>
                     </div>
-                    { content }
+                    <form onSubmit={() => this.saveProduct({ id: this.state.id ,activeUser: this.props.activeUser.toJS() })}>
+                        <div style={styles.content}>
+                            <div style={{ columnCount: 2, display: 'inline-flex', width: '540px' }}>
+                                <div>
+                                    <select value={this.state.category} onChange={(e) => this.update('category', e.target.value)} required >
+                                        <option disabled selected value="" >Select category</option>
+                                        { categories }
+                                    </select>
+                                </div>
+                                <div><input type="text" placeholder="Product name"   value={this.state.name} onChange={(e) => this.update('name', e.target.value)}    required /></div>
+                            </div>
+                            <div style={{ columnCount: 2, display: 'inline-flex', width: '540px' }}>
+                                <div><input type="text" placeholder="Classification" value={this.state.applianceDescription} onChange={(e) => this.update('classification', e.target.value)} required /></div>
+                                <div><input type="text" placeholder="Size"           value={this.state.applianceSize}        onChange={(e) => this.update('size', e.target.value)}           required /></div>
+                            </div>
+                            <div id="accordion">
+                                <div id="accordion-pictures" onClick={() => this.changeActiveSection('pictures')}>
+                                    <div>{ _.size(this.state.applianceColorsAndImages) } Photos</div>
+                                </div>
+                                <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} > showing pictures </div>
+                                <div id="accordion-parts" onClick={() => this.changeActiveSection('parts')} >
+                                    <div>{ _.size(this.state.applianceAssociatedParts) } Parts</div>
+                                </div>
+                                <div style={{ display: (this.state.activeSection === 'parts') ? 'block' : 'none' }} > showing parts </div>
+                            </div>
+                            <div style={styles.checkbox}>
+                                <input
+                                    id="checkbox-is-ge-install"
+                                    type="checkbox"
+                                    onClick={() => this.update('isInstall', !(this.state.isInstall))}
+                                    checked={this.state.isInstall}
+                                    style={{ height: '15px', width: '30px' }}
+                                />Option for GE to install
+                            </div>
+                            <div style={{ display: (this.state.isInstall) ? 'block' : 'none' }} >
+                                <div><input type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update('installCode', e.target.value)} /></div>
+                                <div><input type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update('installPrice', e.target.value)} /></div>
+                            </div>
+                            <div style={styles.checkbox}>
+                                <input
+                                    id="checkbox-is-ge-remove-old"
+                                    type="checkbox"
+                                    onClick={() => this.update('isRemoval', !(this.state.isRemoval))}
+                                    checked={this.state.isRemoval}
+                                    style={{ height: '15px', width: '30px' }}
+                                />Option for GE to remove old appliance
+                            </div>
+                            <div style={{ display: (this.state.isRemoval) ? 'block' : 'none' }} >
+                                <div><input type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update('removalCode', e.target.value)} /></div>
+                                <div><input type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update('removalPrice', e.target.value)} /></div>
+                            </div>
+                        </div>
+                        <input className="submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
+                        { deleteBtn }
+                    </form>
                 </div>
             </Overlay>
         );
     }
 }
+
+const select = (state) => ({
+    activeUser          : state.application.get('activeUser'),
+    productCategories   : state.application.get('productCategories')
+});
+
+const actions = {
+    updateProduct, 
+    createProduct,
+    archiveProduct
+};
+
+export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(EditProduct)));

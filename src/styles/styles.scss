@@ -9,7 +9,7 @@
 @import './pure-responsive-min';
 @import './reset';
 
-// @import '../../../node_modules/react-tabs/style/react-tabs'; //TODO: figure out why this style sheat won't add
+@import 'node_modules/react-tabs/style/react-tabs.scss';
 
 // APP STYLES (need to include each file one by one)
 // @import './pages/*';

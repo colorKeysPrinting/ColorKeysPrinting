@@ -99,21 +99,21 @@ export default (state = initialState, action) => {
 
     case ActionTypes.GET_PRODUCTS_FOR_CATEGORY_SUCCESS:
         console.log('receiving products for category', action.data);
-        state = state.setIn(['products', action.original.headers.category], Immutable.fromJS(action.data));
+        state = state.setIn(['products', action.config.headers.category], Immutable.fromJS(action.data));
         break;
 
     case ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS:
         console.log('receiving products for sub category', action.data);
-        state = state.setIn(['products', action.original.headers.category], Immutable.fromJS(action.data));
+        state = state.setIn(['products', action.config.headers.category], Immutable.fromJS(action.data));
         break;
     
     case ActionTypes.UPDATE_PRODUCTS_SUCCESS:
         console.log('receiving updated product');
-        products = state.getIn(['products', action.original.headers.category]).toJS();
+        products = state.getIn(['products', action.config.headers.category]).toJS();
         index = _.findIndex(products, ['id', action.data.id]);
         products[index] = action.data;
         
-        state = state.updateIn(['products', action.original.headers.category], value => Immutable.fromJS(products));
+        state = state.updateIn(['products', action.config.headers.category], value => Immutable.fromJS(products));
         break;
 
     case ActionTypes.CREATE_PRODUCTS_SUCCESS:
@@ -121,17 +121,17 @@ export default (state = initialState, action) => {
         state = state.set('products', Immutable.fromJS(action.data));
         break;
 
-    //  case'REMOVE_PRODUCT_SUCCESS':
+    //  case'ARCHIVE_PRODUCT_SUCCESS':
     //     console.log('removed products', action.data);
     //     state = state.set('products', Immutable.fromJS(action.data));
     //     break;
 
-    case ActionTypes.REMOVE_PRODUCT_SUCCESS:
+    case ActionTypes.ARCHIVE_PRODUCT_SUCCESS:
         console.log('delete call back');
-        products = state.getIn(['products', action.original.headers.category]).toJS();
+        products = state.getIn(['products', action.config.headers.category]).toJS();
         products = _.remove(products, (product) => { return product.id === action.data.id });
         
-        state = state.updateIn(['products', action.original.headers.category], value => Immutable.fromJS(products));
+        state = state.updateIn(['products', action.config.headers.category], value => Immutable.fromJS(products));
         break;
 
     case ActionTypes.GET_ORDERS_SUCCESS:
@@ -142,7 +142,7 @@ export default (state = initialState, action) => {
     case ActionTypes.APPROVE_ORDER_SUCCESS:
         console.log('approved order', action.data);
         const orders = state.get('orders').toJS();
-        index = _.findIndex(orders, ['id', action.original.headers.orderId]);
+        index = _.findIndex(orders, ['id', action.config.headers.orderId]);
         orders[index] = action.data;
 
         state = state.set('orders', Immutable.fromJS(orders));

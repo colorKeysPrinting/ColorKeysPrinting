@@ -1,6 +1,5 @@
 import React                    from 'react';
 import _                        from 'lodash';
-import { browserHistory }       from 'react-router';
 import assets                   from 'libs/assets';
 
 export default class MyTable extends React.Component {

@@ -34,7 +34,7 @@ class HeaderBar extends React.Component {
     componentWillUpdate(nextProps) {
         if (nextProps.activeUser) {
             const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
-            // browserHistory.push(path);  //TODO: figure out how to push history now with react-router v4
+            this.props.history.push(path);
         }
 
         if (nextProps.isLogout) {

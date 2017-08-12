@@ -3,7 +3,7 @@ import { withRouter }               from 'react-router';
 import { connect }                  from 'react-redux';
 import assets                       from 'libs/assets';
 
-import { login, closeOverlay, passwordReset }      from 'actions/application';
+import { login, passwordReset }     from 'actions/application';
 import { logout }                   from 'actions/header';
 
 import Overlay                      from 'components/overlay';
@@ -16,7 +16,7 @@ class LoginOverlay extends React.Component {
             type: 'login',
             email: '',
             password: ''
-        }
+        };
 
         this.update = this.update.bind(this);
         this.close = this.close.bind(this);
@@ -134,8 +134,7 @@ const select = (state) => ({});
 const actions = {
     login,
     logout,
-    passwordReset,
-    closeOverlay
+    passwordReset
 };
 
 export default connect(select, actions, null, { withRef: true })(withRouter(LoginOverlay));

@@ -49,9 +49,9 @@ const createProductSuccess = (payload) => {
     }
 }
 
-const removeProductSuccess = (payload) => {
+const archiveProductSuccess = (payload) => {
     return {
-        type: ActionTypes.REMOVE_PRODUCT_SUCCESS,
+        type: ActionTypes.ARCHIVE_PRODUCT_SUCCESS,
         ...payload
     }
 }
@@ -188,7 +188,7 @@ export function updateProduct({ token, category, product }) {
                 'x-auth-token': token,
                 category
             },
-            body: {
+            data: {
                 ...product
             }
         })
@@ -210,7 +210,7 @@ export function createProduct({ token, category, product }) {
                 'x-auth-token': token,
                 category
             },
-            body: {
+            data: {
                 ...product
             }
         })
@@ -223,18 +223,18 @@ export function createProduct({ token, category, product }) {
     }
 }
 
-export function removeProduct({ token, category, id }) {
+export function archiveProduct({ token, category, id }) {
     return (dispatch) => {
         return axios({
             method  : Network.DEL,
-            url     : `${Network.DOMAIN}/products/${id}`,
+            url     : `${Network.DOMAIN}/products/${id}/archive`,
             headers : {
                 'x-auth-token': token,
                 category
             }
         })
             .then(payload => {
-                dispatch(removeProductSuccess(payload));
+                dispatch(archiveProductSuccess(payload));
             })
             .catch(error => {
                 throw(error);
@@ -288,7 +288,7 @@ export function updateOrder({ token, id, status }) {
             headers : {
                 'x-auth-token': token
             },
-            body: {
+            data: {
                 productsAndDestinations,
                 fundPropertyId,
                 tenantFirstName,
