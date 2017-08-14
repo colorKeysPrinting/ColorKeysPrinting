@@ -30,9 +30,9 @@ module.exports = WebpackConfig = (app) => {
     ].filter(Boolean);
 
     const loaders = [
-        { test: /\.(js|jsx)$/,                      use: 'babel-loader',        exclude: /node_modules/ },
-        { test: /\.(js|jsx)$/,                      use: 'source-map-loader',   exclude: /node_modules/, enforce: 'pre' },
-        { test: /\.scss$/,                          use: ExtractTextPlugin.extract('css-loader!autoprefixer-loader!sass-loader')},
+        { test: /\.(js|jsx)$/,                      use: ['babel-loader','eslint-loader'], exclude: /node_modules/ },
+        { test: /\.(js|jsx)$/,                      use: 'source-map-loader',              exclude: /node_modules/, enforce: 'pre' },
+        { test: /\.scss$/,                          use: ExtractTextPlugin.extract('css-loader!postcss-loader!sass-loader')},
         { test: /.*\.(pdf|gif|png|jpg|jpeg|svg)$/,  use: ['file-loader?name=[hash].[ext]'] },
         { test: /.*\.(eot|woff2|woff|ttf)$/,        use: ['file-loader?name=[hash].[ext]'] }
     ];
