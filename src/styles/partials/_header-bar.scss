@@ -1,0 +1,33 @@
+#header-bar {
+    height: 85px;
+    width: 100%;
+    margin: 0 auto;
+    display: inline-flex;
+    background: #2D324C;
+    box-shadow: 0px 2px 7px 0px rgba(50, 50, 50, 0.4);
+}
+.login-section {
+    display: inline-flex;
+    margin: 20px;
+}
+.profile-section {
+    display: inline-flex;
+
+    .profile-pic {
+        border-radius: 40px;
+        margin: 20px 10px;
+        cursor: pointer;
+    }
+    .search {
+        margin: 28px 10px;
+        cursor: pointer;
+    }
+    .truck {
+        margin: 28px 10px;
+        cursor: pointer;
+    }
+}
+.sibi-logo {
+    width: 273px;
+    cursor: pointer;
+}

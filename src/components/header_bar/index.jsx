@@ -49,42 +49,6 @@ class HeaderBar extends React.Component {
     render() {
         let loginSection;
 
-        const styles = {
-            header: {
-                height: '85px',
-                width: '95%',
-                margin: '0 auto',
-                display: 'inline-flex',
-                background: '#2D324C',
-                boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)'
-            },
-            loginSection: {
-                display: 'inline-flex',
-                margin: '20px'
-            },
-            profileSection: {
-                display: 'inline-flex',
-
-                profilePic: {
-                    borderRadius: '40px',
-                    margin: '20px 10px',
-                    cursor: 'pointer'
-                },
-                search: {
-                    margin: '28px 10px',
-                    cursor: 'pointer'
-                },
-                truck: {
-                    margin: '28px 10px',
-                    cursor: 'pointer'
-                }
-            },
-            sibiLogo: {
-                width: '273px',
-                cursor: 'pointer'
-            }
-        };
-
         const activeUser = this.props.activeUser.toJS();
 
         if (!activeUser.type || activeUser.type === 'signUp') {
@@ -93,19 +57,21 @@ class HeaderBar extends React.Component {
         } else {
             const profilePic = (activeUser.profilePicture) ? assets(activeUser.profilePicture) : assets('./images/profile_pic.jpg');
 
-            loginSection = <Link to={{ pathname: `/profile`, state: { prevPath: this.props.location.pathname }}} ><img src={profilePic} alt="profilePicture" width="40px" height="40px" style={styles.profileSection.profilePic} /></Link>;
+            loginSection = <Link to={{ pathname: `/profile`, state: { prevPath: this.props.location.pathname }}} >
+                <img src={profilePic} alt="profilePicture" width="40px" height="40px" className="profile-pic" />
+            </Link>;
         }
 
         // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <img src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
         const to = (activeUser.type && activeUser.type !== 'signUp') ? `/orders` : `/`;
         return (
-            <div id="header-bar" style={styles.header}>
+            <div id="header-bar">
                 <Tabs
                     type={activeUser.type}
                     activeTab={this.props.activeTab}
                     setActivateTab={this.props.setActivateTab}
                 />
-                <div style={styles.loginSection}>
+                <div className="login-section">
                     { loginSection }
                 </div>
             </div>
