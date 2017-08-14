@@ -6,7 +6,7 @@ import dateformat                           from 'dateformat';
 import assets                               from 'libs/assets';
 
 import { logout }                           from 'actions/header';
-import { getUsers, approveUser }            from 'actions/users';
+import { getUsers, approveUser, updateUser }            from 'actions/users';
 
 import MyTable                              from 'components/my_table';
 
@@ -15,6 +15,7 @@ class UsersPage extends React.Component {
         super(props);
 
         this.handleAction = this.handleAction.bind(this);
+        this.handleAutoApprove = this.handleAutoApprove.bind(this);
     }
 
     componentWillMount() {
@@ -50,12 +51,18 @@ class UsersPage extends React.Component {
         this.props.approveUser({ token: jwt.token, id: item.id });
     }
 
+    handleAutoApprove({ user, isAutoApprove }) {
+        console.log('auto approve');
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+
+        this.props.updateUser({ token: jwt.token, user, isAutoApprove });
+    }
+
     render() {
         let data = [];
 
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
-        const headers = { id: '', name: 'Name', office: 'PM Office', email: 'Email', phoneNumber: 'Phone', createdAt: 'Acount Created', status: 'Status', action: '' };
+        const headers = { id: '', name: 'Name', office: 'PM Office', email: 'Email', phoneNumber: 'Phone', createdAt: 'Acount Created', isAutoApprove: 'Auto-approve', status: 'Status', action: '' };
 
         if (this.props.users.size > 0 ) {
 
@@ -81,6 +88,14 @@ class UsersPage extends React.Component {
 
                     } else if (key === 'createdAt') {
                         value = dateformat(new Date(value), 'mmmm dd, yyyy');
+
+                    } else if (key === 'isAutoApprove') {
+                        const isAutoApprove = (user.isAutoApprove) ? user.isAutoApprove : false;
+
+                        value = <select value={isAutoApprove} onChange={(e) => this.handleAutoApprove({ user, isAutoApprove: e.target.value })} >
+                            <option value="false" >No</option>
+                            <option value="true" >Yes</option>
+                        </select>;
 
                     } else if (key === 'status') {
                         value = (user['type'] === 'pending') ? 'Pending' : 'Approved';
@@ -117,4 +132,4 @@ const select = (state) => ({
     users           : state.application.get('users')
 });
 
-export default connect(select, { getUsers, approveUser }, null, { withRef: true })(withCookies(UsersPage));
+export default connect(select, { getUsers, approveUser, updateUser }, null, { withRef: true })(withCookies(UsersPage));

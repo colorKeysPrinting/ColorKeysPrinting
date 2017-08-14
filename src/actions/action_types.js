@@ -42,6 +42,7 @@ const asycActions = [
     // users
     'GET_USERS',
     'APPROVE_USER',
+    'UPDATE_USER',
     'DISABLE_USER',
     'GET_FUNDS',
     'GET_FUND_PROPERTIES',

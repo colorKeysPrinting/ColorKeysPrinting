@@ -13,24 +13,35 @@ const getUsersSuccess = (payload) => {
         ...payload
     }
 }
+
 const approveUserSuccess = (payload) => {
     return {
         type: ActionTypes.APPROVE_USER_SUCCESS,
         ...payload
     }
 }
+
+const updateUserSuccess = (payload) => {
+    return {
+        type: ActionTypes.UPDATE_USER_SUCCESS,
+        ...payload
+    }
+}
+
 const disableUserSuccess = (payload) => {
     return {
         type: ActionTypes.DISABLE_USER_SUCCESS,
         ...payload
     }
 }
+
 const getFundsSuccess = (payload) => {
     return {
         type: ActionTypes.GET_FUNDS_SUCCESS,
         ...payload
     }
 }
+
 const getFundPropertiesSuccess = (payload) => {
     return {
         type: ActionTypes.GET_FUND_PROPERTIES_SUCCESS,
@@ -74,6 +85,28 @@ export function approveUser({ token, id }) {
             .catch(error => {
                 throw(error);
             });
+    }
+}
+
+export function updateUser( { token, user, isAutoApprove }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.PATCH,
+            url     : `${Network.DOMAIN}/users/${user.id}` ,
+            headers : {
+                'x-auth-token': token
+            },
+            data: {
+                ...user
+            }
+        })
+            .then(payload => {
+                dispatch(updateUserSuccess(payload));
+            })
+            .catch(error => {
+                dispatch(updateUserSuccess({ config: { headers: { isAutoApprove }}, data: { ...user } })); // TODO: remove this line when api is updated
+                // throw(error);
+            })
     }
 }
 

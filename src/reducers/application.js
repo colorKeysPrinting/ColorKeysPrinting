@@ -18,7 +18,7 @@ const initialState = Immutable.fromJS({ currLanguage: 'English',
 });
 
 export default (state = initialState, action) => {
-    let products, index;
+    let products, index, users;
     
     switch (action.type) {
     case ActionTypes.GET_CURRENT_USER_SUCCESS:
@@ -170,9 +170,19 @@ export default (state = initialState, action) => {
 
     case ActionTypes.APPROVE_USER_SUCCESS:
         console.log('receiving approved user');
-        const users = state.get('users').toJS();
+        users = state.get('users').toJS();
         index = _.findIndex(users, ['id', action.data.id]);
         users[index] = action.data;
+
+        state = state.set('users', Immutable.fromJS(users));
+        break;
+
+    case ActionTypes.UPDATE_USER_SUCCESS:
+        console.log('receiving updated user');
+        users = state.get('users').toJS();
+        index = _.findIndex(users, ['id', action.data.id]);
+        users[index] = action.data;
+        users[index].isAutoApprove = action.config.headers.isAutoApprove; // TODO: remove this line when api is updated
 
         state = state.set('users', Immutable.fromJS(users));
         break;
