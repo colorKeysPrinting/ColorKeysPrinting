@@ -13,11 +13,11 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             LOCAL ACTIONS
 // /////////////////////////////////////
-export function setActiveTab(key) {
+export function setActiveTab(activeTab) {
     // activeTab: products, features, support, orderHistory, warranties, reports, dashboard, rebates, dealers, funds, vendors
     return {
         type: ActionTypes.SET_ACTIVE_TAB,
-        key
+        activeTab
     };
 }
 

@@ -8,6 +8,7 @@ import assets                               from 'libs/assets';
 import { logout }                           from 'ducks/active_user/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
 import { getUsers, getFundProperties }      from 'ducks/users/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
 
@@ -30,6 +31,8 @@ class OrdersPage extends React.Component {
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
+        
+        this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
@@ -158,4 +161,13 @@ const select = (state) => ({
     fundProperties  : state.users.get('fundProperties'),
 });
 
-export default connect(select, { logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));
+const actions = {
+    logout, 
+    getOrders, 
+    getUsers, 
+    getFundProperties, 
+    approveOrder,
+    setActiveTab
+}
+
+export default connect(select, actions, null, { withRef: true })(withCookies(OrdersPage));
