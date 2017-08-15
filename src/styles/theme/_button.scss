@@ -11,6 +11,9 @@
   letter-spacing: 0.6px;
   transition-duration: 0.3s;
   border-radius: 3px;
+  &.fill {
+    width: 100%;
+  }
 }
 
 .submit-btn {
@@ -27,27 +30,8 @@
 
 .white-btn {
   &:hover {
-    background: $light-gray;
+    background: $gray-color;
   }
-}
-
-.cancel-btn {
-    border: 1px solid $gray-color;
-    border-radius: 5px;
-    color: $light-blue;
-    cursor: pointer;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    margin: auto;
-    padding: 10px;
-    width: 200px;
-    height: 46px;
-    font-size: 18px;
-
-    margin: 20px auto;
-    padding-top: 14px;
 }
 
 .text-link {
