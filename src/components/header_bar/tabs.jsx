@@ -4,35 +4,30 @@ import { Link }                 from 'react-router-dom';
 export default class Tabs extends React.Component {
 
     render() {
-        const styles = {
-            header: {
-                display: 'inline-flex'
-            },
-            tabSection: {
-                width: '400px',
-                margin: '0 auto'
-            }
-        };
 
         const tabs = {
-            orders   : <Link to={`/orders`}   className="{(this.props.activeTab === 'orders')   ? 'active' : ''}" >Orders</Link>,
-            products : <Link to={`/products`} className="{(this.props.activeTab === 'products') ? 'active' : ''}" >Products</Link>,
-            users    : <Link to={`/users`}    className="{(this.props.activeTab === 'users')    ? 'active' : ''}" >Users</Link>,
+            dashboard : <Link to={`/dashboard`} className={(this.props.activeTab === 'dashboard') ? 'active' : 'tabs'} >Dashboard</Link>,
+            orders    : <Link to={`/orders`}    className={(this.props.activeTab === 'orders')    ? 'active' : 'tabs'} >Orders</Link>,
+            products  : <Link to={`/products`}  className={(this.props.activeTab === 'products')  ? 'active' : 'tabs'} >Products</Link>,
+            users     : <Link to={`/users`}     className={(this.props.activeTab === 'users')     ? 'active' : 'tabs'} >Users</Link>,
+            newOrder  : <Link to={`/new-order`} className={(this.props.activeTab === 'newOrder')  ? 'active' : 'tabs'} >New Order</Link>
         };
 
         let activeTabs;
 
         switch (this.props.type) {
         case 'superAdmin':
-            activeTabs = (<div className="links">
+            activeTabs = (<div className="header-tabs">
+                { tabs['dashboard'] }
                 { tabs['orders'] }
                 { tabs['users'] }
                 { tabs['products'] }
+                { tabs['newOrder'] }
             </div>);
             break;
 
         case 'admin':
-            activeTabs = (<div className="links">
+            activeTabs = (<div className="header-tabs">
                 { tabs['orders'] }
                 { tabs['users'] }
             </div>);
@@ -41,9 +36,9 @@ export default class Tabs extends React.Component {
         default:
             activeTabs = <div></div>
         }
-
+        
         return (
-            <div id="header-tab-section">
+            <div className="tab-section">
                 { activeTabs }
             </div>
         );
