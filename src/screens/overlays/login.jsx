@@ -48,79 +48,44 @@ class LoginOverlay extends React.Component {
     render() {
         let close, inputs, actionSection;
 
-        const styles = {
-            container: {
-                backgroundColor: '#F9FAFC',
-                borderRadius: '5px',
-                border: '1px solid rgba(50, 50, 50, 0.4)',
-                boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-                width: '490px',
-                margin: '10em auto',
-            },
-            titleBar: {
-                display: 'inline-flex',
-                backgroundColor: '#FFF',
-                borderTopLeftRadius: '5px',
-                borderTopRightRadius: '5px',
-                boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-                height: '20%',
-                width: '100%'
-            },
-            title: {
-                textAlign: 'left',
-                padding: '30px',
-                width: '90%'
-            },
-            close: {
-                cursor: 'pointer',
-                textAlign: 'right',
-                padding: '30px',
-                width: '10%'
-            },
-            content: {
-                margin: '20px auto 0px',
-                textAlign: 'left',
-                display: 'inline-grid',
-            },
-            text: {
-                margin: '10px'
-            }
-        };
-
         if (this.state.type === 'login') {
-            close = <div onClick={this.close} style={styles.close}>X</div>;
-            inputs = (<div style={styles.content}>
+            close = <div onClick={this.close} className="icon-close">X</div>;
+            inputs = (<div>
                 <input type="email"     placeholder="Email"     value={this.state.email}    onChange={(e) => { this.update('email', e.target.value) }}     style={{ width: '435px' }} required />
                 <input type="password"  placeholder="Password"  value={this.state.password} onChange={(e) => { this.update('password', e.target.value) }}  style={{ width: '435px' }} required />
             </div>);
 
-            actionSection = (<div style={{ columnCount: 2, display: 'inline-flex', width: '435px', textAlign: 'left' }}>
-                <div className="cancel-btn" onClick={() => this.changeOverlay('reset')} style={{ width: '97%' }} >Forgot password?</div>
-                <input className="submit-btn" type="submit" value="Login" style={{ width: '86%' }} />
+            actionSection = (<div className="pure-g">
+              <div className="pure-u-1-2">
+                <div className="btn white-btn" onClick={() => this.changeOverlay('reset')}>Forgot password?</div>
+              </div>
+              <div className="pure-u-1-2">
+                <input className="btn submit-btn" type="submit" value="Login"/>
+              </div>
             </div>);
 
         } else if (this.state.type === 'reset') {
-            close = <div onClick={() => this.changeOverlay('login')} style={styles.close}>X</div>;
+            close = <div onClick={() => this.changeOverlay('login')} className="icon-close">X</div>;
             inputs = (<div>
-                <div style={styles.text}>Enter your email to reset your password.</div>
+                <p>Enter your email to reset your password.</p>
                 <input type="email" placeholder="Email" value={this.state.email} onChange={(e) => { this.update('email', e.target.value) }} style={{ width: '435px' }} required />
             </div>);
 
-            actionSection = <input className="submit-btn" type="submit" value="Submit" style={{ width: '86%' }} />;
+            actionSection = <input className="btn submit-btn" type="submit" value="Submit" style={{ width: '86%' }} />;
         }
 
         return (
             <Overlay type="login">
-                <div style={styles.container}>
-                    <div style={styles.titleBar} >
-                        <div style={styles.title}>{(this.state.type === 'login') ? 'Login': 'Reset password'}</div>
+                <div className="modal">
+                    <div className="titleBar">
+                        <div className="title">{(this.state.type === 'login') ? 'Login': 'Reset password'}</div>
                         { close }
                     </div>
                     <form onSubmit={() => this.submitLoginBtn(this.state.type)} >
-                        <div style={styles.content}>
+                        <div className="content">
                             { inputs }
+                            { actionSection }
                         </div>
-                        { actionSection }
                     </form>
                 </div>
             </Overlay>

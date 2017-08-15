@@ -26,11 +26,14 @@
     position: absolute;
     top: 0px;
     right: 0px;
-    padding:19px;
     img {
+      margin: 19px;
       border-radius: 50%;
       height: 30px;
       width: 30px;
+    }
+    .btn {
+      margin: 12px;
     }
 }
 .profile-section {

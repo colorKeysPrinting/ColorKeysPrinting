@@ -93,7 +93,7 @@ export default function fileUploaderOverlay(props) {
                     >
 
                         <label>Drag and drop a document or</label>
-                        <label htmlFor="file" className="submit-btn" style={{ width: '50%' }} >Choose file
+                        <label htmlFor="file" className="btn submit-btn" style={{ width: '50%' }} >Choose file
                             <input
                                 id="file"
                                 type="file"
