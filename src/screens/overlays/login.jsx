@@ -3,8 +3,7 @@ import { withRouter }               from 'react-router';
 import { connect }                  from 'react-redux';
 import assets                       from 'libs/assets';
 
-import { login, passwordReset }     from 'actions/application';
-import { logout }                   from 'actions/header';
+import { login, logout, passwordReset }     from 'ducks/active_user/actions';
 
 import Overlay                      from 'components/overlay';
 

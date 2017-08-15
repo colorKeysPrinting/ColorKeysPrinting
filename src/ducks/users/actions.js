@@ -1,42 +1,22 @@
 'use strict';
 
 import axios            from 'axios';
-import ActionTypes      from 'actions/action_types';
 import Network          from 'libs/constants/network';
 
 // /////////////////////////////////////
-//             helper functions
+//             ACTION TYPES
 // /////////////////////////////////////
-const getUsersSuccess = (payload) => {
-    return {
-        type: ActionTypes.GET_USERS_SUCCESS,
-        ...payload
-    }
+export const ActionTypes = {
+    GET_USERS_SUCCESS : 'sibi_ge_admin/users/GET_USERS_SUCCESS',
+    APPROVE_USER_SUCCESS : 'sibi_ge_admin/users/APPROVE_USER_SUCCESS',
+    DISABLE_USER_SUCCESS : 'sibi_ge_admin/users/DISABLE_USER_SUCCESS',
+    GET_FUNDS_SUCCESS : 'sibi_ge_admin/users/GET_FUNDS_SUCCESS',
+    GET_FUND_PROPERTIES_SUCCESS : 'sibi_ge_admin/users/GET_FUND_PROPERTIES_SUCCESS',
 }
-const approveUserSuccess = (payload) => {
-    return {
-        type: ActionTypes.APPROVE_USER_SUCCESS,
-        ...payload
-    }
-}
-const disableUserSuccess = (payload) => {
-    return {
-        type: ActionTypes.DISABLE_USER_SUCCESS,
-        ...payload
-    }
-}
-const getFundsSuccess = (payload) => {
-    return {
-        type: ActionTypes.GET_FUNDS_SUCCESS,
-        ...payload
-    }
-}
-const getFundPropertiesSuccess = (payload) => {
-    return {
-        type: ActionTypes.GET_FUND_PROPERTIES_SUCCESS,
-        ...payload
-    }
-}
+
+// /////////////////////////////////////
+//             LOCAL ACTIONS
+// /////////////////////////////////////
 
 // /////////////////////////////////////
 //             ASYNC CALLS
@@ -51,7 +31,7 @@ export function getUsers({ token, users }) {
             }
         })
             .then(payload => {
-                dispatch(getUsersSuccess(payload));
+                dispatch({ type: ActionTypes.GET_USERS_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);
@@ -69,7 +49,7 @@ export function approveUser({ token, id }) {
             }
         })
             .then(payload => {
-                dispatch(approveUserSuccess(payload));
+                dispatch({ type: ActionTypes.APPROVE_USER_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);
@@ -87,7 +67,7 @@ export function disableUser({ token, id }) {
             }
         })
             .then(payload => {
-                dispatch(disableUserSuccess(payload));
+                dispatch({ type: ActionTypes.DISABLE_USER_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);
@@ -105,7 +85,7 @@ export function getFunds({ token, emailDomain }) {
             }
         })
             .then(payload => {
-                dispatch(getFundsSuccess(payload));
+                dispatch({ type: ActionTypes.GET_FUNDS_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);
@@ -123,7 +103,7 @@ export function getFundProperties({ token }) {
             }
         })
             .then(payload => {
-                dispatch(getFundPropertiesSuccess(payload));
+                dispatch({ type: ActionTypes.GET_FUND_PROPERTIES_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);

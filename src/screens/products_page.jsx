@@ -7,8 +7,8 @@ import { Link }                             from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                               from 'libs/assets';
 
-import { logout }                           from 'actions/header';
-import { getProducts, getProductCategories, getProductsForSubCategory }          from 'actions/products';
+import { logout }                           from 'ducks/active_user/actions';
+import { getProducts, getProductCategories, getProductsForSubCategory }          from 'ducks/products/actions';
 
 import MyTable                              from 'components/my_table';
 
@@ -106,8 +106,8 @@ class ProductsPage extends React.Component {
 }
 
 const select = (state) => ({
-    products            : state.application.get('products'),
-    productCategories   : state.application.get('productCategories')
+    products            : state.products.get('products'),
+    productCategories   : state.products.get('productCategories')
 });
 
 const actions = {
