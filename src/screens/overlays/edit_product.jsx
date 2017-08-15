@@ -223,16 +223,16 @@ class EditProduct extends React.Component {
                                     <div><input type="text" placeholder="sku"            value={this.state.sku}                     onChange={(e) => this.update('sku', e.target.value)}                     required /></div>
                                     <div><input type="url"  placeholder="Spec Sheet URL" value={this.state.applianceSpecSheetUrl} onChange={(e) => this.update('applianceSpecSheetUrl', e.target.value)} required /></div>
                                 </div>
-
-                                <div><textarea placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update('shortDescription', e.target.value)} maxLength="1000" required /></div>
-
+                            </div>
+                            <div><textarea placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update('shortDescription', e.target.value)} maxLength="1000" required /></div>
+                            <div style={{ columnCount: 2 }}>
                                 <div>
                                     <div><input type="text" placeholder="faq" value={this.state.faq} onChange={(e) => this.update('faq', e.target.value)} required /></div>
                                     <div><input type="text" placeholder="Width"  value={this.state.applianceWidth}  onChange={(e) => this.update('applianceWidth', e.target.value)}  required />in.</div>
                                 </div>
-
-                                <div><textarea type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update('overview', e.target.value)} maxLength="1000" required /></div>
-
+                            </div>
+                            <div><textarea type="text" placeholder="overview" height="110" width="500" value={this.state.overview} onChange={(e) => this.update('overview', e.target.value)} maxLength="1000" required /></div>
+                            <div style={{ columnCount: 2 }}>
                                 <div>
                                     <div><input type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update('applianceHeight', e.target.value)} required />in.</div>
                                     <div><input type="text" placeholder="Depth"  value={this.state.applianceDepth}  onChange={(e) => this.update('applianceDepth', e.target.value)}  required />in.</div>
