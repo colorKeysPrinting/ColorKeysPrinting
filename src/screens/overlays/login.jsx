@@ -56,12 +56,12 @@ class LoginOverlay extends React.Component {
             </div>);
 
             actionSection = (<div className="pure-g">
-              <div className="pure-u-1-2">
-                <div className="btn white-btn" onClick={() => this.changeOverlay('reset')}>Forgot password?</div>
-              </div>
-              <div className="pure-u-1-2">
-                <input className="btn submit-btn" type="submit" value="Login"/>
-              </div>
+                <div className="pure-u-1-2">
+                    <div className="btn white-btn" onClick={() => this.changeOverlay('reset')}>Forgot password?</div>
+                </div>
+                <div className="pure-u-1-2">
+                    <input className="btn submit-btn" type="submit" value="Login"/>
+                </div>
             </div>);
 
         } else if (this.state.type === 'reset') {
