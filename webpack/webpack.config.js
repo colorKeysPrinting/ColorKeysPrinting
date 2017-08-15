@@ -27,8 +27,8 @@ module.exports = WebpackConfig = (app) => {
         { test: /\.(js|jsx)$/,                      use: ['babel-loader','eslint-loader'], exclude: /node_modules/ },
         { test: /\.(js|jsx)$/,                      use: 'source-map-loader',              exclude: /node_modules/, enforce: 'pre' },
         { test: /\.scss$/,                          use: ExtractTextPlugin.extract('css-loader!postcss-loader!sass-loader')},
-        { test: /.*\.(pdf|gif|png|jpg|jpeg|svg)$/,  loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/images') } },
-        { test: /.*\.(eot|woff2|woff|ttf)$/,        loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/fonts') } }
+        { test: /\.*\.(pdf|gif|png|jpg|jpeg|svg)$/,  loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/images') } },
+        { test: /\.*\.(eot|woff2|woff|ttf)$/,        loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/fonts') } }
     ];
 
     return {
