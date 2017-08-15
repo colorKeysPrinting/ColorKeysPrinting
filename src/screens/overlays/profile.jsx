@@ -3,8 +3,8 @@ import { connect }              from 'react-redux';
 import { Link }                 from 'react-router-dom';
 import assets                   from 'libs/assets';
 
-import { logout }               from 'actions/header';
-import { changeLanguage }       from 'actions/application';
+import { logout }               from 'ducks/active_user/actions';
+import { changeLanguage }       from 'ducks/ui/actions';
 
 import Overlay                  from 'components/overlay';
 
@@ -66,7 +66,7 @@ class ProfileOverlay extends React.Component {
 }
 
 const select = (state) => ({
-    activeUser  : state.application.get('activeUser')
+    activeUser  : state.activeUser.get('activeUser')
 });
 
 const actions = {

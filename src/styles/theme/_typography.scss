@@ -1,0 +1,57 @@
+// @include font-face(Avenir-Regular, '../fonts/AvenirNext-Regular', 400, normal);
+// @include font-face(Avenir-Bold, '/fonts/AvenirNext-Bold', 700, normal);
+
+h1, h2, h3, h4, h5, p, label {
+    color: $dark-gray;
+}
+
+h1 {
+    font-size: 50px;
+    line-height: 60px;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 28px;
+    line-height: 34px;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 700;
+}
+
+h4 {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 700;
+}
+
+h5 {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+}
+
+p {
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 700;
+    &.large {
+        font-size: 16px;
+        line-height: 26px;
+    }
+}
+
+label {
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: 700;
+}
+
+.submit-btn {
+    font-family: 'lato';
+    font-weight: 700;
+}

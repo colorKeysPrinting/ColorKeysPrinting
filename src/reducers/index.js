@@ -1,12 +1,22 @@
-import { combineReducers } from 'redux';
-import settings            from './settings';
-import jwt                 from './jwt';
-import application         from './application';
+'user strict';
+
+import { combineReducers }  from 'redux';
+import activeUser           from 'ducks/active_user/reducer';
+import header               from 'ducks/header/reducer';
+import jwt                  from 'ducks/jwt/reducer';
+import orders               from 'ducks/orders/reducer';
+import products             from 'ducks/products/reducer';
+import ui                   from 'ducks/ui/reducer';
+import users                from 'ducks/users/reducer';
 
 const rootReducer = combineReducers({
-    settings,
+    activeUser,
+    header,
     jwt,
-    application,
+    orders,
+    products,
+    ui,
+    users,
 });
 
 export default rootReducer;

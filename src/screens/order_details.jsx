@@ -5,8 +5,8 @@ import { browserHistory, Link } from 'react-router';
 import { withCookies }          from 'react-cookie';
 import assets                   from 'libs/assets';
 
-import { logout }               from 'actions/header';
-import { getOrders, updateOrderStatus }          from 'actions/products';
+import { logout }               from 'ducks/active_user/actions';
+import { getOrders, updateOrderStatus }          from 'ducks/orders/actions';
 
 import MyTable                  from 'components/my_table';
 
@@ -52,7 +52,7 @@ class OrderDetails extends React.Component {
 }
 
 const select = (state) => ({
-    orders          : state.application.get('orders')
+    orders          : state.orders.get('orders')
 });
 
 export default connect(select, { getOrders, updateOrderStatus }, null, { withRef: true })(withCookies(OrderDetails));

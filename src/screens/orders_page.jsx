@@ -5,9 +5,9 @@ import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import assets                               from 'libs/assets';
 
-import { logout }                           from 'actions/header';
-import { getOrders, approveOrder }          from 'actions/products';
-import { getUsers, getFundProperties }      from 'actions/users';
+import { logout }                           from 'ducks/active_user/actions';
+import { getOrders, approveOrder }          from 'ducks/orders/actions';
+import { getUsers, getFundProperties }      from 'ducks/users/actions';
 
 import MyTable                              from 'components/my_table';
 
@@ -152,10 +152,10 @@ class OrdersPage extends React.Component {
 }
 
 const select = (state) => ({
-    activeUser      : state.application.get('activeUser'),
-    orders          : state.application.get('orders'),
-    users           : state.application.get('users'),
-    fundProperties  : state.application.get('fundProperties'),
+    activeUser      : state.activeUser.get('activeUser'),
+    orders          : state.orders.get('orders'),
+    users           : state.users.get('users'),
+    fundProperties  : state.users.get('fundProperties'),
 });
 
 export default connect(select, { logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));

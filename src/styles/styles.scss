@@ -1,9 +1,3 @@
-
-// @import './theme/colors';
-@import './theme/button';
-@import './theme/forms';
-// @import './theme/layout';
-
 // HQ STYLES
 @import './pure-min';
 @import './pure-responsive-min';
@@ -12,7 +6,20 @@
 @import 'node_modules/react-tabs/style/react-tabs.scss';
 
 // APP STYLES (need to include each file one by one)
-// @import './pages/*';
-@import './partials/accordion';
-@import './partials/slider';
-// @import './responsive/*';
+
+/**********************/
+/*       Theme        */
+/**********************/
+@import "theme/mixins";
+@import "theme/colors";
+@import "theme/typography";
+@import "theme/button";
+@import "theme/forms";
+@import "theme/layout";
+
+/**********************/
+/*      Partials      */
+/**********************/
+@import "partials/accordion";
+@import "partials/slider";
+@import "partials/header-bar";

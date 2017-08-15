@@ -5,8 +5,8 @@ import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import assets                               from 'libs/assets';
 
-import { logout }                           from 'actions/header';
-import { getUsers, approveUser, updateUser }            from 'actions/users';
+import { logout }                           from 'ducks/active_user/actions';
+import { getUsers, approveUser }            from 'ducks/users/actions';
 
 import MyTable                              from 'components/my_table';
 
@@ -129,7 +129,7 @@ class UsersPage extends React.Component {
 }
 
 const select = (state) => ({
-    users           : state.application.get('users')
+    users           : state.users.get('users')
 });
 
 export default connect(select, { getUsers, approveUser, updateUser }, null, { withRef: true })(withCookies(UsersPage));
