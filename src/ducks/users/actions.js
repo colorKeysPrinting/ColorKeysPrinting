@@ -12,17 +12,6 @@ export const ActionTypes = {
     DISABLE_USER_SUCCESS : 'sibi_ge_admin/users/DISABLE_USER_SUCCESS',
     GET_FUNDS_SUCCESS : 'sibi_ge_admin/users/GET_FUNDS_SUCCESS',
     GET_FUND_PROPERTIES_SUCCESS : 'sibi_ge_admin/users/GET_FUND_PROPERTIES_SUCCESS',
-
-
-const updateUserSuccess = (payload) => {
-    return {
-        type: ActionTypes.UPDATE_USER_SUCCESS,
-        ...payload
-    }
-}
-
-
-
 }
 
 // /////////////////////////////////////
