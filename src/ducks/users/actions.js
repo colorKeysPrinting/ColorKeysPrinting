@@ -9,6 +9,7 @@ import Network          from 'libs/constants/network';
 export const ActionTypes = {
     GET_USERS_SUCCESS : 'sibi_ge_admin/users/GET_USERS_SUCCESS',
     APPROVE_USER_SUCCESS : 'sibi_ge_admin/users/APPROVE_USER_SUCCESS',
+    AUTO_APPROVE_USER_ORDERS: 'sibi_ge_admin/users/AUTO_APPROVE_USER_ORDERS',
     DISABLE_USER_SUCCESS : 'sibi_ge_admin/users/DISABLE_USER_SUCCESS',
     GET_FUNDS_SUCCESS : 'sibi_ge_admin/users/GET_FUNDS_SUCCESS',
     GET_FUND_PROPERTIES_SUCCESS : 'sibi_ge_admin/users/GET_FUND_PROPERTIES_SUCCESS',
@@ -57,11 +58,12 @@ export function approveUser({ token, id }) {
     }
 }
 
-export function updateUser( { token, user, isAutoApprove }) {
+export function autoApproveUserOrders( { token, user, autoApprovedOrders }) {
     return (dispatch) => {
+        autoApprovedOrders = (autoApprovedOrders == 'true') ? 'autoApproveOrders' : 'removeAutoApproveOrders' ;
         return axios({
-            method  : Network.PATCH,
-            url     : `${Network.DOMAIN}/users/${user.id}` ,
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/users/${user.id}/${autoApprovedOrders}` ,
             headers : {
                 'x-auth-token': token
             },
@@ -70,11 +72,10 @@ export function updateUser( { token, user, isAutoApprove }) {
             }
         })
             .then(payload => {
-                dispatch(updateUserSuccess(payload));
+                dispatch({ type: ActionTypes.AUTO_APPROVE_USER_ORDERS, ...payload});
             })
             .catch(error => {
-                dispatch(updateUserSuccess({ config: { headers: { isAutoApprove }}, data: { ...user } })); // TODO: remove this line when api is updated
-                // throw(error);
+                throw(error);
             })
     }
 }
