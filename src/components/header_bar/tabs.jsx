@@ -13,11 +13,11 @@ export default class Tabs extends React.Component {
                 margin: '0 auto'
             }
         };
-
+        
         const tabs = {
-            orders   : <Link to={`/orders`}   className="{(this.props.activeTab === 'orders')   ? 'active' : ''}" >Orders</Link>,
-            products : <Link to={`/products`} className="{(this.props.activeTab === 'products') ? 'active' : ''}" >Products</Link>,
-            users    : <Link to={`/users`}    className="{(this.props.activeTab === 'users')    ? 'active' : ''}" >Users</Link>,
+            orders   : <Link to={`/orders`}   className={(this.props.activeTab === 'orders')   ? 'active' : ''} >Orders</Link>,
+            products : <Link to={`/products`} className={(this.props.activeTab === 'products') ? 'active' : ''} >Products</Link>,
+            users    : <Link to={`/users`}    className={(this.props.activeTab === 'users')    ? 'active' : ''} >Users</Link>,
         };
 
         let activeTabs;

@@ -1,14 +1,15 @@
-import React                    from 'react';
-import _                        from 'lodash';
-import { connect }              from 'react-redux';
-import { browserHistory, Link } from 'react-router';
-import { withCookies }          from 'react-cookie';
-import assets                   from 'libs/assets';
+import React                                from 'react';
+import _                                    from 'lodash';
+import { connect }                          from 'react-redux';
+import { browserHistory, Link }             from 'react-router';
+import { withCookies }                      from 'react-cookie';
+import assets                               from 'libs/assets';
 
-import { logout }               from 'ducks/active_user/actions';
-import { getOrders, updateOrderStatus }          from 'ducks/orders/actions';
+import { logout }                           from 'ducks/active_user/actions';
+import { getOrders, updateOrderStatus }     from 'ducks/orders/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
 
-import MyTable                  from 'components/my_table';
+import MyTable                              from 'components/my_table';
 
 class OrderDetails extends React.Component {
 
@@ -21,6 +22,8 @@ class OrderDetails extends React.Component {
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
+
+        this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
@@ -55,4 +58,4 @@ const select = (state) => ({
     orders          : state.orders.get('orders')
 });
 
-export default connect(select, { getOrders, updateOrderStatus }, null, { withRef: true })(withCookies(OrderDetails));
+export default connect(select, { getOrders, updateOrderStatus, setActiveTab }, null, { withRef: true })(withCookies(OrderDetails));

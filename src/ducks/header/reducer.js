@@ -16,8 +16,8 @@ export default (state = initialState, action) => {
    
     switch (action.type) {
     case ActionTypes.SET_ACTIVE_TAB:
-        console.log('activeTab', action.key);
-        state = state.set('activeTab', action.key);
+        console.log('activeTab', action.activeTab);
+        state = state.set('activeTab', action.activeTab);
         break;
     
     default: 
