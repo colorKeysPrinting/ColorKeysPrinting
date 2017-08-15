@@ -6,7 +6,7 @@ import _                        from 'lodash';
 import { withCookies }          from 'react-cookie';
 import assets                   from 'libs/assets';
 
-import * as HeaderActions       from 'actions/header';
+import * as HeaderActions       from 'ducks/active_user/actions';
 
 import Tabs                     from './tabs';
 
@@ -80,9 +80,9 @@ class HeaderBar extends React.Component {
 }
 
 const select = (state) => ({
-    isLogout        : state.jwt.isLogout,
-    activeUser      : state.application.get('activeUser'),
-    activeTab       : state.application.get('activeTab')
+    isLogout        : state.jwt.get('isLogout'),
+    activeUser      : state.activeUser.get('activeUser'),
+    activeTab       : state.header.get('activeTab')
 });
 
 export default connect(select, { ...HeaderActions }, null, { withRef: true })(withRouter(withCookies(HeaderBar)));
