@@ -1,0 +1,36 @@
+/***********************\
+    Mixins
+\***********************/
+
+// @mixin typeface($font-name, $filename, $weight: normal, $style: normal) {
+//     @font-face {
+//         font-family: '#{$font-name}';
+//         src:url('../../assets/fonts/#{$filename}.eot');
+//         src:url('../../assets/fonts/#{$filename}.eot?#iefix') format('embedded-opentype'),
+//             url('../../assets/fonts/#{$filename}.woff') format('woff'),
+//             url('../../assets/fonts/#{$filename}.ttf')  format('truetype'),
+//             url('../../assets/fonts/#{$filename}.svg#svgFontName') format('svg');
+//         font-weight:$weight;
+//         font-style:$style;
+//     }
+// }
+
+@mixin font-face($font-family, $file-path, $font-weight, $font-style) {
+  @font-face {
+    font-family: $font-family;
+      src: url('#{$file-path}.eot');
+      src: url('#{$file-path}.eot?#iefix') format('embedded-opentype'),
+           url('#{$file-path}.woff') format('woff'),
+           url('#{$file-path}.ttf') format('truetype'),
+           url('#{$file-path}.svg##{$font-family}') format('svg');
+    font-weight: $font-weight;
+    font-style: $font-style;
+  }
+  // Chrome for Windows rendering fix: https://www.adtrak.co.uk/blog/font-face-chrome-rendering/
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    @font-face {
+      font-family: $font-family;
+        src: url('#{$file-path}.svg##{$font-family}') format('svg');
+    }
+  }
+}
