@@ -52,7 +52,7 @@ class HeaderBar extends React.Component {
         const activeUser = this.props.activeUser.toJS();
 
         if (!activeUser.type || activeUser.type === 'signUp') {
-            loginSection = <Link to={`/login`} className="submit-btn" >Login</Link>;
+            loginSection = <Link to={`/login`} className="btn submit-btn" >Login</Link>;
 
         } else {
             const profilePic = (activeUser.profilePicture) ? assets(activeUser.profilePicture) : assets('./images/profile_pic.jpg');

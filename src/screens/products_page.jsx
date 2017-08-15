@@ -95,7 +95,7 @@ class ProductsPage extends React.Component {
             <div id="products-page" >
                 <div>
                     <div>Products</div>
-                    <Link to={`/edit_product`} className="submit-btn" >Add</Link>
+                    <Link to={`/edit_product`} className="btn submit-btn" >Add</Link>
                 </div>
                 <Tabs defaultIndex={0} >
                     <TabList>

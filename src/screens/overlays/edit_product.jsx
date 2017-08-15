@@ -236,7 +236,7 @@ class EditProduct extends React.Component {
                                 <div><input type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update('applianceRemovalPrice', e.target.value)} /></div>
                             </div>
                         </div>
-                        <input className="submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
+                        <input className="btn submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
                         { deleteBtn }
                     </form>
                 </div>

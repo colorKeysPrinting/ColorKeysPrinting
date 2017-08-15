@@ -1,0 +1,31 @@
+.table {
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1px solid $medium-light-gray;
+  background: white;
+  box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+  border-radius: 3px;
+  .head {
+    tr {
+      background: $light-gray;
+    }
+    td {
+      background: $light-gray;
+      border: none !important;
+    }
+  }
+  tr {
+    border: none !important;
+  }
+  td {
+    border-bottom: 1px solid $border-gray;
+    div {
+      padding: 14px 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 200px;
+      font-size: 14px;
+    }
+  }
+}
