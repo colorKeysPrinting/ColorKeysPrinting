@@ -1,4 +1,6 @@
-import { refreshJwt } from 'actions/jwt';
+'use strict';
+
+import { refreshJwt } from 'ducks/jwt/actions';
 
 export default ({ dispatch, token }) => {
     const refresh = 1000 * 60 * 20; // every 20 minutes

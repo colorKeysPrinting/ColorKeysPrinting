@@ -5,7 +5,7 @@ import { withCookies }          from 'react-cookie';
 import _                        from 'lodash';
 import assets                   from 'libs/assets';
 
-import { updateProduct, createProduct, archiveProduct }      from 'actions/products';
+import { updateProduct, createProduct, archiveProduct }      from 'ducks/products/actions';
 
 import Overlay                  from 'components/overlay';
 
@@ -292,8 +292,8 @@ class EditProduct extends React.Component {
 }
 
 const select = (state) => ({
-    activeUser          : state.application.get('activeUser'),
-    productCategories   : state.application.get('productCategories')
+    activeUser          : state.activeUser.get('activeUser'),
+    productCategories   : state.products.get('productCategories')
 });
 
 const actions = {
