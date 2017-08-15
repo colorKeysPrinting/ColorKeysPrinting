@@ -22,7 +22,7 @@ export default class MyTable extends React.Component {
     componentWillReceiveProps(nextProps) {
         console.log('nextProps:', nextProps);
         const data = (nextProps.data) ? nextProps.data : [];
-    
+
         this.setState({ data });
     }
 
@@ -37,7 +37,7 @@ export default class MyTable extends React.Component {
 
     render() {
         let title, headers = [], search = '';
-        
+
         if (this.props.headers) {
             headers = _.map(this.props.headers, (header, id) => {
                 if (id !== 'id') {
@@ -56,7 +56,7 @@ export default class MyTable extends React.Component {
         }
 
         const data = _.map(this.state.data, (item, id) => {
-        
+
             const col = _.map(item, (col, id) => {
                 if (id !== 'id') {
                     if (id === 'action') {
@@ -69,11 +69,11 @@ export default class MyTable extends React.Component {
 
             return (<tr key={`table-row-${id}`}>{ col }</tr>);
         });
-    
+
         return (
-            <div id="admin-table" >
-                <table>
-                    <thead>
+            <div id="admin-table" className="header-margin">
+                <table className="table">
+                    <thead className="head">
                         <tr>
                             <td>{ title }</td>
                             { search }
