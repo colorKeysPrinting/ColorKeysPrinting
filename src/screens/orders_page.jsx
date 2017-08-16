@@ -142,13 +142,20 @@ class OrdersPage extends React.Component {
 
         return (
             <div id="orders-page" >
-                <MyTable
-                    type="orders"
-                    headers={headers}
-                    data={data}
-                    handleAction={this.handleAction}
-                    handleItem={this.handleItem}
-                />
+                <div className="table-card">
+                    <div className="card-header">
+                        <h2>Orders</h2>
+                        <div className="search-bar">
+                        </div>
+                    </div>
+                    <MyTable
+                        type="orders"
+                        headers={headers}
+                        data={data}
+                        handleAction={this.handleAction}
+                        handleItem={this.handleItem}
+                    />
+                </div>
             </div>
         );
     }

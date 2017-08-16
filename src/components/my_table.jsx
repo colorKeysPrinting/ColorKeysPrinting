@@ -71,7 +71,7 @@ export default class MyTable extends React.Component {
         });
 
         return (
-            <div id="admin-table" className="header-margin">
+            <div id="admin-table">
                 <table className="table">
                     <thead className="head">
                         <tr>

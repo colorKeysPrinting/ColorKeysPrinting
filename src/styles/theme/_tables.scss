@@ -1,4 +1,6 @@
 .table {
+  table-layout: fixed;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   border: 1px solid $medium-light-gray;
@@ -7,25 +9,51 @@
   border-radius: 3px;
   .head {
     tr {
-      background: $light-gray;
+      background: $table-header-gray;
     }
     td {
-      background: $light-gray;
+      background: $table-header-gray;
       border: none !important;
+      div {
+        font-size: 14px;	
+        font-weight: 600;
+      }
     }
   }
   tr {
     border: none !important;
+    text-align: left;
   }
   td {
     border-bottom: 1px solid $border-gray;
     div {
-      padding: 14px 10px;
+      padding: 23px 12px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       max-width: 200px;
       font-size: 14px;
+      font-weight: 400;
+      color: $dark-gray;
     }
+  }
+}
+
+.table-card {
+  max-width: 1200px;
+  margin: 50px auto;
+  box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+  .card-header {
+    background: $table-header-gray;
+    border: 1px solid $medium-light-gray;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 27px 31px;
+  }
+  .table {
+    box-shadow: none;
+    border-top: none;
   }
 }
