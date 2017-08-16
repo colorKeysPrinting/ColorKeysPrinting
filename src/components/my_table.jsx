@@ -45,7 +45,7 @@ export default class MyTable extends React.Component {
                     if (id !== 'action') {
                         return (<td className="table-header" key={`table-header-${id}`} ><div onClick={() => this.orderBy(header, (this.state.isAscending) ? false : true)}>{ header }</div></td>);
                     } else if (id !== 'id') {
-                        return (<td></td>);
+                        return (<td key={`table-header-${id}`} ></td>);
                     }
                 }
             });

@@ -13,18 +13,21 @@ class EditProduct extends React.Component {
     constructor(props) {
         super(props);
 
-        const product = (this.props.location.state) ? this.props.location.state.product : {
+        const categories = this.props.productCategories.toJS();
+
+        const product = (this.props.location.state.product) ? this.props.location.state.product : {
             name: '',
             manufacturerModelNumber: '',
             serialNumber: '',
             shortDescription: '',
             sku: '',
             overview: '',
-            specifications: '',
             faq: '',
             videos: [],
-            productCategoryId: this.props.activeUser.tradeId,
-            productSubcategoryId: '',
+            productCategoryId: this.props.productCategoryId,
+            productSubcategoryId: categories[0].id,
+            applianceManufacturerName: '',
+            applianceOrderDisplayNumber: this.props.location.state.applianceOrderDisplayNumber + 1,
             applianceType: '',
             applianceSize: '',
             applianceDescription: '',
@@ -59,6 +62,13 @@ class EditProduct extends React.Component {
 
     update(type, value) {
         this.setState({ [type]: value });
+
+        if (type === 'productSubcategoryId') {
+            const products = this.props.products.toJS();
+            const categoryName = _.find(this.props.productCategories.toJS(), ['id', value]).name;
+            let applianceOrderDisplayNumber = _.size(products[categoryName]);
+            this.setState({ applianceOrderDisplayNumber });
+        }
     }
 
     close() {
@@ -81,41 +91,41 @@ class EditProduct extends React.Component {
 
         const product = {
             name: this.state.name,
-            manufacturerModelNumber: this.state.manufacturerModelNumber || '',  // not in invision
-            serialNumber: this.state.serialNumber || '',                        // not in invision
-            shortDescription: this.state.shortDescription || '',                // not in invision
-            sku: this.state.sku || '',                                          // not in invision
-            overview: this.state.overview || '',                                // not in invision
-            specifications: this.state.specifications || '',                    // not in invision
-            faq: this.state.faq || '',                                          // not in invision
-            videos: this.state.videos || [],                                    // not in invision
+            manufacturerModelNumber: this.state.manufacturerModelNumber,
+            serialNumber: this.state.serialNumber,
+            shortDescription: this.state.shortDescription,
+            sku: this.state.sku,
+            overview: this.state.overview,
+            faq: this.state.faq,
+            videos: this.state.videos,
             productCategoryId: this.state.productCategoryId,
             productSubcategoryId: category.id,
+            applianceManufacturerName: this.state.applianceManufacturerName,
+            applianceOrderDisplayNumber: this.state.applianceOrderDisplayNumber,
             applianceType: category.name,
-            applianceSize: this.state.size,
-            applianceDescription: this.state.applianceDescription || '',
-            sibiModelNumber: this.state.sibiModelNumber || '',                  // not in invision
-            applianceFuelType: this.state.applianceFuelType || '',              // not in invision
-            applianceWidth: this.state.applianceWidth || '',                    // not in invision
-            applianceHeight: this.state.applianceHeight || '',                  // not in invision
-            applianceDepth: this.state.applianceDepth || '',                    // not in invision
-            applianceInstallDescription: this.state.applianceInstallDescription || '',    // not in invision
+            applianceSize: this.state.applianceSize,
+            applianceDescription: this.state.applianceDescription,
+            sibiModelNumber: this.state.sibiModelNumber,
+            applianceFuelType: this.state.applianceFuelType,
+            applianceWidth: this.state.applianceWidth,
+            applianceHeight: this.state.applianceHeight,
+            applianceDepth: this.state.applianceDepth,
+            applianceInstallDescription: this.state.applianceInstallDescription || '',
             applianceInstallPrice: this.state.applianceInstallPrice,
             applianceInstallCode: this.state.applianceInstallCode,
-            applianceColorsAndImages: this.state.applianceColorsAndImages || [],
-            applianceAssociatedParts: this.state.applianceAssociatedParts || [],
-            applianceSpecSheetUrl: this.state.applianceSpecSheetUrl || '',              // not in invision
-            applianceRemovalDescription: this.state.applianceRemovalDescription || '',  // not in invision
+            applianceColorsAndImages: this.state.applianceColorsAndImages,
+            applianceAssociatedParts: this.state.applianceAssociatedParts, // not in api?
+            applianceSpecSheetUrl: this.state.applianceSpecSheetUrl,
+            applianceRemovalDescription: this.state.applianceRemovalDescription || '',
             applianceRemovalCode: this.state.applianceRemovalCode,
             applianceRemovalPrice: this.state.applianceRemovalPrice,
         };
 
         if (id) {
             product['id'] = id;
-            
             this.props.updateProduct({ token: jwt.token, category: category.name, product });
-        } else {
 
+        } else {
             this.props.createProduct({ token: jwt.token, category: category.name, product })
         }
 
@@ -178,7 +188,7 @@ class EditProduct extends React.Component {
         });
         const title = (this.props.location.state) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
-        const deleteBtn = (this.state.id) ? <div className="remove-btn" onClick={() => this.props.archiveProduct({ token: jwt.token, category, id: this.state.id })}>Remove Product</div> : null;
+        const archiveBtn = (this.state.id) ? <div className="cancel-btn" onClick={() => this.props.archiveProduct({ token: jwt.token, category: category.name, id: this.state.id })}>Archive Product</div> : null;
         
         return (
             <Overlay type="editProduct">
@@ -187,56 +197,117 @@ class EditProduct extends React.Component {
                         <div style={styles.title}>{ title } Product</div>
                         <div onClick={this.close} style={styles.close}>X</div>
                     </div>
-                    <form onSubmit={() => this.saveProduct({ id: this.state.id })}>
+                    <form onSubmit={() => this.saveProduct({ id: this.state.id })} >
                         <div style={styles.content}>
                             <div style={{ columnCount: 2 }}>
                                 <div>
-                                    <select value={this.state.productSubcategoryId} onChange={(e) => this.update('productSubcategoryId', e.target.value)} required >
-                                        <option disabled defaultValue="" >Select category</option>
-                                        { categories }
-                                    </select>
+                                    <div>
+                                        <label htmlFor="product-category">Category</label>
+                                        <select name="product-category" value={this.state.productSubcategoryId} onChange={(e) => this.update('productSubcategoryId', e.target.value)} required >
+                                            <option disabled defaultValue="" >Select category</option>
+                                            { categories }
+                                        </select>
+                                    </div>
 
-                                    <div><input type="text" placeholder="Product name"   value={this.state.name}                 onChange={(e) => this.update('name', e.target.value)}                 required /></div>
+                                    <div>
+                                        <label htmlFor="product-name">Product Name</label>
+                                        <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update('name', e.target.value)} required />
+                                    </div>
                                 </div>
                                 
                                 <div>
-                                    <div><input type="text" placeholder="Classification" value={this.state.applianceDescription} onChange={(e) => this.update('applianceDescription', e.target.value)} required /></div>
-                                    <div><input type="text" placeholder="Size"           value={this.state.applianceSize}        onChange={(e) => this.update('applianceSize', e.target.value)}        required /></div>
+                                    <div>
+                                        <label htmlFor="product-classification">Classification</label>
+                                        <input name="product-classification" type="text" placeholder="Classification" value={this.state.applianceDescription} onChange={(e) => this.update('applianceDescription', e.target.value)} required />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="product-size">Size</label>
+                                        <input name="product-size" type="text" placeholder="Size" value={this.state.applianceSize} onChange={(e) => this.update('applianceSize', e.target.value)} required />
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <select value={this.state.applianceFuelType} onChange={(e) => this.update('applianceFuelType', e.target.value)} >
-                                        <option disabled defaultValue="" >Select Fuel Type</option>
-                                        <option value="gas">Gas</option>
-                                        <option value="electric">Electric</option>
-                                    </select>
-
-                                    <div><input type="text" placeholder="Manuf. Model #" value={this.state.manufacturerModelNumber} onChange={(e) => this.update('manufacturerModelNumber', e.target.value)} required /></div>
+                                    <div>
+                                        <label htmlFor="product-manuf-name">Manufacturer Name</label>
+                                        <input name="product-manuf-name" type="text" placeholder="Manufacturer Name (e.g. GE)" value={this.state.applianceManufacturerName} onChange={(e) => this.update('applianceManufacturerName', e.target.value)} required />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="product-ordering">Featured #</label>
+                                        <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.applianceOrderDisplayNumber + 1} onChange={(e) => this.update('applianceOrderDisplayNumber', e.target.value)} required />
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <div><input type="text" placeholder="SIBI Model #"   value={this.state.sibiModelNumber}         onChange={(e) => this.update('sibiModelNumber', e.target.value)}         required /></div>
-                                    <div><input type="text" placeholder="Serial #"       value={this.state.serialNumber}            onChange={(e) => this.update('serialNumber', e.target.value)}            required /></div>
+                                    <div>
+                                        <label htmlFor="product-fuel-type">Fuel Type</label>
+                                        <select name="product-fuel-type" value={this.state.applianceFuelType} onChange={(e) => this.update('applianceFuelType', e.target.value)} >
+                                            <option disabled defaultValue="" >Select Fuel Type</option>
+                                            <option value="gas">Gas</option>
+                                            <option value="electric">Electric</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="product-manuf-model-num">Manufacture Model #</label>
+                                        <input name="product-manuf-model-num" type="text" placeholder="Manuf. Model #" value={this.state.manufacturerModelNumber} onChange={(e) => this.update('manufacturerModelNumber', e.target.value)} required />
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <div><input type="text" placeholder="sku"            value={this.state.sku}                     onChange={(e) => this.update('sku', e.target.value)}                     required /></div>
-                                    <div><input type="url"  placeholder="Spec Sheet URL" value={this.state.applianceSpecSheetUrl} onChange={(e) => this.update('applianceSpecSheetUrl', e.target.value)} required /></div>
+                                    <div>
+                                        <label htmlFor="product-sibi-model-num">SIBI Model #</label>
+                                        <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update('sibiModelNumber', e.target.value)} required />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="product-serial-num">Serial #</label>
+                                        <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update('serialNumber', e.target.value)} required />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>
+                                        <label htmlFor="product-sku">SKU</label>
+                                        <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update('sku', e.target.value)} required />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="product-spec-sheet">Spec Sheet URL</label>
+                                        <input name="product-spec-sheet" type="url" placeholder="Spec Sheet URL" value={this.state.applianceSpecSheetUrl} onChange={(e) => this.update('applianceSpecSheetUrl', e.target.value)} required />
+                                    </div>
                                 </div>
                             </div>
-                            <div><textarea placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update('shortDescription', e.target.value)} maxLength="1000" required /></div>
+                            <div>
+                                <label htmlFor="product-description">Description</label>
+                                <textarea name="product-description" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update('shortDescription', e.target.value)} maxLength="1000" required />
+                            </div>
                             <div style={{ columnCount: 2 }}>
                                 <div>
-                                    <div><input type="text" placeholder="faq" value={this.state.faq} onChange={(e) => this.update('faq', e.target.value)} required /></div>
-                                    <div><input type="text" placeholder="Width"  value={this.state.applianceWidth}  onChange={(e) => this.update('applianceWidth', e.target.value)}  required />in.</div>
+                                    <div>
+                                        <label htmlFor="product-faq">FAQ</label>
+                                        <input name="product-faq" type="text" placeholder="faq" value={this.state.faq} onChange={(e) => this.update('faq', e.target.value)} required />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="product-width">Width</label>
+                                        <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update('applianceWidth', e.target.value)}  required />in.
+                                    </div>
                                 </div>
                             </div>
-                            <div><textarea type="text" placeholder="overview" height="110" width="500" value={this.state.overview} onChange={(e) => this.update('overview', e.target.value)} maxLength="1000" required /></div>
+                            
                             <div style={{ columnCount: 2 }}>
                                 <div>
-                                    <div><input type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update('applianceHeight', e.target.value)} required />in.</div>
-                                    <div><input type="text" placeholder="Depth"  value={this.state.applianceDepth}  onChange={(e) => this.update('applianceDepth', e.target.value)}  required />in.</div>
+                                    <div>
+                                        <label htmlFor="product-height">Height</label>
+                                        <input name="product-height" type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update('applianceHeight', e.target.value)} required />in.
+                                    </div>
+                                    <div>
+                                        <label htmlFor="product-depth">Depth</label>
+                                        <input name="product-depth" type="text" placeholder="Depth"  value={this.state.applianceDepth} onChange={(e) => this.update('applianceDepth', e.target.value)}  required />in.
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div>
+                                <label htmlFor="product-overview">Overview</label>
+                                <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update('overview', e.target.value)} maxLength="1000" required />
                             </div>
 
                             <div id="accordion">
@@ -263,9 +334,18 @@ class EditProduct extends React.Component {
                                 />Option for GE to install
                             </div>
                             <div style={{ display: (this.state.isInstall) ? 'inline-flex' : 'none' }} >
-                                <div><input    type="text"   placeholder="install code (e.g. M106)"  value={this.state.applianceInstallCode}        onChange={(e) => this.update('applianceInstallCode', e.target.value)}        required /></div>
-                                <div><input    type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice}       onChange={(e) => this.update('applianceInstallPrice', e.target.value)}       required /></div>
-                                <div><textarea type="text"   placeholder="Install Description"       value={this.state.applianceInstallDescription} onChange={(e) => this.update('applianceInstallDescription', e.target.value)} required /></div>
+                                <div>
+                                    <label htmlFor="product-install-code">Install Code</label>
+                                    <input name="product-install-code" type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update('applianceInstallCode', e.target.value)} required />
+                                </div>
+                                <div>
+                                    <label htmlFor="product-install-value">Install Value</label>
+                                    <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update('applianceInstallPrice', e.target.value)} required />
+                                </div>
+                                <div>
+                                    <label htmlFor="product-install-descr">Install Description</label>
+                                    <textarea name="product-install-descr" type="text" placeholder="Install Description" value={this.state.applianceInstallDescription} onChange={(e) => this.update('applianceInstallDescription', e.target.value)} />
+                                </div>
                             </div>
                             <div style={styles.checkbox}>
                                 <input
@@ -277,13 +357,22 @@ class EditProduct extends React.Component {
                                 />Option for GE to remove old appliance
                             </div>
                             <div style={{ display: (this.state.isRemoval) ? 'inline-flex' : 'none' }} >
-                                <div><input type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update('applianceRemovalCode', e.target.value)} required /></div>
-                                <div><input type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update('applianceRemovalPrice', e.target.value)} required/></div>
-                                <div><textarea type="text" placeholder="Removal Description"           value={this.state.applianceRemovalDescription}        onChange={(e) => this.update('applianceRemovalDescription', e.target.value)} required /></div>
+                                <div>
+                                    <label htmlFor="product-removal-code">Removal Code</label>
+                                    <input name="product-removal-code" type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update('applianceRemovalCode', e.target.value)} required />
+                                </div>
+                                <div>
+                                    <label htmlFor="product-removal-value">Removal Value</label>
+                                    <input name="product-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update('applianceRemovalPrice', e.target.value)} required/>
+                                </div>
+                                <div>
+                                    <label htmlFor="product-removal-descr">Removal Description</label>
+                                    <textarea name="product-removal-descr" type="text" placeholder="Removal Description" value={this.state.applianceRemovalDescription} onChange={(e) => this.update('applianceRemovalDescription', e.target.value)} />
+                                </div>
                             </div>
                         </div>
                         <input className="submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
-                        { deleteBtn }
+                        { archiveBtn }
                     </form>
                 </div>
             </Overlay>
@@ -293,7 +382,9 @@ class EditProduct extends React.Component {
 
 const select = (state) => ({
     activeUser          : state.activeUser.get('activeUser'),
-    productCategories   : state.products.get('productCategories')
+    products            : state.products.get('products'),
+    productCategories   : state.products.get('productCategories'),
+    productCategoryId   : state.products.get('productCategoryId')
 });
 
 const actions = {
