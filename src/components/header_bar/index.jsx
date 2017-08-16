@@ -50,6 +50,7 @@ class HeaderBar extends React.Component {
         let loginSection;
 
         const activeUser = this.props.activeUser.toJS();
+        const sibiLogo = assets('./images/SIBI_Logo.png');
 
         if (!activeUser.type || activeUser.type === 'signUp') {
             loginSection = <Link to={`/login`} className="btn submit-btn" >Login</Link>;
