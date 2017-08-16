@@ -14,7 +14,8 @@ const initialState = Immutable.fromJS({
 });
 
 export default (state = initialState, action) => {
-   
+    let users, index;
+
     switch (action.type) {
     case ActionTypes.GET_USERS_SUCCESS:
         console.log('receiving users');
@@ -23,7 +24,16 @@ export default (state = initialState, action) => {
 
     case ActionTypes.APPROVE_USER_SUCCESS:
         console.log('receiving approved user');
-        const users = state.get('users').toJS();
+        users = state.get('users').toJS();
+        index = _.findIndex(users, ['id', action.data.id]);
+        users[index] = action.data;
+
+        state = state.set('users', Immutable.fromJS(users));
+        break;
+    
+    case ActionTypes.AUTO_APPROVE_USER_ORDERS: 
+        console.log('receiving auto approve user info');
+        users = state.get('users').toJS();
         index = _.findIndex(users, ['id', action.data.id]);
         users[index] = action.data;
 
