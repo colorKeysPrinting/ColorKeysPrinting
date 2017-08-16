@@ -36,7 +36,7 @@ export default class MyTable extends React.Component {
     }
 
     render() {
-        let title, headers = [], search = '';
+        let headers = [], search = '';
 
         if (this.props.headers) {
             headers = _.map(this.props.headers, (header, id) => {
@@ -70,14 +70,11 @@ export default class MyTable extends React.Component {
             return (<tr key={`table-row-${id}`}>{ col }</tr>);
         });
 
+
         return (
             <div id="admin-table">
                 <table className="table">
                     <thead className="head">
-                        <tr>
-                            <td>{ title }</td>
-                            { search }
-                        </tr>
                         <tr>
                             { headers }
                         </tr>
