@@ -188,7 +188,7 @@ class OrderDetails extends React.Component {
                         </div>
                         : <div className="button-container"></div>
                     }
-                </div>;
+                </div>
                 <MyTable
                     type="orderDetails"
                     headers={orderHeaders}
