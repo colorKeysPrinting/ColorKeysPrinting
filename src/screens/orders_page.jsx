@@ -52,7 +52,8 @@ class OrdersPage extends React.Component {
     }
 
     handleItem({ item }) {
-        console.log('item pressed');
+        console.log('item pressed', item);
+        this.props.history.push({ pathname: '/order_details', state: { ... item } });
     }
 
     render() {
@@ -60,18 +61,18 @@ class OrdersPage extends React.Component {
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        const headers = { 
-            id: '', 
-            office: 'PM Office', 
-            propertyId: 'Property ID',  
-            address: 'Property address', 
-            occupied: 'Occupancy', 
-            userId: 'Ordered by', 
-            orderNumber: 'GE Order #', 
-            createdAt: 'Order Date', 
-            totalCost: 'Cost', 
-            orderStatus: 'Status', 
-            action: '' 
+        const headers = {
+            id: '',
+            office: 'PM Office',
+            propertyId: 'Property ID',
+            address: 'Property address',
+            occupied: 'Occupancy',
+            userId: 'Ordered by',
+            orderNumber: 'GE Order #',
+            createdAt: 'Order Date',
+            totalCost: 'Cost',
+            orderStatus: 'Status',
+            action: ''
         };
 
         if (this.props.orders.size > 0 &&
