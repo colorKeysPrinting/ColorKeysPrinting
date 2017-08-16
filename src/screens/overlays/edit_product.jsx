@@ -189,6 +189,10 @@ class EditProduct extends React.Component {
         const title = (this.props.location.state) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
         const archiveBtn = (this.state.id) ? <div className="cancel-btn" onClick={() => this.props.archiveProduct({ token: jwt.token, category: category.name, id: this.state.id })}>Archive Product</div> : null;
+
+        const productPictures = _.map(this.state.applianceColorsAndImages, (image, key) => {
+            return <div></div>;
+        });
         
         return (
             <Overlay type="editProduct">
@@ -314,7 +318,9 @@ class EditProduct extends React.Component {
                                 <div id="accordion-pictures" onClick={() => this.changeActiveSection('pictures')}>
                                     <div>{ _.size(this.state.applianceColorsAndImages) } Photos</div>
                                 </div>
-                                <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} > showing pictures </div>
+                                <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} > 
+                                    { productPictures }
+                                </div>
                                 <div id="accordion-video" onClick={() => this.changeActiveSection('videos')}>
                                     <div>{ _.size(this.state.applianceColorsAndImages) } Vidoes</div>
                                 </div>
