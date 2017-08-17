@@ -15,8 +15,11 @@ class UsersPage extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = { sortby: {column: '', isAsc: false } };
+
         this.handleAction = this.handleAction.bind(this);
         this.handleAutoApprove = this.handleAutoApprove.bind(this);
+        this.orderBy = this.orderBy.bind(this);
     }
 
     componentWillMount() {
@@ -31,7 +34,7 @@ class UsersPage extends React.Component {
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
-        
+
         this.props.setActiveTab('users');
     }
 
@@ -58,10 +61,29 @@ class UsersPage extends React.Component {
         this.props.autoApproveUserOrders({ token: jwt.token, user, autoApprovedOrders });
     }
 
+    orderBy({ column }) {
+        this.setState((prevState) => {
+            const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc !== 'asc') ? 'asc' : 'desc';
+            const sortby = { column, isAsc };
+
+            return { sortby };
+        });
+    }
+
     render() {
         let data = [];
 
-        const headers = { id: '', name: 'Name', office: 'PM Office', email: 'Email', phoneNumber: 'Phone', createdAt: 'Acount Created', autoApprovedOrders: 'Auto-approve', status: 'Status', action: '' };
+        const headers = {
+            id: '',
+            name: 'Name',
+            office: 'PM Office',
+            email: 'Email',
+            phoneNumber: 'Phone',
+            createdAt: 'Acount Created',
+            autoApprovedOrders: 'Auto-approve',
+            status: 'Status',
+            action: ''
+        };
 
         if (this.props.users.size > 0 ) {
 
@@ -109,9 +131,27 @@ class UsersPage extends React.Component {
                 return cols;
             });
 
+            _.each(headers, (header, key) => {
+                let value;
+
+                if (key === 'id' || key === 'action') {
+                    value = header;
+
+                } else {
+                    value = <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
+                }
+
+                headers[key] = value;
+            });
+
             // this initially sets the "Pending" users before everything
-            data = _.partition(data, ['status', 'Pending']);
-            data = data[0].concat(data[1]);
+            if (this.state.sortby.column === '') {
+                data = _.partition(data, ['status', 'Pending']);
+                data = data[0].concat(data[1]);
+
+            } else {
+                data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+            }
         }
 
         return (
