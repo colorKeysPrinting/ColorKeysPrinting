@@ -32,7 +32,7 @@ class OrdersPage extends React.Component {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
         
-        // this.props.setActiveTab('orders');
+        this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
@@ -169,4 +169,4 @@ const select = (state) => ({
     fundProperties  : state.users.get('fundProperties'),
 });
 
-export default connect(select, { logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));
+export default connect(select, { logout, getOrders, getUsers, getFundProperties, approveOrder, setActiveTab }, null, { withRef: true })(withCookies(OrdersPage));

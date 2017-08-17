@@ -7,6 +7,7 @@ import assets                               from 'libs/assets';
 
 import { logout }                           from 'ducks/active_user/actions';
 import { getUsers, approveUser, autoApproveUserOrders }            from 'ducks/users/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
 
@@ -138,4 +139,4 @@ const select = (state) => ({
     isLogout        : state.jwt.get('isLogout')
 });
 
-export default connect(select, { getUsers, approveUser, autoApproveUserOrders }, null, { withRef: true })(withCookies(UsersPage));
+export default connect(select, { getUsers, approveUser, autoApproveUserOrders, setActiveTab }, null, { withRef: true })(withCookies(UsersPage));
