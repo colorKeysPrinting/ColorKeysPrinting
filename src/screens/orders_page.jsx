@@ -162,4 +162,13 @@ const select = (state) => ({
     fundProperties  : state.users.get('fundProperties'),
 });
 
-export default connect(select, { logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));
+const action = {
+    logout, 
+    getOrders, 
+    getUsers, 
+    getFundProperties, 
+    approveOrder,
+    setActiveTab
+}
+
+export default connect(select, action, null, { withRef: true })(withCookies(OrdersPage));
