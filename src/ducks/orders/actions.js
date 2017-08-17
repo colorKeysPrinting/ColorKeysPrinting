@@ -7,6 +7,7 @@ import Network          from 'libs/constants/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
+    GET_ORDER_BY_ID_SUCCESS : 'sibi_ge_admin/products/GET_ORDER_BY_ID_SUCCESS',
     GET_ORDERS_SUCCESS : 'sibi_ge_admin/products/GET_ORDERS_SUCCESS',
     APPROVE_ORDER_SUCCESS : 'sibi_ge_admin/products/APPROVE_ORDER_SUCCESS',
     UPDATE_ORDER_SUCCESS : 'sibi_ge_admin/products/UPDATE_ORDER_SUCCESS',
@@ -21,6 +22,24 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
+export function getOrderById({ token, id }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.GET,
+            url     : `${Network.DOMAIN}/order/${id}`,
+            headers : {
+                'x-auth-token': token
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.GET_ORDER_BY_ID_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
 export function getOrders({ token, orders }) {
     return (dispatch) => {
         return axios({
