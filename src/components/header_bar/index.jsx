@@ -55,10 +55,10 @@ class HeaderBar extends React.Component {
             loginSection = <Link to={`/login`} className="submit-btn" >Login</Link>;
 
         } else {
-            const profilePic = (activeUser.profilePicture) ? assets(activeUser.profilePicture) : assets('./images/profile_pic.jpg');
+            const profilePic = (activeUser.profilePicture) ? assets(activeUser.profilePicture) : assets('./images/icons-account.png');
 
             loginSection = <Link to={{ pathname: `/profile`, state: { prevPath: this.props.location.pathname }}} >
-                <img src={profilePic} alt="profilePicture" width="40px" height="40px" className="profile-pic" />
+                <img src={profilePic} alt="profilePicture" width="auto" height="27px" className="profile-pic" />
             </Link>;
         }
 
