@@ -93,30 +93,30 @@ class ProductsPage extends React.Component {
 
         return (
             <div id="products-page">
-              <div className="container">
-                <div className="box">
-                  <div className="header">
-                    <div className="pure-g actions">
-                      <div className="pure-u-1-2">
-                        <h2>Products</h2>
-                      </div>
-                      <div className="pure-u-1-2">
-                        <Link to={`/edit_product`} className="btn submit-btn" >Add</Link>
-                      </div>
+                <div className="container">
+                    <div className="box">
+                        <div className="header">
+                            <div className="pure-g actions">
+                                <div className="pure-u-1-2">
+                                    <h2>Products</h2>
+                                </div>
+                                <div className="pure-u-1-2">
+                                    <Link to={`/edit_product`} className="btn submit-btn" >Add</Link>
+                                </div>
+                            </div>
+                            <div className="pure-g">
+                                <div className="pure-u-1">
+                                    <Tabs defaultIndex={0} >
+                                        <TabList>
+                                            { tabs }
+                                        </TabList>
+                                        { tabContent }
+                                    </Tabs>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="pure-g">
-                      <div className="pure-u-1">
-                        <Tabs defaultIndex={0} >
-                            <TabList>
-                                { tabs }
-                            </TabList>
-                            { tabContent }
-                        </Tabs>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
             </div>
         );
     }

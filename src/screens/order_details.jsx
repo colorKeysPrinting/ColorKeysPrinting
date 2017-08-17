@@ -8,6 +8,7 @@ import assets                                               from 'libs/assets';
 
 import { logout }                                           from 'ducks/active_user/actions';
 import { getOrderById, approveOrder, getProducts, getOrder} from 'ducks/orders/actions';
+import { setActiveTab }                                     from 'ducks/header/actions';
 
 import MyTable                                              from 'components/my_table';
 
@@ -219,7 +220,8 @@ const actions = {
     logout,
     approveOrder,
     getOrderById,
-    getOrder
+    getOrder,
+    setActiveTab
 }
 
 export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(OrderDetails)));

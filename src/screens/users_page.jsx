@@ -132,4 +132,11 @@ const select = (state) => ({
     isLogout        : state.jwt.get('isLogout')
 });
 
-export default connect(select, { getUsers, approveUser, autoApproveUserOrders }, null, { withRef: true })(withCookies(UsersPage));
+const action = {
+    getUsers, 
+    approveUser, 
+    autoApproveUserOrders,
+    setActiveTab
+}
+
+export default connect(select, action, null, { withRef: true })(withCookies(UsersPage));
