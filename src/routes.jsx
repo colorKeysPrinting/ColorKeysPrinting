@@ -7,6 +7,7 @@ import Home                             from 'screens/home';
 import OrdersPage                       from 'screens/orders_page';
 import UsersPage                        from 'screens/users_page';
 import ProductsPage                     from 'screens/products_page';
+import DashboardPage                    from 'screens/dashboard_page';
 import OrderDetails                     from 'screens/order_details';
 
 // overlays
@@ -25,6 +26,7 @@ export default (
             <Route path="/orders" component={OrdersPage} />
             <Route path="/users" component={UsersPage} />
             <Route path="/products" component={ProductsPage} />
+            <Route path="/dashboard" component={DashboardPage} />
             <Route path="/order_details" component={OrderDetails} />
 
             <Route path="/login" component={LoginOverlay} />

@@ -9,6 +9,7 @@ import Network          from 'libs/constants/network';
 export const ActionTypes = {
     GET_USERS_SUCCESS : 'sibi_ge_admin/users/GET_USERS_SUCCESS',
     APPROVE_USER_SUCCESS : 'sibi_ge_admin/users/APPROVE_USER_SUCCESS',
+    AUTO_APPROVE_USER_ORDERS: 'sibi_ge_admin/users/AUTO_APPROVE_USER_ORDERS',
     DISABLE_USER_SUCCESS : 'sibi_ge_admin/users/DISABLE_USER_SUCCESS',
     GET_FUNDS_SUCCESS : 'sibi_ge_admin/users/GET_FUNDS_SUCCESS',
     GET_FUND_PROPERTIES_SUCCESS : 'sibi_ge_admin/users/GET_FUND_PROPERTIES_SUCCESS',
@@ -54,6 +55,28 @@ export function approveUser({ token, id }) {
             .catch(error => {
                 throw(error);
             });
+    }
+}
+
+export function autoApproveUserOrders( { token, user, autoApprovedOrders }) {
+    return (dispatch) => {
+        autoApprovedOrders = (autoApprovedOrders == 'true') ? 'autoApproveOrders' : 'removeAutoApproveOrders' ;
+        return axios({
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/users/${user.id}/${autoApprovedOrders}` ,
+            headers : {
+                'x-auth-token': token
+            },
+            data: {
+                ...user
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.AUTO_APPROVE_USER_ORDERS, ...payload});
+            })
+            .catch(error => {
+                throw(error);
+            })
     }
 }
 

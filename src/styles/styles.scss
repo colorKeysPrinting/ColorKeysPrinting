@@ -16,6 +16,8 @@
 @import "theme/button";
 @import "theme/forms";
 @import "theme/layout";
+@import "theme/tables";
+@import "theme/modal";
 
 /**********************/
 /*      Partials      */
@@ -23,3 +25,9 @@
 @import "partials/accordion";
 @import "partials/slider";
 @import "partials/header-bar";
+
+/**********************/
+/*       Pages        */
+/**********************/
+@import "pages/orders-page";
+@import "pages/users-page";

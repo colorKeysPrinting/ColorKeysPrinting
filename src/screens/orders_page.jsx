@@ -8,6 +8,7 @@ import assets                               from 'libs/assets';
 import { logout }                           from 'ducks/active_user/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
 import { getUsers, getFundProperties }      from 'ducks/users/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
 
@@ -33,6 +34,8 @@ class OrdersPage extends React.Component {
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
+        
+        // this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
@@ -64,7 +67,8 @@ class OrdersPage extends React.Component {
     }
 
     handleItem({ item }) {
-        console.log('item pressed');
+        console.log('item pressed', item);
+        this.props.history.push({ pathname: '/order_details', state: { ... item } });
     }
 
     render() {
@@ -72,18 +76,18 @@ class OrdersPage extends React.Component {
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        const headers = { 
-            id: '', 
-            office: 'PM Office', 
-            propertyId: 'Property ID',  
-            address: 'Property address', 
-            occupied: 'Occupancy', 
-            userId: 'Ordered by', 
-            orderNumber: 'GE Order #', 
-            createdAt: 'Order Date', 
-            totalCost: 'Cost', 
-            orderStatus: 'Status', 
-            action: '' 
+        const headers = {
+            id: '',
+            office: 'PM Office',
+            propertyId: 'Property ID',
+            address: 'Property address',
+            occupied: 'Occupancy',
+            userId: 'Ordered by',
+            orderNumber: 'GE Order #',
+            createdAt: 'Order Date',
+            totalCost: 'Cost',
+            orderStatus: 'Status',
+            action: ''
         };
 
         if (this.props.orders.size > 0 &&
@@ -163,13 +167,20 @@ class OrdersPage extends React.Component {
 
         return (
             <div id="orders-page" >
-                <MyTable
-                    type="orders"
-                    headers={headers}
-                    data={data}
-                    handleAction={this.handleAction}
-                    handleItem={this.handleItem}
-                />
+                <div className="table-card">
+                    <div className="card-header">
+                        <h2>Orders</h2>
+                        <div className="search-bar">
+                        </div>
+                    </div>
+                    <MyTable
+                        type="orders"
+                        headers={headers}
+                        data={data}
+                        handleAction={this.handleAction}
+                        handleItem={this.handleItem}
+                    />
+                </div>
             </div>
         );
     }
