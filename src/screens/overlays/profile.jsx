@@ -46,18 +46,18 @@ class ProfileOverlay extends React.Component {
             }
         };
     
-        const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : '';
+        const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : assets('./images/icons-account.png');
     
+        // <div><img src={profilePic} alt={this.props.username} height="70px" width="70px" style={styles.profilePic} /></div>
+        // <Link to={`/settings`} style={styles.element} >Settings</Link>
+        // <Link to={`/support`} style={styles.element} >Support</Link>
+        // <div onClick={() => this.props.changeLanguage('english')} style={styles.element} >English / Espanol</div>
         return (
             <Overlay type="profile">
                 <div style={styles.container}>
                     <div style={{ display: 'inline-flex' }}>
-                        <div><img src={profilePic} alt={this.props.username} height="70px" width="70px" style={styles.profilePic} /></div>
-                        <div style={styles.username}>{this.props.username}</div>
+                        <div style={styles.username}>{this.props.email}</div>
                     </div>
-                    <Link to={`/settings`} style={styles.element} >Settings</Link>
-                    <Link to={`/support`} style={styles.element} >Support</Link>
-                    <div onClick={() => this.props.changeLanguage('english')} style={styles.element} >English / Espanol</div>
                     <div onClick={() => this.props.logout(this.props.activeUser.username)} style={styles.element.logout} >Log out </div>
                 </div>
             </Overlay>

@@ -51,16 +51,20 @@ class EditProduct extends React.Component {
             activeSection: '', 
             isInstall: false, 
             isRemoval: false,
+            image: '',
+            color: '',
             ...product 
         };
 
         this.update = this.update.bind(this);
         this.close = this.close.bind(this);
         this.changeActiveSection = this.changeActiveSection.bind(this);
+        this.addColorAndImage = this.addColorAndImage.bind(this);
+        this.removeColorAndImage = this.removeColorAndImage.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
     }
 
-    update(type, value) {
+    update({ type, value }) {
         this.setState({ [type]: value });
 
         if (type === 'productSubcategoryId') {
@@ -80,6 +84,25 @@ class EditProduct extends React.Component {
             activeSection = (prevState.activeSection !== activeSection) ? activeSection : '';
 
             return { activeSection };
+        });
+    }
+
+    addColorAndImage() {
+        console.log('adding color & image');
+        this.setState((prevState) => {
+            prevState.applianceColorsAndImages.push({ imageUrl: prevState.image, color: prevState.color });
+            document.getElementById('product-image-input').value = null;
+
+            return { applianceColorsAndImages: prevState.applianceColorsAndImages, color: '', image: '' };
+        });
+    }
+
+    removeColorAndImage({ color }) {
+        console.log('removeColorAndImage with color: ', color);
+        this.setState((prevState) => {
+            const applianceColorsAndImages = _.remove(prevState.applianceColorsAndImages, (element) => { return element.color !== color } );
+
+            return { applianceColorsAndImages };
         });
     }
 
@@ -190,8 +213,20 @@ class EditProduct extends React.Component {
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
         const archiveBtn = (this.state.id) ? <div className="cancel-btn" onClick={() => this.props.archiveProduct({ token: jwt.token, category: category.name, id: this.state.id })}>Archive Product</div> : null;
 
-        const productPictures = _.map(this.state.applianceColorsAndImages, (image, key) => {
-            return <div></div>;
+        const newColorAndImage = <div style={{ display: 'inline-flex' }} >
+            <input type="file" id="product-image-input" name="productImage" className="submit-btn" accept=".png,.jpg,.jpeg,.svg" onChange={(e) => {e.preventDefault(); this.update({ type: 'image', value: e.target.files[0] }); }} />
+            <input type="text" value={this.state.color} onChange={(e) => this.update({ type: 'color', value: e.target.value })} />
+            <div onClick={this.addColorAndImage} className="cancel-btn">Add</div>
+        </div>;
+
+        const productPictures = _.map(this.state.applianceColorsAndImages, (image, index) => {
+            return (
+                <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                    <img src={image.imageUrl} alt="picture" width="auto" height="60" />
+                    <input type="text" value={image.color} disabled />
+                    <div className="cancel-btn" onClick={()=> this.removeColorAndImage({ color: image.color }) } >X</div>
+                </div>
+            );
         });
         
         return (
@@ -207,7 +242,7 @@ class EditProduct extends React.Component {
                                 <div>
                                     <div>
                                         <label htmlFor="product-category">Category</label>
-                                        <select name="product-category" value={this.state.productSubcategoryId} onChange={(e) => this.update('productSubcategoryId', e.target.value)} required >
+                                        <select name="product-category" value={this.state.productSubcategoryId} onChange={(e) => this.update({ type: 'productSubcategoryId', value: e.target.value})} required >
                                             <option disabled defaultValue="" >Select category</option>
                                             { categories }
                                         </select>
@@ -215,36 +250,36 @@ class EditProduct extends React.Component {
 
                                     <div>
                                         <label htmlFor="product-name">Product Name</label>
-                                        <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update('name', e.target.value)} required />
+                                        <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update({ type: 'name', value: e.target.value})} required />
                                     </div>
                                 </div>
                                 
                                 <div>
                                     <div>
                                         <label htmlFor="product-classification">Classification</label>
-                                        <input name="product-classification" type="text" placeholder="Classification" value={this.state.applianceDescription} onChange={(e) => this.update('applianceDescription', e.target.value)} required />
+                                        <input name="product-classification" type="text" placeholder="Classification" value={this.state.applianceDescription} onChange={(e) => this.update({ type: 'applianceDescription', value: e.target.value})} />
                                     </div>
                                     <div>
                                         <label htmlFor="product-size">Size</label>
-                                        <input name="product-size" type="text" placeholder="Size" value={this.state.applianceSize} onChange={(e) => this.update('applianceSize', e.target.value)} required />
+                                        <input name="product-size" type="text" placeholder="Size" value={this.state.applianceSize} onChange={(e) => this.update({ type: 'applianceSize', value: e.target.value})} />
                                     </div>
                                 </div>
 
                                 <div>
                                     <div>
                                         <label htmlFor="product-manuf-name">Manufacturer Name</label>
-                                        <input name="product-manuf-name" type="text" placeholder="Manufacturer Name (e.g. GE)" value={this.state.applianceManufacturerName} onChange={(e) => this.update('applianceManufacturerName', e.target.value)} required />
+                                        <input name="product-manuf-name" type="text" placeholder="Manufacturer Name (e.g. GE)" value={this.state.applianceManufacturerName} onChange={(e) => this.update({ type: 'applianceManufacturerName', value: e.target.value})}  />
                                     </div>
                                     <div>
                                         <label htmlFor="product-ordering">Featured #</label>
-                                        <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.applianceOrderDisplayNumber + 1} onChange={(e) => this.update('applianceOrderDisplayNumber', e.target.value)} required />
+                                        <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.applianceOrderDisplayNumber + 1} onChange={(e) => this.update({ type: 'applianceOrderDisplayNumber', value: e.target.value})} />
                                     </div>
                                 </div>
 
                                 <div>
                                     <div>
                                         <label htmlFor="product-fuel-type">Fuel Type</label>
-                                        <select name="product-fuel-type" value={this.state.applianceFuelType} onChange={(e) => this.update('applianceFuelType', e.target.value)} >
+                                        <select name="product-fuel-type" value={this.state.applianceFuelType} onChange={(e) => this.update({ type: 'applianceFuelType', value: e.target.value})} >
                                             <option disabled defaultValue="" >Select Fuel Type</option>
                                             <option value="gas">Gas</option>
                                             <option value="electric">Electric</option>
@@ -253,45 +288,45 @@ class EditProduct extends React.Component {
 
                                     <div>
                                         <label htmlFor="product-manuf-model-num">Manufacture Model #</label>
-                                        <input name="product-manuf-model-num" type="text" placeholder="Manuf. Model #" value={this.state.manufacturerModelNumber} onChange={(e) => this.update('manufacturerModelNumber', e.target.value)} required />
+                                        <input name="product-manuf-model-num" type="text" placeholder="Manuf. Model #" value={this.state.manufacturerModelNumber} onChange={(e) => this.update({ type: 'manufacturerModelNumber', value: e.target.value})} required />
                                     </div>
                                 </div>
 
                                 <div>
                                     <div>
                                         <label htmlFor="product-sibi-model-num">SIBI Model #</label>
-                                        <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update('sibiModelNumber', e.target.value)} required />
+                                        <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update({ type: 'sibiModelNumber', value: e.target.value})} required />
                                     </div>
                                     <div>
                                         <label htmlFor="product-serial-num">Serial #</label>
-                                        <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update('serialNumber', e.target.value)} required />
+                                        <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update({ type: 'serialNumber', value: e.target.value})}  />
                                     </div>
                                 </div>
 
                                 <div>
                                     <div>
                                         <label htmlFor="product-sku">SKU</label>
-                                        <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update('sku', e.target.value)} required />
+                                        <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update({ type: 'sku', value: e.target.value})} required />
                                     </div>
                                     <div>
                                         <label htmlFor="product-spec-sheet">Spec Sheet URL</label>
-                                        <input name="product-spec-sheet" type="url" placeholder="Spec Sheet URL" value={this.state.applianceSpecSheetUrl} onChange={(e) => this.update('applianceSpecSheetUrl', e.target.value)} required />
+                                        <input name="product-spec-sheet" type="url" placeholder="Spec Sheet URL" value={this.state.applianceSpecSheetUrl} onChange={(e) => this.update({ type: 'applianceSpecSheetUrl', value: e.target.value})} />
                                     </div>
                                 </div>
                             </div>
                             <div>
                                 <label htmlFor="product-description">Description</label>
-                                <textarea name="product-description" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update('shortDescription', e.target.value)} maxLength="1000" required />
+                                <textarea name="product-description" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})} maxLength="1000" />
                             </div>
                             <div style={{ columnCount: 2 }}>
                                 <div>
                                     <div>
                                         <label htmlFor="product-faq">FAQ</label>
-                                        <input name="product-faq" type="text" placeholder="faq" value={this.state.faq} onChange={(e) => this.update('faq', e.target.value)} required />
+                                        <input name="product-faq" type="text" placeholder="faq" value={this.state.faq} onChange={(e) => this.update({ type: 'faq', value: e.target.value})} />
                                     </div>
                                     <div>
                                         <label htmlFor="product-width">Width</label>
-                                        <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update('applianceWidth', e.target.value)}  required />in.
+                                        <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update({ type: 'applianceWidth', value: e.target.value})}  />in.
                                     </div>
                                 </div>
                             </div>
@@ -300,18 +335,18 @@ class EditProduct extends React.Component {
                                 <div>
                                     <div>
                                         <label htmlFor="product-height">Height</label>
-                                        <input name="product-height" type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update('applianceHeight', e.target.value)} required />in.
+                                        <input name="product-height" type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update({ type: 'applianceHeight', value: e.target.value})} />in.
                                     </div>
                                     <div>
                                         <label htmlFor="product-depth">Depth</label>
-                                        <input name="product-depth" type="text" placeholder="Depth"  value={this.state.applianceDepth} onChange={(e) => this.update('applianceDepth', e.target.value)}  required />in.
+                                        <input name="product-depth" type="text" placeholder="Depth"  value={this.state.applianceDepth} onChange={(e) => this.update({ type: 'applianceDepth', value: e.target.value})}  />in.
                                     </div>
                                 </div>
                             </div>
 
                             <div>
                                 <label htmlFor="product-overview">Overview</label>
-                                <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update('overview', e.target.value)} maxLength="1000" required />
+                                <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" />
                             </div>
 
                             <div id="accordion">
@@ -320,6 +355,7 @@ class EditProduct extends React.Component {
                                 </div>
                                 <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} > 
                                     { productPictures }
+                                    { newColorAndImage }
                                 </div>
                                 <div id="accordion-video" onClick={() => this.changeActiveSection('videos')}>
                                     <div>{ _.size(this.state.applianceColorsAndImages) } Vidoes</div>
@@ -334,7 +370,7 @@ class EditProduct extends React.Component {
                                 <input
                                     id="checkbox-is-ge-install"
                                     type="checkbox"
-                                    onClick={() => this.update('isInstall', !(this.state.isInstall))}
+                                    onClick={() => this.update({ type: 'isInstall', value: !this.state.isInstall }) }
                                     checked={this.state.isInstall}
                                     style={{ height: '15px', width: '30px' }}
                                 />Option for GE to install
@@ -342,22 +378,22 @@ class EditProduct extends React.Component {
                             <div style={{ display: (this.state.isInstall) ? 'inline-flex' : 'none' }} >
                                 <div>
                                     <label htmlFor="product-install-code">Install Code</label>
-                                    <input name="product-install-code" type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update('applianceInstallCode', e.target.value)} required />
+                                    <input name="product-install-code" type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update({ type: 'applianceInstallCode', value: e.target.value})} />
                                 </div>
                                 <div>
                                     <label htmlFor="product-install-value">Install Value</label>
-                                    <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update('applianceInstallPrice', e.target.value)} required />
+                                    <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update({ type: 'applianceInstallPrice', value: e.target.value})} />
                                 </div>
                                 <div>
                                     <label htmlFor="product-install-descr">Install Description</label>
-                                    <textarea name="product-install-descr" type="text" placeholder="Install Description" value={this.state.applianceInstallDescription} onChange={(e) => this.update('applianceInstallDescription', e.target.value)} />
+                                    <textarea name="product-install-descr" type="text" placeholder="Install Description" value={this.state.applianceInstallDescription} onChange={(e) => this.update({ type: 'applianceInstallDescription', value: e.target.value})} />
                                 </div>
                             </div>
                             <div style={styles.checkbox}>
                                 <input
                                     id="checkbox-is-ge-remove-old"
                                     type="checkbox"
-                                    onClick={() => this.update('isRemoval', !(this.state.isRemoval))}
+                                    onClick={() => this.update({ type: 'isRemoval', value: !this.state.isRemoval }) }
                                     checked={this.state.isRemoval}
                                     style={{ height: '15px', width: '30px' }}
                                 />Option for GE to remove old appliance
@@ -365,15 +401,15 @@ class EditProduct extends React.Component {
                             <div style={{ display: (this.state.isRemoval) ? 'inline-flex' : 'none' }} >
                                 <div>
                                     <label htmlFor="product-removal-code">Removal Code</label>
-                                    <input name="product-removal-code" type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update('applianceRemovalCode', e.target.value)} required />
+                                    <input name="product-removal-code" type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update({ type: 'applianceRemovalCode', value: e.target.value})} />
                                 </div>
                                 <div>
                                     <label htmlFor="product-removal-value">Removal Value</label>
-                                    <input name="product-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update('applianceRemovalPrice', e.target.value)} required/>
+                                    <input name="product-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update({ type: 'applianceRemovalPrice', value: e.target.value})}/>
                                 </div>
                                 <div>
                                     <label htmlFor="product-removal-descr">Removal Description</label>
-                                    <textarea name="product-removal-descr" type="text" placeholder="Removal Description" value={this.state.applianceRemovalDescription} onChange={(e) => this.update('applianceRemovalDescription', e.target.value)} />
+                                    <textarea name="product-removal-descr" type="text" placeholder="Removal Description" value={this.state.applianceRemovalDescription} onChange={(e) => this.update({ type: 'applianceRemovalDescription', value: e.target.value})} />
                                 </div>
                             </div>
                         </div>
