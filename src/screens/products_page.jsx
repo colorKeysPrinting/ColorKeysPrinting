@@ -33,7 +33,7 @@ class ProductsPage extends React.Component {
 
             const { cookies } = this.props;
             const jwt = cookies.get('sibi-admin-jwt');
-            
+
             _.each(productCategories, (category) => {
                 this.props.getProductsForSubCategory({ token: jwt.token, categoryId: category.id, category: category.name });
             });
@@ -48,7 +48,7 @@ class ProductsPage extends React.Component {
 
         if (this.props.productCategories.size > 0 &&
             this.props.products.size > 0) {
-            
+
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
 
@@ -92,17 +92,31 @@ class ProductsPage extends React.Component {
         }
 
         return (
-            <div id="products-page" >
-                <div>
-                    <div>Products</div>
-                    <Link to={`/edit_product`} className="btn submit-btn" >Add</Link>
+            <div id="products-page">
+              <div className="container">
+                <div className="box">
+                  <div className="header">
+                    <div className="pure-g actions">
+                      <div className="pure-u-1-2">
+                        <h2>Products</h2>
+                      </div>
+                      <div className="pure-u-1-2">
+                        <Link to={`/edit_product`} className="btn submit-btn" >Add</Link>
+                      </div>
+                    </div>
+                    <div className="pure-g">
+                      <div className="pure-u-1">
+                        <Tabs defaultIndex={0} >
+                            <TabList>
+                                { tabs }
+                            </TabList>
+                            { tabContent }
+                        </Tabs>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <Tabs defaultIndex={0} >
-                    <TabList>
-                        { tabs }
-                    </TabList>
-                    { tabContent }
-                </Tabs>
+              </div>
             </div>
         );
     }
@@ -114,8 +128,8 @@ const select = (state) => ({
 });
 
 const actions = {
-    getProducts, 
-    getProductCategories, 
+    getProducts,
+    getProductCategories,
     getProductsForSubCategory,
     setActiveTab
 };

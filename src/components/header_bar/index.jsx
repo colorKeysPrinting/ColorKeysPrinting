@@ -67,6 +67,7 @@ class HeaderBar extends React.Component {
         // const to = (activeUser.type && activeUser.type !== 'signUp') ? `/orders` : `/`;
         return (
             <div id="header-bar">
+                <img src={sibiLogo} id="logo"/>
                 <Tabs
                     type={activeUser.type}
                     activeTab={this.props.activeTab}
