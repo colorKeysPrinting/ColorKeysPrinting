@@ -67,7 +67,7 @@ class ProductsPage extends React.Component {
                         let value = product[key];
 
                         if (key === 'action') {
-                            value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} >Edit</Link>;
+                            value = <Link className="edit" to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} >Edit</Link>;
 
                         } else if (key === 'id') {
                             value = { ...product, category: type.id };

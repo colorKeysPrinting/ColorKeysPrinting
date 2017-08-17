@@ -20,6 +20,11 @@
   }
   td {
     border-bottom: 1px solid $border-gray;
+    &:last-child {
+      div {
+        max-width: 300px;
+      }
+    }
     div {
       padding: 20px 15px;
       overflow: hidden;
@@ -27,6 +32,12 @@
       text-overflow: ellipsis;
       max-width: 200px;
       font-size: 14px;
+    }
+    .edit {
+      color: $blue;
+      text-align: right;
+      font-weight: 500;
+      display: block;
     }
   }
 }
