@@ -119,8 +119,7 @@ class UsersPage extends React.Component {
                 <div className="table-card">
                     <div className="card-header">
                         <h2>Users</h2>
-                        <div className="search-bar">
-                        </div>
+                        <div className="search-bar"></div>
                     </div>
                     <MyTable
                         type="users"
