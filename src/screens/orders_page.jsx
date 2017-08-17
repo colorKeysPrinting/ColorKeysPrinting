@@ -31,7 +31,7 @@ class OrdersPage extends React.Component {
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
-        
+
         this.props.setActiveTab('orders');
     }
 
@@ -55,7 +55,8 @@ class OrdersPage extends React.Component {
     }
 
     handleItem({ item }) {
-        console.log('item pressed');
+        console.log('item pressed', item);
+        this.props.history.push({ pathname: '/order_details', state: { ... item } });
     }
 
     render() {
@@ -63,18 +64,18 @@ class OrdersPage extends React.Component {
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        const headers = { 
-            id: '', 
-            office: 'PM Office', 
-            propertyId: 'Property ID',  
-            address: 'Property address', 
-            occupied: 'Occupancy', 
-            userId: 'Ordered by', 
-            orderNumber: 'GE Order #', 
-            createdAt: 'Order Date', 
-            totalCost: 'Cost', 
-            orderStatus: 'Status', 
-            action: '' 
+        const headers = {
+            id: '',
+            office: 'PM Office',
+            propertyId: 'Property ID',
+            address: 'Property address',
+            occupied: 'Occupancy',
+            userId: 'Ordered by',
+            orderNumber: 'GE Order #',
+            createdAt: 'Order Date',
+            totalCost: 'Cost',
+            orderStatus: 'Status',
+            action: ''
         };
 
         if (this.props.orders.size > 0 &&
@@ -161,13 +162,4 @@ const select = (state) => ({
     fundProperties  : state.users.get('fundProperties'),
 });
 
-const actions = {
-    logout, 
-    getOrders, 
-    getUsers, 
-    getFundProperties, 
-    approveOrder,
-    setActiveTab
-}
-
-export default connect(select, actions, null, { withRef: true })(withCookies(OrdersPage));
+export default connect(select, { logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));

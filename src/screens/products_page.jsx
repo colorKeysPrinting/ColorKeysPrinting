@@ -8,7 +8,7 @@ import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                               from 'libs/assets';
 
 import { logout }                           from 'ducks/active_user/actions';
-import { getProducts, getProductCategories, getProductsForSubCategory }          from 'ducks/products/actions';
+import { getProducts, getProductCategories, getProductsForSubCategory }         from 'ducks/products/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
