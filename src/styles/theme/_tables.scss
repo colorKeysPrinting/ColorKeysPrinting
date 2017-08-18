@@ -47,6 +47,13 @@
         max-width: 300px;
       }
     }
+    &.approve {
+      color: $blue;
+      cursor: pointer;
+      div {
+        color: $blue;
+      }
+    }
     div {
       overflow: hidden;
       white-space: nowrap;
