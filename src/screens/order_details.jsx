@@ -34,10 +34,6 @@ class OrderDetails extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        // if (nextProps.activeUser) {
-        //     const path = (nextProps.activeUser.size > 0) ? `/order_details` : `/`;
-        //     browserHistory.push(path);
-        // }
 
         if (nextProps.isLogout) {
             this.props.logout();
