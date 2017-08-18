@@ -8,7 +8,7 @@ import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                               from 'libs/assets';
 
 import { logout }                           from 'ducks/active_user/actions';
-import { getProducts, getProductCategories, getProductsForSubCategory }          from 'ducks/products/actions';
+import { getProducts, getProductCategories, getProductsForSubCategory, unarchiveProduct }          from 'ducks/products/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
@@ -33,7 +33,7 @@ class ProductsPage extends React.Component {
 
             const { cookies } = this.props;
             const jwt = cookies.get('sibi-admin-jwt');
-            
+
             _.each(productCategories, (category) => {
                 this.props.getProductsForSubCategory({ token: jwt.token, categoryId: category.id, category: category.name });
             });
@@ -41,16 +41,18 @@ class ProductsPage extends React.Component {
     }
 
     render() {
-        let tabs, tabContent;
+        let tabs, tabContent, tabsSection, addBtn;
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (this.props.productCategories.size > 0 &&
             this.props.products.size > 0) {
-            
+
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
+
+            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, applianceOrderDisplayNumber: _.size(products[productCategories[0]]) } }} className="btn submit-btn" >Add</Link>;
 
             tabs = _.map(productCategories, (type) => {
                 return (
@@ -67,7 +69,11 @@ class ProductsPage extends React.Component {
                         let value = product[key];
 
                         if (key === 'action') {
-                            value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} >Edit</Link>;
+                            if (product.archived) {
+                                value = <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: type.name, id: product.id }) } >Unarchive</div>;
+                            } else {
+                                value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} >Edit</Link>;
+                            }
 
                         } else if (key === 'id') {
                             value = { ...product, category: type.id };
@@ -89,20 +95,22 @@ class ProductsPage extends React.Component {
                     </TabPanel>
                 );
             });
+
+            tabsSection = <Tabs defaultIndex={0} >
+                <TabList>
+                    { tabs }
+                </TabList>
+                { tabContent }
+            </Tabs>;
         }
 
         return (
             <div id="products-page" >
                 <div>
                     <div>Products</div>
-                    <Link to={`/edit_product`} className="btn submit-btn" >Add</Link>
+                    { addBtn }
                 </div>
-                <Tabs defaultIndex={0} >
-                    <TabList>
-                        { tabs }
-                    </TabList>
-                    { tabContent }
-                </Tabs>
+                { tabsSection }
             </div>
         );
     }
@@ -114,9 +122,10 @@ const select = (state) => ({
 });
 
 const actions = {
-    getProducts, 
-    getProductCategories, 
+    getProducts,
+    getProductCategories,
     getProductsForSubCategory,
+    unarchiveProduct,
     setActiveTab
 };
 

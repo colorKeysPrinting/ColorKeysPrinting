@@ -14,7 +14,7 @@ export const ActionTypes = {
     UPDATE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/UPDATE_PRODUCT_SUCCESS',
     CREATE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/CREATE_PRODUCT_SUCCESS',
     ARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/ARCHIVE_PRODUCT_SUCCESS',
-    
+    UNARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/UNARCHIVE_PRODUCT_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -145,15 +145,36 @@ export function createProduct({ token, category, product }) {
 export function archiveProduct({ token, category, id }) {
     return (dispatch) => {
         return axios({
-            method  : Network.DEL,
+            method  : Network.POST,
             url     : `${Network.DOMAIN}/products/${id}/archive`,
             headers : {
                 'x-auth-token': token,
-                category
+                category,
+                id
             }
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.ARCHIVE_PRODUCT_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function unarchiveProduct({ token, category, id }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/products/${id}/unarchive`,
+            headers : {
+                'x-auth-token': token,
+                category,
+                id
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.UNARCHIVE_PRODUCT_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);

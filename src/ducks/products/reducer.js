@@ -10,7 +10,8 @@ import { ActionTypes }          from './actions';
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({ 
     products: {},
-    productCategories: []
+    productCategories: [],
+    productCategoryId: ''
 });
 
 export default (state = initialState, action) => {
@@ -24,6 +25,7 @@ export default (state = initialState, action) => {
         
     case ActionTypes.GET_PRODUCT_CATEGORIES_SUCCESS:
         console.log('receiving product categories', action.data);
+        state = state.set('productCategoryId', Immutable.fromJS(action.data[0].id));
         state = state.set('productCategories', Immutable.fromJS(action.data[0].subcategories));
         break;
         
@@ -48,13 +50,26 @@ export default (state = initialState, action) => {
         
     case ActionTypes.CREATE_PRODUCT_SUCCESS:
         console.log('created product', action.data);
-        state = state.set('products', Immutable.fromJS(action.data));
+        products = state.getIn(['products', action.config.headers.category]).toJS();
+        products.push(action.data);
+
+        state = state.updateIn(['products', action.config.headers.category], value => Immutable.fromJS(products));
         break;
         
     case ActionTypes.ARCHIVE_PRODUCT_SUCCESS:
-        console.log('delete call back');
+        console.log('archive call back');
         products = state.getIn(['products', action.config.headers.category]).toJS();
-        products = _.remove(products, (product) => { return product.id === action.data.id });
+        index = _.findIndex(products, ['id', action.config.headers.id]);
+        products[index].archived = action.data.archived;
+        
+        state = state.updateIn(['products', action.config.headers.category], value => Immutable.fromJS(products));
+        break;
+    
+    case ActionTypes.UNARCHIVE_PRODUCT_SUCCESS:
+        console.log('unarchive call back');
+        products = state.getIn(['products', action.config.headers.category]).toJS();
+        index = _.findIndex(products, ['id', action.config.headers.id]);
+        products[index].archived = action.data.archived;
         
         state = state.updateIn(['products', action.config.headers.category], value => Immutable.fromJS(products));
         break;
