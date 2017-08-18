@@ -7,21 +7,19 @@ import { logout }                           from 'ducks/active_user/actions';
 import { getUsers, getFundProperties }      from 'ducks/users/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
-import InfoCard                             from 'components/info_card';
-
-class DashboardPage extends React.Component {
+class NewOrderPage extends React.Component {
 
     componentWillMount() {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
-            console.log('TODO: get dashboard data');
+            console.log('TODO: get new orders data');
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
 
-        this.props.setActiveTab('dashboard');
+        this.props.setActiveTab('newOrder');
     }
 
     componentWillUpdate(nextProps) {
@@ -33,17 +31,15 @@ class DashboardPage extends React.Component {
 
     render() {
         return (
-            <div id="dashboard-page" >
-                <InfoCard />
+            <div id="new-orders-page" >
+                <div>This page is currently under development</div>
             </div>
         );
     }
 }
 
 const select = (state) => ({
-    activeUser      : state.activeUser.get('activeUser'),
-    users           : state.users.get('users'),
-    fundProperties  : state.users.get('fundProperties'),
+    activeUser      : state.activeUser.get('activeUser')
 });
 
 const actions = {
@@ -53,4 +49,4 @@ const actions = {
     setActiveTab
 }
 
-export default connect(select, actions, null, { withRef: true })(withCookies(DashboardPage));
+export default connect(select, actions, null, { withRef: true })(withCookies(NewOrderPage));

@@ -8,7 +8,7 @@ import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                               from 'libs/assets';
 
 import { logout }                           from 'ducks/active_user/actions';
-import { getProducts, getProductCategories, getProductsForSubCategory }         from 'ducks/products/actions';
+import { getProducts, getProductCategories, getProductsForSubCategory, unarchiveProduct }          from 'ducks/products/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
@@ -41,7 +41,7 @@ class ProductsPage extends React.Component {
     }
 
     render() {
-        let tabs, tabContent;
+        let tabs, tabContent, tabsSection, addBtn;
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
@@ -51,6 +51,8 @@ class ProductsPage extends React.Component {
 
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
+
+            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, applianceOrderDisplayNumber: _.size(products[productCategories[0]]) } }} className="btn submit-btn" >Add</Link>;
 
             tabs = _.map(productCategories, (type) => {
                 return (
@@ -67,7 +69,11 @@ class ProductsPage extends React.Component {
                         let value = product[key];
 
                         if (key === 'action') {
-                            value = <Link className="edit" to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} >Edit</Link>;
+                            if (product.archived) {
+                                value = <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: type.name, id: product.id }) } >Unarchive</div>;
+                            } else {
+                                value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} >Edit</Link>;
+                            }
 
                         } else if (key === 'id') {
                             value = { ...product, category: type.id };
@@ -89,29 +95,31 @@ class ProductsPage extends React.Component {
                     </TabPanel>
                 );
             });
+
+            tabsSection = <Tabs defaultIndex={0} >
+                <TabList>
+                    { tabs }
+                </TabList>
+                { tabContent }
+            </Tabs>;
         }
 
         return (
             <div id="products-page">
                 <div className="container">
                     <div className="box">
-                        <div className="header">
+                    	<div className="header">
                             <div className="pure-g actions">
                                 <div className="pure-u-1-2">
                                     <h2>Products</h2>
                                 </div>
                                 <div className="pure-u-1-2">
-                                    <Link to={`/edit_product`} className="btn submit-btn" >Add</Link>
+                                    { addBtn }
                                 </div>
                             </div>
                             <div className="pure-g">
                                 <div className="pure-u-1">
-                                    <Tabs defaultIndex={0} >
-                                        <TabList>
-                                            { tabs }
-                                        </TabList>
-                                        { tabContent }
-                                    </Tabs>
+                                    { tabsSection }
                                 </div>
                             </div>
                         </div>
@@ -131,6 +139,7 @@ const actions = {
     getProducts,
     getProductCategories,
     getProductsForSubCategory,
+    unarchiveProduct,
     setActiveTab
 };
 

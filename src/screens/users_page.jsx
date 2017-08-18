@@ -3,7 +3,8 @@ import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
-import assets                               from 'libs/assets';
+import SearchInput                          from 'react-search-input';
+import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
 import { getUsers, approveUser, autoApproveUserOrders }            from 'ducks/users/actions';
@@ -15,8 +16,15 @@ class UsersPage extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            searchTerm: '',
+            sortby: {column: '', isAsc: false }
+        };
+
+        this.update = this.update.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleAutoApprove = this.handleAutoApprove.bind(this);
+        this.orderBy = this.orderBy.bind(this);
     }
 
     componentWillMount() {
@@ -42,6 +50,10 @@ class UsersPage extends React.Component {
         }
     }
 
+    update({ type, value }) {
+        this.setState({ [type]: value });
+    }
+
     handleAction({ item }) {
         console.log('user action:', item.id);
         const { cookies } = this.props;
@@ -58,10 +70,31 @@ class UsersPage extends React.Component {
         this.props.autoApproveUserOrders({ token: jwt.token, user, autoApprovedOrders });
     }
 
+    orderBy({ column }) {
+        this.setState((prevState) => {
+            const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc !== 'asc') ? 'asc' : 'desc';
+            const sortby = { column, isAsc };
+
+            return { sortby };
+        });
+    }
+
     render() {
         let data = [];
 
-        const headers = { id: '', name: 'Name', office: 'PM Office', email: 'Email', phoneNumber: 'Phone', createdAt: 'Acount Created', autoApprovedOrders: 'Auto-approve', status: 'Status', action: '' };
+        const headers = {
+            id: '',
+            name: 'Name',
+            office: 'PM Office',
+            email: 'Email',
+            phoneNumber: 'Phone',
+            createdAt: 'Acount Created',
+            autoApprovedOrders: 'Auto-approve',
+            status: 'Status',
+            action: ''
+        };
+
+        const KEYS_TO_FILTERS = ['name','office','email','phoneNumber','createdAt','autoApprovedOrders','status'];
 
         if (this.props.users.size > 0 ) {
 
@@ -109,9 +142,31 @@ class UsersPage extends React.Component {
                 return cols;
             });
 
+            _.each(headers, (header, key) => {
+                let value;
+
+                if (key === 'id' || key === 'action') {
+                    value = header;
+
+                } else {
+                    value = <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
+                }
+
+                headers[key] = value;
+            });
+
             // this initially sets the "Pending" users before everything
-            data = _.partition(data, ['status', 'Pending']);
-            data = data[0].concat(data[1]);
+            if(this.state.searchTerm !== '') {
+                data = filter(this.state.searchTerm, KEYS_TO_FILTERS, data);
+            }
+
+            if (this.state.sortby.column === '') {
+                data = _.partition(data, ['status', 'Pending']);
+                data = data[0].concat(data[1]);
+
+            } else {
+                data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+            }
         }
 
         return (
@@ -119,7 +174,9 @@ class UsersPage extends React.Component {
                 <div className="table-card">
                     <div className="card-header">
                         <h2>Users</h2>
-                        <div className="search-bar"></div>
+                        <div className="search-bar">
+                            <SearchInput onChange={(value) => this.update({ type: 'searchTerm', value })} />
+                        </div>
                     </div>
                     <MyTable
                         type="users"

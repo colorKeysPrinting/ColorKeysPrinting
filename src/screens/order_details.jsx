@@ -30,14 +30,10 @@ class OrderDetails extends React.Component {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
 
-        // this.props.setActiveTab('orders');
+        this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
-        // if (nextProps.activeUser) {
-        //     const path = (nextProps.activeUser.size > 0) ? `/order_details` : `/`;
-        //     browserHistory.push(path);
-        // }
 
         if (nextProps.isLogout) {
             this.props.logout();
