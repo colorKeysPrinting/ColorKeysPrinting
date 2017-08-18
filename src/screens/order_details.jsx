@@ -34,6 +34,10 @@ class OrderDetails extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/order_details` : `/`;
+            this.props.history.push(path);
+        }
 
         if (nextProps.isLogout) {
             this.props.logout();
@@ -218,9 +222,10 @@ class OrderDetails extends React.Component {
 }
 
 const select = (state) => ({
-    isLogout       : state.jwt.get('isLogout'),
-    order          : state.orders.get('order'),
-    orders         : state.orders.get('orders')
+    activeUser      : state.activeUser.get('activeUser'),
+    isLogout        : state.jwt.get('isLogout'),
+    order           : state.orders.get('order'),
+    orders          : state.orders.get('orders')
 });
 
 const actions = {

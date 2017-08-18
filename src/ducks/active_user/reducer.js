@@ -14,14 +14,15 @@ const initialState = Immutable.fromJS({
 
 export default (state = initialState, action) => {
     const cookies = new Cookies();
-   
+
     switch (action.type) {
     case ActionTypes.LOGOUT:
         console.log('logging out');
 
         state = state.set('activeUser', Immutable.fromJS({}));
-                
+
         cookies.set('sibi-admin-jwt', { token: '', email: '' }, { path: '/' });
+
         break;
 
     case ActionTypes.LOGIN_SUCCESS:
@@ -55,7 +56,7 @@ export default (state = initialState, action) => {
         break;
 
     default:
-        return state;    
+        return state;
     }
     return state;
 };

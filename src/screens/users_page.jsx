@@ -45,6 +45,10 @@ class UsersPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/users` : `/`;
+            this.props.history.push(path);
+        }
 
         if (nextProps.isLogout) {
             this.props.logout();
@@ -130,12 +134,16 @@ class UsersPage extends React.Component {
                             { value: true, label: 'Yes' }
                         ];
 
-                        value = <Select
-                            name="auto-approved-orders-select"
-                            value={autoApprovedOrders}
-                            options={options}
-                            onChange={(autoApprovedOrders) => this.handleAutoApprove({ user, autoApprovedOrders: autoApprovedOrders.value })}
-                        />;
+                        // value = <Select
+                        //     name="auto-approved-orders-select"
+                        //     value={autoApprovedOrders}
+                        //     options={options}
+                        //     onChange={(autoApprovedOrders) => this.handleAutoApprove({ user, autoApprovedOrders: autoApprovedOrders.value })}
+                        // />;
+                        value = <select value={autoApprovedOrders} onChange={(e) => this.handleAutoApprove({ user, autoApprovedOrders: e.target.value })} >
+                            <option value="false" >No</option>
+                            <option value="true" >Yes</option>
+                        </select>;
 
                     } else if (key === 'status') {
                         value = (user['type'] === 'pending') ? 'Pending' : 'Approved';
@@ -199,6 +207,7 @@ class UsersPage extends React.Component {
 }
 
 const select = (state) => ({
+    activeUser      : state.activeUser.get('activeUser'),
     users           : state.users.get('users'),
     isLogout        : state.jwt.get('isLogout')
 });
