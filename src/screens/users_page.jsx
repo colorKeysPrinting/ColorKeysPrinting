@@ -4,6 +4,7 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import SearchInput                          from 'react-search-input';
+import Select                               from 'react-select';
 import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
@@ -122,12 +123,19 @@ class UsersPage extends React.Component {
                         value = dateformat(new Date(value), 'mmmm dd, yyyy');
 
                     } else if (key === 'autoApprovedOrders') {
-                        const autoApprovedOrders = (user.autoApprovedOrders) ? user.autoApprovedOrders : false;
+                        const autoApprovedOrders = (user.autoApprovedOrders) ? true : false;
 
-                        value = <select value={autoApprovedOrders} onChange={(e) => this.handleAutoApprove({ user, autoApprovedOrders: e.target.value })} >
-                            <option value="false" >No</option>
-                            <option value="true" >Yes</option>
-                        </select>;
+                        const options = [
+                            { value: false, label: 'No' },
+                            { value: true, label: 'Yes' }
+                        ];
+
+                        value = <Select
+                            name="auto-approved-orders-select"
+                            value={autoApprovedOrders}
+                            options={options}
+                            onChange={(autoApprovedOrders) => this.handleAutoApprove({ user, autoApprovedOrders: autoApprovedOrders.value })}
+                        />;
 
                     } else if (key === 'status') {
                         value = (user['type'] === 'pending') ? 'Pending' : 'Approved';

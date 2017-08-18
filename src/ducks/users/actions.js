@@ -60,7 +60,7 @@ export function approveUser({ token, id }) {
 
 export function autoApproveUserOrders( { token, user, autoApprovedOrders }) {
     return (dispatch) => {
-        autoApprovedOrders = (autoApprovedOrders == 'true') ? 'autoApproveOrders' : 'removeAutoApproveOrders' ;
+        autoApprovedOrders = (autoApprovedOrders) ? 'autoApproveOrders' : 'removeAutoApproveOrders' ;
         return axios({
             method  : Network.POST,
             url     : `${Network.DOMAIN}/users/${user.id}/${autoApprovedOrders}` ,
