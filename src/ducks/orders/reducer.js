@@ -33,6 +33,7 @@ export default (state = initialState, action) => {
         index = _.findIndex(orders, ['id', action.config.headers.orderId]);
         orders[index] = action.data;
 
+        state = state.set('order', Immutable.fromJS(action.data));
         state = state.set('orders', Immutable.fromJS(orders));
         break;
 
