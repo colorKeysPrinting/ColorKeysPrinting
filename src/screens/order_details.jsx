@@ -179,33 +179,35 @@ class OrderDetails extends React.Component {
 
         return (
             <div id="orders-page" >
-                <div className="details-header">
-                    <div className="header-property">
-                        <div className="property-address">{orderPageHeading.orderNumber}</div>
-                        <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
-                    </div>
-                    {orderStatus == "Pending" ?
-                        <div className="button-container">
-                            <div className="button">Edit</div>
-                            <div className="button" onClick={() => this.handleAction({orderId})}>Approve</div>
+                <div className="container">
+                    <div className="details-header pure-g">
+                        <div className="header-property pure-u-2-3">
+                            <h2 className="property-address">{orderPageHeading.orderNumber}</h2>
+                            <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
                         </div>
-                        : <div className="button-container"></div>
-                    }
+                        {orderStatus == "Pending" ?
+                            <div className="button-container pure-u-1-3">
+                                <div className="btn submit-btn">Edit</div>
+                                <div className="btn submit-btn" onClick={() => this.handleAction({orderId})}>Approve</div>
+                            </div>
+                            : <div className="button-container pure-u-1-3"></div>
+                        }
+                    </div>
+                    <MyTable
+                        type="orderDetails"
+                        headers={orderHeaders}
+                        data={orderData}
+                    />
+                    <div className="box">
+                        <div className="title">Tenant Info: </div>
+                        <div className="body"> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div>
+                    </div>
+                    <MyTable
+                        type="productDetails"
+                        headers={productHeaders}
+                        data={productData}
+                    />
                 </div>
-                <MyTable
-                    type="orderDetails"
-                    headers={orderHeaders}
-                    data={orderData}
-                />
-                <div className="box">
-                    <div className="title">Tenant Info: </div>
-                    <div className="body"> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div>
-                </div>
-                <MyTable
-                    type="productDetails"
-                    headers={productHeaders}
-                    data={productData}
-                />
             </div>
         );
     }

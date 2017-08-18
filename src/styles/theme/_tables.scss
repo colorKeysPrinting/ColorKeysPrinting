@@ -13,6 +13,7 @@
     td {
       background: $light-gray;
       border: none !important;
+
     }
   }
   tr {
@@ -20,24 +21,50 @@
   }
   td {
     border-bottom: 1px solid $border-gray;
+    vertical-align: top;
+    text-align: left;
+    padding: 20px 15px;
     &:last-child {
       div {
         max-width: 300px;
       }
     }
     div {
-      padding: 20px 15px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       max-width: 200px;
       font-size: 14px;
+      line-height: 1.3em;
+      &.no-limit {
+        max-width: none;
+        div {
+          max-width: none;
+        }
+      }
     }
     .edit {
       color: $blue;
       text-align: right;
       font-weight: 500;
       display: block;
+    }
+    .productImage {
+      max-width: 100px;
+      margin: 15px 0;
+    }
+    .table-cell-title {
+      text-align: left;
+      font-weight: 600;
+      padding: 0;
+      padding-bottom: 10px;
+      max-width: 400px;
+    }
+    .table-cell-details {
+      text-align: left;
+      opacity: 0.5;
+      padding: 5px 0;
+      max-width: 400px;
     }
   }
 }

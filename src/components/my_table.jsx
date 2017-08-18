@@ -63,7 +63,7 @@ export default class MyTable extends React.Component {
                     if (id === 'action') {
                         return (col === 'approve' || this.props.type === 'products') ? <td className="table-cell" key={`table-item-${id}`} ><div onClick={() => this.state.handleAction({ item })}>{ col }</div></td> : <td></td>;
                     } else if (id === 'productImage') {
-                        return (<td key={`table-item-${id}`} ><img src={col}></img></td>)
+                        return (<td key={`table-item-${id}`} ><img className="productImage" src={col}></img></td>)
                     }
                     else if (typeof col === "object") {
                         let productTitle = '';
@@ -77,7 +77,7 @@ export default class MyTable extends React.Component {
                                 productDescription.push(<div>{col[i]}</div>)
                             }
                         }
-                        return (<td key={`table-item-${id}`} >{productTitle}{productDescription}</td>)
+                        return (<td key={`table-item-${id}`} ><div className="no-limit">{productTitle}{productDescription}</div></td>)
                     }
                     else {
                         return (<td key={`table-item-${id}`} ><div onClick={() => this.state.handleItem({ item })}>{ col }</div></td>);
