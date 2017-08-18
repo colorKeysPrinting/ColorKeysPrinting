@@ -1,96 +1,59 @@
-#admin-table {
-  max-width: 90%;
-  border-radius: 7px;
-  margin: 40px auto;
-  border: 1px solid #ddd;
-  div {
-    font-family: 'Lato', sans-serif;
-    color: #4B4D62;
-  }
-  img {
-    width: 150px;
-    vertical-align: top !important;
-  }
-  table {
-    width: 100%;
-    padding: 0 20px;
-    line-height: 1.5;
-  }
-}
-.table-header {
-  font-weight: 700;
-  background: #F9FAFC;
-  padding: 24px 0 24px 18px;
-}
-
-.table-cell {
-  padding: 40px 0;
-}
-.table-cell-title {
-  font-weight: 700;
-  font-size: 20px;
-}
-.table-cell-details {
-  color: #ddd !important;
-}
-
-#orders-page {
-  div {
-    font-family: 'Lato', sans-serif;
-    color: #4B4D62;
-  }
-  .details-header {
-    width: 90%;
-    margin: 80px auto 40px;
-    .header-property {
-      width: 55%;
-      display: inline-block;
-      text-align: left;
-      .property-address {
-        width: 100%;
-        font-size: 25px;
-        line-height: 2.2;
-        font-weight: 700;
-      }
-      .property-manager {
-        width: 100%;
-        color: #ddd;
-        font-weight: 700;
-      }
+.table {
+  table-layout: fixed;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1px solid $medium-light-gray;
+  background: white;
+  box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+  border-radius: 3px;
+  .head {
+    tr {
+      background: $table-header-gray;
     }
-    .button-container {
-      width: 45%;
-      display: inline-block;
-      text-align: right;
-      margin-bottom: 15px;
-      .button {
-        text-align: center;
-        display: inherit;
-        margin-left: 40px;
-        background: #00D2E8;
-        width: 160px;
-        padding: 21px 0;
-        color: white;
-        border-radius: 5px;
-        font-weight: 400;
+    td {
+      background: $table-header-gray;
+      border: none !important;
+      div {
+        font-size: 14px;	
+        font-weight: 600;
       }
     }
   }
-
-  .box {
-    background: #F9FAFC;
-    border: 1px solid #ddd;
-    max-width: 90%;
-    border-radius: 7px;
-    margin: 40px auto;
+  tr {
+    border: none !important;
     text-align: left;
-    padding: 24px 0 24px 18px;
-    .title {
-      display: inline;
-      font-weight: 700;
+  }
+  td {
+    border-bottom: 1px solid $border-gray;
+    div {
+      padding: 23px 12px 23px 22px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 200px;
+      font-size: 14px;
+      font-weight: 400;
+      color: $dark-gray;
     }
-    .body {
-      display: inline;
-    }
+  }
+}
+
+.table-card {
+  max-width: 1200px;
+  margin: 50px auto;
+  box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+  .card-header {
+    background: $table-header-gray;
+    border: 1px solid $medium-light-gray;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 27px 31px;
+  }
+  .table {
+    box-shadow: none;
+    border-top: none;
   }
 }

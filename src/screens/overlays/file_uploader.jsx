@@ -130,7 +130,7 @@ class fileUploaderOverlay extends React.Component {
                         >
     
                             <label>Drag and drop an image or</label>
-                            <label htmlFor="file" className="submit-btn" style={{ width: '50%' }} >Choose file
+                        <label htmlFor="file" className="btn submit-btn" style={{ width: '50%' }} >Choose file
                                 <input
                                     id="file"
                                     type="file"

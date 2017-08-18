@@ -413,7 +413,7 @@ class EditProduct extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <input className="submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
+                        <input className="btn submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
                         { archiveBtn }
                     </form>
                 </div>

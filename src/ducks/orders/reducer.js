@@ -9,6 +9,7 @@ import { ActionTypes }          from './actions';
 //             REDUCER
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
+    order: '',
     orders: []
 });
 
@@ -18,7 +19,7 @@ export default (state = initialState, action) => {
     switch (action.type) {
     case ActionTypes.GET_ORDER_BY_ID_SUCCESS:
         console.log('receiving order by ID', action.data);
-        state = state.set('order', action.data);
+        state = state.set('order', Immutable.fromJS(action.data));
         break;
 
     case ActionTypes.GET_ORDERS_SUCCESS:
@@ -32,6 +33,7 @@ export default (state = initialState, action) => {
         index = _.findIndex(orders, ['id', action.config.headers.orderId]);
         orders[index] = action.data;
 
+        state = state.set('order', Immutable.fromJS(action.data));
         state = state.set('orders', Immutable.fromJS(orders));
         break;
 

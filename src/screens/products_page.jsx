@@ -9,6 +9,7 @@ import assets                               from 'libs/assets';
 
 import { logout }                           from 'ducks/active_user/actions';
 import { getProducts, getProductCategories, getProductsForSubCategory, unarchiveProduct }          from 'ducks/products/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
 
@@ -22,6 +23,8 @@ class ProductsPage extends React.Component {
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
+
+        this.props.setActiveTab('products');
     }
 
     componentWillUpdate(nextProps) {
@@ -49,7 +52,7 @@ class ProductsPage extends React.Component {
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
 
-            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, applianceOrderDisplayNumber: _.size(products[productCategories[0]]) } }} className="submit-btn" >Add</Link>;
+            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, applianceOrderDisplayNumber: _.size(products[productCategories[0]]) } }} className="btn submit-btn" >Add</Link>;
 
             tabs = _.map(productCategories, (type) => {
                 return (
@@ -122,7 +125,8 @@ const actions = {
     getProducts,
     getProductCategories,
     getProductsForSubCategory,
-    unarchiveProduct
+    unarchiveProduct,
+    setActiveTab
 };
 
 export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(ProductsPage)));
