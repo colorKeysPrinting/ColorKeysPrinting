@@ -12,10 +12,10 @@ import { setActiveTab }                                     from 'ducks/header/a
 
 import MyTable                                              from 'components/my_table';
 
-
 class OrderDetails extends React.Component {
     constructor(props) {
         super(props);
+
         this.handleAction = this.handleAction.bind(this);
     }
 
@@ -30,7 +30,7 @@ class OrderDetails extends React.Component {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
 
-        this.props.setActiveTab('orders');
+        // this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
@@ -38,10 +38,10 @@ class OrderDetails extends React.Component {
         //     const path = (nextProps.activeUser.size > 0) ? `/order_details` : `/`;
         //     browserHistory.push(path);
         // }
-        //
-        // if (nextProps.isLogout) {
-        //     this.props.logout();
-        // }
+
+        if (nextProps.isLogout) {
+            this.props.logout();
+        }
     }
 
     handleAction({orderId}) {
@@ -53,17 +53,10 @@ class OrderDetails extends React.Component {
     }
 
     render() {
-        let productData = [];
-        let orderData = [];
-        let orderPageHeading = {};
-        let orderStatus = '';
-        let orderId = '';
-        let tenantInfo = {};
+        let productData, orderData, tenantInfoSection, detailsHeaderSection;
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-
-        let orderHeaders = {};
 
         const productHeaders = {
             productImage: 'Product',
@@ -73,34 +66,35 @@ class OrderDetails extends React.Component {
             price: 'Cost'
         };
 
-        if (this.props.order) {
-            const order = this.props.order;
+        const orderHeaders = {
+            orderStatus: 'Order Status',
+            orderNumber: 'Order Number',
+            deliveryDate: 'Delivery Date',
+            installTime: 'Preferred Install Time',
+            occupied: 'Occupancy',
+            lockBoxCode: '',
+            createdBy: 'Ordered By'
+        };
 
-            orderId = order.id
-            orderStatus = order.orderStatus
-            orderPageHeading = {
-                address: order.fundProperty.addressLineOne + " " + order.fundProperty.addressLineTwo + " " + order.fundProperty.addressLineThree + ", " + order.fundProperty.city + ", " + order.fundProperty.state + ", " + order.fundProperty.zipcode,
+        if (this.props.order.size > 0) {
+            const order = this.props.order.toJS();
+
+            const orderId = order.id
+            const orderStatus = order.orderStatus
+            const orderPageHeading = {
+                address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`,
                 PM: order.pmOffice.name,
                 orderNumber: order.orderNumber
             };
-            tenantInfo = {
-                tenantName: order.tenantFirstName + " " + order.tenantLastName,
+            const tenantInfo = {
+                tenantName: `${order.tenantFirstName} ${order.tenantLastName}`,
                 tenantPhoneNumber: order.tenantPhone,
                 tenantEmail: order.tenantEmail
             }
 
-            orderHeaders = {
-                orderStatus: 'Order Status',
-                orderNumber: 'Order Number',
-                deliveryDate: 'Delivery Date',
-                installTime: 'Preferred Install Time',
-                occupied: 'Occupancy',
-                lockBoxCode: (order.lockBoxCode ? order.lockBoxCode : 'Tenant'),
-                createdBy: 'Ordered By'
-            };
+            orderHeaders['lockBoxCode'] = (order.lockBoxCode) ? order.lockBoxCode : 'Tenant';
 
             const cols = {};
-
             _.each(orderHeaders, (value, key) => {
                 value = order[key]
                 if (key === 'orderStatus') {
@@ -110,17 +104,16 @@ class OrderDetails extends React.Component {
                     value = order.orderNumber;
 
                 }else if (key === 'deliveryDate') {
-                    value = order.installDate;
-                    value = dateformat(order.installDate, "mm/dd/yy");
+                    value = dateformat(order.installDate, 'mm/dd/yy');
 
                 } else if (key === 'installTime') {
-                    value = order.applianceDeliveryTime ? order.applianceDeliveryTime : "Not Specified";
+                    value = order.applianceDeliveryTime ? order.applianceDeliveryTime : 'Not Specified';
 
                 } else if (key === 'occupied') {
                     value = (order['occupied'] === false) ? 'Unoccupied' : 'Occupied';
 
                 } else if (key === 'lockBoxCode') {
-                    value = order.lockBoxCode ? order.lockBoxCode : (order.tenantFirstName + " " + order.tenantLastName);
+                    value = (order.lockBoxCode) ? order.lockBoxCode : `${order.tenantFirstName} ${order.tenantLastName}`;
 
                 } else if (key === 'createdBy') {
                     value = order.createdBy ? order.createdBy : 'Ordered By';
@@ -131,77 +124,80 @@ class OrderDetails extends React.Component {
 
             orderData = {cols};
 
-
             productData = _.map(order.productsAndDestinations, (orderDetail) => {
-                const detail = orderDetail.product
+                const detail = orderDetail.product;
 
                 const cols = {};
-
-                _.each(productHeaders, (value,key) => {
+                _.each(productHeaders, (value, key) => {
 
                     value = detail[key];
 
                     if (key === 'productImage') {
-                        value = detail.applianceColorsAndImages[0].imageUrl;
+                        value = <img className="productImage" src={detail.applianceColorsAndImages[0].imageUrl} alt="productImg" />;
 
                     } else if (key === 'productDescription') {
-                        value = [
-                            detail.applianceDescription,
-                            "SIBI Model Number: " + detail.sibiModelNumber,
-                            "Manufacturer's Model Number" + detail.manufacturerModelNumber,
-                            "Colors: detail.selectProductColor",
-                            "Fuel Type: " + detail.applianceFuelType,
-                            "Width: " + detail.applianceWidth,
-                            "Height: " + detail.applianceHeight,
-                            "Depth: " + detail.applianceDepth,
-                            "Install Instructions: " + (detail.applianceInstallDescription ? detail.applianceInstallDescription : "Not Specified"),
-                            "Remove Old Appliance: " + (detail.applianceRemovalDescription ? detail.applianceRemovalDescription : "Not Specified")
-                        ]
+                        value = <div className="no-limit">
+                            <div className="table-cell-title">{ detail.applianceDescription }</div>
+                            <div className="table-cell-details">{ `SIBI Model Number: ${detail.sibiModelNumber}` }</div>
+                            <div className="table-cell-details">{ `Manufacturer's Model Number ${detail.manufacturerModelNumber}` }</div>
+                            <div className="table-cell-details">{ `Colors: ${detail.selectProductColor}` }</div>
+                            <div className="table-cell-details">{ `Fuel Type: ${detail.applianceFuelType}` }</div>
+                            <div className="table-cell-details">{ `Width: ${detail.applianceWidth}` }</div>
+                            <div className="table-cell-details">{ `Height: ${detail.applianceHeight}` }</div>
+                            <div className="table-cell-details">{ `Depth: ${detail.applianceDepth}` }</div>
+                            <div className="table-cell-details">{ `Install Instructions: ${(detail.applianceInstallDescription) ? detail.applianceInstallDescription : 'Not Specified'}` }</div>
+                            <div className="table-cell-details">{ `Remove Old Appliance: ${(detail.applianceRemovalDescription) ? detail.applianceRemovalDescription : 'Not Specified'}` }</div>
+                        </div>;
 
                     } else if (key === 'address') {
-                        value = [
-                            order.fundProperty.addressLineOne + " " + order.fundProperty.addressLineTwo + " " + order.fundProperty.addressLineThree + ",",
-                            order.fundProperty.city + ", " + order.fundProperty.state + ", " + order.fundProperty.zipcode
-                        ]
+                        value = <div className="no-limit">
+                            <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
+                            <div>{`${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`}</div>
+                        </div>;
 
                     } else if (key === 'qty') {
                         value = orderDetail.qty;
 
                     } else if (key === 'price') {
-                        value = "$" + orderDetail.ProductPrice.price;
+                        value = '$' + orderDetail.ProductPrice.price;
                     }
 
                     cols[key] = value;
                 })
                 return cols;
             });
+
+            const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
+                    <div className="btn submit-btn">Edit</div>
+                    <div className="btn submit-btn" onClick={() => this.handleAction({orderId})}>Approve</div>
+                </div>
+                : <div className="button-container pure-u-1-3"></div>;
+
+            detailsHeaderSection = <div className="details-header">
+                  <div className="header-property pure-u-2-3">
+                      <h2 className="property-address">{orderPageHeading.orderNumber}</h2>
+                      <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
+                  </div>
+                { buttonSection }
+            </div>;
+
+            tenantInfoSection = <div className="box">
+                <div className="title">Tenant Info: </div>
+                <div className="body"> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div>
+            </div>;
         }
 
         return (
             <div id="orders-page" >
                 <div className="container">
-                    <div className="details-header pure-g">
-                        <div className="header-property pure-u-2-3">
-                            <h2 className="property-address">{orderPageHeading.orderNumber}</h2>
-                            <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
-                        </div>
-                        {orderStatus == "Pending" ?
-                            <div className="button-container pure-u-1-3">
-                                <div className="btn submit-btn">Edit</div>
-                                <div className="btn submit-btn" onClick={() => this.handleAction({orderId})}>Approve</div>
-                            </div>
-                            : <div className="button-container pure-u-1-3"></div>
-                        }
-                    </div>
+
+                    { detailsHeaderSection }
                     <MyTable
                         type="orderDetails"
                         headers={orderHeaders}
                         data={orderData}
                     />
-                    <div className="box">
-                        <div className="title">Tenant Info: </div>
-                        <div className="body"> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div>
-                    </div>
+                    { tenantInfoSection }
                     <MyTable
                         type="productDetails"
                         headers={productHeaders}
@@ -214,6 +210,7 @@ class OrderDetails extends React.Component {
 }
 
 const select = (state) => ({
+    isLogout       : state.jwt.get('isLogout'),
     order          : state.orders.get('order'),
     orders         : state.orders.get('orders')
 });
