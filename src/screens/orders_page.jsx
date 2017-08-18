@@ -3,7 +3,8 @@ import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
-import assets                               from 'libs/assets';
+import SearchInput                          from 'react-search-input';
+import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
@@ -16,8 +17,12 @@ class OrdersPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { sortby: {column: '', isAsc: false } };
+        this.state = {
+            searchTerm: '',
+            sortby: {column: '', isAsc: false }
+        };
 
+        this.update = this.update.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleItem = this.handleItem.bind(this);
         this.orderBy = this.orderBy.bind(this);
@@ -47,6 +52,10 @@ class OrdersPage extends React.Component {
         if (nextProps.isLogout) {
             this.props.logout();
         }
+    }
+
+    update({ type, value }) {
+        this.setState({ [type]: value });
     }
 
     orderBy({ column }) {
@@ -89,6 +98,8 @@ class OrdersPage extends React.Component {
             orderStatus: 'Status',
             action: ''
         };
+
+        const KEYS_TO_FILTERS = ['propertyId','address','occupied','userId','orderNumber','createdAt','totalCost','orderStatus'];
 
         if (this.props.orders.size > 0 &&
             this.props.users.size > 0 &&
@@ -154,6 +165,10 @@ class OrdersPage extends React.Component {
             });
 
             // this initially sets the "Pending" orders before everything and "Approved" orders at the end
+            if(this.state.searchTerm !== '') {
+                data = filter(this.state.searchTerm, KEYS_TO_FILTERS, data);
+            }
+
             if (this.state.sortby.column === '') {
                 data = _.partition(data, ['orderStatus', 'Pending']);
                 data = data[0].concat(data[1]);
@@ -171,6 +186,7 @@ class OrdersPage extends React.Component {
                     <div className="card-header">
                         <h2>Orders</h2>
                         <div className="search-bar">
+                            <SearchInput onChange={(value) => this.update({ type: 'searchTerm', value })} />
                         </div>
                     </div>
                     <MyTable
@@ -193,13 +209,13 @@ const select = (state) => ({
     fundProperties  : state.users.get('fundProperties'),
 });
 
-const action = {
+const actions = {
     logout,
     getOrders,
-    getUsers, 
+    getUsers,
     getFundProperties,
     approveOrder,
     setActiveTab
 }
 
-export default connect(select, action, null, { withRef: true })(withCookies(OrdersPage));
+export default connect(select, actions, null, { withRef: true })(withCookies(OrdersPage));

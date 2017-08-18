@@ -30,14 +30,10 @@ class OrderDetails extends React.Component {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
 
-        // this.props.setActiveTab('orders');
+        this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
-        // if (nextProps.activeUser) {
-        //     const path = (nextProps.activeUser.size > 0) ? `/order_details` : `/`;
-        //     browserHistory.push(path);
-        // }
 
         if (nextProps.isLogout) {
             this.props.logout();
@@ -86,6 +82,7 @@ class OrderDetails extends React.Component {
                 PM: order.pmOffice.name,
                 orderNumber: order.orderNumber
             };
+
             const tenantInfo = {
                 tenantName: `${order.tenantFirstName} ${order.tenantLastName}`,
                 tenantPhoneNumber: order.tenantPhone,
@@ -168,7 +165,7 @@ class OrderDetails extends React.Component {
             });
 
             const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
-                <div className="btn submit-btn">Edit</div>
+                {/* <div className="btn submit-btn">Edit</div> */}
                 <div className="btn submit-btn" onClick={() => this.handleAction({orderId})}>Approve</div>
             </div>
                 : <div className="button-container pure-u-1-3"></div>;
@@ -181,7 +178,9 @@ class OrderDetails extends React.Component {
                 { buttonSection }
             </div>;
 
-            tenantInfoSection = <div className="admin-table">
+            const tenantInfoDetails = (order.tenantFirstName) ? <div>{tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div> : <div>lock Box Code: { order.lockBoxCode }</div>;
+
+            tenantInfoSection = <div id="admin-table">
                 <table className="table">
                     <thead className="head">
                         <tr>
@@ -190,7 +189,7 @@ class OrderDetails extends React.Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td><div> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div></td>
+                            <td>{ tenantInfoDetails }</td>
                         </tr>
                     </tbody>
                 </table>
