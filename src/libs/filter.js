@@ -3,6 +3,11 @@
 import _            from 'lodash';
 
 const checkObj = (obj) => {
+    // if (obj.type.displayName === 'Select') {
+    //     if (typeof obj.props.value === 'boolean') {
+    //         return (obj.props.value) ? 'yes' : 'no';
+    //     }
+    // }
     if (obj.type === 'select') {
         if (typeof obj.props.value === 'boolean') {
             return (obj.props.value) ? 'yes' : 'no';

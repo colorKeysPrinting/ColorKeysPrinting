@@ -4,6 +4,7 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import SearchInput                          from 'react-search-input';
+import Select                               from 'react-select';
 import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
@@ -44,6 +45,10 @@ class UsersPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/users` : `/`;
+            this.props.history.push(path);
+        }
 
         if (nextProps.isLogout) {
             this.props.logout();
@@ -122,8 +127,19 @@ class UsersPage extends React.Component {
                         value = dateformat(new Date(value), 'mmmm dd, yyyy');
 
                     } else if (key === 'autoApprovedOrders') {
-                        const autoApprovedOrders = (user.autoApprovedOrders) ? user.autoApprovedOrders : false;
+                        const autoApprovedOrders = (user.autoApprovedOrders) ? true : false;
 
+                        const options = [
+                            { value: false, label: 'No' },
+                            { value: true, label: 'Yes' }
+                        ];
+
+                        // value = <Select
+                        //     name="auto-approved-orders-select"
+                        //     value={autoApprovedOrders}
+                        //     options={options}
+                        //     onChange={(autoApprovedOrders) => this.handleAutoApprove({ user, autoApprovedOrders: autoApprovedOrders.value })}
+                        // />;
                         value = <select value={autoApprovedOrders} onChange={(e) => this.handleAutoApprove({ user, autoApprovedOrders: e.target.value })} >
                             <option value="false" >No</option>
                             <option value="true" >Yes</option>
@@ -170,7 +186,7 @@ class UsersPage extends React.Component {
         }
 
         return (
-            <div id="users-page" >
+            <div id="users-page" className="container">
                 <div className="table-card">
                     <div className="card-header">
                         <h2>Users</h2>
@@ -191,8 +207,16 @@ class UsersPage extends React.Component {
 }
 
 const select = (state) => ({
+    activeUser      : state.activeUser.get('activeUser'),
     users           : state.users.get('users'),
     isLogout        : state.jwt.get('isLogout')
 });
 
-export default connect(select, { getUsers, approveUser, autoApproveUserOrders, setActiveTab }, null, { withRef: true })(withCookies(UsersPage));
+const action = {
+    getUsers,
+    approveUser,
+    autoApproveUserOrders,
+    setActiveTab
+}
+
+export default connect(select, action, null, { withRef: true })(withCookies(UsersPage));

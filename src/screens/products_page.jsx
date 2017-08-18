@@ -28,6 +28,11 @@ class ProductsPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/products` : `/`;
+            this.props.history.push(path);
+        }
+
         if (!_.isEqual(this.props.productCategories, nextProps.productCategories)) {
             const productCategories = nextProps.productCategories.toJS();
 
@@ -105,18 +110,33 @@ class ProductsPage extends React.Component {
         }
 
         return (
-            <div id="products-page" >
-                <div>
-                    <div>Products</div>
-                    { addBtn }
+            <div id="products-page">
+                <div className="container">
+                    <div className="box">
+                        <div className="header">
+                            <div className="pure-g actions">
+                                <div className="pure-u-1-2">
+                                    <h2>Products</h2>
+                                </div>
+                                <div className="pure-u-1-2">
+                                    { addBtn }
+                                </div>
+                            </div>
+                            <div className="pure-g">
+                                <div className="pure-u-1">
+                                    { tabsSection }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                { tabsSection }
             </div>
         );
     }
 }
 
 const select = (state) => ({
+    activeUser          : state.activeUser.get('activeUser'),
     products            : state.products.get('products'),
     productCategories   : state.products.get('productCategories')
 });

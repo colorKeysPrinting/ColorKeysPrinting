@@ -25,6 +25,10 @@ class DashboardPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/dashboard` : `/`;
+            this.props.history.push(path);
+        }
 
         if (nextProps.isLogout) {
             this.props.logout();
@@ -33,7 +37,7 @@ class DashboardPage extends React.Component {
 
     render() {
         return (
-            <div id="dashboard-page" >
+            <div id="dashboard-page" className="container">
                 <InfoCard />
             </div>
         );

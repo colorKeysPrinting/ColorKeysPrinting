@@ -4,7 +4,7 @@ import assets       from 'libs/assets';
 export default () => {
 
     return (
-        <div>
+        <div className="container">
 
         </div>
     );

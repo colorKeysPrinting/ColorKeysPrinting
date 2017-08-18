@@ -1,6 +1,8 @@
 import React                    from 'react';
 import _                        from 'lodash';
 
+import assets                   from 'libs/assets';
+
 export default class MyTable extends React.Component {
 
     constructor(props) {
@@ -19,7 +21,11 @@ export default class MyTable extends React.Component {
             headers = _.map(this.props.headers, (header, id) => {
                 if (id !== 'id') {
                     if (id !== 'action') {
-                        return (<td className="table-header" key={`table-header-${id}`} >{ header }</td>);
+                        if (id === 'createdAt') {
+                            return (<td className="table-header" key={`table-header-${id}`} >{ header }<img className="sort-arrow" src={assets('./images/icon-sort-down.svg')} alt="sortArrow" /></td>);
+                        } else {
+                            return (<td className="table-header" key={`table-header-${id}`} >{ header }</td>);
+                        }
                     } else if (id !== 'id') {
                         return (<td key={`table-header-${id}`} ></td>);
                     }
@@ -33,7 +39,7 @@ export default class MyTable extends React.Component {
             const col = _.map(item, (col, id) => {
                 if (id !== 'id') {
                     if (id === 'action') {
-                        return (col === 'approve' || this.props.type === 'products') ? <td className="table-cell" key={`table-item-${id}`} ><div onClick={() => this.state.handleAction({ item })}>{ col }</div></td> : <td className="table-cell"></td>;
+                        return (col === 'approve' || this.props.type === 'products') ? <td className="table-cell approve" key={`table-item-${id}`} ><div onClick={() => this.state.handleAction({ item })}>{ col }</div></td> : <td className="table-cell"></td>;
 
                     } else {
                         return <td key={`table-item-${id}`} ><div onClick={() => this.state.handleItem({ item })}>{ col }</div></td>;

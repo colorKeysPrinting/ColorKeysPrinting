@@ -31,9 +31,9 @@ class HeaderBar extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        if (nextProps.activeUser) {
-            // const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
-            // this.props.history.push(path);
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
+            this.props.history.push(path);
         }
 
         if (nextProps.isLogout) {
@@ -56,10 +56,8 @@ class HeaderBar extends React.Component {
             loginSection = <Link to={`/login`} className="btn submit-btn" >Login</Link>;
 
         } else {
-            const profilePic = (activeUser.profilePicture) ? assets(activeUser.profilePicture) : assets('./images/icons-account.png');
-
             loginSection = <Link to={{ pathname: `/profile`, state: { prevPath: this.props.location.pathname }}} >
-                <img src={profilePic} alt="profilePicture" width="auto" height="27px" className="profile-pic" />
+                <img className="settings-icon" src={assets('./images/icon-settings.svg')} alt="settingsButtons" width="40px" height="40px" className="profile-pic" />
             </Link>;
         }
 
@@ -67,6 +65,7 @@ class HeaderBar extends React.Component {
         // const to = (activeUser.type && activeUser.type !== 'signUp') ? `/orders` : `/`;
         return (
             <div id="header-bar">
+                <img src={sibiLogo} id="logo"/>
                 <Tabs
                     type={activeUser.type}
                     activeTab={this.props.activeTab}

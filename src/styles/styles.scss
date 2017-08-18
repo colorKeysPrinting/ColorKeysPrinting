@@ -4,6 +4,7 @@
 @import './reset';
 
 @import 'node_modules/react-tabs/style/react-tabs.scss';
+@import 'node_modules/react-select/scss/default.scss';
 
 // APP STYLES (need to include each file one by one)
 
@@ -18,6 +19,7 @@
 @import "theme/layout";
 @import "theme/tables";
 @import "theme/modal";
+@import "theme/box";
 
 /**********************/
 /*      Partials      */
@@ -25,10 +27,12 @@
 @import "partials/accordion";
 @import "partials/slider";
 @import "partials/header-bar";
+@import "partials/details-header";
+@import "partials/profile-overlay";
 
 /**********************/
-/*       Pages        */
+/*        Pages       */
 /**********************/
+@import "pages/order-details-page";
 @import "pages/orders-page";
 @import "pages/users-page";
-@import "pages/order-details-page";

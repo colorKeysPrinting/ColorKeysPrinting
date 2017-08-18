@@ -14,11 +14,10 @@ class ProfileOverlay extends React.Component {
         const styles = {
             container: {
                 position: 'absolute',
-                top: '80px',
-                left: '80%',
+                top: '67px',
+                right: '10px',
                 backgroundColor: 'rgb(255, 255, 255)',
                 borderRadius: '5px',
-                border: '1px solid rgba(50, 50, 50, 0.4)',
                 boxShadow: 'rgba(50, 50, 50, 0.4) 0px 2px 7px 0px',
                 width: '250px',
                 zIndex: '999',
@@ -31,7 +30,6 @@ class ProfileOverlay extends React.Component {
                 cursor: 'pointer',
     
                 logout: {
-                    borderTop: '1px solid rgba(50, 50, 50, 0.4)',
                     padding: '10px',
                     cursor: 'pointer',
                 }
@@ -55,9 +53,7 @@ class ProfileOverlay extends React.Component {
         return (
             <Overlay type="profile">
                 <div style={styles.container}>
-                    <div style={{ display: 'inline-flex' }}>
-                        <div style={styles.username}>{this.props.email}</div>
-                    </div>
+                    <div className="arrow-up"></div>
                     <div onClick={() => this.props.logout(this.props.activeUser.username)} style={styles.element.logout} >Log out </div>
                 </div>
             </Overlay>

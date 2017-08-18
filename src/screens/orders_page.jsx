@@ -33,9 +33,11 @@ class OrdersPage extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
-            this.props.getUsers({ token: jwt.token });
-            this.props.getFundProperties({ token: jwt.token });
-            this.props.getOrders({ token: jwt.token, orders: (this.props.activeUser.type === 'superAdmin') ? 'ordersForSuperAdmin' : 'ordersForFund' });
+            if(jwt.token !== '') {
+                this.props.getUsers({ token: jwt.token });
+                this.props.getFundProperties({ token: jwt.token });
+                this.props.getOrders({ token: jwt.token, orders: (this.props.activeUser.type === 'superAdmin') ? 'ordersForSuperAdmin' : 'ordersForFund' });
+            }
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
@@ -44,10 +46,10 @@ class OrdersPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        // if (nextProps.activeUser) {
-        //     const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
-        //     browserHistory.push(path);
-        // }
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
+            this.props.history.push(path);
+        }
 
         if (nextProps.isLogout) {
             this.props.logout();
@@ -181,7 +183,7 @@ class OrdersPage extends React.Component {
         }
 
         return (
-            <div id="orders-page" >
+            <div id="orders-page" className="container">
                 <div className="table-card">
                     <div className="card-header">
                         <h2>Orders</h2>

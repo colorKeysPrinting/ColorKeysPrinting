@@ -34,6 +34,10 @@ class OrderDetails extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/order_details` : `/`;
+            this.props.history.push(path);
+        }
 
         if (nextProps.isLogout) {
             this.props.logout();
@@ -82,6 +86,7 @@ class OrderDetails extends React.Component {
                 PM: order.pmOffice.name,
                 orderNumber: order.orderNumber
             };
+
             const tenantInfo = {
                 tenantName: `${order.tenantFirstName} ${order.tenantLastName}`,
                 tenantPhoneNumber: order.tenantPhone,
@@ -129,10 +134,10 @@ class OrderDetails extends React.Component {
                     value = detail[key];
 
                     if (key === 'productImage') {
-                        value = <img src={detail.applianceColorsAndImages[0].imageUrl} alt="productImg" />;
+                        value = <img className="productImage" src={detail.applianceColorsAndImages[0].imageUrl} alt="productImg" />;
 
                     } else if (key === 'productDescription') {
-                        value = <div>
+                        value = <div className="no-limit">
                             <div className="table-cell-title">{ detail.applianceDescription }</div>
                             <div className="table-cell-details">{ `SIBI Model Number: ${detail.sibiModelNumber}` }</div>
                             <div className="table-cell-details">{ `Manufacturer's Model Number ${detail.manufacturerModelNumber}` }</div>
@@ -146,7 +151,7 @@ class OrderDetails extends React.Component {
                         </div>;
 
                     } else if (key === 'address') {
-                        value = <div>
+                        value = <div className="no-limit">
                             <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
                             <div>{`${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`}</div>
                         </div>;
@@ -163,19 +168,21 @@ class OrderDetails extends React.Component {
                 return cols;
             });
 
-            const buttonSection = (orderStatus == 'Pending') ? <div className="button-container">
-                <div className="button">Edit</div>
-                <div className="button" onClick={() => this.handleAction({orderId})}>Approve</div>
+            const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
+                {/* <div className="btn submit-btn">Edit</div> */}
+                <div className="btn submit-btn" onClick={() => this.handleAction({orderId})}>Approve</div>
             </div>
-                : null;
+                : <div className="button-container pure-u-1-3"></div>;
 
             detailsHeaderSection = <div className="details-header">
-                <div className="header-property">
-                    <div className="property-address">{orderPageHeading.orderNumber}</div>
+                <div className="header-property pure-u-2-3">
+                    <h2 className="property-address">{orderPageHeading.orderNumber}</h2>
                     <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
                 </div>
                 { buttonSection }
             </div>;
+
+            const tenantInfoDetails = (order.tenantFirstName) ? <div>{tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div> : <div>lock Box Code: { order.lockBoxCode }</div>;
 
             tenantInfoSection = <div id="admin-table">
                 <table className="table">
@@ -186,7 +193,7 @@ class OrderDetails extends React.Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td><div> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div></td>
+                            <td>{ tenantInfoDetails }</td>
                         </tr>
                     </tbody>
                 </table>
@@ -194,28 +201,31 @@ class OrderDetails extends React.Component {
         }
 
         return (
-            <div id="orders-page" >
-                { detailsHeaderSection }
-                <MyTable
-                    type="orderDetails"
-                    headers={orderHeaders}
-                    data={orderData}
-                />
-                { tenantInfoSection }
-                <MyTable
-                    type="productDetails"
-                    headers={productHeaders}
-                    data={productData}
-                />
+            <div id="orders-page" className="container">
+                <div className="container">
+                    { detailsHeaderSection }
+                    <MyTable
+                        type="orderDetails"
+                        headers={orderHeaders}
+                        data={orderData}
+                    />
+                    { tenantInfoSection }
+                    <MyTable
+                        type="productDetails"
+                        headers={productHeaders}
+                        data={productData}
+                    />
+                </div>
             </div>
         );
     }
 }
 
 const select = (state) => ({
-    isLogout       : state.jwt.get('isLogout'),
-    order          : state.orders.get('order'),
-    orders         : state.orders.get('orders')
+    activeUser      : state.activeUser.get('activeUser'),
+    isLogout        : state.jwt.get('isLogout'),
+    order           : state.orders.get('order'),
+    orders          : state.orders.get('orders')
 });
 
 const actions = {
