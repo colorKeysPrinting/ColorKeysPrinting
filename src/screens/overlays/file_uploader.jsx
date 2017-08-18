@@ -55,7 +55,7 @@ class fileUploaderOverlay extends React.Component {
 
     render() {
         let title, inputs, actionSection, close;
-    
+
         const styles = {
             container: {
                 backgroundColor: '#F9FAFC',
@@ -111,9 +111,9 @@ class fileUploaderOverlay extends React.Component {
                 whiteSpace: 'pre-wrap'
             }
         };
-    
+
         const errorMsg = (props.errorMsg) ? <div style={styles.errorMsg}>{ props.errorMsg }</div> : '';
-    
+
         return (
             <Overlay type="fileUploader">
                 <div style={styles.container}>
@@ -128,9 +128,9 @@ class fileUploaderOverlay extends React.Component {
                             onDrop={(e) => { e.preventDefault(); props.fileDrop(props.type, e.dataTransfer.files[0]) }}
                             onDragOver={(e) => { e.preventDefault(); e.dropEffect='copy' }}
                         >
-    
+
                             <label>Drag and drop an image or</label>
-                        <label htmlFor="file" className="btn submit-btn" style={{ width: '50%' }} >Choose file
+                            <label htmlFor="file" className="btn submit-btn" style={{ width: '50%' }} >Choose file
                                 <input
                                     id="file"
                                     type="file"
