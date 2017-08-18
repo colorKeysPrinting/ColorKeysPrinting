@@ -30,7 +30,7 @@ class ProductsPage extends React.Component {
 
             const { cookies } = this.props;
             const jwt = cookies.get('sibi-admin-jwt');
-            
+
             _.each(productCategories, (category) => {
                 this.props.getProductsForSubCategory({ token: jwt.token, categoryId: category.id, category: category.name });
             });
@@ -38,14 +38,14 @@ class ProductsPage extends React.Component {
     }
 
     render() {
-        let tabs, tabContent, addBtn;
+        let tabs, tabContent, tabsSection, addBtn;
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (this.props.productCategories.size > 0 &&
             this.props.products.size > 0) {
-            
+
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
 
@@ -92,6 +92,13 @@ class ProductsPage extends React.Component {
                     </TabPanel>
                 );
             });
+
+            tabsSection = <Tabs defaultIndex={0} >
+                <TabList>
+                    { tabs }
+                </TabList>
+                { tabContent }
+            </Tabs>;
         }
 
         return (
@@ -100,12 +107,7 @@ class ProductsPage extends React.Component {
                     <div>Products</div>
                     { addBtn }
                 </div>
-                <Tabs defaultIndex={0} >
-                    <TabList>
-                        { tabs }
-                    </TabList>
-                    { tabContent }
-                </Tabs>
+                { tabsSection }
             </div>
         );
     }
@@ -117,8 +119,8 @@ const select = (state) => ({
 });
 
 const actions = {
-    getProducts, 
-    getProductCategories, 
+    getProducts,
+    getProductCategories,
     getProductsForSubCategory,
     unarchiveProduct
 };
