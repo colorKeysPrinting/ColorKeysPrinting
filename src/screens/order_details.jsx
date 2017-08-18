@@ -82,6 +82,7 @@ class OrderDetails extends React.Component {
                 PM: order.pmOffice.name,
                 orderNumber: order.orderNumber
             };
+
             const tenantInfo = {
                 tenantName: `${order.tenantFirstName} ${order.tenantLastName}`,
                 tenantPhoneNumber: order.tenantPhone,
@@ -177,6 +178,8 @@ class OrderDetails extends React.Component {
                 { buttonSection }
             </div>;
 
+            const tenantInfoDetails = (order.tenantFirstName) ? <div>{tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div> : <div>lock Box Code: { order.lockBoxCode }</div>;
+
             tenantInfoSection = <div id="admin-table">
                 <table className="table">
                     <thead className="head">
@@ -186,7 +189,7 @@ class OrderDetails extends React.Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td><div> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div></td>
+                            <td>{ tenantInfoDetails }</td>
                         </tr>
                     </tbody>
                 </table>
