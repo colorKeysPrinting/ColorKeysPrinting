@@ -168,20 +168,20 @@ class OrderDetails extends React.Component {
             });
 
             const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
-                    <div className="btn submit-btn">Edit</div>
-                    <div className="btn submit-btn" onClick={() => this.handleAction({orderId})}>Approve</div>
-                </div>
+                <div className="btn submit-btn">Edit</div>
+                <div className="btn submit-btn" onClick={() => this.handleAction({orderId})}>Approve</div>
+            </div>
                 : <div className="button-container pure-u-1-3"></div>;
 
             detailsHeaderSection = <div className="details-header">
-                  <div className="header-property pure-u-2-3">
-                      <h2 className="property-address">{orderPageHeading.orderNumber}</h2>
-                      <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
-                  </div>
+                <div className="header-property pure-u-2-3">
+                    <h2 className="property-address">{orderPageHeading.orderNumber}</h2>
+                    <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
+                </div>
                 { buttonSection }
             </div>;
 
-            tenantInfoSection = <div id="admin-table">
+            tenantInfoSection = <div className="admin-table">
                 <table className="table">
                     <thead className="head">
                         <tr>
@@ -198,9 +198,8 @@ class OrderDetails extends React.Component {
         }
 
         return (
-            <div id="orders-page" >
+            <div id="orders-page" className="container">
                 <div className="container">
-
                     { detailsHeaderSection }
                     <MyTable
                         type="orderDetails"

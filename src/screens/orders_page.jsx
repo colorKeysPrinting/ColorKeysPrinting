@@ -166,7 +166,7 @@ class OrdersPage extends React.Component {
         }
 
         return (
-            <div id="orders-page" >
+            <div id="orders-page" className="container">
                 <div className="table-card">
                     <div className="card-header">
                         <h2>Orders</h2>

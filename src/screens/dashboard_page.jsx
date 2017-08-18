@@ -15,7 +15,7 @@ class DashboardPage extends React.Component {
 
     render() {
         return (
-            <div id="dashboard-page" >
+            <div id="dashboard-page" className="container">
                 <InfoCard />
             </div>
         );

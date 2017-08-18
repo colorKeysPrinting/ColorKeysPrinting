@@ -115,7 +115,7 @@ class UsersPage extends React.Component {
         }
 
         return (
-            <div id="users-page" >
+            <div id="users-page" className="container">
                 <div className="table-card">
                     <div className="card-header">
                         <h2>Users</h2>
