@@ -30,7 +30,7 @@ class OrderDetails extends React.Component {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
 
-        this.props.setActiveTab('orders');
+        // this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
@@ -181,9 +181,19 @@ class OrderDetails extends React.Component {
                 { buttonSection }
             </div>;
 
-            tenantInfoSection = <div className="box">
-                <div className="title">Tenant Info: </div>
-                <div className="body"> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div>
+            tenantInfoSection = <div id="admin-table">
+                <table className="table">
+                    <thead className="head">
+                        <tr>
+                            <td><div className="table-header">Tenant Info: </div></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>;
         }
 
