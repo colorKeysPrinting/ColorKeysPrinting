@@ -18,8 +18,6 @@ export default class MyTable extends React.Component {
         let headers = [];
 
         if (this.props.headers) {
-            console.log("headers");
-            console.log(this.props.headers);
             headers = _.map(this.props.headers, (header, id) => {
                 if (id !== 'id') {
                     if (id !== 'action') {
