@@ -181,9 +181,9 @@ class OrderDetails extends React.Component {
                 { buttonSection }
             </div>;
 
-            tenantInfoSection = <div className="admin-table">
-                <table>
-                    <thead>
+            tenantInfoSection = <div id="admin-table">
+                <table className="table">
+                    <thead className="head">
                         <tr>
                             <td><div className="table-header">Tenant Info: </div></td>
                         </tr>
