@@ -3,7 +3,7 @@ import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
-import SearchInput, { createFilter }        from 'react-search-input';
+import SearchInput                          from 'react-search-input';
 import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
@@ -209,7 +209,7 @@ const select = (state) => ({
     fundProperties  : state.users.get('fundProperties'),
 });
 
-const actions = { 
+const actions = {
     logout,
     getOrders,
     getUsers,

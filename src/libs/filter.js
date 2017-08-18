@@ -2,6 +2,14 @@
 
 import _            from 'lodash';
 
+const checkObj = (obj) => {
+    if (obj.type === 'select') {
+        if (typeof obj.props.value === 'boolean') {
+            return (obj.props.value) ? 'yes' : 'no';
+        }
+    }
+}
+
 export default function filter(searchTerm, keys, data) {
     searchTerm = searchTerm.toLowerCase();
     data = _.map(data, (element) => {
@@ -9,7 +17,7 @@ export default function filter(searchTerm, keys, data) {
 
         _.each(keys, (key) => {
             if (element[key]) {
-                const value = element[key].toLowerCase();
+                const value = (typeof element[key] === 'string')? element[key].toLowerCase() : checkObj(element[key]);
 
                 if (_.includes(value, searchTerm) ) {
                     isFound = true;
