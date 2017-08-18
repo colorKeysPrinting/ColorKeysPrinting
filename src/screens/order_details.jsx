@@ -181,9 +181,19 @@ class OrderDetails extends React.Component {
                 { buttonSection }
             </div>;
 
-            tenantInfoSection = <div className="box">
-                <div className="title">Tenant Info: </div>
-                <div className="body"> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div>
+            tenantInfoSection = <div className="admin-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <td><div className="table-header">Tenant Info: </div></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div> {tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>;
         }
 
