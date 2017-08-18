@@ -108,7 +108,7 @@ class ProductsPage extends React.Component {
             <div id="products-page">
                 <div className="container">
                     <div className="box">
-                    	<div className="header">
+                        <div className="header">
                             <div className="pure-g actions">
                                 <div className="pure-u-1-2">
                                     <h2>Products</h2>
