@@ -3,11 +3,13 @@ import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
-import assets                               from 'libs/assets';
+import SearchInput                          from 'react-search-input';
+import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
 import { getUsers, getFundProperties }      from 'ducks/users/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
 
@@ -15,8 +17,15 @@ class OrdersPage extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            searchTerm: '',
+            sortby: {column: '', isAsc: false }
+        };
+
+        this.update = this.update.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleItem = this.handleItem.bind(this);
+        this.orderBy = this.orderBy.bind(this);
     }
 
     componentWillMount() {
@@ -30,6 +39,8 @@ class OrdersPage extends React.Component {
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
+
+        this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
@@ -41,6 +52,19 @@ class OrdersPage extends React.Component {
         if (nextProps.isLogout) {
             this.props.logout();
         }
+    }
+
+    update({ type, value }) {
+        this.setState({ [type]: value });
+    }
+
+    orderBy({ column }) {
+        this.setState((prevState) => {
+            const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc !== 'asc') ? 'asc' : 'desc';
+            const sortby = { column, isAsc };
+
+            return { sortby };
+        });
     }
 
     handleAction({ item }) {
@@ -74,6 +98,8 @@ class OrdersPage extends React.Component {
             orderStatus: 'Status',
             action: ''
         };
+
+        const KEYS_TO_FILTERS = ['propertyId','address','occupied','userId','orderNumber','createdAt','totalCost','orderStatus'];
 
         if (this.props.orders.size > 0 &&
             this.props.users.size > 0 &&
@@ -109,12 +135,6 @@ class OrdersPage extends React.Component {
                     } else if (key === 'userId') {
                         value = `${user['firstName']} ${user['lastName']}`;
 
-                    } else if (key === 'email') {
-                        value = user['email'];
-
-                    } else if (key === 'productsAndDestinations') {
-                        value = _.size(value);
-
                     } else if (key === 'createdAt') {
                         value = dateformat(new Date(value), 'mmmm dd, yyyy');
 
@@ -131,22 +151,52 @@ class OrdersPage extends React.Component {
                 return cols;
             });
 
+            _.each(headers, (header, key) => {
+                let value;
+
+                if (key === 'id' || key === 'action') {
+                    value = header;
+
+                } else {
+                    value = <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
+                }
+
+                headers[key] = value;
+            });
+
             // this initially sets the "Pending" orders before everything and "Approved" orders at the end
-            data = _.partition(data, ['orderStatus', 'Pending']);
-            data = data[0].concat(data[1]);
-            data = _.partition(data, ['orderStatus', 'Approved']);
-            data = data[1].concat(data[0]);
+            if(this.state.searchTerm !== '') {
+                data = filter(this.state.searchTerm, KEYS_TO_FILTERS, data);
+            }
+
+            if (this.state.sortby.column === '') {
+                data = _.partition(data, ['orderStatus', 'Pending']);
+                data = data[0].concat(data[1]);
+                data = _.partition(data, ['orderStatus', 'Approved']);
+                data = data[1].concat(data[0]);
+
+            } else {
+                data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+            }
         }
 
         return (
             <div id="orders-page" >
-                <MyTable
-                    type="orders"
-                    headers={headers}
-                    data={data}
-                    handleAction={this.handleAction}
-                    handleItem={this.handleItem}
-                />
+                <div className="table-card">
+                    <div className="card-header">
+                        <h2>Orders</h2>
+                        <div className="search-bar">
+                            <SearchInput onChange={(value) => this.update({ type: 'searchTerm', value })} />
+                        </div>
+                    </div>
+                    <MyTable
+                        type="orders"
+                        headers={headers}
+                        data={data}
+                        handleAction={this.handleAction}
+                        handleItem={this.handleItem}
+                    />
+                </div>
             </div>
         );
     }
@@ -159,4 +209,13 @@ const select = (state) => ({
     fundProperties  : state.users.get('fundProperties'),
 });
 
-export default connect(select, { logout, getOrders, getUsers, getFundProperties, approveOrder }, null, { withRef: true })(withCookies(OrdersPage));
+const actions = {
+    logout,
+    getOrders,
+    getUsers,
+    getFundProperties,
+    approveOrder,
+    setActiveTab
+}
+
+export default connect(select, actions, null, { withRef: true })(withCookies(OrdersPage));

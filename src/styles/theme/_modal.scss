@@ -1,0 +1,30 @@
+.modal {
+  background: white;
+  border-radius: 4px;
+  max-width: 500px;
+  margin: 0 auto;
+  position: relative;
+  top: 20%;
+  background: $background-gray;
+  .titleBar {
+    background: white;
+    padding: 30px;
+    position: relative;
+    text-align:left;
+    border-bottom: 1px solid $border-gray;
+    .title {
+      font-size: 16px;
+    }
+    .icon-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+  }
+  .content {
+    padding: 40px;
+    input[type=email], input[type=password], input[type=text] {
+      margin-bottom: 15px;
+    }
+  }
+}

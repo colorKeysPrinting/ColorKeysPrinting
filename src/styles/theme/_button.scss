@@ -1,45 +1,40 @@
-$blue-color: #06cfe5;
-$gray-color: rgba(50,50,50,0.1);
-$white: #FFF;
-
-.submit-btn {
-    background-color: $blue-color;
-    border-radius: 5px;
-    color: $white;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    padding: 10px;
-    width: 200px;
-    height: 46px;
-    font-size: 18px;
-
-    margin: 20px auto;
-    padding-top: 14px;
+.btn {
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  padding: 15px 20px;
+  font-weight: 400;
+  min-width: 130px;
+  display: inline-block;
+  letter-spacing: 0.6px;
+  transition-duration: 0.3s;
+  border-radius: 3px;
+  &.fill {
+    width: 100%;
+  }
 }
 
-.cancel-btn {
-    border: 1px solid $gray-color;
-    border-radius: 5px;
-    color: $blue-color;
-    cursor: pointer;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    margin: auto;
-    padding: 10px;
-    width: 200px;
-    height: 46px;
-    font-size: 18px;
+.submit-btn {
+    background-color: $light-blue;
+    color: white;
+    &:hover {
+      color: white;
+      opacity: 0.9;
+    }
+    &:active, &:focus {
+      color: white;
+    }
+}
 
-    margin: 20px auto;
-    padding-top: 14px;
+.white-btn {
+  &:hover {
+    background: $gray-color;
+  }
 }
 
 .text-link {
-    color: $blue-color;
+    color: $light-blue;
     cursor: pointer;
 }
-
