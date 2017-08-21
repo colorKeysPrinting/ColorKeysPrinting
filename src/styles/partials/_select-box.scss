@@ -2,8 +2,10 @@
     .input {
         height: 30px;
         width: 60px;
-        border: 1px solid #000;
+        border: 1px solid #383838;
         cursor: pointer;
+        display: inline-flex;
+        padding: 5px;
     }
 
     .option {
@@ -14,21 +16,19 @@
 
     .select-options {
         display: none;
-        position: absolute;
-        border: 2px solid #efefef;
-        background-color: #ffffff;
-        color: #efefef;
     }
 
-    .select-options.active {
+    .select-options-active {
         display: block;
+        position: absolute;
+        box-shadow: 3px 3px 13px 0px rgba(50, 50, 50, 0.5);
+        background-color: #FFF;
+        max-height: 100px;
+        overflow-y: scroll;
+        padding: 5px;
     }
 
-    // .arrow-indicator {
-
-    // }
-
-    // .arrow-indicator.active {
-
-    // }
+    .arrow-indicator {
+        padding-left: 15px;
+    }
 }
