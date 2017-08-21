@@ -1,0 +1,34 @@
+.select-box {
+    .input {
+        height: 30px;
+        width: 60px;
+        border: 1px solid #000;
+        cursor: pointer;
+    }
+
+    .option {
+        height: 30px;
+        width: 60px;
+        cursor: pointer;
+    }
+
+    .select-options {
+        display: none;
+        position: absolute;
+        border: 2px solid #efefef;
+        background-color: #ffffff;
+        color: #efefef;
+    }
+
+    .select-options.active {
+        display: block;
+    }
+
+    // .arrow-indicator {
+
+    // }
+
+    // .arrow-indicator.active {
+
+    // }
+}
