@@ -34,7 +34,6 @@
         "shelljs": false     // shelljs global variables.
     },
 
-    "extends": "airbnb",
     "parser": "babel-eslint",
 
     "globals": {
@@ -142,7 +141,7 @@
         "yoda": 0,                  // require or disallow Yoda conditions
         "import/no-unresolved": 0,
         "import/extensions": 0,
-        "import/no-extraneous-dependencies": 1,
+        "import/no-extraneous-dependencies": 0,
         "jsx-a11y/no-static-element-interactions": 0,
         "jsx-a11y/href-no-hash": 0,
         "jsx-a11y/label-has-for": 0,
@@ -150,7 +149,7 @@
         "react/prefer-stateless-function": 0,
         "react/forbid-prop-types": 0,
         "react/prop-types": 0,
-        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent": ["warn", 4],
         "react/jsx-indent-props": ["error", 4],
         "react/self-closing-comp": 0,
         "react/no-will-update-set-state": 0,
@@ -206,7 +205,7 @@
         "no-inline-comments": 0,        // disallow comments inline after code (off by default)
         "no-lonely-if": 0,              // disallow if as the only statement in an else block (off by default)
         "no-mixed-spaces-and-tabs": 2,  // disallow mixed spaces and tabs for indentation
-        "indent": ["error", 4],
+        "indent": ["warn", 4],
         "no-multiple-empty-lines": 0,   // disallow multiple empty lines (off by default)
         "no-nested-ternary": 0,         // disallow nested ternary expressions (off by default)
         "no-new-object": 0,             // disallow use of the Object constructor

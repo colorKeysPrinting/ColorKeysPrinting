@@ -1,0 +1,58 @@
+body {
+  text-align: center;
+  background: $background-gray;
+  padding-top: 119px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.react-tabs {
+  &__tab-list {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  &__tab {
+    display: inline-block;
+    position: relative;
+    list-style: none;
+    padding: 12px 0px;
+    margin-left: 30px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    opacity: 0.3;
+    text-transform: lowercase;
+
+    &--selected {
+      color: black;
+      background: none;
+      border: none;
+      border-bottom: 3px solid $blue;
+      opacity: 1;
+    }
+    &:focus {
+      box-shadow: none;
+      border: none;
+      outline: none;
+    }
+  }
+
+  &__tab-panel {
+    display: none;
+
+    &--selected {
+      display: block;
+    }
+
+    &--disabled {
+      color: GrayText;
+      cursor: default;
+    }
+  }
+}

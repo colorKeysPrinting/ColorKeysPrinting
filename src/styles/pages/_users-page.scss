@@ -1,0 +1,48 @@
+//Users Page Specific Styling
+#users-page {
+    .table {
+        thead {
+            td {
+                //Name
+                &:nth-child(1) {
+                    width: 12%;
+                }
+
+                //PM Office
+                &:nth-child(2) {
+                    width: 11%;
+                }
+
+                //Email
+                &:nth-child(3) {
+                    width: 17%;
+                }
+
+                //Phone
+                &:nth-child(4) {
+                    width: 12%;
+                }
+
+                //Account Created
+                &:nth-child(5) {
+                    width: 15%;
+                }
+
+                //Auto Approve
+                &:nth-child(6) {
+                    width: 13%;
+                }
+
+                //Status
+                &:nth-child(7) {
+                    width: 10%;
+                }
+
+                //Approval Column
+                &:nth-child(8) {
+                    width: 10%;
+                }
+            }
+        }
+    }
+}

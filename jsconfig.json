@@ -2,7 +2,9 @@
     "compilerOptions": {
         "target": "ES6",
         "checkJs": false,
-        "jsx": "react"
+        "jsx": "react",
+        "sourceMap": true,
+        "sourceRoot": "./src/"
     },
     "exclude": [
         "**/node_modules/*",
