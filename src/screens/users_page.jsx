@@ -135,7 +135,6 @@ class UsersPage extends React.Component {
                         ];
 
                         value = <Select
-                            className="select-box"
                             name="auto-approved-orders-select"
                             value={autoApprovedOrders}
                             options={options}

@@ -8,6 +8,7 @@ import assets                   from 'libs/assets';
 import { updateProduct, createProduct, archiveProduct }      from 'ducks/products/actions';
 
 import Overlay                  from 'components/overlay';
+import Select                   from 'components/select_box';
 
 class EditProduct extends React.Component {
     constructor(props) {
@@ -47,16 +48,18 @@ class EditProduct extends React.Component {
             applianceRemovalPrice: '',
         };
 
-        this.state = { 
-            activeSection: '', 
-            isInstall: false, 
+        this.state = {
+            activeSection: '',
+            isInstall: false,
             isRemoval: false,
             image: '',
+            imageFile: '',
             color: '',
-            ...product 
+            ...product
         };
 
         this.update = this.update.bind(this);
+        this.updateImage = this.updateImage.bind(this);
         this.close = this.close.bind(this);
         this.changeActiveSection = this.changeActiveSection.bind(this);
         this.addColorAndImage = this.addColorAndImage.bind(this);
@@ -75,12 +78,23 @@ class EditProduct extends React.Component {
         }
     }
 
+    updateImage({ image }) {
+        const reader = new FileReader();
+        this.setState({ imageFile: image });
+
+        reader.onload = (e) => {
+            this.setState({ image: e.target.result });
+        }
+
+        reader.readAsDataURL(image);
+    }
+
     close() {
         this.props.history.goBack();
     }
 
     changeActiveSection(activeSection) {
-        this.setState((prevState) => { 
+        this.setState((prevState) => {
             activeSection = (prevState.activeSection !== activeSection) ? activeSection : '';
 
             return { activeSection };
@@ -91,7 +105,7 @@ class EditProduct extends React.Component {
         console.log('adding color & image');
         this.setState((prevState) => {
             prevState.applianceColorsAndImages.push({ imageUrl: prevState.image, color: prevState.color });
-            document.getElementById('product-image-input').value = null;
+            // document.getElementById('product-image-input').value = null;
 
             return { applianceColorsAndImages: prevState.applianceColorsAndImages, color: '', image: '' };
         });
@@ -158,17 +172,8 @@ class EditProduct extends React.Component {
     render() {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        
+
         const styles = {
-            container: {
-                backgroundColor: '#F9FAFC',
-                borderRadius: '5px',
-                border: '1px solid rgba(50, 50, 50, 0.4)',
-                boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-                width: '490px',
-                maxHeight: '640px',
-                margin: '5em auto',
-            },
             titleBar: {
                 display: 'inline-flex',
                 backgroundColor: '#FFF',
@@ -206,18 +211,14 @@ class EditProduct extends React.Component {
         };
 
         const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
-        const categories = _.map(this.props.productCategories.toJS(), (category) => {
-            return <option key={category.id} value={category.id}>{ category.name }</option>;
-        });
         const title = (this.props.location.state) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
         const archiveBtn = (this.state.id) ? <div className="cancel-btn" onClick={() => this.props.archiveProduct({ token: jwt.token, category: category.name, id: this.state.id })}>Archive Product</div> : null;
+        const imageBtn = (this.state.image !== '') ? <img src={this.state.image} alt="uploaded-image" height="60" /> : 'Choose File';
 
-        const newColorAndImage = <div style={{ display: 'inline-flex' }} >
-            <input type="file" id="product-image-input" name="productImage" className="submit-btn" accept=".png,.jpg,.jpeg,.svg" onChange={(e) => {e.preventDefault(); this.update({ type: 'image', value: e.target.files[0] }); }} />
-            <input type="text" value={this.state.color} onChange={(e) => this.update({ type: 'color', value: e.target.value })} />
-            <div onClick={this.addColorAndImage} className="cancel-btn">Add</div>
-        </div>;
+        const categories = _.map(this.props.productCategories.toJS(), (category) => {
+            return { label: category.name, value: category.id };
+        });
 
         const productPictures = _.map(this.state.applianceColorsAndImages, (image, index) => {
             return (
@@ -228,10 +229,21 @@ class EditProduct extends React.Component {
                 </div>
             );
         });
-        
+
+        const categoryOptions = [
+            { label: 'Select Category', value: '', className: 'disabled' },
+            ...categories
+        ]
+
+        const fuelTypeOptions = [
+            { label: 'Select Fuel Type', value: '', className: 'disabled' },
+            { label: 'Gas', value: 'gas' },
+            { label: 'Electric', value: 'electric' }
+        ]
+
         return (
             <Overlay type="editProduct">
-                <div style={styles.container}>
+                <div id="edit-product-overlay" >
                     <div style={styles.titleBar} >
                         <div style={styles.title}>{ title } Product</div>
                         <div onClick={this.close} style={styles.close}>X</div>
@@ -242,10 +254,12 @@ class EditProduct extends React.Component {
                                 <div>
                                     <div>
                                         <label htmlFor="product-category">Category</label>
-                                        <select name="product-category" value={this.state.productSubcategoryId} onChange={(e) => this.update({ type: 'productSubcategoryId', value: e.target.value})} required >
-                                            <option disabled defaultValue="" >Select category</option>
-                                            { categories }
-                                        </select>
+                                        <Select
+                                            name="product-category"
+                                            value={this.state.productSubcategoryId}
+                                            options={categoryOptions}
+                                            onChange={(value) => this.update({ type: 'productSubcategoryId', value })}
+                                        />
                                     </div>
 
                                     <div>
@@ -253,7 +267,7 @@ class EditProduct extends React.Component {
                                         <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update({ type: 'name', value: e.target.value})} required />
                                     </div>
                                 </div>
-                                
+
                                 <div>
                                     <div>
                                         <label htmlFor="product-classification">Classification</label>
@@ -279,11 +293,12 @@ class EditProduct extends React.Component {
                                 <div>
                                     <div>
                                         <label htmlFor="product-fuel-type">Fuel Type</label>
-                                        <select name="product-fuel-type" value={this.state.applianceFuelType} onChange={(e) => this.update({ type: 'applianceFuelType', value: e.target.value})} >
-                                            <option disabled defaultValue="" >Select Fuel Type</option>
-                                            <option value="gas">Gas</option>
-                                            <option value="electric">Electric</option>
-                                        </select>
+                                        <Select
+                                            name="product-fuel-type"
+                                            value={(this.state.applianceFuelType).toLowerCase()}
+                                            options={fuelTypeOptions}
+                                            onChange={(value) => this.update({ type: 'applianceFuelType', value })}
+                                        />
                                     </div>
 
                                     <div>
@@ -330,7 +345,7 @@ class EditProduct extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div style={{ columnCount: 2 }}>
                                 <div>
                                     <div>
@@ -350,17 +365,34 @@ class EditProduct extends React.Component {
                             </div>
 
                             <div id="accordion">
+                                {/* ************************************** color/pictures section ************************************** */}
                                 <div id="accordion-pictures" onClick={() => this.changeActiveSection('pictures')}>
                                     <div>{ _.size(this.state.applianceColorsAndImages) } Photos</div>
                                 </div>
-                                <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} > 
+                                <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} >
                                     { productPictures }
-                                    { newColorAndImage }
+                                    <div style={{ display: 'inline-flex' }} >
+                                        <label className="btn submit-btn" >
+                                            { imageBtn }
+                                            <input
+                                                type="file"
+                                                accept=".png,.jpg,.jpeg,.svg"
+                                                onChange={(e) => {e.preventDefault(); this.updateImage({ image: e.target.files[0] }); }}
+                                                style={{ display: 'none' }}
+                                            />
+                                        </label>
+                                        <input type="text" value={this.state.color} onChange={(e) => this.update({ type: 'color', value: e.target.value })} />
+                                        <div onClick={this.addColorAndImage} className="cancel-btn">Add</div>
+                                    </div>
                                 </div>
+
+                                {/* ************************************** video section ************************************** */}
                                 <div id="accordion-video" onClick={() => this.changeActiveSection('videos')}>
                                     <div>{ _.size(this.state.applianceColorsAndImages) } Vidoes</div>
                                 </div>
                                 <div style={{ display: (this.state.activeSection === 'videos') ? 'block' : 'none' }} > showing videos </div>
+
+                                {/* ************************************** parts section ************************************** */}
                                 <div id="accordion-parts" onClick={() => this.changeActiveSection('parts')} >
                                     <div>{ _.size(this.state.applianceAssociatedParts) } Parts</div>
                                 </div>
@@ -430,7 +462,7 @@ const select = (state) => ({
 });
 
 const actions = {
-    updateProduct, 
+    updateProduct,
     createProduct,
     archiveProduct
 };
