@@ -55,6 +55,9 @@ class EditProduct extends React.Component {
             image: '',
             imageFile: '',
             color: '',
+            partDescription: '',
+            partCode: '',
+            videoURL: '',
             ...product
         };
 
@@ -65,6 +68,10 @@ class EditProduct extends React.Component {
         this.addColorAndImage = this.addColorAndImage.bind(this);
         this.removeColorAndImage = this.removeColorAndImage.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
+        this.addProductPart = this.addProductPart.bind(this);
+        this.removeProductPart = this.removeProductPart.bind(this);
+        this.addProductVideo = this.addProductVideo.bind(this);
+        this.removeProductVideo = this.removeProductVideo.bind(this);
     }
 
     update({ type, value }) {
@@ -105,7 +112,6 @@ class EditProduct extends React.Component {
         console.log('adding color & image');
         this.setState((prevState) => {
             prevState.applianceColorsAndImages.push({ imageUrl: prevState.image, color: prevState.color });
-            // document.getElementById('product-image-input').value = null;
 
             return { applianceColorsAndImages: prevState.applianceColorsAndImages, color: '', image: '' };
         });
@@ -117,6 +123,43 @@ class EditProduct extends React.Component {
             const applianceColorsAndImages = _.remove(prevState.applianceColorsAndImages, (element) => { return element.color !== color } );
 
             return { applianceColorsAndImages };
+        });
+    }
+
+    addProductPart() {
+        console.log('adding part');
+        this.setState((prevState) => {
+            const id = _.size(prevState.applianceAssociatedParts);
+            prevState.applianceAssociatedParts.push({ id, description: prevState.partDescription, code: prevState.partCode });
+
+            return { applianceAssociatedParts: prevState.applianceAssociatedParts, partDescription: '', partCode: '' };
+        });
+    }
+
+    removeProductPart({ partId }) {
+        console.log('removeProductPart with partNumber: ', partId);
+        this.setState((prevState) => {
+            const applianceAssociatedParts = _.remove(prevState.applianceAssociatedParts, (element) => { return element.id !== partId } );
+
+            return { applianceAssociatedParts };
+        });
+    }
+
+    addProductVideo() {
+        console.log('adding video');
+        this.setState((prevState) => {
+            prevState.videos.push(prevState.videoURL);
+
+            return { videos: prevState.videos, videoURL: '' };
+        });
+    }
+
+    removeProductVideo({ index }) {
+        console.log('removeProductPart with partNumber: ', index);
+        this.setState((prevState) => {
+            const videos = _.remove(prevState.videos, (element, i) => { return i !== index } ); // I'm using this in place of splice because the videos will probably change to obj
+
+            return { videos };
         });
     }
 
@@ -229,6 +272,25 @@ class EditProduct extends React.Component {
                 </div>
             );
         });
+
+        const productVideos = _.map(this.state.videos, (video, index) => {
+            return (
+                <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                    <input type="text" value={video} disabled />
+                    <div className="cancel-btn" onClick={()=> this.removeProductVideo({ index }) } >X</div>
+                </div>
+            );
+        });
+
+        const productParts = _.map(this.state.applianceAssociatedParts, (part, index) => {
+            return (
+                <div key={`parts${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                    <input type="text" value={part.description} disabled />
+                    <input type="text" value={part.code} disabled />
+                    <div className="cancel-btn" onClick={()=> this.removeProductPart({ partId: (part.id) ? part.id : index }) } >X</div>
+                </div>
+            )
+        })
 
         const categoryOptions = [
             { label: 'Select Category', value: '', className: 'disabled' },
@@ -364,9 +426,9 @@ class EditProduct extends React.Component {
                                 <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" />
                             </div>
 
-                            <div id="accordion">
+                            <div className="accordion">
                                 {/* ************************************** color/pictures section ************************************** */}
-                                <div id="accordion-pictures" onClick={() => this.changeActiveSection('pictures')}>
+                                <div id="accordion-pictures" className={(this.state.activeSection === 'pictures') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('pictures')}>
                                     <div>{ _.size(this.state.applianceColorsAndImages) } Photos</div>
                                 </div>
                                 <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} >
@@ -381,22 +443,35 @@ class EditProduct extends React.Component {
                                                 style={{ display: 'none' }}
                                             />
                                         </label>
-                                        <input type="text" value={this.state.color} onChange={(e) => this.update({ type: 'color', value: e.target.value })} />
+                                        <input type="text" value={this.state.color} placeholder="Color name" onChange={(e) => this.update({ type: 'color', value: e.target.value })} />
                                         <div onClick={this.addColorAndImage} className="cancel-btn">Add</div>
                                     </div>
                                 </div>
 
                                 {/* ************************************** video section ************************************** */}
-                                <div id="accordion-video" onClick={() => this.changeActiveSection('videos')}>
-                                    <div>{ _.size(this.state.applianceColorsAndImages) } Vidoes</div>
+                                <div id="accordion-video" className={(this.state.activeSection === 'videos') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('videos')}>
+                                    <div>{ _.size(this.state.videos) } Vidoes</div>
                                 </div>
-                                <div style={{ display: (this.state.activeSection === 'videos') ? 'block' : 'none' }} > showing videos </div>
+                                <div style={{ display: (this.state.activeSection === 'videos') ? 'block' : 'none' }} >
+                                    { productVideos }
+                                    <div style={{ display: 'inline-flex' }} >
+                                        <input type="url" value={this.state.videoURL} placeholder="video URL" onChange={(e) => this.update({ type: 'videoURL', value: e.target.value })} />
+                                        <div onClick={this.addProductVideo} className="cancel-btn">Add</div>
+                                    </div>
+                                </div>
 
                                 {/* ************************************** parts section ************************************** */}
-                                <div id="accordion-parts" onClick={() => this.changeActiveSection('parts')} >
+                                <div id="accordion-parts" className={(this.state.activeSection === 'parts') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('parts')} >
                                     <div>{ _.size(this.state.applianceAssociatedParts) } Parts</div>
                                 </div>
-                                <div style={{ display: (this.state.activeSection === 'parts') ? 'block' : 'none' }} > showing parts </div>
+                                <div style={{ display: (this.state.activeSection === 'parts') ? 'block' : 'none' }} >
+                                    { productParts }
+                                    <div style={{ display: 'inline-flex' }} >
+                                        <input type="text" value={this.state.partDescription} placeholder="Part name"   onChange={(e) => this.update({ type: 'partDescription', value: e.target.value })} />
+                                        <input type="text" value={this.state.partCode}        placeholder="Part number" onChange={(e) => this.update({ type: 'partCode', value: e.target.value })} />
+                                        <div onClick={this.addProductPart} className="cancel-btn">Add</div>
+                                    </div>
+                                </div>
                             </div>
                             <div style={styles.checkbox}>
                                 <input
