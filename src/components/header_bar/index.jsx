@@ -7,6 +7,8 @@ import { withCookies }          from 'react-cookie';
 import assets                   from 'libs/assets';
 
 import { getCurrentUser }       from 'ducks/active_user/actions';
+import { getUsers }             from 'ducks/users/actions';
+import { getOrders }            from 'ducks/orders/actions';
 
 import Tabs                     from './tabs';
 
@@ -34,6 +36,21 @@ class HeaderBar extends React.Component {
         if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
             const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
             this.props.history.push(path);
+
+            if (nextProps.activeUser.size > 0) {
+                const activeUser = nextProps.activeUser.toJS();
+                const { cookies } = this.props;
+                const jwt = cookies.get('sibi-admin-jwt');
+
+                if (jwt && jwt.token !== '') {
+                    this.props.getCurrentUser(jwt.token);
+                    this.props.getUsers({ token: jwt.token });
+                    this.props.getOrders({ token: jwt.token, type: activeUser.type });
+
+                } else {
+                    console.log('TODO: trigger logout function *** no JWT ***');
+                }
+            }
         }
 
         if (nextProps.isLogout) {
@@ -47,7 +64,7 @@ class HeaderBar extends React.Component {
     }
 
     render() {
-        let loginSection;
+        let loginSection, pendingUsers = 0, pendingOrders = 0;
 
         const activeUser = this.props.activeUser.toJS();
         const sibiLogo = assets('./images/SIBI_Logo.png');
@@ -59,16 +76,28 @@ class HeaderBar extends React.Component {
             loginSection = <Link to={{ pathname: `/profile`, state: { prevPath: this.props.location.pathname }}} >
                 <img className="settings-icon" src={assets('./images/icon-settings.svg')} alt="settingsButtons" width="40px" height="40px" className="profile-pic" />
             </Link>;
+
+            if (this.props.orders.size > 0 &&
+                this.props.users.size > 0) {
+
+                _.each(this.props.orders.toJS(), (order) => {
+                    pendingOrders += ((order.orderStatus).toLowerCase() === 'pending') ? 1 : 0;
+                });
+
+                _.each(this.props.users.toJS(), (user) => {
+                    pendingUsers += ((user.type).toLowerCase() === 'pending') ? 1 : 0;
+                });
+            }
         }
 
-        // let searchSection = (this.state.isSearch) ? <input type="text" onChange={ (e)=>{this.search()} } /> : <img src={''} alt="search" onClick={(e)=>{ this.setState(isSearch, true)}}/>
-        // const to = (activeUser.type && activeUser.type !== 'signUp') ? `/orders` : `/`;
         return (
             <div id="header-bar">
                 <img src={sibiLogo} id="logo"/>
                 <Tabs
                     type={activeUser.type}
                     activeTab={this.props.activeTab}
+                    pendingOrders={pendingOrders}
+                    pendingUsers={pendingUsers}
                 />
                 <div className="login-section">
                     { loginSection }
@@ -81,7 +110,15 @@ class HeaderBar extends React.Component {
 const select = (state) => ({
     isLogout        : state.jwt.get('isLogout'),
     activeUser      : state.activeUser.get('activeUser'),
-    activeTab       : state.header.get('activeTab')
+    activeTab       : state.header.get('activeTab'),
+    orders          : state.orders.get('orders'),
+    users           : state.users.get('users')
 });
 
-export default connect(select, { getCurrentUser }, null, { withRef: true })(withRouter(withCookies(HeaderBar)));
+const actions = {
+    getCurrentUser,
+    getUsers,
+    getOrders,
+}
+
+export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(HeaderBar)));

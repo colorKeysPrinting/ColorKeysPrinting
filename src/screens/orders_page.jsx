@@ -32,12 +32,10 @@ class OrdersPage extends React.Component {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt) {
-            if(jwt.token !== '') {
-                this.props.getUsers({ token: jwt.token });
-                this.props.getFundProperties({ token: jwt.token });
-                this.props.getOrders({ token: jwt.token, orders: (this.props.activeUser.type === 'superAdmin') ? 'ordersForSuperAdmin' : 'ordersForFund' });
-            }
+        if (jwt && jwt.token !== '') {
+            this.props.getUsers({ token: jwt.token });
+            this.props.getFundProperties({ token: jwt.token });
+            this.props.getOrders({ token: jwt.token, type: this.props.activeUser.type });
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
