@@ -4,6 +4,7 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import SearchInput                          from 'react-search-input';
+import Select                               from 'components/select_box';
 import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
@@ -129,20 +130,17 @@ class UsersPage extends React.Component {
                         const autoApprovedOrders = (user.autoApprovedOrders) ? true : false;
 
                         const options = [
-                            { value: false, label: 'No' },
-                            { value: true, label: 'Yes' }
+                            { label: 'No', value: false },
+                            { label: 'Yes', value: true }
                         ];
 
-                        // value = <Select
-                        //     name="auto-approved-orders-select"
-                        //     value={autoApprovedOrders}
-                        //     options={options}
-                        //     onChange={(autoApprovedOrders) => this.handleAutoApprove({ user, autoApprovedOrders: autoApprovedOrders.value })}
-                        // />;
-                        value = <select value={autoApprovedOrders} onChange={(e) => this.handleAutoApprove({ user, autoApprovedOrders: e.target.value })} >
-                            <option value="false" >No</option>
-                            <option value="true" >Yes</option>
-                        </select>;
+                        value = <Select
+                            className="select-box"
+                            name="auto-approved-orders-select"
+                            value={autoApprovedOrders}
+                            options={options}
+                            onChange={(autoApprovedOrders) => this.handleAutoApprove({ user, autoApprovedOrders })}
+                        />;
 
                     } else if (key === 'status') {
                         value = (user['type'] === 'pending') ? 'Pending' : 'Approved';

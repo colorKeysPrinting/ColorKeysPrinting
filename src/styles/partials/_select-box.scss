@@ -1,0 +1,33 @@
+.select-box {
+    .input {
+        height: 30px;
+        width: 60px;
+        cursor: pointer;
+        display: inline-flex;
+        padding: 5px;
+    }
+
+    .option {
+        height: 30px;
+        width: 60px;
+        cursor: pointer;
+    }
+
+    .select-options {
+        display: none;
+    }
+
+    .select-options-active {
+        display: block;
+        position: absolute;
+        box-shadow: 3px 3px 13px 0px rgba(50, 50, 50, 0.5);
+        background-color: #FFF;
+        max-height: 100px;
+        overflow-y: scroll;
+        padding: 5px;
+    }
+
+    .arrow-indicator {
+        padding-left: 15px;
+    }
+}
