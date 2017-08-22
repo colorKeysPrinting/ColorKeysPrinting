@@ -9,51 +9,61 @@
 }
 
 #logo {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  height: 30px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    height: 30px;
 }
 
 .links {
-  text-align: center;
-  a {
-    display: inline-block;
-    height: 69px;
-    color: white;
-    padding: 28px 20px;
-    font-size: 16px;
-    font-weight: 400;
-    font-style: normal;
-    &.active {
-      border-bottom: 3px solid $blue;
-    }
-  }
-
-  .pending-badges {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    font-size: 10px;
-    color: $white;
-    line-height: 22px;
     text-align: center;
-    background: $light-blue;
+    a {
+        display: inline-flex;
+        height: 69px;
+        color: white;
+        padding: 28px 20px;
+        font-size: 16px;
+        font-weight: 400;
+        font-style: normal;
 
-  }
+        &.active {
+        border-bottom: 3px solid $blue;
+        }
+    }
+
+    #order-badge {
+        margin-left: 50px;
+    }
+
+    #user-badge {
+        margin-left: 35px;
+    }
+
+    .pending-badges {
+        width: 15px;
+        height: 15px;
+        border-radius: 10px;
+        font-size: 10px;
+        color: $white;
+        line-height: 17px;
+        text-align: center;
+        background: $light-blue;
+        top: 14px;
+        position: absolute;
+    }
 }
 .login-section {
     position: absolute;
     top: 0px;
     right: 0px;
     img {
-      margin: 19px;
-      border-radius: 50%;
-      height: 30px;
-      width: 30px;
+        margin: 19px;
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
     }
     .btn {
-      margin: 12px;
+        margin: 12px;
     }
 }
 .profile-section {

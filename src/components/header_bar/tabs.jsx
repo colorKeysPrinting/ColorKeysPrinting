@@ -5,8 +5,8 @@ export default class Tabs extends React.Component {
 
     render() {
 
-        const pendingOrders = (this.props.pendingOrders !== 0) ? <div className="pending-badges" >{this.props.pendingOrders}</div> : null;
-        const pendingUsers = (this.props.pendingUsers !== 0) ? <div className="pending-badges" >{this.props.pendingUsers}</div> : null;
+        const pendingOrders = (this.props.pendingOrders !== 0) ? <div id="order-badge" className="pending-badges" >{this.props.pendingOrders}</div> : null;
+        const pendingUsers = (this.props.pendingUsers !== 0) ? <div id="user-badge" className="pending-badges" >{this.props.pendingUsers}</div> : null;
 
         const tabs = {
             // dashboard : <Link to={`/dashboard`} className={(this.props.activeTab === 'dashboard') ? 'active' : 'tabs'} >Dashboard</Link>,

@@ -81,11 +81,11 @@ class HeaderBar extends React.Component {
                 this.props.users.size > 0) {
 
                 _.each(this.props.orders.toJS(), (order) => {
-                    pendingOrders += 1;
+                    pendingOrders += ((order.orderStatus).toLowerCase() === 'pending') ? 1 : 0;
                 });
 
-                _.each(this.props.users.toJS(), (users) => {
-                    pendingUsers += 1;
+                _.each(this.props.users.toJS(), (user) => {
+                    pendingUsers += ((user.type).toLowerCase() === 'pending') ? 1 : 0;
                 });
             }
         }
