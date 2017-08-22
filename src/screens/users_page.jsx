@@ -4,7 +4,6 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import SearchInput                          from 'react-search-input';
-import Select                               from 'react-select';
 import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';

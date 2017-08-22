@@ -29,6 +29,18 @@
       border-bottom: 3px solid $blue;
     }
   }
+
+  .pending-badges {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    font-size: 10px;
+    color: $white;
+    line-height: 22px;
+    text-align: center;
+    background: $light-blue;
+
+  }
 }
 .login-section {
     position: absolute;
