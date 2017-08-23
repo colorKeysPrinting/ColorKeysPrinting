@@ -17,22 +17,24 @@ class EditProduct extends React.Component {
         const categories = this.props.productCategories.toJS();
 
         const product = (this.props.location.state.product) ? this.props.location.state.product : {
-            name: '',
-            manufacturerModelNumber: '',
+            name: '', // required
+            manufacturerModelNumber: '', // required
+            sibiModelNumber: '', // required
+            productCategoryId: this.props.productCategoryId, // required
+            productSubcategoryId: categories[0].id, // required
+            sku: '', // required
+
+            // ***************** the following are optional *****************
             serialNumber: '',
             shortDescription: '',
-            sku: '',
             overview: '',
-            faq: '',
+            faq: [],
             videos: [],
-            productCategoryId: this.props.productCategoryId,
-            productSubcategoryId: categories[0].id,
             applianceManufacturerName: '',
             applianceOrderDisplayNumber: this.props.location.state.applianceOrderDisplayNumber + 1,
             applianceType: '',
             applianceSize: '',
             applianceDescription: '',
-            sibiModelNumber: '',
             applianceFuelType: '',
             applianceWidth: '',
             applianceHeight: '',
@@ -41,17 +43,23 @@ class EditProduct extends React.Component {
             applianceInstallPrice: '',
             applianceInstallCode: '',
             applianceColorsAndImages: [],
-            applianceAssociatedParts: [],
             applianceSpecSheetUrl: '',
             applianceRemovalDescription: '',
             applianceRemovalCode: '',
             applianceRemovalPrice: '',
+            applianceAssociatedParts: [],
         };
+
+        _.each(product, (value, key) => {
+            product[key] = (value === null) ? '' : value;
+        });
 
         this.state = {
             activeSection: '',
             isInstall: false,
             isRemoval: false,
+            faqQuestion: '',
+            faqAnswer: '',
             image: '',
             imageFile: '',
             color: '',
@@ -67,11 +75,14 @@ class EditProduct extends React.Component {
         this.changeActiveSection = this.changeActiveSection.bind(this);
         this.addColorAndImage = this.addColorAndImage.bind(this);
         this.removeColorAndImage = this.removeColorAndImage.bind(this);
+        this.addPart = this.addPart.bind(this);
+        this.removePart = this.removePart.bind(this);
+        this.addVideo = this.addVideo.bind(this);
+        this.removeVideo = this.removeVideo.bind(this);
+        this.addFAQ = this.addFAQ.bind(this);
+        this.removeFaq = this.removeFaq.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
-        this.addProductPart = this.addProductPart.bind(this);
-        this.removeProductPart = this.removeProductPart.bind(this);
-        this.addProductVideo = this.addProductVideo.bind(this);
-        this.removeProductVideo = this.removeProductVideo.bind(this);
+        this.archiveProduct = this.archiveProduct.bind(this);
     }
 
     update({ type, value }) {
@@ -126,7 +137,7 @@ class EditProduct extends React.Component {
         });
     }
 
-    addProductPart() {
+    addPart() {
         console.log('adding part');
         this.setState((prevState) => {
             const id = _.size(prevState.applianceAssociatedParts);
@@ -136,8 +147,8 @@ class EditProduct extends React.Component {
         });
     }
 
-    removeProductPart({ partId }) {
-        console.log('removeProductPart with partNumber: ', partId);
+    removePart({ partId }) {
+        console.log('removePart with partNumber: ', partId);
         this.setState((prevState) => {
             const applianceAssociatedParts = _.remove(prevState.applianceAssociatedParts, (element) => { return element.id !== partId } );
 
@@ -145,7 +156,7 @@ class EditProduct extends React.Component {
         });
     }
 
-    addProductVideo() {
+    addVideo() {
         console.log('adding video');
         this.setState((prevState) => {
             prevState.videos.push(prevState.videoURL);
@@ -154,12 +165,31 @@ class EditProduct extends React.Component {
         });
     }
 
-    removeProductVideo({ index }) {
-        console.log('removeProductPart with partNumber: ', index);
+    removeVideo({ index }) {
+        console.log('removing video at: ', index);
         this.setState((prevState) => {
             const videos = _.remove(prevState.videos, (element, i) => { return i !== index } ); // I'm using this in place of splice because the videos will probably change to obj
 
             return { videos };
+        });
+    }
+
+    addFAQ() {
+        console.log('adding faq');
+        this.setState((prevState) => {
+            const id = _.size(prevState.faq);
+            prevState.faq.push({ Question: prevState.faqQuestion, Answer: prevState.faqAnswer });
+
+            return { faq: prevState.faq, faqQuestion: '', faqAnswer: '' };
+        });
+    }
+
+    removeFaq({ index }) {
+        console.log('removeFaq at: ', index);
+        this.setState((prevState) => {
+            const faq = _.remove(prevState.faq, (element, i) => { return i !== index } ); // I'm using this in place of splice because the videos will probably change to obj
+
+            return { faq };
         });
     }
 
@@ -170,36 +200,44 @@ class EditProduct extends React.Component {
         const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
 
         const product = {
-            name: this.state.name,
-            manufacturerModelNumber: this.state.manufacturerModelNumber,
+            name: this.state.name, // required
+            manufacturerModelNumber: this.state.manufacturerModelNumber, // required
+            sibiModelNumber: this.state.sibiModelNumber, // required
+            productCategoryId: this.state.productCategoryId, // required
+            productSubcategoryId: category.id, // required
+            sku: this.state.sku, // required
+
+            // ***************** the following are optional *****************
             serialNumber: this.state.serialNumber,
             shortDescription: this.state.shortDescription,
-            sku: this.state.sku,
             overview: this.state.overview,
             faq: this.state.faq,
             videos: this.state.videos,
-            productCategoryId: this.state.productCategoryId,
-            productSubcategoryId: category.id,
             applianceManufacturerName: this.state.applianceManufacturerName,
             applianceOrderDisplayNumber: this.state.applianceOrderDisplayNumber,
             applianceType: category.name,
             applianceSize: this.state.applianceSize,
             applianceDescription: this.state.applianceDescription,
-            sibiModelNumber: this.state.sibiModelNumber,
             applianceFuelType: this.state.applianceFuelType,
             applianceWidth: this.state.applianceWidth,
             applianceHeight: this.state.applianceHeight,
             applianceDepth: this.state.applianceDepth,
-            applianceInstallDescription: this.state.applianceInstallDescription || '',
+            applianceInstallDescription: this.state.applianceInstallDescription,
             applianceInstallPrice: this.state.applianceInstallPrice,
             applianceInstallCode: this.state.applianceInstallCode,
             applianceColorsAndImages: this.state.applianceColorsAndImages,
-            applianceAssociatedParts: this.state.applianceAssociatedParts, // not in api?
             applianceSpecSheetUrl: this.state.applianceSpecSheetUrl,
-            applianceRemovalDescription: this.state.applianceRemovalDescription || '',
+            applianceRemovalDescription: this.state.applianceRemovalDescription,
             applianceRemovalCode: this.state.applianceRemovalCode,
             applianceRemovalPrice: this.state.applianceRemovalPrice,
+            applianceAssociatedParts: this.state.applianceAssociatedParts, // not in api?
         };
+
+        _.each(product, (value, key) => {
+            if(value === '' || typeof value === 'object' && _.size(value) === 0) {
+                delete product[key];
+            }
+        });
 
         if (id) {
             product['id'] = id;
@@ -209,6 +247,15 @@ class EditProduct extends React.Component {
             this.props.createProduct({ token: jwt.token, category: category.name, product })
         }
 
+        this.props.history.push(`/products`);
+    }
+
+    archiveProduct() {
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
+
+        this.props.archiveProduct({ token: jwt.token, category: category.name, id: this.state.id })
         this.props.history.push(`/products`);
     }
 
@@ -256,7 +303,7 @@ class EditProduct extends React.Component {
         const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
         const title = (this.props.location.state) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
-        const archiveBtn = (this.state.id) ? <div className="cancel-btn" onClick={() => this.props.archiveProduct({ token: jwt.token, category: category.name, id: this.state.id })}>Archive Product</div> : null;
+        const archiveBtn = (this.state.id) ? <div className="btn cancel-btn" onClick={this.archiveProduct}>Archive Product</div> : null;
         const imageBtn = (this.state.image !== '') ? <img src={this.state.image} alt="uploaded-image" height="60" /> : 'Choose File';
 
         const categories = _.map(this.props.productCategories.toJS(), (category) => {
@@ -268,7 +315,7 @@ class EditProduct extends React.Component {
                 <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
                     <img src={image.imageUrl} alt="picture" width="auto" height="60" />
                     <input type="text" value={image.color} disabled />
-                    <div className="cancel-btn" onClick={()=> this.removeColorAndImage({ color: image.color }) } >X</div>
+                    <div className="btn cancel-btn" onClick={()=> this.removeColorAndImage({ color: image.color }) } >X</div>
                 </div>
             );
         });
@@ -277,7 +324,7 @@ class EditProduct extends React.Component {
             return (
                 <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
                     <input type="text" value={video} disabled />
-                    <div className="cancel-btn" onClick={()=> this.removeProductVideo({ index }) } >X</div>
+                    <div className="btn cancel-btn" onClick={()=> this.removeVideo({ index }) } >X</div>
                 </div>
             );
         });
@@ -287,7 +334,17 @@ class EditProduct extends React.Component {
                 <div key={`parts${index}`} style={{ display: 'inline-flex', width: '100%' }} >
                     <input type="text" value={part.description} disabled />
                     <input type="text" value={part.code} disabled />
-                    <div className="cancel-btn" onClick={()=> this.removeProductPart({ partId: (part.id) ? part.id : index }) } >X</div>
+                    <div className="btn cancel-btn" onClick={()=> this.removePart({ partId: (part.id) ? part.id : index }) } >X</div>
+                </div>
+            )
+        });
+
+        const productFAQ = _.map(this.state.faq, (faq, index) => {
+            return (
+                <div key={`faq${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                    <textarea value={faq.Question} disabled />
+                    <textarea value={faq.Answer} disabled />
+                    <div className="btn cancel-btn" onClick={()=> this.removeFaq({ index }) } >X</div>
                 </div>
             )
         })
@@ -398,10 +455,6 @@ class EditProduct extends React.Component {
                             <div style={{ columnCount: 2 }}>
                                 <div>
                                     <div>
-                                        <label htmlFor="product-faq">FAQ</label>
-                                        <input name="product-faq" type="text" placeholder="faq" value={this.state.faq} onChange={(e) => this.update({ type: 'faq', value: e.target.value})} />
-                                    </div>
-                                    <div>
                                         <label htmlFor="product-width">Width</label>
                                         <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update({ type: 'applianceWidth', value: e.target.value})}  />in.
                                     </div>
@@ -427,6 +480,19 @@ class EditProduct extends React.Component {
                             </div>
 
                             <div className="accordion">
+                                {/* ************************************** faq section ************************************** */}
+                                <div id="accordion-faq" className={(this.state.activeSection === 'faq') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('faq')}>
+                                    <div>{ _.size(this.state.faq) } FAQs</div>
+                                </div>
+                                <div style={{ display: (this.state.activeSection === 'faq') ? 'block' : 'none' }} >
+                                    { productFAQ }
+                                    <div style={{ display: 'inline-flex' }} >
+                                        <textarea value={this.state.faqQuestion} placeholder="Question" onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })} />
+                                        <textarea value={this.state.faqAnswer}   placeholder="Answer"   onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })} />
+                                        <div onClick={this.addFAQ} className="btn cancel-btn">Add</div>
+                                    </div>
+                                </div>
+
                                 {/* ************************************** color/pictures section ************************************** */}
                                 <div id="accordion-pictures" className={(this.state.activeSection === 'pictures') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('pictures')}>
                                     <div>{ _.size(this.state.applianceColorsAndImages) } Photos</div>
@@ -444,7 +510,7 @@ class EditProduct extends React.Component {
                                             />
                                         </label>
                                         <input type="text" value={this.state.color} placeholder="Color name" onChange={(e) => this.update({ type: 'color', value: e.target.value })} />
-                                        <div onClick={this.addColorAndImage} className="cancel-btn">Add</div>
+                                        <div onClick={this.addColorAndImage} className="btn cancel-btn">Add</div>
                                     </div>
                                 </div>
 
@@ -456,7 +522,7 @@ class EditProduct extends React.Component {
                                     { productVideos }
                                     <div style={{ display: 'inline-flex' }} >
                                         <input type="url" value={this.state.videoURL} placeholder="video URL" onChange={(e) => this.update({ type: 'videoURL', value: e.target.value })} />
-                                        <div onClick={this.addProductVideo} className="cancel-btn">Add</div>
+                                        <div onClick={this.addVideo} className="btn cancel-btn">Add</div>
                                     </div>
                                 </div>
 
@@ -469,7 +535,7 @@ class EditProduct extends React.Component {
                                     <div style={{ display: 'inline-flex' }} >
                                         <input type="text" value={this.state.partDescription} placeholder="Part name"   onChange={(e) => this.update({ type: 'partDescription', value: e.target.value })} />
                                         <input type="text" value={this.state.partCode}        placeholder="Part number" onChange={(e) => this.update({ type: 'partCode', value: e.target.value })} />
-                                        <div onClick={this.addProductPart} className="cancel-btn">Add</div>
+                                        <div onClick={this.addPart} className="btn cancel-btn">Add</div>
                                     </div>
                                 </div>
                             </div>
