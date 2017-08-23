@@ -5,7 +5,7 @@ import { Provider }                     from 'react-redux';
 import { CookiesProvider, Cookies }     from 'react-cookie';
 import injectTapEventPlugin             from 'react-tap-event-plugin';
 import { PropTypes }                    from 'prop-types';
-import configureStore                   from './store';
+import configureStore                   from './configure_store';
 import jwt                              from './libs/loaders/jwt';
 import routes                           from './routes';
 

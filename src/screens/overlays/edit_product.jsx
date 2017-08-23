@@ -6,6 +6,7 @@ import _                        from 'lodash';
 import assets                   from 'libs/assets';
 
 import { updateProduct, createProduct, archiveProduct }      from 'ducks/products/actions';
+import { getPresignedUrls, uploadImagesS3 }      from 'ducks/assets/actions';
 
 import Overlay                  from 'components/overlay';
 import Select                   from 'components/select_box';
@@ -17,12 +18,14 @@ class EditProduct extends React.Component {
         const categories = this.props.productCategories.toJS();
 
         const product = (this.props.location.state.product) ? this.props.location.state.product : {
-            name: '', // required
-            manufacturerModelNumber: '', // required
-            sibiModelNumber: '', // required
-            productCategoryId: this.props.productCategoryId, // required
-            productSubcategoryId: categories[0].id, // required
-            sku: '', // required
+            id: '',
+            // ***************** the following are required *****************
+            name: '',
+            manufacturerModelNumber: '',
+            sibiModelNumber: '',
+            productCategoryId: this.props.productCategoryId,
+            productSubcategoryId: categories[0].id,
+            sku: '',
 
             // ***************** the following are optional *****************
             serialNumber: '',
@@ -83,6 +86,33 @@ class EditProduct extends React.Component {
         this.removeFaq = this.removeFaq.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
         this.archiveProduct = this.archiveProduct.bind(this);
+        this.submitProduct = this.submitProduct.bind(this);
+    }
+
+    componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.preSignedURLs, this.props.preSignedURLs)) {
+            const re = /http(s)?:\/\//;
+
+            if (_.size(this.state.applianceColorsAndImages) > 0) {
+                _.each(this.state.applianceColorsAndImages, (image) => {
+                    const match = re.exec(image.imageUrl);
+                    if (!match) {
+                        const picture = image.imageFile.type.split('/');
+
+                    } else {
+                        const fooBar = "don't do anything";
+                    }
+                });
+            }
+
+            console.log('check for uploaded images/videos');
+            console.log('update urls for images/videos in product object');
+            console.log('send product data to api');
+        }
+
+        if (nextProps.imageUploadSuccess.size === nextProps.preSignedURLs.size) {
+            this.submitProduct();
+        }
     }
 
     update({ type, value }) {
@@ -122,7 +152,7 @@ class EditProduct extends React.Component {
     addColorAndImage() {
         console.log('adding color & image');
         this.setState((prevState) => {
-            prevState.applianceColorsAndImages.push({ imageUrl: prevState.image, color: prevState.color });
+            prevState.applianceColorsAndImages.push({ imageUrl: prevState.image, color: prevState.color, imageFile: prevState.imageFile });
 
             return { applianceColorsAndImages: prevState.applianceColorsAndImages, color: '', image: '' };
         });
@@ -193,19 +223,51 @@ class EditProduct extends React.Component {
         });
     }
 
-    saveProduct({ id }) {
-        console.log('save product', id);
+    saveProduct() {
+        const re = /http(s)?:\/\//;
+        const types = [];
+
+        if (_.size(this.state.applianceColorsAndImages) > 0) {
+            _.each(this.state.applianceColorsAndImages, (image) => {
+                const match = re.exec(image.imageUrl);
+                if (!match) {
+                    const picture = image.imageFile.type.split('/');
+                    types.push({ type: picture[0], fileType: picture[1] });
+                }
+            });
+        }
+
+        if (_.size(types) > 0) {
+            this.props.getPresignedUrls({ types });
+
+        } else {
+            console.log('save product', this.state.id);
+            this.submitProduct();
+        }
+    }
+
+    archiveProduct() {
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
+
+        this.props.archiveProduct({ token: jwt.token, category: category.name, id: this.state.id })
+        this.props.history.push(`/products`);
+    }
+
+    submitProduct() {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
         const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
 
         const product = {
-            name: this.state.name, // required
-            manufacturerModelNumber: this.state.manufacturerModelNumber, // required
-            sibiModelNumber: this.state.sibiModelNumber, // required
-            productCategoryId: this.state.productCategoryId, // required
-            productSubcategoryId: category.id, // required
-            sku: this.state.sku, // required
+            // ***************** the following are required *****************
+            name: this.state.name,
+            manufacturerModelNumber: this.state.manufacturerModelNumber,
+            sibiModelNumber: this.state.sibiModelNumber,
+            productCategoryId: this.state.productCategoryId,
+            productSubcategoryId: category.id,
+            sku: this.state.sku,
 
             // ***************** the following are optional *****************
             serialNumber: this.state.serialNumber,
@@ -239,23 +301,14 @@ class EditProduct extends React.Component {
             }
         });
 
-        if (id) {
-            product['id'] = id;
+        if (this.state.id) {
+            product['id'] = this.state.id;
             this.props.updateProduct({ token: jwt.token, category: category.name, product });
 
         } else {
             this.props.createProduct({ token: jwt.token, category: category.name, product })
         }
 
-        this.props.history.push(`/products`);
-    }
-
-    archiveProduct() {
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
-        const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
-
-        this.props.archiveProduct({ token: jwt.token, category: category.name, id: this.state.id })
         this.props.history.push(`/products`);
     }
 
@@ -367,7 +420,7 @@ class EditProduct extends React.Component {
                         <div style={styles.title}>{ title } Product</div>
                         <div onClick={this.close} style={styles.close}>X</div>
                     </div>
-                    <form onSubmit={() => this.saveProduct({ id: this.state.id })} >
+                    <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
                         <div style={styles.content}>
                             <div style={{ columnCount: 2 }}>
                                 <div>
@@ -526,13 +579,18 @@ const select = (state) => ({
     activeUser          : state.activeUser.get('activeUser'),
     products            : state.products.get('products'),
     productCategories   : state.products.get('productCategories'),
-    productCategoryId   : state.products.get('productCategoryId')
+    productCategoryId   : state.products.get('productCategoryId'),
+    preSignedURLs       : state.assets.get('preSignedURLs'),
+    imageUploadSuccess  : state.assets.get('imageUploadSuccess'),
+    imageUploadFailed   : state.assets.get('imageUploadFailed')
 });
 
 const actions = {
     updateProduct,
     createProduct,
-    archiveProduct
+    archiveProduct,
+    getPresignedUrls,
+    uploadImagesS3
 };
 
 export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(EditProduct)));
