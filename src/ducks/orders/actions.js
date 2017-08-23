@@ -40,11 +40,12 @@ export function getOrderById({ token, id }) {
     }
 }
 
-export function getOrders({ token, orders }) {
+export function getOrders({ token, type }) {
     return (dispatch) => {
+        type = (type === 'superAdmin') ? 'ordersForSuperAdmin' : 'ordersForFund';
         return axios({
             method  : Network.GET,
-            url     : `${Network.DOMAIN}/${orders}`,
+            url     : `${Network.DOMAIN}/${type}`,
             headers : {
                 'x-auth-token': token
             }
