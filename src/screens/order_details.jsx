@@ -53,7 +53,7 @@ class OrderDetails extends React.Component {
     }
 
     render() {
-        let productData, orderData, tenantInfoSection, detailsHeaderSection, orderTotalSection;
+        let productData, orderData, tenantInfoSection, detailsHeaderSection, orderTotalSection, subTotal = 0;
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
@@ -160,6 +160,7 @@ class OrderDetails extends React.Component {
                         value = orderDetail.qty;
 
                     } else if (key === 'price') {
+
                         value = '$' + orderDetail.ProductPrice.price;
                     }
 
@@ -199,15 +200,15 @@ class OrderDetails extends React.Component {
                 </table>
             </div>;
 
-            orderTotalSection = <div id="admin-table">
-                <div>Sub Total: ${ order.subTotal }</div>
-                <div>Sales Tax: ${ order.salesTax }</div>
-                <div>Total: ${ order.salesTax + order.subTotal }</div>
+            orderTotalSection = <div className="cost-section">
+                <div className="cost-row" ><h4>Sub Total:</h4> ${ order.totalCost }</div>
+                <div className="cost-row" ><h4>Sales Tax:</h4> ${ order.salesTax }</div>
+                <div className="cost-row" ><h4>Total:</h4> ${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</div>
             </div>;
         }
 
         return (
-            <div id="orders-page" className="container">
+            <div id="orders-page">
                 <div className="container">
                     { detailsHeaderSection }
                     <MyTable
