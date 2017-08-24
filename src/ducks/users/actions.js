@@ -22,7 +22,7 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getUsers({ token, users }) {
+export function getUsers({ token }) {
     return (dispatch) => {
         return axios({
             method  : Network.GET,
