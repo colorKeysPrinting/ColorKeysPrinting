@@ -19,11 +19,14 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getPresignedUrls({ types }) {
+export function getPresignedUrls({ token, types }) {
     return (dispatch) => {
         return axios({
             method  : Network.POST,
-            url     : `${Network.DOMAIN}/imageUploadUrl`,
+            url     : `${Network.DOMAIN}/getPresignedUrl`,
+            headers : {
+                'x-auth-token': token
+            },
             data    : {
                 urlInfo: types
             }

@@ -224,6 +224,8 @@ class EditProduct extends React.Component {
     }
 
     saveProduct() {
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
         const re = /http(s)?:\/\//;
         const types = [];
 
@@ -238,7 +240,7 @@ class EditProduct extends React.Component {
         }
 
         if (_.size(types) > 0) {
-            this.props.getPresignedUrls({ types });
+            this.props.getPresignedUrls({ token: jwt.token, types });
 
         } else {
             console.log('save product', this.state.id);
