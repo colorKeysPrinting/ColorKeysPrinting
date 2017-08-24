@@ -11,7 +11,7 @@ module.exports = WebpackConfig = (app) => {
                 NODE_ENV    : JSON.stringify(app.env)
             })
         }),
-        new ExtractTextPlugin(`${app.APP_NAME}.css`),
+        new ExtractTextPlugin(`${app.APP_NAME}_[hash].css`),
         new HtmlWebpackPlugin({
             title: JSON.stringify(app.name),
             filename: 'index.html',
@@ -36,7 +36,7 @@ module.exports = WebpackConfig = (app) => {
         entry: 'app',
         output: {
             path: path.resolve(__dirname, `../dist`),
-            filename: `${app.APP_NAME}.bundle.js`,
+            filename: `${app.APP_NAME}_[hash].bundle.js`,
             sourceMapFilename: `[file].map`,
             devtoolModuleFilenameTemplate: (info) => {
                 return `webpack:///${info.resourcePath}`
