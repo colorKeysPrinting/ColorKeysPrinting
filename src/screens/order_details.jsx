@@ -53,7 +53,7 @@ class OrderDetails extends React.Component {
     }
 
     render() {
-        let productData, orderData, tenantInfoSection, detailsHeaderSection;
+        let productData, orderData, tenantInfoSection, detailsHeaderSection, orderTotalSection;
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
@@ -198,6 +198,12 @@ class OrderDetails extends React.Component {
                     </tbody>
                 </table>
             </div>;
+
+            orderTotalSection = <div id="admin-table">
+                <div>Sub Total: ${ order.subTotal }</div>
+                <div>Sales Tax: ${ order.salesTax }</div>
+                <div>Total: ${ order.salesTax + order.subTotal }</div>
+            </div>;
         }
 
         return (
@@ -215,6 +221,7 @@ class OrderDetails extends React.Component {
                         headers={productHeaders}
                         data={productData}
                     />
+                    { orderTotalSection }
                 </div>
             </div>
         );
