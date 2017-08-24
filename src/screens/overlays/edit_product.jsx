@@ -64,11 +64,11 @@ class EditProduct extends React.Component {
             faqQuestion: '',
             faqAnswer: '',
             image: '',
-            imageFile: '',
             color: '',
             partDescription: '',
             partCode: '',
             videoURL: '',
+            newImages: [],
             ...product
         };
 
@@ -91,19 +91,23 @@ class EditProduct extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (!_.isEqual(nextProps.preSignedURLs, this.props.preSignedURLs)) {
-            const re = /http(s)?:\/\//;
+            const re = /(http(s)?.*)\?/;
+            const preSignedURLs = nextProps.preSignedURLs.toJS();
+            const applianceColorsAndImages = this.state.applianceColorsAndImages;
 
-            if (_.size(this.state.applianceColorsAndImages) > 0) {
-                _.each(this.state.applianceColorsAndImages, (image) => {
-                    const match = re.exec(image.imageUrl);
-                    if (!match) {
-                        const picture = image.imageFile.type.split('/');
+            _.each(this.state.newImages, (index, i) => {
+                const imageObj = applianceColorsAndImages[index];
+                const file = imageObj.imageFile;
+                const type = imageObj.type;
+                const url = preSignedURLs[i].url;
 
-                    } else {
-                        const fooBar = "don't do anything";
-                    }
-                });
-            }
+                const match = re.exec(url);
+                applianceColorsAndImages[index] = { imageUrl: match[1], color: imageObj.color };
+
+                this.props.uploadImagesS3({ url, type, file });
+            });
+
+            this.setState({ applianceColorsAndImages });
 
             console.log('check for uploaded images/videos');
             console.log('update urls for images/videos in product object');
@@ -128,10 +132,11 @@ class EditProduct extends React.Component {
 
     updateImage({ image }) {
         const reader = new FileReader();
-        this.setState({ imageFile: image });
+        const imageFile = image;
 
         reader.onload = (e) => {
-            this.setState({ image: e.target.result });
+            const image = { imageUrl: e.target.result, type: imageFile.type, imageFile };
+            this.setState({ image });
         }
 
         reader.readAsDataURL(image);
@@ -152,7 +157,7 @@ class EditProduct extends React.Component {
     addColorAndImage() {
         console.log('adding color & image');
         this.setState((prevState) => {
-            prevState.applianceColorsAndImages.push({ imageUrl: prevState.image, color: prevState.color, imageFile: prevState.imageFile });
+            prevState.applianceColorsAndImages.push({ ...prevState.image, color: prevState.color });
 
             return { applianceColorsAndImages: prevState.applianceColorsAndImages, color: '', image: '' };
         });
@@ -228,18 +233,21 @@ class EditProduct extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
         const re = /http(s)?:\/\//;
         const types = [];
+        const newImages = [];
 
         if (_.size(this.state.applianceColorsAndImages) > 0) {
-            _.each(this.state.applianceColorsAndImages, (image) => {
+            _.each(this.state.applianceColorsAndImages, (image, index) => {
                 const match = re.exec(image.imageUrl);
                 if (!match) {
-                    const picture = image.imageFile.type.split('/');
+                    newImages.push(index);
+                    const picture = image.type.split('/');
                     types.push({ type: picture[0], fileType: picture[1] });
                 }
             });
         }
 
         if (_.size(types) > 0) {
+            this.setState({ newImages });
             this.props.getPresignedUrls({ token: jwt.token, types });
 
         } else {
@@ -359,7 +367,7 @@ class EditProduct extends React.Component {
         const title = (this.props.location.state) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
         const archiveBtn = (this.state.id) ? <div className="btn cancel-btn" onClick={this.archiveProduct}>Archive Product</div> : null;
-        const imageBtn = (this.state.image !== '') ? <img src={this.state.image} alt="uploaded-image" height="60" /> : 'Choose File';
+        const imageBtn = (this.state.image !== '') ? <img src={this.state.image.imageUrl} alt="uploaded-image" height="60" /> : 'Choose File';
 
         const categories = _.map(this.props.productCategories.toJS(), (category) => {
             return { label: category.name, value: category.id };

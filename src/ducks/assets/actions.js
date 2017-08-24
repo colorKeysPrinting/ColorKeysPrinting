@@ -40,20 +40,19 @@ export function getPresignedUrls({ token, types }) {
     }
 }
 
-export function uploadImagesS3({ url, image }) {
+export function uploadImagesS3({ url, type, file }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.PUT,
-            url,
-            data    : {
-                image
+        const options = {
+            headers : {
+                'Content-Type': type
             }
-        })
+        };
+
+        return axios.put(url, file, options)
             .then(payload => {
                 dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_SUCCESS , ...payload });
             })
             .catch(error => {
-                dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_FAILED , ...payload });
                 throw(error);
             });
     }

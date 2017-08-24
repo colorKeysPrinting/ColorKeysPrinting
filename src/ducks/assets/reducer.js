@@ -19,7 +19,7 @@ export default (state = initialState, action) => {
     switch (action.type) {
     case ActionTypes.GET_PRESIGNED_URLS_SUCCESS:
         console.log('receiving preSignedURLs');
-        state = state.set('preSignedURLs', Immutable.fromJS(action.data));
+        state = state.set('preSignedURLs', Immutable.fromJS(action.data.presignedUrlInfo));
         break;
 
     case ActionTypes.UPLOAD_IMAGES_S3_SUCCESS:
