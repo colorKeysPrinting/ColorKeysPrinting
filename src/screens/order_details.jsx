@@ -187,7 +187,7 @@ class OrderDetails extends React.Component {
 
             let tenantInfoTitle;
             let tenantInfoDetails;
-            if (order.tenantFirstName) {
+            if (order.occupied) {
                 tenantInfoTitle = <tr>
                     <td><div className="table-header">Tenant Info: </div></td>
                 </tr>;
