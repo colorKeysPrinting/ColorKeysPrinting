@@ -24,7 +24,7 @@ export function getPresignedUrls({ types }) {
         return axios({
             method  : Network.POST,
             url     : `${Network.DOMAIN}/imageUploadUrl`,
-            body    : {
+            data    : {
                 urlInfo: types
             }
         })
