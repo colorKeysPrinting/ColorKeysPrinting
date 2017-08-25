@@ -5,7 +5,6 @@ import assets                               from 'libs/assets';
 
 export default class Select extends React.Component {
     static propTypes = {
-        value   : PropTypes.bool.isRequired,
         options : PropTypes.array.isRequired
     };
 

@@ -47,7 +47,7 @@ export default class MyTable extends React.Component {
                 }
             });
 
-            return (<tr key={`table-row-${id}`}>{ col }</tr>);
+            return (<tr key={`table-row-${id}`} className={(this.props.dataClassName) ? this.props.dataClassName : 'table-row' } >{ col }</tr>);
         });
 
 

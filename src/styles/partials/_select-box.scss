@@ -1,15 +1,14 @@
 .select-box {
     .input {
         height: 30px;
-        width: 60px;
         cursor: pointer;
         display: inline-flex;
         padding: 5px;
+        background-color: $white;
     }
 
     .option {
         height: 30px;
-        width: 60px;
         cursor: pointer;
     }
 
@@ -25,6 +24,13 @@
         max-height: 100px;
         overflow-y: scroll;
         padding: 5px;
+
+        .option {
+            &:hover {
+                color: $white;
+                background-color: $light-blue;
+            }
+        }
     }
 
     .arrow-indicator {

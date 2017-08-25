@@ -9,19 +9,23 @@ import { ActionTypes }          from './actions';
 //             REDUCER
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
-    currLanguage: 'English'
+    salesTax: 0,
+    orderCost: 0
 });
 
 export default (state = initialState, action) => {
 
     switch (action.type) {
-    case ActionTypes.CHANGE_LANGUAGE:
-        console.log('change language: ', action.language);
-        state = state.set('currLanguage', action.language);
+    case ActionTypes.CALCLATE_ORDER_COST:
+        console.log('calculating order cost');
+        let orderCost;
+
+        state = state.set('orderCost', Immutable.fromJS(orderCost));
         break;
 
-    case ActionTypes.GO_HOME:
-        console.log('going home');
+    case ActionTypes.GET_SALES_TAX_SUCCESS:
+        console.log('receiving salesTax');
+        state = state.set('salesTax', Immutable.fromJS(action.data));
         break;
 
     default:
