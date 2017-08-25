@@ -43,17 +43,6 @@ class OrdersPage extends React.Component {
         this.props.setActiveTab('orders');
     }
 
-    componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
-            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
-            this.props.history.push(path);
-        }
-
-        if (nextProps.isLogout) {
-            this.props.logout();
-        }
-    }
-
     update({ type, value }) {
         this.setState({ [type]: value });
     }
