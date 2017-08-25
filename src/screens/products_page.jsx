@@ -65,18 +65,22 @@ class ProductsPage extends React.Component {
                 const data = _.map(products[type.name], (product) => {
                     const cols = {};
 
-                    _.each(['id','name','action'], (key) => {
+                    _.each(['id','name','featured','action'], (key) => {
                         let value = product[key];
 
-                        if (key === 'action') {
+                        if (key === 'id') {
+                            value = { ...product, category: type.id };
+
+                        } else if (key === 'action') {
                             if (product.archived) {
                                 value = <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: type.name, id: product.id }) } >Unarchive</div>;
                             } else {
                                 value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} >Edit</Link>;
                             }
-
-                        } else if (key === 'id') {
-                            value = { ...product, category: type.id };
+                        } else if (key === 'featured') {
+                            if (product.applianceOrderDisplayNumber <= 5) {
+                                value = <div className="featured-column">featured {product.applianceOrderDisplayNumber}</div>;
+                            }
                         }
 
                         cols[key] = value;
