@@ -53,7 +53,7 @@ class HeaderBar extends React.Component {
             }
         }
 
-        if (nextProps.isLogout) {
+        if (!_.isEqual(nextProps.isLogout, this.props.isLogout)) {
             this.props.logout();
         }
     }

@@ -44,17 +44,6 @@ class UsersPage extends React.Component {
         this.props.setActiveTab('users');
     }
 
-    componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
-            const path = (nextProps.activeUser.size > 0) ? `/users` : `/`;
-            this.props.history.push(path);
-        }
-
-        if (nextProps.isLogout) {
-            this.props.logout();
-        }
-    }
-
     update({ type, value }) {
         this.setState({ [type]: value });
     }
@@ -204,8 +193,7 @@ class UsersPage extends React.Component {
 
 const select = (state) => ({
     activeUser      : state.activeUser.get('activeUser'),
-    users           : state.users.get('users'),
-    isLogout        : state.jwt.get('isLogout')
+    users           : state.users.get('users')
 });
 
 const action = {

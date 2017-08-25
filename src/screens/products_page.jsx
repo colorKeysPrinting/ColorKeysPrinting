@@ -28,11 +28,6 @@ class ProductsPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
-            const path = (nextProps.activeUser.size > 0) ? `/products` : `/`;
-            this.props.history.push(path);
-        }
-
         if (!_.isEqual(this.props.productCategories, nextProps.productCategories)) {
             const productCategories = nextProps.productCategories.toJS();
 
