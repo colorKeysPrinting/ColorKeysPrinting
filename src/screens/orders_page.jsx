@@ -192,6 +192,7 @@ class OrdersPage extends React.Component {
                     <MyTable
                         type="orders"
                         headers={headers}
+                        dataClassName="table-row-clickable"
                         data={data}
                         handleAction={this.handleAction}
                         handleItem={this.handleItem}

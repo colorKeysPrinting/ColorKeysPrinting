@@ -9,6 +9,7 @@ import products             from 'ducks/products/reducer';
 import ui                   from 'ducks/ui/reducer';
 import users                from 'ducks/users/reducer';
 import assets               from 'ducks/assets/reducer';
+import calculations         from 'ducks/calculations/reducer';
 
 const rootReducer = combineReducers({
     activeUser,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
     products,
     ui,
     users,
-    assets
+    assets,
+    calculations
 });
 
 export default rootReducer;
