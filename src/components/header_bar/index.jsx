@@ -28,8 +28,8 @@ class HeaderBar extends React.Component {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt) {
-            this.props.getCurrentUser(jwt.token);
+        if (jwt && jwt.token !== '') {
+            this.props.getCurrentUser({ token: jwt.token});
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
@@ -46,7 +46,7 @@ class HeaderBar extends React.Component {
                 const jwt = cookies.get('sibi-admin-jwt');
 
                 if (jwt && jwt.token !== '') {
-                    this.props.getCurrentUser(jwt.token);
+                    this.props.getCurrentUser({ token: jwt.token});
                     this.props.getUsers({ token: jwt.token });
                     this.props.getOrders({ token: jwt.token, type: activeUser.type });
 
@@ -83,7 +83,7 @@ class HeaderBar extends React.Component {
             loginSection = <Link to={`/login`} className="btn submit-btn" >Login</Link>;
 
         } else {
-            const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : assets('./images/icons-account.png');
+            const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : assets('./images/icon-settings.svg');
 
             profileOverlay = (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
                 <div id="profile-container">
@@ -93,7 +93,7 @@ class HeaderBar extends React.Component {
             </Overlay> : null;
 
             loginSection = <div onClick={this.showProfile}>
-                <img className="settings-icon" src={profilePic} alt="settingsButtons" width="40px" height="40px" className="profile-pic" />
+                <img className="settings-icon" src={profilePic} alt="settingsButtons" width="40px" height="40px" />
             </div>;
 
             if (this.props.orders.size > 0 &&
