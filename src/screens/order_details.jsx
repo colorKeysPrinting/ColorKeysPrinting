@@ -7,7 +7,8 @@ import dateformat                                           from 'dateformat';
 import assets                                               from 'libs/assets';
 
 import { logout }                                           from 'ducks/active_user/actions';
-import { getOrderById, approveOrder, getProducts, getOrder} from 'ducks/orders/actions';
+import { getOrderById, approveOrder, getProducts, getOrder } from 'ducks/orders/actions';
+import { getUsers }                                         from 'ducks/users/actions';
 import { setActiveTab }                                     from 'ducks/header/actions';
 
 import MyTable                                              from 'components/my_table';
@@ -25,7 +26,8 @@ class OrderDetails extends React.Component {
         const orderId = this.props.location.state.id;
 
         if (jwt && orderId) {
-            this.props.getOrderById({token: jwt.token, id: orderId});
+            this.props.getOrderById({ token: jwt.token, id: orderId });
+            this.props.getUsers({ token: jwt.token });
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
@@ -76,7 +78,8 @@ class OrderDetails extends React.Component {
             createdBy: 'Ordered By'
         };
 
-        if (this.props.order.size > 0) {
+        if (this.props.order.size > 0 &&
+            this.props.users.size > 0) {
             const order = this.props.order.toJS();
 
             const orderId = order.id
@@ -182,19 +185,42 @@ class OrderDetails extends React.Component {
                 { buttonSection }
             </div>;
 
-            const tenantInfoDetails = (order.tenantFirstName) ? <div>{tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div> : <div>lock Box Code: { order.lockBoxCode }</div>;
+            let tenantInfoTitle;
+            let tenantInfoDetails;
+            if (order.occupied) {
+                tenantInfoTitle = <tr>
+                    <td><div className="table-header">Tenant Info: </div></td>
+                </tr>;
+                tenantInfoDetails = <tr>
+                    <td><div>{tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div></td>
+                </tr>;
+            } else {
+                const user = _.find(this.props.users.toJS(), ['id', order.userId]);
+
+                tenantInfoTitle = <tr>
+                    <td><div className="table-header">Delivery Contact: </div></td>
+                    <td><div className="table-header">Phone Number: </div></td>
+                </tr>;
+
+                tenantInfoDetails = [
+                    <tr>
+                        <td><div>{user.firstName} {user.lastName}</div></td>
+                        <td><div>{user.phoneNumber}</div></td>
+                    </tr>,
+                    <tr>
+                        <td><div>{order.pmOffice.name}</div></td>
+                        <td><div>{order.pmOffice.phoneNumber}</div></td>
+                    </tr>
+                ];
+            }
 
             tenantInfoSection = <div id="admin-table">
                 <table className="table">
                     <thead className="head">
-                        <tr>
-                            <td><div className="table-header">Tenant Info: </div></td>
-                        </tr>
+                        { tenantInfoTitle }
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>{ tenantInfoDetails }</td>
-                        </tr>
+                        { tenantInfoDetails }
                     </tbody>
                 </table>
             </div>;
@@ -225,7 +251,8 @@ const select = (state) => ({
     activeUser      : state.activeUser.get('activeUser'),
     isLogout        : state.jwt.get('isLogout'),
     order           : state.orders.get('order'),
-    orders          : state.orders.get('orders')
+    orders          : state.orders.get('orders'),
+    users           : state.users.get('users'),
 });
 
 const actions = {
@@ -233,6 +260,7 @@ const actions = {
     approveOrder,
     getOrderById,
     getOrder,
+    getUsers,
     setActiveTab
 }
 
