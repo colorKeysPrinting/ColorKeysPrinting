@@ -9,16 +9,19 @@ import assets                   from 'libs/assets';
 import { getCurrentUser }       from 'ducks/active_user/actions';
 import { getUsers }             from 'ducks/users/actions';
 import { getOrders }            from 'ducks/orders/actions';
+import { logout }               from 'ducks/active_user/actions';
 
 import Tabs                     from './tabs';
+import Overlay                  from 'components/overlay';
 
 class HeaderBar extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.state = { isSearch: false };
+        this.state = { isSearch: false, isOpen: false };
         this.search = this.search.bind(this);
+        this.showProfile = this.showProfile.bind(this);
     }
 
     componentWillMount() {
@@ -63,8 +66,15 @@ class HeaderBar extends React.Component {
         this.props.search(term);
     }
 
+    showProfile() {
+        this.setState((prevState) => {
+            const isOpen = (prevState.isOpen) ? false : true;
+            return { isOpen };
+        });
+    }
+
     render() {
-        let loginSection, pendingUsers = 0, pendingOrders = 0;
+        let loginSection, profileOverlay, pendingUsers = 0, pendingOrders = 0;
 
         const activeUser = this.props.activeUser.toJS();
         const sibiLogo = assets('./images/SIBI_Logo.png');
@@ -73,9 +83,18 @@ class HeaderBar extends React.Component {
             loginSection = <Link to={`/login`} className="btn submit-btn" >Login</Link>;
 
         } else {
-            loginSection = <Link to={{ pathname: `/profile`, state: { prevPath: this.props.location.pathname }}} >
-                <img className="settings-icon" src={assets('./images/icon-settings.svg')} alt="settingsButtons" width="40px" height="40px" className="profile-pic" />
-            </Link>;
+            const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : assets('./images/icons-account.png');
+
+            profileOverlay = (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
+                <div id="profile-container">
+                    <div className="arrow-up"></div>
+                    <div className="element" onClick={() => this.props.logout()} >Log out</div>
+                </div>
+            </Overlay> : null;
+
+            loginSection = <div onClick={this.showProfile}>
+                <img className="settings-icon" src={profilePic} alt="settingsButtons" width="40px" height="40px" className="profile-pic" />
+            </div>;
 
             if (this.props.orders.size > 0 &&
                 this.props.users.size > 0) {
@@ -102,6 +121,7 @@ class HeaderBar extends React.Component {
                 <div className="login-section">
                     { loginSection }
                 </div>
+                { profileOverlay }
             </div>
         );
     }
@@ -119,6 +139,7 @@ const actions = {
     getCurrentUser,
     getUsers,
     getOrders,
+    logout
 }
 
 export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(HeaderBar)));

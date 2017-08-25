@@ -1,10 +1,29 @@
-.arrow-up {
+#profile-container {
     position: absolute;
-    top: -10px;
-    right: 13px;
-    width: 0; 
-    height: 0; 
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid white;
+    top: 67px;
+    right: 10px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    box-shadow: rgba(50, 50, 50, 0.4) 0px 2px 7px 0px;
+    width: 250px;
+    z-index: 999;
+    text-align: left;
+    font-size: 20px;
+    display: grid;
+
+    .arrow-up {
+        position: absolute;
+        top: -10px;
+        right: 13px;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid white;
+    }
+
+    .element {
+        padding: 10px;
+        cursor: pointer;
+    }
 }
