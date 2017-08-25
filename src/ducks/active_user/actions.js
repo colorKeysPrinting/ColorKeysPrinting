@@ -63,7 +63,7 @@ export function passwordReset({ token, password }) {
     }
 }
 
-export function getCurrentUser(token) {
+export function getCurrentUser({ token }) {
     return (dispatch) => {
         return axios({
             method  : Network.GET,

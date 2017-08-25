@@ -24,17 +24,6 @@ class DashboardPage extends React.Component {
         this.props.setActiveTab('dashboard');
     }
 
-    componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
-            const path = (nextProps.activeUser.size > 0) ? `/dashboard` : `/`;
-            this.props.history.push(path);
-        }
-
-        if (nextProps.isLogout) {
-            this.props.logout();
-        }
-    }
-
     render() {
         return (
             <div id="dashboard-page" className="container">
