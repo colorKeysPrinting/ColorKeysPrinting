@@ -79,7 +79,7 @@ class ProductsPage extends React.Component {
                             }
                         } else if (key === 'featured') {
                             if (product.applianceOrderDisplayNumber <= 5) {
-                                value = <div className="featured-column">featured {product.applianceOrderDisplayNumber}</div>;
+                                value = <div className="featured-column">featured {product.applianceOrderDisplayNumber + 1}</div>;
                             }
                         }
 
