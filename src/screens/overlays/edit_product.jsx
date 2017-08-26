@@ -278,6 +278,7 @@ class EditProduct extends React.Component {
     render() {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
+        const isDisabled = (this.props.activeUser.toJS().type === 'superAdmin') ? false : true;
 
         const styles = {
             titleBar: {
@@ -327,40 +328,48 @@ class EditProduct extends React.Component {
         });
 
         const productPictures = _.map(this.state.applianceColorsAndImages, (image, index) => {
+            const removal = (!isDisabled) ? <div className="btn cancel-btn" onClick={()=> this.removeColorAndImage({ color: image.color }) } >X</div> : null;
+
             return (
                 <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
                     <img src={image.imageUrl} alt="picture" width="auto" height="60" />
                     <input type="text" value={image.color} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removeColorAndImage({ color: image.color }) } >X</div>
+                    { removal }
                 </div>
             );
         });
 
         const productVideos = _.map(this.state.videos, (video, index) => {
+            const removal = (!isDisabled) ? <div className="btn cancel-btn" onClick={()=> this.removeVideo({ index }) } >X</div> : null;
+
             return (
                 <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
                     <input type="text" value={video} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removeVideo({ index }) } >X</div>
+                    { removal }
                 </div>
             );
         });
 
         const productParts = _.map(this.state.applianceAssociatedParts, (part, index) => {
+            const removal = (!isDisabled) ? <div className="btn cancel-btn" onClick={()=> this.removePart({ partId: (part.id) ? part.id : index }) } >X</div> : null;
+
             return (
                 <div key={`parts${index}`} style={{ display: 'inline-flex', width: '100%' }} >
                     <input type="text" value={part.description} disabled />
                     <input type="text" value={part.code} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removePart({ partId: (part.id) ? part.id : index }) } >X</div>
+                    { removal }
                 </div>
             )
         });
 
         const productFAQ = _.map(this.state.faq, (faq, index) => {
+            const removal = (!isDisabled) ? <div className="btn cancel-btn" onClick={()=> this.removeFaq({ index }) } >X</div> : null;
+
             return (
                 <div key={`faq${index}`} style={{ display: 'inline-flex', width: '100%' }} >
-                    <textarea value={faq.Question} disabled />
-                    <textarea value={faq.Answer} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removeFaq({ index }) } >X</div>
+                    <textarea value={faq.Question} disabled disabled={isDisabled} />
+                    <textarea value={faq.Answer} disabled disabled={isDisabled} />
+                    { removal }
                 </div>
             )
         })
@@ -392,17 +401,18 @@ class EditProduct extends React.Component {
                                         value={this.state.productSubcategoryId}
                                         options={categoryOptions}
                                         onChange={(value) => this.update({ type: 'productSubcategoryId', value })}
+                                        disabled={isDisabled}
                                     />
-                                    <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update({ type: 'name', value: e.target.value})} required />
+                                    <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update({ type: 'name', value: e.target.value})} required disabled={isDisabled} />
                                 </div>
 
                                 <div>
-                                    <input name="product-classification" type="text" placeholder="Classification" value={this.state.applianceDescription} onChange={(e) => this.update({ type: 'applianceDescription', value: e.target.value})} />
-                                    <input name="product-size" type="text" placeholder="Size" value={this.state.applianceSize} onChange={(e) => this.update({ type: 'applianceSize', value: e.target.value})} />
+                                    <input name="product-classification" type="text" placeholder="Classification" value={this.state.applianceDescription} onChange={(e) => this.update({ type: 'applianceDescription', value: e.target.value})} disabled={isDisabled} />
+                                    <input name="product-size" type="text" placeholder="Size" value={this.state.applianceSize} onChange={(e) => this.update({ type: 'applianceSize', value: e.target.value})} disabled={isDisabled} />
                                 </div>
 
                                 <div>
-                                    <input name="product-manuf-name" type="text" placeholder="Manufacturer Name (e.g. GE)" value={this.state.applianceManufacturerName} onChange={(e) => this.update({ type: 'applianceManufacturerName', value: e.target.value})}  />
+                                    <input name="product-manuf-name" type="text" placeholder="Manufacturer Name (e.g. GE)" value={this.state.applianceManufacturerName} onChange={(e) => this.update({ type: 'applianceManufacturerName', value: e.target.value})}  disabled={isDisabled} />
                                     <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.applianceOrderDisplayNumber} onChange={(e) => this.update({ type: 'applianceOrderDisplayNumber', value: e.target.value})} />
                                 </div>
 
@@ -412,33 +422,34 @@ class EditProduct extends React.Component {
                                         value={(this.state.applianceFuelType).toLowerCase()}
                                         options={fuelTypeOptions}
                                         onChange={(value) => this.update({ type: 'applianceFuelType', value })}
+                                        disabled={isDisabled}
                                     />
-                                    <input name="product-manuf-model-num" type="text" placeholder="Manuf. Model #" value={this.state.manufacturerModelNumber} onChange={(e) => this.update({ type: 'manufacturerModelNumber', value: e.target.value})} required />
+                                    <input name="product-manuf-model-num" type="text" placeholder="Manuf. Model #" value={this.state.manufacturerModelNumber} onChange={(e) => this.update({ type: 'manufacturerModelNumber', value: e.target.value})} required disabled={isDisabled} />
                                 </div>
 
                                 <div>
-                                    <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update({ type: 'sibiModelNumber', value: e.target.value})} required />
-                                    <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update({ type: 'serialNumber', value: e.target.value})}  />
+                                    <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update({ type: 'sibiModelNumber', value: e.target.value})} required disabled={isDisabled} />
+                                    <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update({ type: 'serialNumber', value: e.target.value})}  disabled={isDisabled} />
                                 </div>
 
                                 <div>
-                                    <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update({ type: 'sku', value: e.target.value})} required />
-                                    <input name="product-spec-sheet" type="url" placeholder="Spec Sheet URL" value={this.state.applianceSpecSheetUrl} onChange={(e) => this.update({ type: 'applianceSpecSheetUrl', value: e.target.value})} />
+                                    <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update({ type: 'sku', value: e.target.value})} required disabled={isDisabled} />
+                                    <input name="product-spec-sheet" type="url" placeholder="Spec Sheet URL" value={this.state.applianceSpecSheetUrl} onChange={(e) => this.update({ type: 'applianceSpecSheetUrl', value: e.target.value})} disabled={isDisabled} />
                                 </div>
                             </div>
 
-                            <textarea name="product-description" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})} maxLength="1000" />
+                            <textarea name="product-description" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
 
                             <div style={{ columnCount: 2 }}>
-                                <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update({ type: 'applianceWidth', value: e.target.value})}  />in.
+                                <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update({ type: 'applianceWidth', value: e.target.value})} disabled={isDisabled} />in.
                             </div>
 
                             <div style={{ columnCount: 2 }}>
-                                <input name="product-height" type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update({ type: 'applianceHeight', value: e.target.value})} />in.
-                                <input name="product-depth" type="text" placeholder="Depth"  value={this.state.applianceDepth} onChange={(e) => this.update({ type: 'applianceDepth', value: e.target.value})}  />in.
+                                <input name="product-height" type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update({ type: 'applianceHeight', value: e.target.value})} disabled={isDisabled} />in.
+                                <input name="product-depth" type="text" placeholder="Depth"  value={this.state.applianceDepth} onChange={(e) => this.update({ type: 'applianceDepth', value: e.target.value})} disabled={isDisabled} />in.
                             </div>
 
-                            <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" />
+                            <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
 
                             <div className="accordion">
                                 {/* ************************************** faq section ************************************** */}
@@ -447,9 +458,9 @@ class EditProduct extends React.Component {
                                 </div>
                                 <div style={{ display: (this.state.activeSection === 'faq') ? 'block' : 'none' }} >
                                     { productFAQ }
-                                    <div style={{ display: 'inline-flex' }} >
-                                        <textarea value={this.state.faqQuestion} placeholder="Question" onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })} />
-                                        <textarea value={this.state.faqAnswer}   placeholder="Answer"   onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })} />
+                                    <div style={{ display: (!isDisabled) ? 'inline-flex' : 'none' }} >
+                                        <textarea value={this.state.faqQuestion} placeholder="Question" onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })} disabled={isDisabled} />
+                                        <textarea value={this.state.faqAnswer}   placeholder="Answer"   onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })} disabled={isDisabled} />
                                         <div onClick={this.addFAQ} className="btn cancel-btn">Add</div>
                                     </div>
                                 </div>
@@ -460,7 +471,7 @@ class EditProduct extends React.Component {
                                 </div>
                                 <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} >
                                     { productPictures }
-                                    <div style={{ display: 'inline-flex' }} >
+                                    <div style={{ display: (!isDisabled) ? 'inline-flex' : 'none' }} >
                                         <label className="btn submit-btn" >
                                             { imageBtn }
                                             <input
@@ -481,7 +492,7 @@ class EditProduct extends React.Component {
                                 </div>
                                 <div style={{ display: (this.state.activeSection === 'videos') ? 'block' : 'none' }} >
                                     { productVideos }
-                                    <div style={{ display: 'inline-flex' }} >
+                                    <div style={{ display: (!isDisabled) ? 'inline-flex' : 'none' }} >
                                         <input type="url" value={this.state.videoURL} placeholder="video URL" onChange={(e) => this.update({ type: 'videoURL', value: e.target.value })} />
                                         <div onClick={this.addVideo} className="btn cancel-btn">Add</div>
                                     </div>
@@ -493,7 +504,7 @@ class EditProduct extends React.Component {
                                 </div>
                                 <div style={{ display: (this.state.activeSection === 'parts') ? 'block' : 'none' }} >
                                     { productParts }
-                                    <div style={{ display: 'inline-flex' }} >
+                                    <div style={{ display: (!isDisabled) ? 'inline-flex' : 'none'}} >
                                         <input type="text" value={this.state.partDescription} placeholder="Part name"   onChange={(e) => this.update({ type: 'partDescription', value: e.target.value })} />
                                         <input type="text" value={this.state.partCode}        placeholder="Part number" onChange={(e) => this.update({ type: 'partCode', value: e.target.value })} />
                                         <div onClick={this.addPart} className="btn cancel-btn">Add</div>
@@ -510,9 +521,9 @@ class EditProduct extends React.Component {
                                 />Option for GE to install
                             </div>
                             <div style={{ display: (this.state.isInstall) ? 'inline-flex' : 'none' }} >
-                                <input name="product-install-code" type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update({ type: 'applianceInstallCode', value: e.target.value})} />
-                                <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update({ type: 'applianceInstallPrice', value: e.target.value})} />
-                                <textarea name="product-install-descr" type="text" placeholder="Install Description" value={this.state.applianceInstallDescription} onChange={(e) => this.update({ type: 'applianceInstallDescription', value: e.target.value})} />
+                                <input name="product-install-code" type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update({ type: 'applianceInstallCode', value: e.target.value})} disabled={isDisabled} />
+                                <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update({ type: 'applianceInstallPrice', value: e.target.value})} disabled={isDisabled} />
+                                <textarea name="product-install-descr" type="text" placeholder="Install Description" value={this.state.applianceInstallDescription} onChange={(e) => this.update({ type: 'applianceInstallDescription', value: e.target.value})} disabled={isDisabled} />
                             </div>
                             <div style={styles.checkbox}>
                                 <input
@@ -524,9 +535,9 @@ class EditProduct extends React.Component {
                                 />Option for GE to remove old appliance
                             </div>
                             <div style={{ display: (this.state.isRemoval) ? 'inline-flex' : 'none' }} >
-                                <input name="product-removal-code" type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update({ type: 'applianceRemovalCode', value: e.target.value})} />
-                                <input name="product-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update({ type: 'applianceRemovalPrice', value: e.target.value})}/>
-                                <textarea name="product-removal-descr" type="text" placeholder="Removal Description" value={this.state.applianceRemovalDescription} onChange={(e) => this.update({ type: 'applianceRemovalDescription', value: e.target.value})} />
+                                <input name="product-removal-code" type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update({ type: 'applianceRemovalCode', value: e.target.value})} disabled={isDisabled} />
+                                <input name="product-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update({ type: 'applianceRemovalPrice', value: e.target.value})}disabled={isDisabled} />
+                                <textarea name="product-removal-descr" type="text" placeholder="Removal Description" value={this.state.applianceRemovalDescription} onChange={(e) => this.update({ type: 'applianceRemovalDescription', value: e.target.value})} disabled={isDisabled} />
                             </div>
                         </div>
                         <input className="btn submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />

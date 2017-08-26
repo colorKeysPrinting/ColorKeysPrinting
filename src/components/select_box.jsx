@@ -20,10 +20,12 @@ export default class Select extends React.Component {
     }
 
     showOptions() {
-        this.setState((prevState) => {
-            const isActive = (prevState.isActive) ? false : true;
-            return { isActive };
-        });
+        if (!this.props.disabled) {
+            this.setState((prevState) => {
+                const isActive = (prevState.isActive) ? false : true;
+                return { isActive };
+            });
+        }
     }
 
     render() {
