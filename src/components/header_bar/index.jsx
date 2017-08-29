@@ -37,8 +37,9 @@ class HeaderBar extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
-            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
-            this.props.history.push(path);
+            // TODO: Rework how logged out users are redirected
+            // const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
+            // this.props.history.push(path);
 
             if (nextProps.activeUser.size > 0) {
                 const activeUser = nextProps.activeUser.toJS();

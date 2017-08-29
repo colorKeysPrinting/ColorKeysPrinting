@@ -96,7 +96,7 @@ class OrderDetails extends React.Component {
                 } else if (key === 'orderNumber'){
                     value = order.orderNumber;
 
-                }else if (key === 'deliveryDate') {
+                } else if (key === 'deliveryDate') {
                     value = dateformat(order.installDate, 'mm/dd/yy');
 
                 } else if (key === 'installTime') {

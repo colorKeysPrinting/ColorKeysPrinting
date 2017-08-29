@@ -15,7 +15,14 @@ export default class MyTable extends React.Component {
     }
 
     render() {
-        let headers = [];
+        let headers = [], tableClass;
+
+        //USE TABLECLASS TO GIVE TABLE A SPECIFIC CLASSNAME FOR STYLING PURPOSES
+        if (this.props.tableClass) {
+            tableClass = this.props.tableClass;
+        } else {
+            tableClass = 'admin-table';
+        }
 
         if (this.props.headers) {
             headers = _.map(this.props.headers, (header, id) => {
@@ -52,7 +59,7 @@ export default class MyTable extends React.Component {
 
 
         return (
-            <div id="admin-table">
+            <div className={ tableClass }>
                 <table className="table">
                     <thead className="head">
                         <tr>
