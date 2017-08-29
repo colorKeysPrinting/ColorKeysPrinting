@@ -34,7 +34,7 @@ class EditProduct extends React.Component {
             faq: [],
             videos: [],
             applianceManufacturerName: '',
-            applianceOrderDisplayNumber: this.props.location.state.applianceOrderDisplayNumber + 1,
+            applianceOrderDisplayNumber: this.props.location.state.applianceOrderDisplayNumber + 2,
             applianceType: '',
             applianceSize: '',
             applianceDescription: '',
@@ -55,6 +55,10 @@ class EditProduct extends React.Component {
 
         _.each(product, (value, key) => {
             product[key] = (value === null) ? '' : value;
+
+            if (key === 'applianceOrderDisplayNumber') {
+                product[key] += 1;
+            }
         });
 
         this.state = {
@@ -258,6 +262,10 @@ class EditProduct extends React.Component {
         _.each(product, (value, key) => {
             if(value === '' || typeof value === 'object' && _.size(value) === 0) {
                 delete product[key];
+            }
+
+            if (key === 'applianceOrderDisplayNumber') {
+                product[key] -= 1;
             }
         });
 
