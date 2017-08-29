@@ -343,9 +343,13 @@ class EditProduct extends React.Component {
 
             return (
                 <div key={`faq${index}`} style={{ display: 'inline-flex', width: '100%' }} >
-                    <textarea value={faq.Question} disabled disabled={isDisabled} />
-                    <textarea value={faq.Answer} disabled disabled={isDisabled} />
-                    { removal }
+                    <div>
+                        <input type="text" value={faq.Question} disabled />
+                        <textarea rows="10" cols="50" value={faq.Answer} disabled />
+                    </div>
+                    <div>
+                        { removal }
+                    </div>
                 </div>
             )
         })
@@ -363,12 +367,12 @@ class EditProduct extends React.Component {
 
         return (
             <Overlay type="editProduct" >
-                <div id="edit-product-overlay" >
-                    <div className="title-bar" >
+                <div id="edit-product-overlay" className="modal" >
+                    <div className="titleBar" >
                         <div className="title" >{ title } Product</div>
-                        <div className="close" onClick={this.close} >X</div>
+                        <div className="icon-close" onClick={this.close} >X</div>
                     </div>
-                    <form className="form" onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
+                    <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
                         <div className="content" >
                             <div className="columns" >
                                 <div>
@@ -414,7 +418,15 @@ class EditProduct extends React.Component {
                                 </div>
                             </div>
 
-                            <textarea name="product-description" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
+                            <textarea
+                                name="product-description"
+                                rows="10"
+                                cols="50"
+                                maxLength="1000"
+                                placeholder="Short Description"
+                                value={this.state.shortDescription}
+                                onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})}
+                                disabled={isDisabled} />
 
                             <div className="columns" >
                                 <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update({ type: 'applianceWidth', value: e.target.value})} disabled={isDisabled} />in.
@@ -425,7 +437,15 @@ class EditProduct extends React.Component {
                                 <input name="product-depth" type="text" placeholder="Depth"  value={this.state.applianceDepth} onChange={(e) => this.update({ type: 'applianceDepth', value: e.target.value})} disabled={isDisabled} />in.
                             </div>
 
-                            <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
+                            <textarea
+                                name="product-overview"
+                                rows="10"
+                                cols="50"
+                                maxLength="1000"
+                                placeholder="overview"
+                                value={this.state.overview}
+                                onChange={(e) => this.update({ type: 'overview', value: e.target.value})}
+                                disabled={isDisabled} />
 
                             <div className="accordion">
                                 {/* ************************************** faq section ************************************** */}
@@ -435,9 +455,26 @@ class EditProduct extends React.Component {
                                 <div style={{ display: (this.state.activeSection === 'faq') ? 'block' : 'none' }} >
                                     { productFAQ }
                                     <div style={{ display: (!isDisabled) ? 'inline-flex' : 'none' }} >
-                                        <textarea value={this.state.faqQuestion} placeholder="Question" onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })} disabled={isDisabled} />
-                                        <textarea value={this.state.faqAnswer}   placeholder="Answer"   onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })} disabled={isDisabled} />
-                                        <div onClick={this.addFAQ} className="btn cancel-btn">Add</div>
+                                        <div>
+                                            <input
+                                                type="text"
+                                                value={this.state.faqQuestion}
+                                                placeholder="Question"
+                                                onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })}
+                                                disabled={isDisabled} />
+
+                                            <textarea
+                                                value={this.state.faqAnswer}
+                                                rows="10"
+                                                cols="50"
+                                                maxLength="1000"
+                                                placeholder="Answer"
+                                                onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })}
+                                                disabled={isDisabled} />
+                                        </div>
+                                        <div>
+                                            <div onClick={this.addFAQ} className="btn submit-btn">Add</div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -448,17 +485,21 @@ class EditProduct extends React.Component {
                                 <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} >
                                     { productPictures }
                                     <div style={{ display: (!isDisabled) ? 'inline-flex' : 'none' }} >
-                                        <label className="btn submit-btn" >
-                                            { imageBtn }
-                                            <input
-                                                type="file"
-                                                accept=".png,.jpg,.jpeg,.svg"
-                                                onChange={(e) => {e.preventDefault(); this.updateImage({ imageFile: e.target.files[0] }); }}
-                                                style={{ display: 'none' }}
-                                            />
-                                        </label>
+                                        <div>
+                                            <label className="btn submit-btn" >
+                                                { imageBtn }
+                                                <input
+                                                    type="file"
+                                                    accept=".png,.jpg,.jpeg,.svg"
+                                                    onChange={(e) => {e.preventDefault(); this.updateImage({ imageFile: e.target.files[0] }); }}
+                                                    style={{ display: 'none' }}
+                                                />
+                                            </label>
+                                        </div>
                                         <input type="text" value={this.state.color} placeholder="Color name" onChange={(e) => this.update({ type: 'color', value: e.target.value })} />
-                                        <div onClick={this.addColorAndImage} className="btn cancel-btn">Add</div>
+                                        <div>
+                                            <div onClick={this.addColorAndImage} className="btn submit-btn">Add</div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -470,7 +511,9 @@ class EditProduct extends React.Component {
                                     { productVideos }
                                     <div style={{ display: (!isDisabled) ? 'inline-flex' : 'none' }} >
                                         <input type="url" value={this.state.videoURL} placeholder="video URL" onChange={(e) => this.update({ type: 'videoURL', value: e.target.value })} />
-                                        <div onClick={this.addVideo} className="btn cancel-btn">Add</div>
+                                        <div>
+                                            <div onClick={this.addVideo} className="btn submit-btn">Add</div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -483,7 +526,9 @@ class EditProduct extends React.Component {
                                     <div style={{ display: (!isDisabled) ? 'inline-flex' : 'none'}} >
                                         <input type="text" value={this.state.partDescription} placeholder="Part name"   onChange={(e) => this.update({ type: 'partDescription', value: e.target.value })} />
                                         <input type="text" value={this.state.partCode}        placeholder="Part number" onChange={(e) => this.update({ type: 'partCode', value: e.target.value })} />
-                                        <div onClick={this.addPart} className="btn cancel-btn">Add</div>
+                                        <div>
+                                            <div onClick={this.addPart} className="btn submit-btn">Add</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -501,7 +546,15 @@ class EditProduct extends React.Component {
                                     <input name="product-install-code" type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update({ type: 'applianceInstallCode', value: e.target.value})} disabled={isDisabled} />
                                     <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update({ type: 'applianceInstallPrice', value: e.target.value})} disabled={isDisabled} />
                                 </div>
-                                <textarea name="product-install-descr" type="text" placeholder="Install Description" value={this.state.applianceInstallDescription} onChange={(e) => this.update({ type: 'applianceInstallDescription', value: e.target.value})} disabled={isDisabled} />
+                                <textarea
+                                    name="product-install-descr"
+                                    rows="10"
+                                    cols="50"
+                                    maxLength="1000"
+                                    placeholder="Install Description"
+                                    value={this.state.applianceInstallDescription}
+                                    onChange={(e) => this.update({ type: 'applianceInstallDescription', value: e.target.value})}
+                                    disabled={isDisabled} />
                             </div>
                             <div className="checkbox" >
                                 <input
@@ -517,10 +570,18 @@ class EditProduct extends React.Component {
                                     <input name="product-removal-code" type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update({ type: 'applianceRemovalCode', value: e.target.value})} disabled={isDisabled} />
                                     <input name="product-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update({ type: 'applianceRemovalPrice', value: e.target.value})}disabled={isDisabled} />
                                 </div>
-                                <textarea name="product-removal-descr" type="text" placeholder="Removal Description" value={this.state.applianceRemovalDescription} onChange={(e) => this.update({ type: 'applianceRemovalDescription', value: e.target.value})} disabled={isDisabled} />
+                                <textarea
+                                    name="product-removal-descr"
+                                    rows="10"
+                                    cols="50"
+                                    maxLength="1000"
+                                    placeholder="Removal Description"
+                                    value={this.state.applianceRemovalDescription}
+                                    onChange={(e) => this.update({ type: 'applianceRemovalDescription', value: e.target.value})}
+                                    disabled={isDisabled} />
                             </div>
                         </div>
-                        <input className="btn submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
+                        <input className="btn submit-btn fill" type="submit" value={buttonTxt} style={{ width: '89%' }} />
                         { archiveBtn }
                     </form>
                 </div>
