@@ -6,4 +6,45 @@
     width: 490px;
     max-height: 640px;
     margin: 5em auto;
+
+    .title-bar {
+        display: inline-flex;
+        background-color: #FFF;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        box-shadow: 0px 2px 7px 0px rgba(50, 50, 50, 0.4);
+        height: 20%;
+        width: 100%;
+
+        .title {
+            text-align: left;
+            padding: 30px;
+            width: 90%;
+        }
+
+        .close {
+            cursor: pointer;
+            text-align: right;
+            padding: 30px;
+            width: 10%;
+        }
+    }
+
+    .form {
+        .content {
+            margin: 20px auto 0px;
+            text-align: left;
+            display: inline-grid;
+            max-height: 500px;
+            overflow-y: auto;
+
+            .columns {
+                column-count: 2;
+            }
+
+            .checkbox {
+                padding: 30px;
+            }
+        }
+    }
 }

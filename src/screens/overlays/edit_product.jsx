@@ -293,44 +293,6 @@ class EditProduct extends React.Component {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
         const isDisabled = (this.props.activeUser.toJS().type === 'superAdmin') ? false : true;
-
-        const styles = {
-            titleBar: {
-                display: 'inline-flex',
-                backgroundColor: '#FFF',
-                borderTopLeftRadius: '5px',
-                borderTopRightRadius: '5px',
-                boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-                height: '20%',
-                width: '100%'
-            },
-            title: {
-                textAlign: 'left',
-                padding: '30px',
-                width: '90%'
-            },
-            close: {
-                cursor: 'pointer',
-                textAlign: 'right',
-                padding: '30px',
-                width: '10%'
-            },
-            content: {
-                margin: '20px auto 0px',
-                textAlign: 'left',
-                display: 'inline-grid',
-                maxHeight: '500px',
-                overflowY: 'auto'
-            },
-            checkbox: {
-                // width: '60%',
-                padding: '30px'
-            },
-            text: {
-                margin: '10px'
-            }
-        };
-
         const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
         const title = (this.props.location.state) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
@@ -402,13 +364,13 @@ class EditProduct extends React.Component {
         return (
             <Overlay type="editProduct" >
                 <div id="edit-product-overlay" >
-                    <div style={styles.titleBar} >
-                        <div style={styles.title}>{ title } Product</div>
-                        <div onClick={this.close} style={styles.close}>X</div>
+                    <div className="title-bar" >
+                        <div className="title" >{ title } Product</div>
+                        <div className="close" onClick={this.close} >X</div>
                     </div>
-                    <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
-                        <div style={styles.content}>
-                            <div style={{ columnCount: 2 }}>
+                    <form className="form" onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
+                        <div className="content" >
+                            <div className="columns" >
                                 <div>
                                     <Select
                                         name="product-category"
@@ -454,11 +416,11 @@ class EditProduct extends React.Component {
 
                             <textarea name="product-description" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
 
-                            <div style={{ columnCount: 2 }}>
+                            <div className="columns" >
                                 <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update({ type: 'applianceWidth', value: e.target.value})} disabled={isDisabled} />in.
                             </div>
 
-                            <div style={{ columnCount: 2 }}>
+                            <div className="columns" >
                                 <input name="product-height" type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update({ type: 'applianceHeight', value: e.target.value})} disabled={isDisabled} />in.
                                 <input name="product-depth" type="text" placeholder="Depth"  value={this.state.applianceDepth} onChange={(e) => this.update({ type: 'applianceDepth', value: e.target.value})} disabled={isDisabled} />in.
                             </div>
@@ -525,7 +487,7 @@ class EditProduct extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div style={styles.checkbox}>
+                            <div className="checkbox" >
                                 <input
                                     id="checkbox-is-ge-install"
                                     type="checkbox"
@@ -534,12 +496,14 @@ class EditProduct extends React.Component {
                                     style={{ height: '15px', width: '30px' }}
                                 />Option for GE to install
                             </div>
-                            <div style={{ display: (this.state.isInstall) ? 'inline-flex' : 'none' }} >
-                                <input name="product-install-code" type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update({ type: 'applianceInstallCode', value: e.target.value})} disabled={isDisabled} />
-                                <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update({ type: 'applianceInstallPrice', value: e.target.value})} disabled={isDisabled} />
+                            <div style={{ display: (this.state.isInstall) ? 'block' : 'none' }} >
+                                <div className="columns" >
+                                    <input name="product-install-code" type="text" placeholder="install code (e.g. M106)" value={this.state.applianceInstallCode} onChange={(e) => this.update({ type: 'applianceInstallCode', value: e.target.value})} disabled={isDisabled} />
+                                    <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update({ type: 'applianceInstallPrice', value: e.target.value})} disabled={isDisabled} />
+                                </div>
                                 <textarea name="product-install-descr" type="text" placeholder="Install Description" value={this.state.applianceInstallDescription} onChange={(e) => this.update({ type: 'applianceInstallDescription', value: e.target.value})} disabled={isDisabled} />
                             </div>
-                            <div style={styles.checkbox}>
+                            <div className="checkbox" >
                                 <input
                                     id="checkbox-is-ge-remove-old"
                                     type="checkbox"
@@ -548,9 +512,11 @@ class EditProduct extends React.Component {
                                     style={{ height: '15px', width: '30px' }}
                                 />Option for GE to remove old appliance
                             </div>
-                            <div style={{ display: (this.state.isRemoval) ? 'inline-flex' : 'none' }} >
-                                <input name="product-removal-code" type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update({ type: 'applianceRemovalCode', value: e.target.value})} disabled={isDisabled} />
-                                <input name="product-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update({ type: 'applianceRemovalPrice', value: e.target.value})}disabled={isDisabled} />
+                            <div style={{ display: (this.state.isRemoval) ? 'block' : 'none' }} >
+                                <div className="columns" >
+                                    <input name="product-removal-code" type="text" placeholder="removal code (e.g. M106)" value={this.state.applianceRemovalCode} onChange={(e) => this.update({ type: 'applianceRemovalCode', value: e.target.value})} disabled={isDisabled} />
+                                    <input name="product-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={this.state.applianceRemovalPrice} onChange={(e) => this.update({ type: 'applianceRemovalPrice', value: e.target.value})}disabled={isDisabled} />
+                                </div>
                                 <textarea name="product-removal-descr" type="text" placeholder="Removal Description" value={this.state.applianceRemovalDescription} onChange={(e) => this.update({ type: 'applianceRemovalDescription', value: e.target.value})} disabled={isDisabled} />
                             </div>
                         </div>
