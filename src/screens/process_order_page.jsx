@@ -35,11 +35,13 @@ class ProcessOrderPage extends React.Component {
     }
 
     render() {
-        let userData, occupancyData, officeData;
+        let userData, occupancyData, officeData, pageHeader;
 
+        const orderId = '3206bf49-9fc6-437e-b867-063ada21f005';
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
+        //TABLE HEADERS
         const userHeaders = {
             orderedBy: 'Ordered By',
             phoneNumber: 'Phone Number',
@@ -62,12 +64,29 @@ class ProcessOrderPage extends React.Component {
             email: 'Email'
         };
 
+        //SET TABLE DATA
         if (this.props.order.size > 0 && this.props.users.size > 0) {
             console.log("GOT USERS AND ORDER");
             const order = this.props.order.toJS();
             const user = _.find(this.props.users.toJS(), ['id', order.userId]);
             console.log(order);
             console.log(user);
+
+            //PAGE HEADER
+            pageHeader = <div className="page-header">
+                <div className="order-info">
+                    <h2>Account #: <span>{ orderId }</span></h2>
+                    <h2>Fund: <span>{ order.fund.name }</span></h2>
+                    <h4>Ship-to Address: <span>{ user.fundLocation.addressLineOne + ', ' + user.fundLocation.city + ', ' + user.fundLocation.state + ', ' + user.fundLocation.zipcode }</span></h4>
+                </div>
+                <div className="process-order">
+                    <div className="input-container">
+                        <label>GE Order Number</label>
+                        <input type="text" placeholder="order number" />
+                    </div>
+                    <button className="blue">Process Order</button>
+                </div>
+            </div>
 
             //USER TABLE DATA
             const userCols = {};
@@ -136,6 +155,7 @@ class ProcessOrderPage extends React.Component {
         return (
             <div id="process-orders-page">
                 <div className="container">
+                    { pageHeader }
                     <MyTable
                         tableClass="user-table"
                         type="userDetails"
