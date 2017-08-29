@@ -266,7 +266,7 @@ class EditProduct extends React.Component {
             this.props.updateProduct({ token: jwt.token, category: category.name, product });
 
         } else {
-            this.props.createProduct({ token, category: category.name, product })
+            this.props.createProduct({ token: jwt.token, category: category.name, product })
         }
 
         this.props.history.push(`/products`);
