@@ -87,6 +87,19 @@ class EditProduct extends React.Component {
         this.saveProduct = this.saveProduct.bind(this);
         this.archiveProduct = this.archiveProduct.bind(this);
     }
+
+    componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.imageUploadSuccess, this.props.imageUploadSuccess)) {
+            this.setState((prevState) => {
+                prevState.applianceColorsAndImages.push({ imageUrl: nextProps.imageUploadSuccess, color: prevState.color });
+
+                return { applianceColorsAndImages: prevState.applianceColorsAndImages, image: '', color: '' };
+            });
+        } else if (!_.isEqual(nextProps.imageUploadSuccess, this.props.imageUploadSuccess)) {
+            alert('There was an error uploading the last image please press "Add" to try again');
+        }
+    }
+
     update({ type, value }) {
         this.setState({ [type]: value });
 
@@ -104,6 +117,7 @@ class EditProduct extends React.Component {
         reader.onload = (e) => {
             // imageUrl - use to show the image on the button
             // imageFile - use this to upload to server
+
             this.setState({ image: { imageUrl: e.target.result, imageFile } });
         }
 
@@ -124,16 +138,14 @@ class EditProduct extends React.Component {
 
     addColorAndImage() {
         console.log('adding color & image');
-        this.setState((prevState) => {
-            const image = prevState.image;
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const image = this.state.image;
 
-            console.log('***** make call to server ****');
-            // this.props.uploadImage({ file: image.imageFile }); // push image to server
+        const type = image.imageFile.type;
+        const imageFile = image.imageFile;
 
-            prevState.applianceColorsAndImages.push({ imageUrl: image.imageUrl, imageName: image.imageFile.name, color: prevState.color });
-
-            return { applianceColorsAndImages: prevState.applianceColorsAndImages, color: '', image: '' };
-        });
+        this.props.uploadImage({ token: jwt.token, type, imageFile });
     }
 
     removeColorAndImage({ color }) {
@@ -204,6 +216,7 @@ class EditProduct extends React.Component {
     saveProduct() {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
+
         const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
 
         const product = {
@@ -241,13 +254,6 @@ class EditProduct extends React.Component {
             applianceAssociatedParts: this.state.applianceAssociatedParts, // not in api?
         };
 
-        // remove imageUrl from newly added images
-        _.each(product.applianceColorsAndImages, (image, i) => {
-            if (image.imageName) {
-                delete product.applianceColorsAndImages[i].imageUrl;
-            }
-        });
-
         // removed empty optional fields
         _.each(product, (value, key) => {
             if(value === '' || typeof value === 'object' && _.size(value) === 0) {
@@ -260,7 +266,7 @@ class EditProduct extends React.Component {
             this.props.updateProduct({ token: jwt.token, category: category.name, product });
 
         } else {
-            this.props.createProduct({ token: jwt.token, category: category.name, product })
+            this.props.createProduct({ token, category: category.name, product })
         }
 
         this.props.history.push(`/products`);
@@ -386,7 +392,7 @@ class EditProduct extends React.Component {
         ]
 
         return (
-            <Overlay type="editProduct">
+            <Overlay type="editProduct" >
                 <div id="edit-product-overlay" >
                     <div style={styles.titleBar} >
                         <div style={styles.title}>{ title } Product</div>
@@ -553,7 +559,8 @@ const select = (state) => ({
     activeUser          : state.activeUser.get('activeUser'),
     products            : state.products.get('products'),
     productCategories   : state.products.get('productCategories'),
-    productCategoryId   : state.products.get('productCategoryId')
+    productCategoryId   : state.products.get('productCategoryId'),
+    imageUploadSuccess  : state.assets.get('imageUploadSuccess')
 });
 
 const actions = {
