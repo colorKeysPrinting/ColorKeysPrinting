@@ -35,7 +35,7 @@ class ProcessOrderPage extends React.Component {
     }
 
     render() {
-        let userData, occupancyData, officeData, pageHeader;
+        let pageHeader, userData, occupancyData, officeData, productData;
 
         const orderId = '3206bf49-9fc6-437e-b867-063ada21f005';
         const { cookies } = this.props;
@@ -64,13 +64,22 @@ class ProcessOrderPage extends React.Component {
             email: 'Email'
         };
 
+        const productHeaders = {
+            product: 'Product',
+            modelNumber: 'Model # or Code #',
+            quantity: 'Qty',
+            cost: 'Cost'
+        };
+
         //SET TABLE DATA
         if (this.props.order.size > 0 && this.props.users.size > 0) {
             console.log("GOT USERS AND ORDER");
             const order = this.props.order.toJS();
             const user = _.find(this.props.users.toJS(), ['id', order.userId]);
+            const parts = order.partsAndDestinations;
             console.log(order);
             console.log(user);
+            console.log(parts);
 
             //PAGE HEADER
             pageHeader = <div className="page-header">
@@ -150,6 +159,51 @@ class ProcessOrderPage extends React.Component {
                 officeCols[key] = value;
             });
             officeData = {officeCols};
+
+            //PRODUCT TABLE DATA
+            productData = _.map(parts, (orderDetail) => {
+                const detail = orderDetail.product;
+
+                const cols = {};
+                _.each(productHeaders, (value, key) => {
+
+                    value = detail[key];
+
+                    if (key === 'product') {
+                        value = <img className="productImage" src={detail.applianceColorsAndImages[0].imageUrl} alt="productImg" />;
+
+                    } else if (key === 'productDescription') {
+                        value = <div className="no-limit">
+                            <div className="table-cell-title">{ detail.applianceDescription }</div>
+                            <div className="table-cell-details">{ `SIBI Model Number: ${detail.sibiModelNumber}` }</div>
+                            <div className="table-cell-details">{ `Manufacturer's Model Number ${detail.manufacturerModelNumber}` }</div>
+                            <div className="table-cell-details">{ `Colors: ${detail.selectProductColor}` }</div>
+                            <div className="table-cell-details">{ `Fuel Type: ${detail.applianceFuelType}` }</div>
+                            <div className="table-cell-details">{ `Width: ${detail.applianceWidth}` }</div>
+                            <div className="table-cell-details">{ `Height: ${detail.applianceHeight}` }</div>
+                            <div className="table-cell-details">{ `Depth: ${detail.applianceDepth}` }</div>
+                            <div className="table-cell-details">{ `Install Instructions: ${(detail.applianceInstallDescription) ? detail.applianceInstallDescription : 'Not Specified'}` }</div>
+                            <div className="table-cell-details">{ `Remove Old Appliance: ${(detail.applianceRemovalDescription) ? detail.applianceRemovalDescription : 'Not Specified'}` }</div>
+                        </div>;
+
+                    } else if (key === 'address') {
+                        value = <div className="no-limit">
+                            <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
+                            <div>{`${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`}</div>
+                        </div>;
+
+                    } else if (key === 'qty') {
+                        value = orderDetail.qty;
+
+                    } else if (key === 'price') {
+
+                        value = '$' + orderDetail.ProductPrice.price;
+                    }
+
+                    cols[key] = value;
+                })
+                return cols;
+            });
         }
 
         return (
