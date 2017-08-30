@@ -81,9 +81,7 @@ class ProcessOrderPage extends React.Component {
             productData,
             orderTotalSection;
 
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
-
+        //TABLE HEADERS
         const userHeaders = {
             orderedBy: 'Ordered By',
             phoneNumber: 'Phone Number',
@@ -125,36 +123,57 @@ class ProcessOrderPage extends React.Component {
                 accountNumber: (order.pmOffice.applianceGEAccountNumber) ? order.pmOffice.applianceGEAccountNumber : 'TODO: get fund account number'
             };
 
-            detailsHeaderSection = <div className="details-header">
-                <div className="header-property pure-u-2-3">
-                    <div>
-                        <h2>Account #:</h2>
-                        <div>{ orderProcessHeading.accountNumber }</div>
-                    </div>
-                    <div>
-                        <h2>Fund:</h2>
-                        <div>{ orderProcessHeading.fund.name }</div>
-                    </div>
-                    <div>
-                        <h3>Ship-to Address:</h3>
-                        <div>{ orderProcessHeading.address }</div>
-                    </div>
+            //PAGE HEADER
+            detailsHeaderSection = <div className="page-header">
+                <div className="order-info">
+                    <h2>Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
+                    <h2>Fund: <span>{ orderProcessHeading.fund.name }</span></h2>
+                    <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
                 </div>
-                <div className="button-container pure-u-1-3">
-                    <form onSubmit={this.processOrder}>
-                        <div>
-                            <label htmlFor="processed-by">Processed By</label>
-                            <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
-                        </div>
-                        <div>
-                            <label htmlFor="ge-order-number">GE Order Number</label>
-                            <input name="ge-order-number" type="number" value={this.state.orderNumber} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
-                        </div>
+                <form className="process-order" onSubmit={this.processOrder}>
+                    <div className="input-container">
+                        <label htmlFor="processed-by">GE Order Number</label>
+                        <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
 
-                        <input className = "btn submit-btn fill" type="submit" value="Process Order" />
-                    </form>
-                </div>
-            </div>;
+                        {/*}
+                        <label htmlFor="processed-by">Processed By</label>
+                        <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
+                        */}
+                    </div>
+                    <button className="blue">Process Order</button>
+                </form>
+            </div>
+
+            // detailsHeaderSection = <div className="details-header">
+            //     <div className="header-property pure-u-2-3">
+            //         <div>
+            //             <h2>Account #:</h2>
+            //             <div>{ orderProcessHeading.accountNumber }</div>
+            //         </div>
+            //         <div>
+            //             <h2>Fund:</h2>
+            //             <div>{ orderProcessHeading.fund.name }</div>
+            //         </div>
+            //         <div>
+            //             <h3>Ship-to Address:</h3>
+            //             <div>{ orderProcessHeading.address }</div>
+            //         </div>
+            //     </div>
+            //     <div className="button-container pure-u-1-3">
+            //         <form onSubmit={this.processOrder}>
+            //             <div>
+            //                 <label htmlFor="processed-by">Processed By</label>
+            //                 <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
+            //             </div>
+            //             <div>
+            //                 <label htmlFor="ge-order-number">GE Order Number</label>
+            //                 <input name="ge-order-number" type="number" value={this.state.orderNumber} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
+            //             </div>
+
+            //             <input className = "btn submit-btn fill" type="submit" value="Process Order" />
+            //         </form>
+            //     </div>
+            // </div>;
 
             // ***************** USER TABLE DATA *****************
             const userCols = {};

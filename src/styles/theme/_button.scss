@@ -38,3 +38,22 @@
     color: $light-blue;
     cursor: pointer;
 }
+
+button {
+  padding: 14px 16px;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  border-radius: 3px;
+  transition-duration: 0.3s;
+  height: 46px;
+  &.blue {
+    background-color: $blue;
+    color: white;
+  }
+}

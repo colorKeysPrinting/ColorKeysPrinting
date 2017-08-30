@@ -1,13 +1,59 @@
 #process-orders-page {
+    .page-header {
+        margin-bottom: 39px;
+        display: flex;
+        justify-content: space-between;
+        .order-info {
+            text-align: left;
+            h2 {
+                &:nth-child(1) {
+                    margin-bottom: 8px;
+                }
+                &:nth-child(2) {
+                    margin-bottom: 16px;
+                }
+            }
+            h4 {
+                font-weight: 600;
+                line-height: 18px;
+            }
+            span {
+                font-weight: 600;
+                color: $medium-dark-gray;
+            }
+        }
+        .process-order {
+            align-self: flex-end;
+            .input-container {
+                text-align: left;
+                display: inline-block;
+                margin-right: 20px;
+                label {
+                    display: block;
+                    font-size: 12px;
+                    font-weight: 600;
+                    line-height: 12px;
+                    margin-bottom: 6px;
+                }
+                input {
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: 22px;
+                }
+            }
+        }
+    }
     .user-table {
-        
+        padding: 9px 0;
     }
     .occupancy-table {
         display: inline-block;
-        width: 60%;
+        width: 58%;
+        padding: 9px 9px 0 0;
     }
     .office-table {
         display: inline-block;
-        width: 40%;
+        width: 42%;
+        padding: 9px 0 0 9px;
     }
 }
