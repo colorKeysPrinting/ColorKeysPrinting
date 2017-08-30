@@ -16,9 +16,10 @@ class ProcessOrderPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { orderNumber: '', processedBy: '' };
+        this.state = { orderNumber: '', processedBy: '', modelNumber: '', outOfStock: '' };
 
         this.update = this.update.bind(this);
+        this.showOutOfStock = this.showOutOfStock.bind(this);
         this.processOrder = this.processOrder.bind(this);
     }
 
@@ -30,11 +31,18 @@ class ProcessOrderPage extends React.Component {
         if (orderId) {
             this.props.getOrderById({ id: orderId });
         }
-
     }
 
-    update({ type, value}) {
+    update({ type, value }) {
         this.setState({ [type]: value });
+    }
+
+    updateOrder() {
+        console.log('updateing ')
+    }
+
+    showOutOfStock({ index }) {
+        this.setState({ outOfStock: index });
     }
 
     processOrder() {
@@ -191,11 +199,11 @@ class ProcessOrderPage extends React.Component {
             // ***************** PRODUCTS TABLE DATA *****************
             const productHeaderHTML = _.map(productHeaders, (header, key) => {
                 if (key !== 'productImage') {
-                    return <td>{ header }</td>
+                    return <td key={`orderDetails-${key}`}>{ header }</td>
                 }
             });
 
-            productData = _.map(order.productsAndDestinations, (orderDetail) => {
+            productData = _.map(order.productsAndDestinations, (orderDetail, index) => {
                 const detail = orderDetail.product;
                 let productImage, productDetails;
 
@@ -206,12 +214,12 @@ class ProcessOrderPage extends React.Component {
                                 <tr className="table-row"><td>{ value }</td></tr>
                             </thead>
                             <tbody>
-                                <tr className="table-row"><td><div><img src={detail.applianceColorsAndImages[0].imageUrl} alt="productImg" width="200" height="auto" /></div></td></tr>
+                                <tr className="table-row"><td><div><img src={detail.applianceColorsAndImages[0].imageUrl} alt="productImg" width="150" height="auto" /></div></td></tr>
                             </tbody>
                         </table>;
 
                     } else {
-                        productDetails = <table>
+                        const productTable = <table>
                             <colgroup>
                                 <col span="1" style={{ width: '45%'}} />
                                 <col span="1" style={{ width: '35%'}} />
@@ -230,7 +238,7 @@ class ProcessOrderPage extends React.Component {
                                     <td className="table-cell-details">{ orderDetail.qty }</td>
                                     <td className="table-cell-details">${ orderDetail.ProductPrice.price }</td>
                                 </tr>
-                                <tr className="table-row"><td className="table-cell-details"><div className="btn submit-btn" onClick={() => console.log('change product model #')}>Out of Stock?</div></td></tr>
+                                <tr className="table-row"><td className="table-cell-details"><div className="btn submit-btn" onClick={() => this.showOutOfStock({ index })} >Out of Stock?</div></td></tr>
                                 <tr className="table-row">
                                     <td className="table-cell-details">Install Description: { detail.applianceInstallDescription }</td>
                                     <td className="table-cell-details">Install Code #{ detail.applianceInstallCode }</td>
@@ -251,10 +259,36 @@ class ProcessOrderPage extends React.Component {
                                 </tr>
                             </tbody>
                         </table>;
+
+                        const outOfStock = <table>
+                            <thead className="head">
+                                <tr className="table-row">
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td className="table-cell-title">{ detail.applianceDescription }</td>
+                                </tr>
+                                <tr>
+                                    <td className="btn cancel-btn" onClick={() => this.showOutOfStock({ index: '' })} >Cancel</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label htmlFor="model-num-replace" >Enter Model # to replace rpoduct</label>
+                                        <input name="model-num-replace" value={this.state.modelNumber} onChange={(e) => this.update({ type: 'modelNumber', value: e.target.value })} />
+                                    </td>
+                                    <td className="btn submit-btn" onClick={this.updateOrder} >Replace</td>
+                                </tr>
+                            </tbody>
+                        </table>;
+
+                        productDetails = (this.state.outOfStock === index) ? outOfStock : productTable;
                     }
                 })
                 return (
-                    <tr key={`orderDetails${orderDetail.fundPropertyId}`} className="table-row">
+                    <tr key={`orderDetails-${orderDetail.fundPropertyId}`} className="table-row">
                         <td>{ productImage }</td>
                         <td>{ productDetails }</td>
                     </tr>
@@ -295,8 +329,8 @@ class ProcessOrderPage extends React.Component {
                     />
                     <table className="table" >
                         <colgroup>
-                            <col span="1" style={{ width: '10%'}} />
-                            <col span="1" style={{ width: '90%'}} />
+                            <col span="1" style={{ width: '15%'}} />
+                            <col span="1" style={{ width: '100%'}} />
                         </colgroup>
                         <tbody>
                             { productData }
