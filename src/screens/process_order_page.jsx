@@ -3,21 +3,41 @@ import _                                                    from 'lodash';
 import { connect }                                          from 'react-redux';
 import { withRouter }                                       from 'react-router';
 import { withCookies }                                      from 'react-cookie';
-import dateformat                                           from 'dateformat';
+import moment                                               from 'moment';
+import DayPickerInput                                       from 'react-day-picker/DayPickerInput';
 import assets                                               from 'libs/assets';
 
 import { logout }                                           from 'ducks/active_user/actions';
-import { getOrderById, approveOrder, updateOrder } from 'ducks/orders/actions';
+import { getOrderById, approveOrder, updateOrder }          from 'ducks/orders/actions';
 
 import MyTable                                              from 'components/my_table';
+
+// ************************************************************************************
+//                              TO LOAD THE PAGE
+//
+//    http://localhost:3000/process_order?orderId=92f07c8d-2c65-48a3-bd68-62f1629d12be
+//
+// ************************************************************************************
+
+// you'll need to run `npm install` to update your node_modules with moment and react-day-picker
+
+// TODO: need to get the date picker to render it's calendar modal when you click on the input box (lines: 192 - 198)
+// TODO: need to update styling for products table (lines: 257 - 346)
 
 class ProcessOrderPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { orderNumber: '', processedBy: '', modelNumber: '', outOfStock: '' };
+        this.state = {
+            orderNumber: '',
+            processedBy: '',
+            modelNumber: '',
+            outOfStock: ''
+        };
 
         this.update = this.update.bind(this);
+        this.updateOrderDate = this.updateOrderDate.bind(this);
+        this.updateOrderProducts = this.updateOrderProducts.bind(this);
         this.showOutOfStock = this.showOutOfStock.bind(this);
         this.processOrder = this.processOrder.bind(this);
     }
@@ -32,36 +52,49 @@ class ProcessOrderPage extends React.Component {
         }
     }
 
+    componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.order, this.props.order)) {
+            this.setState({ installDate: nextProps.order.toJS().installDate });
+        }
+    }
+
     update({ type, value }) {
         this.setState({ [type]: value });
     }
 
-    updateOrder() {
+    updateOrderDate({ day }) {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        console.log('updating order');
 
-        // productsAndDestinations,
-        // fundPropertyId,
-        // tenantFirstName,
-        // tenantLastName,
-        // tenantPhone,
-        // tenantEmail,
-        // lockBoxCode,
-        // specialInstructions,
-        // customerPONumber,
-        // occupied,
-        // isApplianceHotShotDelivery,
-        // installDate,
-        // applianceDeliveryTime,
-        // installDate,
-        // applianceDeliveryTime
+        const order = this.props.order;
+        order['installDate'] = (!_.isEqual(day, order.installDate)) ? day : order.installDate;
 
-        const order = {
+        console.log('send updated order');
+        // this.props.updateOrder({ token: jwt.token, order });
+    }
 
-        }
+    updateOrderProducts() {
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
 
-        this.props.updateOrder({ token: jwt.token, order });
+        const order = this.props.order;
+
+        _.each(order.productsAndDestinations, (product, index) => {
+            if (this.state.outOfStock === index) {
+                // TODO: need to update this information to match the endpoint for modelnumer (currently not created)
+                const product = {
+                    productId: 'required',
+                    selectedProductInfo: {
+                        color: '',
+                        imageURL: ''
+                    }
+                }
+                order.productsAndDestinations[index] = this.state.modelNumber;
+            }
+        });
+
+        console.log('send updated order');
+        // this.props.updateOrder({ token: jwt.token, order });
     }
 
     showOutOfStock({ index }) {
@@ -118,62 +151,28 @@ class ProcessOrderPage extends React.Component {
             const user = order.createdByUser;
 
             const orderProcessHeading = {
-                address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`,
-                fund: 'TODO: get fund name',
-                accountNumber: (order.pmOffice.applianceGEAccountNumber) ? order.pmOffice.applianceGEAccountNumber : 'TODO: get fund account number'
+                accountNumber: (order.pmOffice.applianceGEAccountNumber) ? order.pmOffice.applianceGEAccountNumber : order.fund.applianceGEAccountNumber,
+                fund: order.fund.name,
+                address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`
             };
 
             //PAGE HEADER
             detailsHeaderSection = <div className="page-header">
                 <div className="order-info">
                     <h2>Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
-                    <h2>Fund: <span>{ orderProcessHeading.fund.name }</span></h2>
+                    <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
                     <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
                 </div>
-                <form className="process-order" onSubmit={this.processOrder}>
+                <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.processOrder();}}>
                     <div className="input-container">
-                        <label htmlFor="processed-by">GE Order Number</label>
-                        <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
-
-                        {/*}
                         <label htmlFor="processed-by">Processed By</label>
                         <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
-                        */}
+                        <label htmlFor="ge-order-number">GE Order Number</label>
+                        <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="1234-5678" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
                     </div>
-                    <button className="blue">Process Order</button>
+                    <input className="btn submit-btn" type="submit" value="Process Order" />
                 </form>
             </div>
-
-            // detailsHeaderSection = <div className="details-header">
-            //     <div className="header-property pure-u-2-3">
-            //         <div>
-            //             <h2>Account #:</h2>
-            //             <div>{ orderProcessHeading.accountNumber }</div>
-            //         </div>
-            //         <div>
-            //             <h2>Fund:</h2>
-            //             <div>{ orderProcessHeading.fund.name }</div>
-            //         </div>
-            //         <div>
-            //             <h3>Ship-to Address:</h3>
-            //             <div>{ orderProcessHeading.address }</div>
-            //         </div>
-            //     </div>
-            //     <div className="button-container pure-u-1-3">
-            //         <form onSubmit={this.processOrder}>
-            //             <div>
-            //                 <label htmlFor="processed-by">Processed By</label>
-            //                 <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
-            //             </div>
-            //             <div>
-            //                 <label htmlFor="ge-order-number">GE Order Number</label>
-            //                 <input name="ge-order-number" type="number" value={this.state.orderNumber} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
-            //             </div>
-
-            //             <input className = "btn submit-btn fill" type="submit" value="Process Order" />
-            //         </form>
-            //     </div>
-            // </div>;
 
             // ***************** USER TABLE DATA *****************
             const userCols = {};
@@ -192,7 +191,12 @@ class ProcessOrderPage extends React.Component {
                     value = 'Yes';
 
                 } else if (key === 'hotshotInstallDate') {
-                    value = dateformat(order.installDate, 'mm/dd/yy');
+                    const formattedDay = moment(order.installDate).format('MM/DD/YYYY');
+
+                    value = <DayPickerInput
+                        value={formattedDay}
+                        onDayChange={(day) => this.updateOrderDate(day)}
+                    />;
 
                 } else if (key === 'hotshotCode') {
                     value = 'NEED HOTSHOT CODE';
@@ -205,18 +209,23 @@ class ProcessOrderPage extends React.Component {
             const occupancyCols = {};
             _.each(occupancyHeaders, (value, key) => {
                 value = order[key]
+
                 if (key === 'occupancy') {
-                    value = (order['occupied'] === false) ? 'Unoccupied' : 'Occupied';
-
-                } else if (key === 'tenantName'){
-                    value = order.tenantFirstName + ' ' + order.tenantLastName;
-
-                } else if (key === 'phoneNumber') {
-                    value = order.tenantPhone;
-
-                } else if (key === 'email') {
-                    value = order.tenantEmail;
+                    value = (!order['occupied']) ? 'Unoccupied' : 'Occupied';
                 }
+
+                if (order['occupied']) {
+                    if (key === 'tenantName'){
+                        value = `${order.tenantFirstName} ${order.tenantLastName}`;
+
+                    } else if (key === 'phoneNumber') {
+                        value = order.tenantPhone;
+
+                    } else if (key === 'email') {
+                        value = order.tenantEmail;
+                    }
+                }
+
                 occupancyCols[key] = value;
             });
             occupancyData = {occupancyCols};
@@ -256,7 +265,11 @@ class ProcessOrderPage extends React.Component {
                                 <tr className="table-row"><td>{ value }</td></tr>
                             </thead>
                             <tbody>
-                                <tr className="table-row"><td><div><img src={detail.applianceColorsAndImages[0].imageUrl} alt="productImg" width="150" height="auto" /></div></td></tr>
+                                <tr className="table-row">
+                                    <td>
+                                        <div><img src={orderDetail.selectedColorInfo.imageUrl} alt="productImg" width="150" height="auto" /></div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>;
 
@@ -318,17 +331,20 @@ class ProcessOrderPage extends React.Component {
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label htmlFor="model-num-replace" >Enter Model # to replace rpoduct</label>
-                                        <input name="model-num-replace" value={this.state.modelNumber} onChange={(e) => this.update({ type: 'modelNumber', value: e.target.value })} />
+                                        <form onSubmit={(e) => {e.preventDefault(); this.updateOrderProducts();}}>
+                                            <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
+                                            <input name="model-num-replace" value={this.state.modelNumber} placeholder="GTE18GT" onChange={(e) => this.update({ type: 'modelNumber', value: e.target.value })} required />
+                                            <input className="btn submit-btn" type="submit" value="Replace" />
+                                        </form>
                                     </td>
-                                    <td className="btn submit-btn" onClick={this.updateOrder} >Replace</td>
                                 </tr>
                             </tbody>
                         </table>;
 
                         productDetails = (this.state.outOfStock === index) ? outOfStock : productTable;
                     }
-                })
+                });
+
                 return (
                     <tr key={`orderDetails-${orderDetail.fundPropertyId}`} className="table-row">
                         <td>{ productImage }</td>
@@ -386,9 +402,7 @@ class ProcessOrderPage extends React.Component {
 }
 
 const select = (state) => ({
-    order           : state.orders.get('order'),
-    orders          : state.orders.get('orders'),
-    users           : state.users.get('users'),
+    order           : state.orders.get('order')
 });
 
 const actions = {
