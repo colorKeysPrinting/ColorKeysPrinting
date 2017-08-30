@@ -19,8 +19,6 @@ import MyTable                                              from 'components/my_
 //
 // ************************************************************************************
 
-// you'll need to run `npm install` to update your node_modules with moment and react-day-picker
-
 // TODO: need to get the date picker to render it's calendar modal when you click on the input box (lines: 192 - 198)
 // TODO: need to update styling for products table (lines: 257 - 346)
 
@@ -167,10 +165,12 @@ class ProcessOrderPage extends React.Component {
                     <div className="input-container">
                         <label htmlFor="processed-by">Processed By</label>
                         <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
+                    </div>
+                    <div className="input-container">
                         <label htmlFor="ge-order-number">GE Order Number</label>
                         <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="1234-5678" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
                     </div>
-                    <input className="btn submit-btn" type="submit" value="Process Order" />
+                    <input className="btn blue" type="submit" value="Process Order" />
                 </form>
             </div>
 
@@ -182,7 +182,7 @@ class ProcessOrderPage extends React.Component {
                     value = user.firstName + ' ' + user.lastName;
 
                 } else if (key === 'phoneNumber'){
-                    value = user.phoneNumber;
+                    value = <div>{user.phoneNumber}</div>;
 
                 } else if (key === 'email') {
                     value = user.email;
@@ -193,13 +193,15 @@ class ProcessOrderPage extends React.Component {
                 } else if (key === 'hotshotInstallDate') {
                     const formattedDay = moment(order.installDate).format('MM/DD/YYYY');
 
-                    value = <DayPickerInput
-                        value={formattedDay}
-                        onDayChange={(day) => this.updateOrderDate(day)}
-                    />;
+                    value = <div className="no-limit">
+                        <DayPickerInput
+                            value={formattedDay}
+                            onDayChange={(day) => this.updateOrderDate(day)}
+                        />
+                    </div>;
 
                 } else if (key === 'hotshotCode') {
-                    value = 'NEED HOTSHOT CODE';
+                    value = <div>{'NEED HOTSHOT CODE'}</div>;
                 }
                 userCols[key] = value;
             });
@@ -219,10 +221,10 @@ class ProcessOrderPage extends React.Component {
                         value = `${order.tenantFirstName} ${order.tenantLastName}`;
 
                     } else if (key === 'phoneNumber') {
-                        value = order.tenantPhone;
+                        value = <div>{order.tenantPhone}</div>;
 
                     } else if (key === 'email') {
-                        value = order.tenantEmail;
+                        value = <div>{order.tenantEmail}</div>;
                     }
                 }
 
@@ -235,13 +237,13 @@ class ProcessOrderPage extends React.Component {
             _.each(officeHeaders, (value, key) => {
                 value = order[key]
                 if (key === 'pmOffice') {
-                    value = order.pmOffice.name;
+                    value = <div>{order.pmOffice.name}</div>;
 
                 } else if (key === 'phoneNumber'){
-                    value = order.pmOffice.phoneNumber;
+                    value = <div>{order.pmOffice.phoneNumber}</div>;
 
                 } else if (key === 'email') {
-                    value = 'NEED PM OFFICE EMAIL';
+                    value = <div>{'NEED PM OFFICE EMAIL'}</div>;
                 }
                 officeCols[key] = value;
             });

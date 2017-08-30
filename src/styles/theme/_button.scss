@@ -1,45 +1,4 @@
 .btn {
-  font-size: 14px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  outline: none;
-  padding: 18px 20px;
-  font-weight: 400;
-  min-width: 130px;
-  display: inline-block;
-  letter-spacing: 0.6px;
-  transition-duration: 0.3s;
-  border-radius: 3px;
-  &.fill {
-    width: 100%;
-  }
-}
-
-.submit-btn {
-    background-color: $light-blue;
-    color: white;
-    &:hover {
-      color: white;
-      opacity: 0.9;
-    }
-    &:active, &:focus {
-      color: white;
-    }
-}
-
-.white-btn {
-  &:hover {
-    background: $gray-color;
-  }
-}
-
-.text-link {
-    color: $light-blue;
-    cursor: pointer;
-}
-
-button {
   padding: 14px 16px;
   display: inline-block;
   font-size: 14px;
@@ -52,8 +11,25 @@ button {
   border-radius: 3px;
   transition-duration: 0.3s;
   height: 46px;
+  &:hover {
+    opacity: 0.8;
+  }
   &.blue {
     background-color: $blue;
     color: white;
   }
+  &.fill {
+    width: 100%;
+  }
+}
+
+.white-btn {
+  &:hover {
+    background: $gray-color;
+  }
+}
+
+.text-link {
+    color: $light-blue;
+    cursor: pointer;
 }

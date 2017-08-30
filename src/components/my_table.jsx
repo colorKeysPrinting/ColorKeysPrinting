@@ -17,13 +17,6 @@ export default class MyTable extends React.Component {
     render() {
         let headers = [], tableClass;
 
-        //USE TABLECLASS TO GIVE TABLE A SPECIFIC CLASSNAME FOR STYLING PURPOSES
-        if (this.props.tableClass) {
-            tableClass = this.props.tableClass;
-        } else {
-            tableClass = 'admin-table';
-        }
-
         if (this.props.headers) {
             headers = _.map(this.props.headers, (header, id) => {
                 if (id !== 'id') {
@@ -46,10 +39,10 @@ export default class MyTable extends React.Component {
             const col = _.map(item, (col, id) => {
                 if (id !== 'id') {
                     if (id === 'action') {
-                        return (col === 'approve' || this.props.type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" ><div onClick={() => this.state.handleAction({ item })}>{ col }</div></td> : <td key={`table-item-${id}`} className="table-cell"></td>;
+                        return (col === 'approve' || this.props.type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
 
                     } else {
-                        return <td key={`table-item-${id}`} ><div onClick={() => this.state.handleItem({ item })}>{ col }</div></td>;
+                        return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
                     }
                 }
             });
