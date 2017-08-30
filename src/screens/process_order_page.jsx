@@ -7,8 +7,7 @@ import dateformat                                           from 'dateformat';
 import assets                                               from 'libs/assets';
 
 import { logout }                                           from 'ducks/active_user/actions';
-import { getOrderById, approveOrder, getProducts, getOrder } from 'ducks/orders/actions';
-import { getUsers }                                         from 'ducks/users/actions';
+import { getOrderById, approveOrder, updateOrder } from 'ducks/orders/actions';
 
 import MyTable                                              from 'components/my_table';
 
@@ -38,7 +37,31 @@ class ProcessOrderPage extends React.Component {
     }
 
     updateOrder() {
-        console.log('updateing ')
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        console.log('updating order');
+
+        // productsAndDestinations,
+        // fundPropertyId,
+        // tenantFirstName,
+        // tenantLastName,
+        // tenantPhone,
+        // tenantEmail,
+        // lockBoxCode,
+        // specialInstructions,
+        // customerPONumber,
+        // occupied,
+        // isApplianceHotShotDelivery,
+        // installDate,
+        // applianceDeliveryTime,
+        // installDate,
+        // applianceDeliveryTime
+
+        const order = {
+
+        }
+
+        this.props.updateOrder({ token: jwt.token, order });
     }
 
     showOutOfStock({ index }) {
@@ -353,8 +376,7 @@ const actions = {
     logout,
     approveOrder,
     getOrderById,
-    getOrder,
-    getUsers
+    updateOrder
 }
 
 export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(ProcessOrderPage)));

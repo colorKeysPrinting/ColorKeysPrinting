@@ -78,7 +78,7 @@ export function approveOrder({ token, id }) {
     }
 }
 
-export function updateOrder({ token, id, status }) {
+export function updateOrder({ token, order }) {
     return (dispatch) => {
         return axios({
             method  : Network.PATCH,
@@ -87,21 +87,7 @@ export function updateOrder({ token, id, status }) {
                 'x-auth-token': token
             },
             data: {
-                productsAndDestinations,
-                fundPropertyId,
-                tenantFirstName,
-                tenantLastName,
-                tenantPhone,
-                tenantEmail,
-                lockBoxCode,
-                specialInstructions,
-                customerPONumber,
-                occupied,
-                isApplianceHotShotDelivery,
-                installDate,
-                applianceDeliveryTime,
-                installDate,
-                applianceDeliveryTime
+                ...order
             }
         })
             .then(payload => {
