@@ -140,9 +140,9 @@ class ProcessOrderPage extends React.Component {
         const productHeaders = {
             productImage: 'Product',
             productDescription: '',
-            model: 'Model # or Code #',
-            qty: 'Qty',
-            price: 'Cost'
+            // model: 'Model # or Code #',
+            // qty: 'Qty',
+            // price: 'Cost'
         };
 
         if (this.props.order.size > 0) {
@@ -248,109 +248,117 @@ class ProcessOrderPage extends React.Component {
             officeData = {officeCols};
 
             // ***************** PRODUCTS TABLE DATA *****************
-            const productHeaderHTML = _.map(productHeaders, (header, key) => {
-                if (key !== 'productImage') {
-                    return <td key={`orderDetails-${key}`}>{ header }</td>
-                }
-            });
-
-            productData = _.map(order.productsAndDestinations, (orderDetail, index) => {
+            productData = _.map(order.productsAndDestinations, (orderDetail, productIndex) => {
+                // this is the full row for 1 product (orderDetail.product)
                 const detail = orderDetail.product;
-                let productImage, productDetails;
 
+                let productCols = {};
                 _.each(productHeaders, (value, key) => {
                     if (key === 'productImage') {
-                        productImage = <table>
-                            <thead className="head">
-                                <tr className="table-row"><td>{ value }</td></tr>
-                            </thead>
-                            <tbody>
-                                <tr className="table-row">
-                                    <td>
-                                        <div><img src={orderDetail.selectedColorInfo.imageUrl} alt="productImg" width="150" height="auto" /></div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>;
+                        productCols[key] = <img src={orderDetail.selectedColorInfo.imageUrl} alt="productImg" height="100" width="auto" />;
 
                     } else {
-                        const productTable = <table>
-                            <colgroup>
-                                <col span="1" style={{ width: '45%'}} />
-                                <col span="1" style={{ width: '35%'}} />
-                                <col span="1" style={{ width: '10%'}} />
-                                <col span="1" style={{ width: '10%'}} />
-                            </colgroup>
-                            <thead className="head">
-                                <tr className="table-row">
-                                    { productHeaderHTML }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="table-row">
-                                    <td className="table-cell-title">{ detail.applianceDescription }</td>
-                                    <td className="table-cell-details">Model #{ detail.sibiModelNumber }</td>
-                                    <td className="table-cell-details">{ orderDetail.qty }</td>
-                                    <td className="table-cell-details">${ orderDetail.ProductPrice.price }</td>
-                                </tr>
-                                <tr className="table-row"><td className="table-cell-details"><div className="btn submit-btn" onClick={() => this.showOutOfStock({ index })} >Out of Stock?</div></td></tr>
-                                <tr className="table-row">
-                                    <td className="table-cell-details">Install Description: { detail.applianceInstallDescription }</td>
-                                    <td className="table-cell-details">Install Code #{ detail.applianceInstallCode }</td>
-                                    <td className="table-cell-details"></td>
-                                    <td className="table-cell-details">${ detail.applianceInstallPrice }</td>
-                                </tr>
-                                <tr className="table-row">
-                                    <td className="table-cell-details">Remove Appliance Description: { detail.applianceRemovalDescription }</td>
-                                    <td className="table-cell-details">Remove Code #{ detail.applianceRemovalDescription }</td>
-                                    <td className="table-cell-details"></td>
-                                    <td className="table-cell-details">${ detail.applianceRemovalPrice }</td>
-                                </tr>
-                                <tr className="table-row">
-                                    <td className="table-cell-details">Disconnect Fee: </td>
-                                    <td className="table-cell-details">Disconnect Code #{  }</td>
-                                    <td className="table-cell-details"></td>
-                                    <td className="table-cell-details">${  }</td>
-                                </tr>
-                            </tbody>
-                        </table>;
+                        // start of table instead of table
+                        const productDetailHeaders = {
+                            productDescription: '',
+                            model: 'Model # or Code #',
+                            qty: 'Qty',
+                            price: 'Cost'
+                        };
 
-                        const outOfStock = <table>
-                            <thead className="head">
-                                <tr className="table-row">
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td className="table-cell-title">{ detail.applianceDescription }</td>
-                                </tr>
-                                <tr>
-                                    <td className="btn cancel-btn" onClick={() => this.showOutOfStock({ index: '' })} >Cancel</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <form onSubmit={(e) => {e.preventDefault(); this.updateOrderProducts();}}>
+                        let productDetails = _.map(productDetailHeaders, (header, key) => {
+                            let cols = {};
+                            _.each(['model', 'outOfStock', 'install', 'remove', 'disconnect'], (row) => {
+                                let value;
+                                switch(key) {
+                                case 'productDescription':
+                                    debugger
+                                    if (row === 'model') {
+                                        value = detail.applianceDescription;
+
+                                    } else if (row === 'outOfStock') {
+                                        value = (this.state.outOfStock !== productIndex) ? <div className="btn submit-btn" onClick={() => this.showOutOfStock({ productIndex })} >Out of Stock?</div> : <div className="btn cancel-btn" onClick={() => this.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+
+                                    } else if (row === 'install') {
+                                        value = (this.state.outOfStock !== productIndex) ? `Install Description: ${ detail.applianceInstallDescription }` : <form onSubmit={(e) => {e.preventDefault(); this.updateOrderProducts();}}>
                                             <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
                                             <input name="model-num-replace" value={this.state.modelNumber} placeholder="GTE18GT" onChange={(e) => this.update({ type: 'modelNumber', value: e.target.value })} required />
                                             <input className="btn submit-btn" type="submit" value="Replace" />
-                                        </form>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>;
+                                        </form>;
 
-                        productDetails = (this.state.outOfStock === index) ? outOfStock : productTable;
+                                    } else if (row === 'remove') {
+                                        value = (this.state.outOfStock !== productIndex) ? `Remove Appliance Description: ${ detail.applianceRemovalDescription }` : '';
+
+                                    } else if (row === 'disconnect') {
+                                        value = (this.state.outOfStock !== productIndex) ? `Disconnect Fee: ${ '*** missing ***' }` : '';
+                                    }
+                                    cols[key] = value;
+                                    break;
+
+                                case 'model':
+                                    debugger
+                                    if (row === 'model') {
+                                        value = `Model #${ detail.sibiModelNumber }`;
+
+                                    } else if (row === 'outOfStock') {
+                                        value = ''
+
+                                    } else if (row === 'install') {
+                                        value = `Install Code #${ detail.applianceInstallCode }`;
+
+                                    } else if (row === 'remove') {
+                                        value = `Remove Code #${ detail.applianceRemovalDescription }`;
+
+                                    } else if (row === 'disconnect') {
+                                        value = `Disconnect Code #${ '*** missing ***' }`;
+                                    }
+
+                                    value = (this.state.outOfStock !== productIndex) ? value : '';
+                                    cols[key] = value;
+                                    break;
+
+                                case 'qty':
+                                    debugger
+                                    value = (row === 'model' && this.state.outOfStock !== productIndex) ? orderDetail.qty : '';
+                                    cols[key] = value;
+                                    break;
+
+                                case 'price':
+                                    debugger
+                                    if (row === 'model') {
+                                        value = orderDetail.ProductPrice.price;
+
+                                    } else if (row === 'outOfStock') {
+                                        value = '';
+
+                                    } else if (row === 'install') {
+                                        value = detail.applianceInstallPrice;
+
+                                    } else if (row === 'remove') {
+                                        value = detail.applianceRemovalPrice;
+
+                                    } else if (row === 'disconnect') {
+                                        value = 'missing';
+                                    }
+
+                                    value = (this.state.outOfStock !== productIndex) ? value : '';
+                                    cols[key] = value;
+                                    break;
+                                }
+                            });
+                            return cols;
+                        });
+
+                        productCols[key] = <MyTable
+                            className="product-details-table"
+                            type="productDetails"
+                            headers={productDetailHeaders}
+                            data={productDetails}
+                        />;
                     }
                 });
 
-                return (
-                    <tr key={`orderDetails-${orderDetail.fundPropertyId}`} className="table-row">
-                        <td>{ productImage }</td>
-                        <td>{ productDetails }</td>
-                    </tr>
-                );
+                return productCols;
             });
 
             orderTotalSection = <div className="cost-section">
@@ -385,15 +393,12 @@ class ProcessOrderPage extends React.Component {
                         headers={officeHeaders}
                         data={officeData}
                     />
-                    <table className="table" >
-                        <colgroup>
-                            <col span="1" style={{ width: '15%'}} />
-                            <col span="1" style={{ width: '100%'}} />
-                        </colgroup>
-                        <tbody>
-                            { productData }
-                        </tbody>
-                    </table>
+                    <MyTable
+                        className="product-table"
+                        type="products"
+                        headers={productHeaders}
+                        data={productData}
+                    />
                     { orderTotalSection }
                 </div>
             </div>
