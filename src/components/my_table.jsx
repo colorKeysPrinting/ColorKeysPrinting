@@ -59,7 +59,7 @@ export default class MyTable extends React.Component {
 
 
         return (
-            <div className={ tableClass }>
+            <div className={ (this.props.className) ? this.props.className : 'admin-table' }>
                 <table className="table">
                     <thead className="head">
                         <tr>
