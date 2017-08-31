@@ -41,7 +41,7 @@ export default class MyTable extends React.Component {
                         return (col === 'approve' || this.props.type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
 
                     } else {
-                        return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                        return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ product })}>{ col }</td>;
                     }
                 }
             });

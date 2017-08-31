@@ -95,8 +95,8 @@ class ProcessOrderPage extends React.Component {
         // this.props.updateOrder({ token: jwt.token, order });
     }
 
-    showOutOfStock({ index }) {
-        this.setState({ outOfStock: index });
+    showOutOfStock({ productIndex }) {
+        this.setState({ outOfStock: productIndex });
     }
 
     processOrder() {
@@ -254,108 +254,119 @@ class ProcessOrderPage extends React.Component {
                 // this is the full row for 1 product (orderDetail.product)
                 const detail = orderDetail.product;
 
-                let productCols = {};
-                _.each(productHeaders, (value, key) => {
-                    if (key === 'productImage') {
-                        productCols[key] = <img src={orderDetail.selectedColorInfo.imageUrl} alt="productImg" height="100" width="auto" />;
+                const imageData = [[<img src={orderDetail.selectedColorInfo.imageUrl} alt="productImg" height="100" width="auto" />]];
 
-                    } else {
-                        // start of table instead of table
-                        const productDetailHeaders = {
-                            productDescription: '',
-                            code: 'Model # or Code #',
-                            qty: 'Qty',
-                            price: 'Cost'
-                        };
+                const productImageTable = <MyTable
+                    className="product-details-image-table"
+                    type="productDetailsImage"
+                    headers={{productImage: 'Product'}}
+                    data={imageData}
+                />;
 
-                        const productDetailRows = ['product', 'outOfStock', 'install', 'remove', 'disconnect'];
+                const productDetailHeaders = {
+                    productDescription: '',
+                    code: 'Model # or Code #',
+                    qty: 'Qty',
+                    price: 'Cost'
+                };
 
-                        let productDetails = _.map(productDetailRows, (row) => {
-                            let cols = {};
-                            _.each(productDetailHeaders, (header, key) => {
-                                let value;
-                                switch(key) {
-                                case 'productDescription':
-                                    if (row === 'product') {
-                                        value = detail.applianceDescription;
+                const productDetailRows = ['product', 'outOfStock', 'install', 'remove', 'disconnect'];
 
-                                    } else if (row === 'outOfStock') {
-                                        value = (this.state.outOfStock !== productIndex) ? <div className="btn submit-btn" onClick={() => this.showOutOfStock({ productIndex })} >Out of Stock?</div> : <div className="btn cancel-btn" onClick={() => this.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                const productDetails = _.map(productDetailRows, (row) => {
+                    let cols = {};
+                    _.each(productDetailHeaders, (header, key) => {
+                        let value;
+                        switch(key) {
+                        case 'productDescription':
+                            if (row === 'product') {
+                                value = detail.applianceDescription;
 
-                                    } else if (row === 'install') {
-                                        value = (this.state.outOfStock !== productIndex) ? `Install Description: ${ detail.applianceInstallDescription }` : <form onSubmit={(e) => {e.preventDefault(); this.updateOrderProducts();}}>
-                                            <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
-                                            <input name="model-num-replace" value={this.state.modelNumber} placeholder="GTE18GT" onChange={(e) => this.update({ type: 'modelNumber', value: e.target.value })} required />
-                                            <input className="btn submit-btn" type="submit" value="Replace" />
-                                        </form>;
+                            } else if (row === 'outOfStock') {
+                                value = (this.state.outOfStock !== productIndex) ? <div className="btn submit-btn" onClick={() => this.showOutOfStock({ productIndex })} >Out of Stock?</div> : <div className="btn cancel-btn" onClick={() => this.showOutOfStock({ productIndex: '' })} >Cancel</div>;
 
-                                    } else if (row === 'remove') {
-                                        value = (this.state.outOfStock !== productIndex) ? `Remove Appliance Description: ${ detail.applianceRemovalDescription }` : '';
+                            } else if (row === 'install') {
+                                value = (this.state.outOfStock !== productIndex) ? `Install Description: ${ detail.applianceInstallDescription }` : <form onSubmit={(e) => {e.preventDefault(); this.updateOrderProducts();}}>
+                                    <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
+                                    <input name="model-num-replace" value={this.state.modelNumber} placeholder="GTE18GT" onChange={(e) => this.update({ type: 'modelNumber', value: e.target.value })} required />
+                                    <input className="btn submit-btn" type="submit" value="Replace" />
+                                </form>;
 
-                                    } else if (row === 'disconnect') {
-                                        value = (this.state.outOfStock !== productIndex) ? `Disconnect Fee: ${ '*** missing ***' }` : '';
-                                    }
-                                    break;
+                            } else if (row === 'remove') {
+                                value = (this.state.outOfStock !== productIndex) ? `Remove Appliance Description: ${ detail.applianceRemovalDescription }` : '';
 
-                                case 'code':
-                                    if (row === 'product') {
-                                        value = `Model #${ detail.sibiModelNumber }`;
+                            } else if (row === 'disconnect') {
+                                value = (this.state.outOfStock !== productIndex) ? `Disconnect Fee: ${ '*** missing ***' }` : '';
+                            }
+                            break;
 
-                                    } else if (row === 'outOfStock') {
-                                        value = ''
+                        case 'code':
+                            if (row === 'product') {
+                                value = `Model #${ detail.sibiModelNumber }`;
 
-                                    } else if (row === 'install') {
-                                        value = `Install Code #${ detail.applianceInstallCode }`;
+                            } else if (row === 'outOfStock') {
+                                value = ''
 
-                                    } else if (row === 'remove') {
-                                        value = `Remove Code #${ detail.applianceRemovalDescription }`;
+                            } else if (row === 'install') {
+                                value = `Install Code #${ detail.applianceInstallCode }`;
 
-                                    } else if (row === 'disconnect') {
-                                        value = `Disconnect Code #${ '*** missing ***' }`;
-                                    }
+                            } else if (row === 'remove') {
+                                value = `Remove Code #${ detail.applianceRemovalCode }`;
 
-                                    value = (this.state.outOfStock !== productIndex) ? value : '';
-                                    break;
+                            } else if (row === 'disconnect') {
+                                value = `Disconnect Code #${ '*** missing ***' }`;
+                            }
 
-                                case 'qty':
-                                    value = (row === 'product' && this.state.outOfStock !== productIndex) ? orderDetail.qty : '';
-                                    break;
+                            value = (this.state.outOfStock !== productIndex) ? value : '';
+                            break;
 
-                                case 'price':
-                                    if (row === 'product') {
-                                        value = orderDetail.ProductPrice.price;
+                        case 'qty':
+                            value = (row === 'product' && this.state.outOfStock !== productIndex) ? orderDetail.qty : '';
+                            break;
 
-                                    } else if (row === 'outOfStock') {
-                                        value = '';
+                        case 'price':
+                            if (row === 'product') {
+                                value = orderDetail.ProductPrice.price;
 
-                                    } else if (row === 'install') {
-                                        value = detail.applianceInstallPrice;
+                            } else if (row === 'outOfStock') {
+                                value = '';
 
-                                    } else if (row === 'remove') {
-                                        value = detail.applianceRemovalPrice;
+                            } else if (row === 'install') {
+                                value = detail.applianceInstallPrice;
 
-                                    } else if (row === 'disconnect') {
-                                        value = 'missing';
-                                    }
+                            } else if (row === 'remove') {
+                                value = detail.applianceRemovalPrice;
 
-                                    value = (this.state.outOfStock !== productIndex) ? value : '';
-                                    break;
-                                }
-                                cols[key] = value;
-                            });
-                            return cols;
-                        });
+                            } else if (row === 'disconnect') {
+                                value = 'missing';
+                            }
 
-                        productCols[key] = <MyTable
-                            className="product-details-table"
-                            type="productDetails"
-                            headers={productDetailHeaders}
-                            data={productDetails}
-                        />;
-                    }
+                            value = (this.state.outOfStock !== productIndex) ? value : '';
+                            break;
+                        }
+                        cols[key] = value;
+                    });
+                    return cols;
                 });
 
-                return productCols;
+                const productDetailsTable = <MyTable
+                    className="product-details-table"
+                    type="productDetails"
+                    headers={productDetailHeaders}
+                    data={productDetails}
+                />;
+
+                return <table className="product-table">
+                    <colgroup>
+                        <col span="1" style={{width: '10%'}} />
+                        <col span="1" style={{width: '90%'}} />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td>{ productImageTable }</td>
+                            <td>{ productDetailsTable }</td>
+                        </tr>
+                    </tbody>
+                </table>;
             });
 
             orderTotalSection = <div className="cost-section">
@@ -390,12 +401,7 @@ class ProcessOrderPage extends React.Component {
                         headers={officeHeaders}
                         data={officeData}
                     />
-                    <MyTable
-                        className="product-table"
-                        type="products"
-                        headers={productHeaders}
-                        data={productData}
-                    />
+                    { productData }
                     { orderTotalSection }
                 </div>
             </div>
