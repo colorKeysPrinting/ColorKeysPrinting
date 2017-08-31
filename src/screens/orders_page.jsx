@@ -125,7 +125,7 @@ class OrdersPage extends React.Component {
                         value = <div>{`${user['firstName']} ${user['lastName']}`}</div>;
                     
                     } else if (key === 'orderNumber') {
-                        value = <div>{item[key]}</div>
+                        value = <div>{item[key]}</div>;
 
                     } else if (key === 'createdAt') {
                         value = <div>{dateformat(new Date(value), 'mmmm dd, yyyy')}</div>;

@@ -302,7 +302,9 @@ class ProcessOrderPage extends React.Component {
                         headers={officeHeaders}
                         data={officeData}
                     />
-                    { productData }
+                    <div className="product-table-wrapper">
+                        { productData }
+                    </div>
                     { orderTotalSection }
                 </div>
             </div>

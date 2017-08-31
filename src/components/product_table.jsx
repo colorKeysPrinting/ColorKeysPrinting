@@ -20,7 +20,6 @@ export default function ProductTable(props) {
     const imageData = [[<img src={props.image} alt="productImg" height="100" width="auto" />]];
 
     const productImageTable = <MyTable
-        className="product-details-image-table"
         type="productDetailsImage"
         headers={{productImage: 'Product'}}
         data={imageData}
@@ -112,7 +111,6 @@ export default function ProductTable(props) {
     });
 
     const productDetailsTable = <MyTable
-        className="product-details-table"
         type="productDetails"
         headers={productDetailHeaders}
         data={productDetails}
@@ -120,13 +118,13 @@ export default function ProductTable(props) {
 
     return <table className="product-table">
         <colgroup>
-            <col span="1" style={{width: '10%'}} />
-            <col span="1" style={{width: '90%'}} />
+            <col span="1" className="product-image-colspan" />
+            <col span="1" className="product-details-colspan" />
         </colgroup>
         <tbody>
-            <tr>
-                <td>{ productImageTable }</td>
-                <td>{ productDetailsTable }</td>
+            <tr className="product-table-container-row">
+                <td className="product-image-table">{ productImageTable }</td>
+                <td className="product-details-table">{ productDetailsTable }</td>
             </tr>
         </tbody>
     </table>;

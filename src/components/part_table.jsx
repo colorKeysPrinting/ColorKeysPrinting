@@ -84,13 +84,13 @@ export default function PartTable(props) {
 
     return <table className="part-table">
         <colgroup>
-            <col span="1" style={{width: '10%'}} />
-            <col span="1" style={{width: '90%'}} />
+            <col span="1" className="product-image-colspan" />
+            <col span="1" className="product-details-colspan" />
         </colgroup>
         <tbody>
-            <tr>
-                <td>{ partImageTable }</td>
-                <td>{ partDetailsTable }</td>
+            <tr className="product-table-container-row" >
+                <td className="product-image-table">{ partImageTable }</td>
+                <td className="product-details-table">{ partDetailsTable }</td>
             </tr>
         </tbody>
     </table>;
