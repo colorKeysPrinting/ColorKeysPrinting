@@ -118,6 +118,7 @@
     }
 }
 
+//Product-table specific styling
 .product-table-wrapper {
     box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
     border: 1px solid $medium-light-gray;
@@ -129,10 +130,28 @@
         .product-details-colspan {
             width: 88%;
         }
+        .head {
+            border-bottom: 1px solid $medium-light-gray;
+            .table-header {
+                &:nth-child(1) {
+                    width: 58%;
+                }
+                &:nth-child(2) {
+                    width: 20%;
+                }
+                &:nth-child(3) {
+                    width: 11%;
+                }
+                &:nth-child(4) {
+                    width: 11%;
+                }
+            }
+        }
         .product-table-container-row {
             background: white;
             border: none;
             box-shadow: none;
+            border-bottom: 1px solid $medium-light-gray;
             .product-image-table, .product-details-table {
                 .table {
                     border: none;
@@ -140,6 +159,42 @@
                     td {
                         border: none;
                     }
+                    tbody {
+                        .table-row {
+                            &:nth-child(1) {
+                                td {
+                                    &:nth-child(1) {
+                                        font-size: 16px;
+                                        font-weight: 600;
+                                    }
+                                }
+                            }
+                        }
+                        td {
+                            padding: 10px 22px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .product-table {
+        
+    }
+    .part-table {
+        .table-row {
+            td {
+                &:nth-child(1) {
+                    width: 58%;
+                }
+                &:nth-child(2) {
+                    width: 20%;
+                }
+                &:nth-child(3) {
+                    width: 11%;
+                }
+                &:nth-child(4) {
+                    width: 11%;
                 }
             }
         }

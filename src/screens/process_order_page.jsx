@@ -271,11 +271,11 @@ class ProcessOrderPage extends React.Component {
             });
 
             orderTotalSection = <div className="cost-section">
-                <h4>Order Summary </h4>
-                <div className="cost-row" >
-                    <div><h4>Sub Total:</h4> ${ order.totalCost }</div>
-                    <div><h4>Sales Tax:</h4> ${ order.salesTax }</div>
-                    <div><h4>Total:</h4> ${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</div>
+                <h5 className="cost-header">Order Summary </h5>
+                <div className="cost-row">
+                    <h5>Sub Total: <span>${ order.totalCost }</span></h5>
+                    <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
+                    <h5>Total: <span>${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</span></h5>
                 </div>
             </div>;
         }

@@ -20,7 +20,6 @@ export default function PartTable(props) {
     const imageData = [[<img src={part.imageUrl} alt="productImg" height="100" width="auto" />]];
 
     const partImageTable = <MyTable
-        className="part-details-image-table"
         type="partDetailsImage"
         data={imageData}
     />;
@@ -77,7 +76,6 @@ export default function PartTable(props) {
     });
 
     const partDetailsTable = <MyTable
-        className="part-details-table"
         type="partDetails"
         data={partDetails}
     />;
