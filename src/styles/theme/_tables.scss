@@ -64,11 +64,10 @@
             max-width: 200px;
             font-size: 14px;
             line-height: 1.3em;
-            &.no-limit {
+            &.no-limit, &.DayPickerInput {
                 max-width: none;
-                div {
-                    max-width: none;
-                }
+                text-overflow: initial !important;
+                overflow: initial !important;
             }
         }
         .edit {

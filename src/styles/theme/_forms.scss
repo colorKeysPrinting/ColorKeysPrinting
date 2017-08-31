@@ -2,6 +2,24 @@ input {
   border: 1px solid $border-gray;
   background: white;
   height: 46px;
-  font-size: 16px;
+  font-size: 14px;
   padding: 10px;
+}
+
+.input-container {
+    text-align: left;
+    display: inline-block;
+    margin-right: 20px;
+    label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 12px;
+        margin-bottom: 6px;
+    }
+    input {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 22px;
+    }
 }
