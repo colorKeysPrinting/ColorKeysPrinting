@@ -263,19 +263,20 @@ class ProcessOrderPage extends React.Component {
                         // start of table instead of table
                         const productDetailHeaders = {
                             productDescription: '',
-                            model: 'Model # or Code #',
+                            code: 'Model # or Code #',
                             qty: 'Qty',
                             price: 'Cost'
                         };
 
-                        let productDetails = _.map(productDetailHeaders, (header, key) => {
+                        const productDetailRows = ['product', 'outOfStock', 'install', 'remove', 'disconnect'];
+
+                        let productDetails = _.map(productDetailRows, (row) => {
                             let cols = {};
-                            _.each(['model', 'outOfStock', 'install', 'remove', 'disconnect'], (row) => {
+                            _.each(productDetailHeaders, (header, key) => {
                                 let value;
                                 switch(key) {
                                 case 'productDescription':
-                                    debugger
-                                    if (row === 'model') {
+                                    if (row === 'product') {
                                         value = detail.applianceDescription;
 
                                     } else if (row === 'outOfStock') {
@@ -294,12 +295,10 @@ class ProcessOrderPage extends React.Component {
                                     } else if (row === 'disconnect') {
                                         value = (this.state.outOfStock !== productIndex) ? `Disconnect Fee: ${ '*** missing ***' }` : '';
                                     }
-                                    cols[key] = value;
                                     break;
 
-                                case 'model':
-                                    debugger
-                                    if (row === 'model') {
+                                case 'code':
+                                    if (row === 'product') {
                                         value = `Model #${ detail.sibiModelNumber }`;
 
                                     } else if (row === 'outOfStock') {
@@ -316,18 +315,14 @@ class ProcessOrderPage extends React.Component {
                                     }
 
                                     value = (this.state.outOfStock !== productIndex) ? value : '';
-                                    cols[key] = value;
                                     break;
 
                                 case 'qty':
-                                    debugger
-                                    value = (row === 'model' && this.state.outOfStock !== productIndex) ? orderDetail.qty : '';
-                                    cols[key] = value;
+                                    value = (row === 'product' && this.state.outOfStock !== productIndex) ? orderDetail.qty : '';
                                     break;
 
                                 case 'price':
-                                    debugger
-                                    if (row === 'model') {
+                                    if (row === 'product') {
                                         value = orderDetail.ProductPrice.price;
 
                                     } else if (row === 'outOfStock') {
@@ -344,9 +339,9 @@ class ProcessOrderPage extends React.Component {
                                     }
 
                                     value = (this.state.outOfStock !== productIndex) ? value : '';
-                                    cols[key] = value;
                                     break;
                                 }
+                                cols[key] = value;
                             });
                             return cols;
                         });
