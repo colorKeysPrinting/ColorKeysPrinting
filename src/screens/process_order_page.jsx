@@ -2,15 +2,15 @@ import React                                                from 'react';
 import _                                                    from 'lodash';
 import { connect }                                          from 'react-redux';
 import { withRouter }                                       from 'react-router';
-import { withCookies }                                      from 'react-cookie';
 import moment                                               from 'moment';
 import DayPickerInput                                       from 'react-day-picker/DayPickerInput';
 import assets                                               from 'libs/assets';
 
-import { logout }                                           from 'ducks/active_user/actions';
-import { getOrderById, approveOrder, updateOrder }          from 'ducks/orders/actions';
+import { getOrderById, processOrder, updateInstallDate, updateModelNumber }          from 'ducks/orders/actions';
 
 import MyTable                                              from 'components/my_table';
+import ProductTable                                         from 'components/product_table';
+import PartTable                                            from 'components/part_table';
 
 // ************************************************************************************
 //                              TO LOAD THE PAGE
@@ -20,7 +20,6 @@ import MyTable                                              from 'components/my_
 // ************************************************************************************
 
 // TODO: need to get the date picker to render it's calendar modal when you click on the input box (lines: 192 - 198)
-// TODO: need to update styling for products table (lines: 257 - 346)
 
 class ProcessOrderPage extends React.Component {
     constructor(props) {
@@ -52,7 +51,12 @@ class ProcessOrderPage extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (!_.isEqual(nextProps.order, this.props.order)) {
-            this.setState({ installDate: nextProps.order.toJS().installDate });
+            if (nextProps.processSuccess) {
+                this.props.history.push(`/`);
+
+            } else {
+                this.setState({ installDate: nextProps.order.toJS().installDate });
+            }
         }
     }
 
@@ -61,38 +65,22 @@ class ProcessOrderPage extends React.Component {
     }
 
     updateOrderDate({ day }) {
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const order = this.props.order.toJS();
+        const newDate = day._d.toISOString();
 
-        const order = this.props.order;
-        order['installDate'] = (!_.isEqual(day, order.installDate)) ? day : order.installDate;
+        const installDate = (!_.isEqual(newDate, order.installDate)) ? newDate : order.installDate;
 
-        console.log('send updated order');
-        // this.props.updateOrder({ token: jwt.token, order });
+        this.props.updateInstallDate({ id: order.id, installDate });
     }
 
     updateOrderProducts() {
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
-
-        const order = this.props.order;
+        const order = this.props.order.toJS();
 
         _.each(order.productsAndDestinations, (product, index) => {
             if (this.state.outOfStock === index) {
-                // TODO: need to update this information to match the endpoint for modelnumer (currently not created)
-                const product = {
-                    productId: 'required',
-                    selectedProductInfo: {
-                        color: '',
-                        imageURL: ''
-                    }
-                }
-                order.productsAndDestinations[index] = this.state.modelNumber;
+                this.props.updateModelNumber({ id: order.id, productOrderId: product.productOrderId, manufacturerModelNumber: this.state.modelNumber })
             }
         });
-
-        console.log('send updated order');
-        // this.props.updateOrder({ token: jwt.token, order });
     }
 
     showOutOfStock({ productIndex }) {
@@ -100,7 +88,9 @@ class ProcessOrderPage extends React.Component {
     }
 
     processOrder() {
-        console.log('process order click')
+        const order = this.props.order.toJS();
+
+        this.props.processOrder({ id: order.id, processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });
     }
 
     render() {
@@ -133,14 +123,6 @@ class ProcessOrderPage extends React.Component {
             pmOffice: 'PM Office',
             phoneNumber: 'Phone Number',
             email: 'Email'
-        };
-
-        const productHeaders = {
-            productImage: 'Product',
-            productDescription: '',
-            // model: 'Model # or Code #',
-            // qty: 'Qty',
-            // price: 'Cost'
         };
 
         if (this.props.order.size > 0) {
@@ -196,7 +178,7 @@ class ProcessOrderPage extends React.Component {
                     value = <div className="no-limit">
                         <DayPickerInput
                             value={formattedDay}
-                            onDayChange={(day) => this.updateOrderDate(day)}
+                            onDayChange={(day) => this.updateOrderDate({ day })}
                         />
                     </div>;
 
@@ -250,123 +232,42 @@ class ProcessOrderPage extends React.Component {
             officeData = {officeCols};
 
             // ***************** PRODUCTS TABLE DATA *****************
-            productData = _.map(order.productsAndDestinations, (orderDetail, productIndex) => {
-                // this is the full row for 1 product (orderDetail.product)
-                const detail = orderDetail.product;
+            const productsAndParts = order.productsAndDestinations.concat(order.partsAndDestinations);
 
-                const imageData = [[<img src={orderDetail.selectedColorInfo.imageUrl} alt="productImg" height="100" width="auto" />]];
+            productData = _.map(productsAndParts, (orderDetail, productIndex) => {
+                if (orderDetail.product) {
+                    return <ProductTable
+                        key={`product${productIndex}`}
+                        productIndex={productIndex}
+                        product={orderDetail.product}
+                        image={orderDetail.selectedColorInfo.imageUrl}
+                        qty={orderDetail.qty}
+                        price={orderDetail.ProductPrice.price}
 
-                const productImageTable = <MyTable
-                    className="product-details-image-table"
-                    type="productDetailsImage"
-                    headers={{productImage: 'Product'}}
-                    data={imageData}
-                />;
+                        outOfStock={this.state.outOfStock}
+                        modelNumber={this.state.modelNumber}
 
-                const productDetailHeaders = {
-                    productDescription: '',
-                    code: 'Model # or Code #',
-                    qty: 'Qty',
-                    price: 'Cost'
-                };
+                        update={this.update}
+                        updateOrderProducts={this.updateOrderProducts}
+                        showOutOfStock={this.showOutOfStock}
+                    />;
+                } else if (orderDetail.part) {
+                    return <PartTable
+                        key={`part${productIndex}`}
+                        productIndex={productIndex}
+                        part={orderDetail.part}
+                        qty={orderDetail.qty}
+                        price={orderDetail.PartPrice.price}
 
-                const productDetailRows = ['product', 'outOfStock', 'install', 'remove', 'disconnect'];
+                        outOfStock={this.state.outOfStock}
+                        modelNumber={this.state.modelNumber}
 
-                const productDetails = _.map(productDetailRows, (row) => {
-                    let cols = {};
-                    _.each(productDetailHeaders, (header, key) => {
-                        let value;
-                        switch(key) {
-                        case 'productDescription':
-                            if (row === 'product') {
-                                value = detail.applianceDescription;
+                        update={this.update}
+                        updateOrderProducts={this.updateOrderProducts}
+                        showOutOfStock={this.showOutOfStock}
+                    />;
+                }
 
-                            } else if (row === 'outOfStock') {
-                                value = (this.state.outOfStock !== productIndex) ? <div className="btn submit-btn" onClick={() => this.showOutOfStock({ productIndex })} >Out of Stock?</div> : <div className="btn cancel-btn" onClick={() => this.showOutOfStock({ productIndex: '' })} >Cancel</div>;
-
-                            } else if (row === 'install') {
-                                value = (this.state.outOfStock !== productIndex) ? `Install Description: ${ detail.applianceInstallDescription }` : <form onSubmit={(e) => {e.preventDefault(); this.updateOrderProducts();}}>
-                                    <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
-                                    <input name="model-num-replace" value={this.state.modelNumber} placeholder="GTE18GT" onChange={(e) => this.update({ type: 'modelNumber', value: e.target.value })} required />
-                                    <input className="btn submit-btn" type="submit" value="Replace" />
-                                </form>;
-
-                            } else if (row === 'remove') {
-                                value = (this.state.outOfStock !== productIndex) ? `Remove Appliance Description: ${ detail.applianceRemovalDescription }` : '';
-
-                            } else if (row === 'disconnect') {
-                                value = (this.state.outOfStock !== productIndex) ? `Disconnect Fee: ${ '*** missing ***' }` : '';
-                            }
-                            break;
-
-                        case 'code':
-                            if (row === 'product') {
-                                value = `Model #${ detail.sibiModelNumber }`;
-
-                            } else if (row === 'outOfStock') {
-                                value = ''
-
-                            } else if (row === 'install') {
-                                value = `Install Code #${ detail.applianceInstallCode }`;
-
-                            } else if (row === 'remove') {
-                                value = `Remove Code #${ detail.applianceRemovalCode }`;
-
-                            } else if (row === 'disconnect') {
-                                value = `Disconnect Code #${ '*** missing ***' }`;
-                            }
-
-                            value = (this.state.outOfStock !== productIndex) ? value : '';
-                            break;
-
-                        case 'qty':
-                            value = (row === 'product' && this.state.outOfStock !== productIndex) ? orderDetail.qty : '';
-                            break;
-
-                        case 'price':
-                            if (row === 'product') {
-                                value = orderDetail.ProductPrice.price;
-
-                            } else if (row === 'outOfStock') {
-                                value = '';
-
-                            } else if (row === 'install') {
-                                value = detail.applianceInstallPrice;
-
-                            } else if (row === 'remove') {
-                                value = detail.applianceRemovalPrice;
-
-                            } else if (row === 'disconnect') {
-                                value = 'missing';
-                            }
-
-                            value = (this.state.outOfStock !== productIndex) ? value : '';
-                            break;
-                        }
-                        cols[key] = value;
-                    });
-                    return cols;
-                });
-
-                const productDetailsTable = <MyTable
-                    className="product-details-table"
-                    type="productDetails"
-                    headers={productDetailHeaders}
-                    data={productDetails}
-                />;
-
-                return <table className="product-table">
-                    <colgroup>
-                        <col span="1" style={{width: '10%'}} />
-                        <col span="1" style={{width: '90%'}} />
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <td>{ productImageTable }</td>
-                            <td>{ productDetailsTable }</td>
-                        </tr>
-                    </tbody>
-                </table>;
             });
 
             orderTotalSection = <div className="cost-section">
@@ -410,14 +311,15 @@ class ProcessOrderPage extends React.Component {
 }
 
 const select = (state) => ({
-    order           : state.orders.get('order')
+    order           : state.orders.get('order'),
+    processSuccess  : state.orders.get('processSuccess')
 });
 
 const actions = {
-    logout,
-    approveOrder,
     getOrderById,
-    updateOrder
+    processOrder,
+    updateInstallDate,
+    updateModelNumber
 }
 
-export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(ProcessOrderPage)));
+export default connect(select, actions, null, { withRef: true })(withRouter(ProcessOrderPage));
