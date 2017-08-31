@@ -45,6 +45,8 @@
         vertical-align: top;
         text-align: left;
         padding: 20px 22px;
+        font-size: 14px;
+        line-height: 1.3em;
         &:last-child {
             div {
                 max-width: 300px;
@@ -62,8 +64,6 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             max-width: 200px;
-            font-size: 14px;
-            line-height: 1.3em;
             &.no-limit, &.DayPickerInput {
                 max-width: none;
                 text-overflow: initial !important;

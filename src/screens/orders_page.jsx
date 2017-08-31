@@ -107,31 +107,37 @@ class OrdersPage extends React.Component {
                     value = item[key];
 
                     if (key === 'id') {
-                        value = item.id;
+                        value = <div>{item.id}</div>;
 
                     } else if (key === 'office') {
-                        value = user.fundLocation.city
+                        value = <div>{user.fundLocation.city}</div>;
 
                     } else if (key ==='propertyId') {
-                        value = fundProperty.id;
+                        value = <div>{fundProperty.id}</div>;
 
                     } else if (key === 'address') {
-                        value = `${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
+                        value = <div>{`${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`}</div>;
 
                     } else if (key === 'occupied') {
-                        value = (item[key]) ? 'Occupied' : 'Vacant';
+                        value = <div>{(item[key]) ? 'Occupied' : 'Vacant'}</div>;
 
                     } else if (key === 'userId') {
-                        value = `${user['firstName']} ${user['lastName']}`;
+                        value = <div>{`${user['firstName']} ${user['lastName']}`}</div>;
+                    
+                    } else if (key === 'orderNumber') {
+                        value = <div>{item[key]}</div>
 
                     } else if (key === 'createdAt') {
-                        value = dateformat(new Date(value), 'mmmm dd, yyyy');
+                        value = <div>{dateformat(new Date(value), 'mmmm dd, yyyy')}</div>;
 
                     } else if (key === 'totalCost') {
-                        value = `$ ${item[key]}`;
+                        value = <div>{`$ ${item[key]}`}</div>;
+
+                    } else if (key === 'orderStatus') {
+                        value = <div>{item[key]}</div>;
 
                     } else if (key === 'action') {
-                        value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
+                        value = <div>{(item['orderStatus'] === 'Pending') ? 'approve' : ''}</div>;
                     }
 
                     cols[key] = value;
@@ -144,7 +150,7 @@ class OrdersPage extends React.Component {
                 let value;
 
                 if (key === 'id' || key === 'action') {
-                    value = header;
+                    value = <div>{header}</div>;
 
                 } else {
                     value = <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
