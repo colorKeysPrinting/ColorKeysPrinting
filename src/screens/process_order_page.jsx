@@ -29,7 +29,8 @@ class ProcessOrderPage extends React.Component {
             orderNumber: '',
             processedBy: '',
             modelNumber: '',
-            outOfStock: ''
+            outOfStock: '',
+            productsAndParts: []
         };
 
         this.update = this.update.bind(this);
@@ -55,7 +56,19 @@ class ProcessOrderPage extends React.Component {
                 this.props.history.push(`/`);
 
             } else {
-                this.setState({ installDate: nextProps.order.toJS().installDate });
+                const order = nextProps.order.toJS();
+                const productsAndDestinations = [];
+                _.each(order.productsAndDestinations, (product) => {
+                    productsAndDestinations.push(product);
+
+                    _.each(product.includedParts, (part) => {
+                        productsAndDestinations.push(part);
+                    });
+                });
+
+                const productsAndParts = productsAndDestinations.concat(order.partsAndDestinations);
+
+                this.setState({ installDate: nextProps.order.toJS().installDate, productsAndParts });
             }
         }
     }
@@ -76,9 +89,9 @@ class ProcessOrderPage extends React.Component {
     updateOrderProducts() {
         const order = this.props.order.toJS();
 
-        _.each(order.productsAndDestinations, (product, index) => {
+        _.each(this.state.productsAndParts, (product, index) => {
             if (this.state.outOfStock === index) {
-                this.props.updateModelNumber({ id: order.id, productOrderId: product.productOrderId, manufacturerModelNumber: this.state.modelNumber })
+                this.props.updateModelNumber({ id: order.id, productOrderId: product.productOrderId, manufacturerModelNumber: this.state.modelNumber });
             }
         });
     }
@@ -232,9 +245,7 @@ class ProcessOrderPage extends React.Component {
             officeData = {officeCols};
 
             // ***************** PRODUCTS TABLE DATA *****************
-            const productsAndParts = order.productsAndDestinations.concat(order.partsAndDestinations);
-
-            productData = _.map(productsAndParts, (orderDetail, productIndex) => {
+            productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
                 if (orderDetail.product) {
                     return <ProductTable
                         key={`product${productIndex}`}
