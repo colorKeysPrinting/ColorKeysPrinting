@@ -8,7 +8,8 @@ module.exports = WebpackConfig = (app) => {
     const plugins = [
         new webpack.DefinePlugin({
             'process.env'   : Object.assign({}, {
-                NODE_ENV    : JSON.stringify(app.env)
+                NODE_ENV    : JSON.stringify(app.env),
+                API_URL     : JSON.stringify(app.API_URL)
             })
         }),
         new ExtractTextPlugin(`${app.APP_NAME}_[hash].css`),

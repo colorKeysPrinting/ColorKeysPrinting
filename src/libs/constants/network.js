@@ -1,5 +1,5 @@
 export default {
-    DOMAIN    : 'https://sibi-development.herokuapp.com',
+    DOMAIN    : process.env.API_URL,
     GET       : 'get',
     POST      : 'post',
     PUT       : 'put',
