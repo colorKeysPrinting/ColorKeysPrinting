@@ -7,7 +7,7 @@
   "homepage": "https://bitbucket.org/HQ-Team/sibi_ge_admin",
   "scripts": {
     "hot": "webpack-dev-server --hot --config ./webpack/webpack.dev.js",
-    "build": "webpack -p --config ./webpack/webpack.prod.js",
+    "build": "rm -rf dist/ && webpack -p --config ./webpack/webpack.prod.js",
     "nuke": "rm -rf node_modules"
   },
   "repository": {

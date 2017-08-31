@@ -81,7 +81,7 @@ class LoginOverlay extends React.Component {
                         <div className="title">{(this.state.type === 'login') ? 'Login': 'Reset password'}</div>
                         { close }
                     </div>
-                    <form onSubmit={() => this.submitLoginBtn(this.state.type)} >
+                    <form onSubmit={(e) =>{e.preventDefault(); this.submitLoginBtn(this.state.type)}} >
                         <div className="content">
                             { inputs }
                             { actionSection }
