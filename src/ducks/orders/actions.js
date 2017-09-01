@@ -105,7 +105,7 @@ export function updateOrder({ token, order }) {
 export function updateInstallDate ({ id, installDate }) {
     return (dispatch) => {
         return axios({
-            method  : Network.POST,
+            method  : Network.PATCH,
             url     : `${Network.DOMAIN}/order/${id}/updateInstallDate`,
             data: {
                 installDate

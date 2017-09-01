@@ -35,7 +35,7 @@ class ProcessOrderPage extends React.Component {
         };
 
         this.update = this.update.bind(this);
-        this.updateOrderDate = this.updateOrderDate.bind(this);
+        this.updateInstallDate = this.updateInstallDate.bind(this);
         this.updateModelNumber = this.updateModelNumber.bind(this);
         this.showOutOfStock = this.showOutOfStock.bind(this);
         this.processOrder = this.processOrder.bind(this);
@@ -76,7 +76,7 @@ class ProcessOrderPage extends React.Component {
         this.setState({ [type]: value });
     }
 
-    updateOrderDate({ day }) {
+    updateInstallDate({ day }) {
         const order = this.props.order.toJS();
         const newDate = day._d.toISOString();
 
@@ -202,7 +202,7 @@ class ProcessOrderPage extends React.Component {
                         value = <div className="no-limit">
                             <DayPickerInput
                                 value={formattedDay}
-                                onDayChange={(day) => this.updateOrderDate({ day })}
+                                onDayChange={(day) => this.updateInstallDate({ day })}
                             />
                         </div>;
 
