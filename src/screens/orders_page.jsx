@@ -138,7 +138,7 @@ class OrdersPage extends React.Component {
                         value = <div>{item[key]}</div>;
 
                     } else if (key === 'action') {
-                        value = <div>{(item['orderStatus'] === 'Pending') ? 'approve' : ''}</div>;
+                        value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
                     }
 
                     cols[key] = value;
