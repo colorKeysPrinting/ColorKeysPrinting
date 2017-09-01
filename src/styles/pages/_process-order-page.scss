@@ -28,6 +28,19 @@
     }
     .user-table {
         padding: 9px 0;
+        td {
+            //PM Office
+            &:nth-child(5) {
+                padding: 0;
+                vertical-align: middle;
+            }
+            div {
+                overflow: initial;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                max-width: initial;
+            }
+        }
     }
     .occupancy-table {
         display: inline-block;
