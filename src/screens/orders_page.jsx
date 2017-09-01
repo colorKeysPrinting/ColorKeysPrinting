@@ -111,31 +111,31 @@ class OrdersPage extends React.Component {
                         value = item.id;
 
                     } else if (key === 'office') {
-                        value = <div>{user.fundLocation.city}</div>;
+                        value = user.fundLocation.city;
 
                     } else if (key ==='propertyId') {
-                        value = <div>{fundProperty.id}</div>;
+                        value = fundProperty.id;
 
                     } else if (key === 'address') {
-                        value = <div>{`${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`}</div>;
+                        value = `${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
 
                     } else if (key === 'occupied') {
-                        value = <div>{(item[key]) ? 'Occupied' : 'Vacant'}</div>;
+                        value = (item[key]) ? 'Occupied' : 'Vacant';
 
                     } else if (key === 'userId') {
-                        value = <div>{`${user['firstName']} ${user['lastName']}`}</div>;
+                        value = `${user['firstName']} ${user['lastName']}`;
 
                     } else if (key === 'orderNumber') {
-                        value = <div>{item[key]}</div>;
+                        value = item[key];
 
                     } else if (key === 'createdAt') {
-                        value = <div>{dateformat(new Date(value), 'mmmm dd, yyyy')}</div>;
+                        value = dateformat(new Date(value), 'mmmm dd, yyyy');
 
                     } else if (key === 'totalCost') {
-                        value = <div>{`$ ${item[key]}`}</div>;
+                        value = `$ ${item[key]}`;
 
                     } else if (key === 'orderStatus') {
-                        value = <div>{item[key]}</div>;
+                        value = item[key];
 
                     } else if (key === 'action') {
                         value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
