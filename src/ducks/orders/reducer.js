@@ -61,8 +61,7 @@ export default (state = initialState, action) => {
     case ActionTypes.PROCESS_ORDER_SUCCESS:
         console.log('process order');
         if (action.data.processedAt) {
-            state = state.set('order', '');
-            state = state.set('processSuccess', true);
+            state = state.set('order', Immutable.fromJS(action.data));
         }
         break;
 

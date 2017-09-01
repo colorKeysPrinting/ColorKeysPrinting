@@ -53,8 +53,9 @@ class ProcessOrderPage extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (!_.isEqual(nextProps.order, this.props.order)) {
-            if (!nextProps.processSuccess) {
-                const order = nextProps.order.toJS();
+            const order = nextProps.order.toJS();
+
+            if (!order.processedAt) {
                 const productsAndDestinations = [];
                 _.each(order.productsAndDestinations, (product) => {
                     productsAndDestinations.push(product);
@@ -67,7 +68,6 @@ class ProcessOrderPage extends React.Component {
                 const productsAndParts = productsAndDestinations.concat(order.partsAndDestinations);
 
                 this.setState({ installDate: nextProps.order.toJS().installDate, productsAndParts });
-
             }
         }
     }
@@ -145,195 +145,197 @@ class ProcessOrderPage extends React.Component {
             email: 'Email'
         };
 
-        if (this.props.order.size > 0 &&
-            !this.props.processSuccess) {
+        if (this.props.order.size > 0) {
             const order = this.props.order.toJS();
-            const user = order.createdByUser;
 
-            userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hotshot Install Date' : 'Install Date';
-            userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'HotShot Code' : '';
+            if (!order.processedAt) {
+                const user = order.createdByUser;
 
-            const orderProcessHeading = {
-                accountNumber: (order.pmOffice.applianceGEAccountNumber) ? order.pmOffice.applianceGEAccountNumber : order.fund.applianceGEAccountNumber,
-                fund: order.fund.name,
-                address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`
-            };
+                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hotshot Install Date' : 'Install Date';
+                userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'HotShot Code' : '';
 
-            //PAGE HEADER
-            const detailsHeaderSection = <div className="page-header">
-                <div className="order-info">
-                    <h2>Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
-                    <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
-                    <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
+                const orderProcessHeading = {
+                    accountNumber: (order.pmOffice.applianceGEAccountNumber) ? order.pmOffice.applianceGEAccountNumber : order.fund.applianceGEAccountNumber,
+                    fund: order.fund.name,
+                    address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`
+                };
+
+                //PAGE HEADER
+                const detailsHeaderSection = <div className="page-header">
+                    <div className="order-info">
+                        <h2>Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
+                        <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
+                        <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
+                    </div>
+                    <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.processOrder();}}>
+                        <div className="input-container">
+                            <label htmlFor="processed-by">Processed By</label>
+                            <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
+                        </div>
+                        <div className="input-container">
+                            <label htmlFor="ge-order-number">GE Order Number</label>
+                            <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="1234-5678" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
+                        </div>
+                        <input className="btn blue" type="submit" value="Process Order" />
+                    </form>
                 </div>
-                <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.processOrder();}}>
-                    <div className="input-container">
-                        <label htmlFor="processed-by">Processed By</label>
-                        <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
-                    </div>
-                    <div className="input-container">
-                        <label htmlFor="ge-order-number">GE Order Number</label>
-                        <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="1234-5678" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
-                    </div>
-                    <input className="btn blue" type="submit" value="Process Order" />
-                </form>
-            </div>
 
-            // ***************** USER TABLE DATA *****************
-            const userCols = {};
-            _.each(userHeaders, (value, key) => {
-                value = order[key]
-                if (key === 'orderedBy') {
-                    value = user.firstName + ' ' + user.lastName;
+                // ***************** USER TABLE DATA *****************
+                const userCols = {};
+                _.each(userHeaders, (value, key) => {
+                    value = order[key]
+                    if (key === 'orderedBy') {
+                        value = user.firstName + ' ' + user.lastName;
 
-                } else if (key === 'phoneNumber'){
-                    value = <div>{user.phoneNumber}</div>;
-
-                } else if (key === 'email') {
-                    value = user.email;
-
-                } else if (key === 'hotshotDelivery') {
-                    value = (order.isApplianceHotShotDelivery) ? 'Yes' : 'No';
-
-                } else if (key === 'hotshotInstallDate') {
-                    const formattedDay = moment(order.installDate).format('MM/DD/YYYY');
-
-                    value = <div className="no-limit">
-                        <DayPickerInput
-                            value={formattedDay}
-                            onDayChange={(day) => this.updateOrderDate({ day })}
-                        />
-                    </div>;
-
-                } else if (key === 'hotshotCode') {
-                    value = (order.isApplianceHotShotDelivery) ? <div>{ order.applianceHotShotCode }</div> : null;
-                }
-                userCols[key] = value;
-            });
-            const userData = { userCols };
-
-            // ***************** OCCUPANCY TABLE DATA *****************
-            const occupancyCols = {};
-            _.each(occupancyHeaders, (value, key) => {
-                value = order[key]
-
-                if (key === 'occupancy') {
-                    value = (!order['occupied']) ? 'Unoccupied' : 'Occupied';
-                }
-
-                if (order['occupied']) {
-                    if (key === 'tenantName'){
-                        value = `${order.tenantFirstName} ${order.tenantLastName}`;
-
-                    } else if (key === 'phoneNumber') {
-                        value = <div>{order.tenantPhone}</div>;
+                    } else if (key === 'phoneNumber'){
+                        value = <div>{user.phoneNumber}</div>;
 
                     } else if (key === 'email') {
-                        value = <div>{order.tenantEmail}</div>;
+                        value = user.email;
+
+                    } else if (key === 'hotshotDelivery') {
+                        value = (order.isApplianceHotShotDelivery) ? 'Yes' : 'No';
+
+                    } else if (key === 'hotshotInstallDate') {
+                        const formattedDay = moment(order.installDate).format('MM/DD/YYYY');
+
+                        value = <div className="no-limit">
+                            <DayPickerInput
+                                value={formattedDay}
+                                onDayChange={(day) => this.updateOrderDate({ day })}
+                            />
+                        </div>;
+
+                    } else if (key === 'hotshotCode') {
+                        value = (order.isApplianceHotShotDelivery) ? <div>{ order.applianceHotShotCode }</div> : null;
                     }
-                }
+                    userCols[key] = value;
+                });
+                const userData = { userCols };
 
-                occupancyCols[key] = value;
-            });
-            const occupancyData = {occupancyCols};
+                // ***************** OCCUPANCY TABLE DATA *****************
+                const occupancyCols = {};
+                _.each(occupancyHeaders, (value, key) => {
+                    value = order[key]
 
-            // ***************** OFFICE TABLE DATA *****************
-            const officeCols = {};
-            _.each(officeHeaders, (value, key) => {
-                value = order[key]
-                if (key === 'pmOffice') {
-                    value = <div>{ order.pmOffice.name }</div>;
+                    if (key === 'occupancy') {
+                        value = (!order['occupied']) ? 'Unoccupied' : 'Occupied';
+                    }
 
-                } else if (key === 'phoneNumber'){
-                    value = <div>{ order.pmOffice.phoneNumber }</div>;
+                    if (order['occupied']) {
+                        if (key === 'tenantName'){
+                            value = `${order.tenantFirstName} ${order.tenantLastName}`;
 
-                } else if (key === 'email') {
-                    value = <div>{ order.pmOffice.email }</div>;
-                }
-                officeCols[key] = value;
-            });
-            const officeData = {officeCols};
+                        } else if (key === 'phoneNumber') {
+                            value = <div>{order.tenantPhone}</div>;
 
-            // ***************** PRODUCTS TABLE DATA *****************
-            const productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
-                if (orderDetail.product) {
-                    const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
-                    return <ProductTable
-                        key={`product${productIndex}`}
-                        productIndex={productIndex}
-                        product={orderDetail.product}
-                        replacement={replacement}
-                        image={orderDetail.selectedColorInfo.imageUrl}
-                        qty={orderDetail.qty}
-                        price={orderDetail.ProductPrice.price}
+                        } else if (key === 'email') {
+                            value = <div>{order.tenantEmail}</div>;
+                        }
+                    }
 
-                        outOfStock={this.state.outOfStock}
-                        modelNumber={this.state.modelNumber}
+                    occupancyCols[key] = value;
+                });
+                const occupancyData = {occupancyCols};
 
-                        update={this.update}
-                        updateModelNumber={this.updateModelNumber}
-                        showOutOfStock={this.showOutOfStock}
-                    />;
-                } else if (orderDetail.part) {
-                    const replacement = (orderDetail.replacementModelNumber) ? orderDetail.replacementModelNumber : false;
-                    return <PartTable
-                        key={`part${productIndex}`}
-                        productIndex={productIndex}
-                        part={orderDetail.part}
-                        replacement={replacement}
-                        qty={orderDetail.qty}
-                        price={orderDetail.PartPrice.price}
+                // ***************** OFFICE TABLE DATA *****************
+                const officeCols = {};
+                _.each(officeHeaders, (value, key) => {
+                    value = order[key]
+                    if (key === 'pmOffice') {
+                        value = <div>{ order.pmOffice.name }</div>;
 
-                        outOfStock={this.state.outOfStock}
-                        modelNumber={this.state.modelNumber}
+                    } else if (key === 'phoneNumber'){
+                        value = <div>{ order.pmOffice.phoneNumber }</div>;
 
-                        update={this.update}
-                        updateModelNumber={this.updateModelNumber}
-                        showOutOfStock={this.showOutOfStock}
-                    />;
-                }
-            });
+                    } else if (key === 'email') {
+                        value = <div>{ order.pmOffice.email }</div>;
+                    }
+                    officeCols[key] = value;
+                });
+                const officeData = {officeCols};
 
-            const orderTotalSection = <div className="cost-section">
-                <h5 className="cost-header">Order Summary </h5>
-                <div className="cost-row">
-                    <h5>Sub Total: <span>${ order.totalCost }</span></h5>
-                    <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
-                    <h5>Total: <span>${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</span></h5>
+                // ***************** PRODUCTS TABLE DATA *****************
+                const productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
+                    if (orderDetail.product) {
+                        const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
+                        return <ProductTable
+                            key={`product${productIndex}`}
+                            productIndex={productIndex}
+                            product={orderDetail.product}
+                            replacement={replacement}
+                            image={orderDetail.selectedColorInfo.imageUrl}
+                            qty={orderDetail.qty}
+                            price={orderDetail.ProductPrice.price}
+
+                            outOfStock={this.state.outOfStock}
+                            modelNumber={this.state.modelNumber}
+
+                            update={this.update}
+                            updateModelNumber={this.updateModelNumber}
+                            showOutOfStock={this.showOutOfStock}
+                        />;
+                    } else if (orderDetail.part) {
+                        const replacement = (orderDetail.replacementModelNumber) ? orderDetail.replacementModelNumber : false;
+                        return <PartTable
+                            key={`part${productIndex}`}
+                            productIndex={productIndex}
+                            part={orderDetail.part}
+                            replacement={replacement}
+                            qty={orderDetail.qty}
+                            price={orderDetail.PartPrice.price}
+
+                            outOfStock={this.state.outOfStock}
+                            modelNumber={this.state.modelNumber}
+
+                            update={this.update}
+                            updateModelNumber={this.updateModelNumber}
+                            showOutOfStock={this.showOutOfStock}
+                        />;
+                    }
+                });
+
+                const orderTotalSection = <div className="cost-section">
+                    <h5 className="cost-header">Order Summary </h5>
+                    <div className="cost-row">
+                        <h5>Sub Total: <span>${ order.totalCost }</span></h5>
+                        <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
+                        <h5>Total: <span>${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</span></h5>
+                    </div>
+                </div>;
+
+                orderPageData = <div>
+                    { detailsHeaderSection }
+                    <MyTable
+                        className="user-table"
+                        type="userDetails"
+                        headers={userHeaders}
+                        data={userData}
+                    />
+                    <MyTable
+                        className="occupancy-table"
+                        type="occupancyDetails"
+                        headers={occupancyHeaders}
+                        data={occupancyData}
+                    />
+                    <MyTable
+                        className="office-table"
+                        type="officeDetails"
+                        headers={officeHeaders}
+                        data={officeData}
+                    />
+                    <div className="product-table-wrapper">
+                        { productData }
+                    </div>
+                    { orderTotalSection }
                 </div>
-            </div>;
-
-            orderPageData = <div>
-                { detailsHeaderSection }
-                <MyTable
-                    className="user-table"
-                    type="userDetails"
-                    headers={userHeaders}
-                    data={userData}
-                />
-                <MyTable
-                    className="occupancy-table"
-                    type="occupancyDetails"
-                    headers={occupancyHeaders}
-                    data={occupancyData}
-                />
-                <MyTable
-                    className="office-table"
-                    type="officeDetails"
-                    headers={officeHeaders}
-                    data={officeData}
-                />
-                <div className="product-table-wrapper">
-                    { productData }
-                </div>
-                { orderTotalSection }
-            </div>
-        } else {
-            orderPageData = <div>
-                <h1>Order Processed</h1>
-                <h4>Your order has been processed.</h4>
-                <Link to={`/`} className="btn blue" >Done</Link>
-            </div>;
+            } else {
+                orderPageData = <div>
+                    <h1>Order Processed</h1>
+                    <h4>Your order has been processed.</h4>
+                    <Link to={`/`} className="btn blue" >Done</Link>
+                </div>;
+            }
         }
 
         return (
