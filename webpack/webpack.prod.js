@@ -5,5 +5,7 @@ module.exports = WebpackConfig({
     APP_NAME        : 'sibi_ge_admin',
     ASSETS_PORT     : 8080,
     HOST            : 'http://sibi-ge-admin.s3-website-us-west-2.amazonaws.com',
-    API_URL         : 'https://sibi-uat.sibipro.com'
+    API_URL         : 'https://sibi-development.herokuapp.com'
 });
+
+// 'https://sibi-uat.sibipro.com'
