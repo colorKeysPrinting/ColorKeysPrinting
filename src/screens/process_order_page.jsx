@@ -135,8 +135,8 @@ class ProcessOrderPage extends React.Component {
             phoneNumber: 'Phone Number',
             email: 'Email',
             hotshotDelivery: 'HotShot Delivery',
-            hotshotInstallDate: 'Hotshot Install Date',
-            hotshotCode: 'HotShot Code'
+            hotshotInstallDate: '',
+            hotshotCode: ''
         };
 
         const occupancyHeaders = {
@@ -156,6 +156,9 @@ class ProcessOrderPage extends React.Component {
 
             const order = this.props.order.toJS();
             const user = order.createdByUser;
+
+            userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hotshot Install Date' : 'Install Date';
+            userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'HotShot Code' : '';
 
             const orderProcessHeading = {
                 accountNumber: (order.pmOffice.applianceGEAccountNumber) ? order.pmOffice.applianceGEAccountNumber : order.fund.applianceGEAccountNumber,
@@ -197,7 +200,7 @@ class ProcessOrderPage extends React.Component {
                     value = user.email;
 
                 } else if (key === 'hotshotDelivery') {
-                    value = 'Yes';
+                    value = (order.isApplianceHotShotDelivery) ? 'Yes' : 'No';
 
                 } else if (key === 'hotshotInstallDate') {
                     const formattedDay = moment(order.installDate).format('MM/DD/YYYY');
@@ -210,7 +213,7 @@ class ProcessOrderPage extends React.Component {
                     </div>;
 
                 } else if (key === 'hotshotCode') {
-                    value = <div>{'NEED HOTSHOT CODE'}</div>;
+                    value = (order.isApplianceHotShotDelivery) ? <div>{ order.applianceHotShotCode }</div> : null;
                 }
                 userCols[key] = value;
             });
@@ -246,13 +249,13 @@ class ProcessOrderPage extends React.Component {
             _.each(officeHeaders, (value, key) => {
                 value = order[key]
                 if (key === 'pmOffice') {
-                    value = <div>{order.pmOffice.name}</div>;
+                    value = <div>{ order.pmOffice.name }</div>;
 
                 } else if (key === 'phoneNumber'){
-                    value = <div>{order.pmOffice.phoneNumber}</div>;
+                    value = <div>{ order.pmOffice.phoneNumber }</div>;
 
                 } else if (key === 'email') {
-                    value = <div>{'NEED PM OFFICE EMAIL'}</div>;
+                    value = <div>{ order.pmOffice.email }</div>;
                 }
                 officeCols[key] = value;
             });
