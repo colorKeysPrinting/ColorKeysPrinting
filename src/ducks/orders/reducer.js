@@ -60,9 +60,10 @@ export default (state = initialState, action) => {
 
     case ActionTypes.PROCESS_ORDER_SUCCESS:
         console.log('process order');
-
-        state = state.set('order', '');
-        state = state.set('processSuccess', true);
+        if (action.data.processedAt) {
+            state = state.set('order', '');
+            state = state.set('processSuccess', true);
+        }
         break;
 
     case ActionTypes.REMOVE_ORDER_SUCCESS:

@@ -162,8 +162,8 @@ class OrderDetails extends React.Component {
             });
 
             const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
-                {/* <div className="btn submit-btn">Edit</div> */}
-                <div className="btn submit-btn" onClick={() => this.handleAction({orderId})}>Approve</div>
+                {/* <div className="btn blue">Edit</div> */}
+                <div className="btn blue" onClick={() => this.handleAction({orderId})}>Approve</div>
             </div>
                 : <div className="button-container pure-u-1-3"></div>;
 

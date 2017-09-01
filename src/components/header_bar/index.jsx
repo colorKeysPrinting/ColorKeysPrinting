@@ -82,7 +82,7 @@ class HeaderBar extends React.Component {
 
         if (this.props.location.pathname !== '/process_order') {
             if (!activeUser.type || activeUser.type === 'signUp') {
-                loginSection = <Link to={`/login`} className="btn submit-btn" >Login</Link>;
+                loginSection = <Link to={`/login`} className="btn blue" >Login</Link>;
 
             } else {
                 const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : assets('./images/icon-settings.svg');

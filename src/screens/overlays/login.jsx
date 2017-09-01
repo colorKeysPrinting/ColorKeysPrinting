@@ -60,7 +60,7 @@ class LoginOverlay extends React.Component {
                     <div className="btn white-btn fill" onClick={() => this.changeOverlay('reset')}>Forgot password?</div>
                 </div>
                 <div className="pure-u-1-2">
-                    <input className="btn submit-btn fill" type="submit" value="Login"/>
+                    <input className="btn blue fill" type="submit" value="Login"/>
                 </div>
             </div>);
 
@@ -71,7 +71,7 @@ class LoginOverlay extends React.Component {
                 <input type="email" placeholder="Email" value={this.state.email} onChange={(e) => { this.update('email', e.target.value) }} style={{ width: '435px' }} required />
             </div>);
 
-            actionSection = <input className="btn submit-btn fill" type="submit" value="Submit"/>;
+            actionSection = <input className="btn blue fill" type="submit" value="Submit"/>;
         }
 
         return (

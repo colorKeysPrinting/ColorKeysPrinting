@@ -2,6 +2,7 @@ import React                                                from 'react';
 import _                                                    from 'lodash';
 import { connect }                                          from 'react-redux';
 import { withRouter }                                       from 'react-router';
+import { Link }                                             from 'react-router-dom';
 import moment                                               from 'moment';
 import DayPickerInput                                       from 'react-day-picker/DayPickerInput';
 import assets                                               from 'libs/assets';
@@ -52,10 +53,7 @@ class ProcessOrderPage extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (!_.isEqual(nextProps.order, this.props.order)) {
-            if (nextProps.processSuccess) {
-                this.props.history.push(`/`);
-
-            } else {
+            if (!nextProps.processSuccess) {
                 const order = nextProps.order.toJS();
                 const productsAndDestinations = [];
                 _.each(order.productsAndDestinations, (product) => {
@@ -69,6 +67,7 @@ class ProcessOrderPage extends React.Component {
                 const productsAndParts = productsAndDestinations.concat(order.partsAndDestinations);
 
                 this.setState({ installDate: nextProps.order.toJS().installDate, productsAndParts });
+
             }
         }
     }
@@ -121,13 +120,7 @@ class ProcessOrderPage extends React.Component {
     }
 
     render() {
-        let detailsHeaderSection,
-            userData,
-            occupancyData,
-            officeData,
-            productsColGroup,
-            productData,
-            orderTotalSection;
+        let orderPageData;
 
         //TABLE HEADERS
         const userHeaders = {
@@ -152,8 +145,8 @@ class ProcessOrderPage extends React.Component {
             email: 'Email'
         };
 
-        if (this.props.order.size > 0) {
-
+        if (this.props.order.size > 0 &&
+            !this.props.processSuccess) {
             const order = this.props.order.toJS();
             const user = order.createdByUser;
 
@@ -167,7 +160,7 @@ class ProcessOrderPage extends React.Component {
             };
 
             //PAGE HEADER
-            detailsHeaderSection = <div className="page-header">
+            const detailsHeaderSection = <div className="page-header">
                 <div className="order-info">
                     <h2>Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
                     <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
@@ -217,7 +210,7 @@ class ProcessOrderPage extends React.Component {
                 }
                 userCols[key] = value;
             });
-            userData = { userCols };
+            const userData = { userCols };
 
             // ***************** OCCUPANCY TABLE DATA *****************
             const occupancyCols = {};
@@ -242,7 +235,7 @@ class ProcessOrderPage extends React.Component {
 
                 occupancyCols[key] = value;
             });
-            occupancyData = {occupancyCols};
+            const occupancyData = {occupancyCols};
 
             // ***************** OFFICE TABLE DATA *****************
             const officeCols = {};
@@ -259,10 +252,10 @@ class ProcessOrderPage extends React.Component {
                 }
                 officeCols[key] = value;
             });
-            officeData = {officeCols};
+            const officeData = {officeCols};
 
             // ***************** PRODUCTS TABLE DATA *****************
-            productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
+            const productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
                 if (orderDetail.product) {
                     const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
                     return <ProductTable
@@ -301,7 +294,7 @@ class ProcessOrderPage extends React.Component {
                 }
             });
 
-            orderTotalSection = <div className="cost-section">
+            const orderTotalSection = <div className="cost-section">
                 <h5 className="cost-header">Order Summary </h5>
                 <div className="cost-row">
                     <h5>Sub Total: <span>${ order.totalCost }</span></h5>
@@ -309,34 +302,44 @@ class ProcessOrderPage extends React.Component {
                     <h5>Total: <span>${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</span></h5>
                 </div>
             </div>;
+
+            orderPageData = <div>
+                { detailsHeaderSection }
+                <MyTable
+                    className="user-table"
+                    type="userDetails"
+                    headers={userHeaders}
+                    data={userData}
+                />
+                <MyTable
+                    className="occupancy-table"
+                    type="occupancyDetails"
+                    headers={occupancyHeaders}
+                    data={occupancyData}
+                />
+                <MyTable
+                    className="office-table"
+                    type="officeDetails"
+                    headers={officeHeaders}
+                    data={officeData}
+                />
+                <div className="product-table-wrapper">
+                    { productData }
+                </div>
+                { orderTotalSection }
+            </div>
+        } else {
+            orderPageData = <div>
+                <h1>Order Processed</h1>
+                <h4>Your order has been processed.</h4>
+                <Link to={`/`} className="btn blue" >Done</Link>
+            </div>;
         }
 
         return (
             <div id="process-orders-page">
                 <div className="container">
-                    { detailsHeaderSection }
-                    <MyTable
-                        className="user-table"
-                        type="userDetails"
-                        headers={userHeaders}
-                        data={userData}
-                    />
-                    <MyTable
-                        className="occupancy-table"
-                        type="occupancyDetails"
-                        headers={occupancyHeaders}
-                        data={occupancyData}
-                    />
-                    <MyTable
-                        className="office-table"
-                        type="officeDetails"
-                        headers={officeHeaders}
-                        data={officeData}
-                    />
-                    <div className="product-table-wrapper">
-                        { productData }
-                    </div>
-                    { orderTotalSection }
+                    { orderPageData }
                 </div>
             </div>
         );
