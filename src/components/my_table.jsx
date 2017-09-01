@@ -34,14 +34,14 @@ export default class MyTable extends React.Component {
             headers = <tr>{ headers }</tr>
         }
 
-        const data = _.map(this.props.data, (product, id) => {
-            const col = _.map(product, (col, id) => {
+        const data = _.map(this.props.data, (item, id) => {
+            const col = _.map(item, (col, id) => {
                 if (id !== 'id') {
                     if (id === 'action') {
                         return (col === 'approve' || this.props.type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
 
                     } else {
-                        return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ product })}>{ col }</td>;
+                        return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
                     }
                 }
             });

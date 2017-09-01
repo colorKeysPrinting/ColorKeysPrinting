@@ -2,6 +2,7 @@ import React                                from 'react';
 import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
+import { withRouter }                       from 'react-router';
 import dateformat                           from 'dateformat';
 import SearchInput                          from 'react-search-input';
 import filter                               from 'libs/filter';
@@ -66,7 +67,7 @@ class OrdersPage extends React.Component {
 
     handleItem({ item }) {
         console.log('item pressed', item);
-        this.props.history.push({ pathname: '/order_details', state: { ... item } });
+        this.props.history.push('/order_details', item.id);
     }
 
     render() {
@@ -107,7 +108,7 @@ class OrdersPage extends React.Component {
                     value = item[key];
 
                     if (key === 'id') {
-                        value = <div>{item.id}</div>;
+                        value = item.id;
 
                     } else if (key === 'office') {
                         value = <div>{user.fundLocation.city}</div>;
@@ -123,7 +124,7 @@ class OrdersPage extends React.Component {
 
                     } else if (key === 'userId') {
                         value = <div>{`${user['firstName']} ${user['lastName']}`}</div>;
-                    
+
                     } else if (key === 'orderNumber') {
                         value = <div>{item[key]}</div>;
 
@@ -214,4 +215,4 @@ const actions = {
     setActiveTab
 }
 
-export default connect(select, actions, null, { withRef: true })(withCookies(OrdersPage));
+export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(OrdersPage)));

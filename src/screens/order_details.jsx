@@ -7,8 +7,7 @@ import dateformat                                           from 'dateformat';
 import assets                                               from 'libs/assets';
 
 import { logout }                                           from 'ducks/active_user/actions';
-import { getOrderById, approveOrder, getProducts, getOrder } from 'ducks/orders/actions';
-import { getUsers }                                         from 'ducks/users/actions';
+import { getOrderById, approveOrder, getProducts }          from 'ducks/orders/actions';
 import { setActiveTab }                                     from 'ducks/header/actions';
 
 import MyTable                                              from 'components/my_table';
@@ -21,13 +20,11 @@ class OrderDetails extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
-        const orderId = this.props.location.state.id;
+        const orderId = this.props.location.state;
 
-        if (jwt && orderId) {
-            this.props.getOrderById({ token: jwt.token, id: orderId });
-            this.props.getUsers({ token: jwt.token });
+        if (orderId) {
+            this.props.getOrderById({ id: orderId });
+
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
@@ -67,12 +64,11 @@ class OrderDetails extends React.Component {
             createdBy: 'Ordered By'
         };
 
-        if (this.props.order.size > 0 &&
-            this.props.users.size > 0) {
+        if (this.props.order.size > 0) {
             const order = this.props.order.toJS();
 
-            const orderId = order.id
-            const orderStatus = order.orderStatus
+            const orderId = order.id;
+            const orderStatus = order.orderStatus;
             const orderPageHeading = {
                 address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`,
                 PM: order.pmOffice.name,
@@ -124,22 +120,21 @@ class OrderDetails extends React.Component {
                 _.each(productHeaders, (value, key) => {
 
                     value = detail[key];
+                    // <div className="table-cell-details">{ `Install Instructions: ${(detail.applianceInstallDescription) ? detail.applianceInstallDescription : 'Not Specified'}` }</div>
+                    // <div className="table-cell-details">{ `Remove Old Appliance: ${(detail.applianceRemovalDescription) ? detail.applianceRemovalDescription : 'Not Specified'}` }</div>
 
                     if (key === 'productImage') {
-                        value = <img className="productImage" src={detail.applianceColorsAndImages[0].imageUrl} alt="productImg" />;
+                        value = <img className="productImage" src={orderDetail.selectedColorInfo.imageUrl} alt="productImg" />;
 
                     } else if (key === 'productDescription') {
                         value = <div className="no-limit">
                             <div className="table-cell-title">{ detail.applianceDescription }</div>
-                            <div className="table-cell-details">{ `SIBI Model Number: ${detail.sibiModelNumber}` }</div>
-                            <div className="table-cell-details">{ `Manufacturer's Model Number ${detail.manufacturerModelNumber}` }</div>
-                            <div className="table-cell-details">{ `Colors: ${detail.selectProductColor}` }</div>
+                            <div className="table-cell-details">{ `Model Number ${detail.manufacturerModelNumber}` }</div>
+                            <div className="table-cell-details">{ `Color: ${orderDetail.selectedColorInfo.color}` }</div>
                             <div className="table-cell-details">{ `Fuel Type: ${detail.applianceFuelType}` }</div>
                             <div className="table-cell-details">{ `Width: ${detail.applianceWidth}` }</div>
                             <div className="table-cell-details">{ `Height: ${detail.applianceHeight}` }</div>
                             <div className="table-cell-details">{ `Depth: ${detail.applianceDepth}` }</div>
-                            <div className="table-cell-details">{ `Install Instructions: ${(detail.applianceInstallDescription) ? detail.applianceInstallDescription : 'Not Specified'}` }</div>
-                            <div className="table-cell-details">{ `Remove Old Appliance: ${(detail.applianceRemovalDescription) ? detail.applianceRemovalDescription : 'Not Specified'}` }</div>
                         </div>;
 
                     } else if (key === 'address') {
@@ -245,18 +240,13 @@ class OrderDetails extends React.Component {
 }
 
 const select = (state) => ({
-    activeUser      : state.activeUser.get('activeUser'),
-    order           : state.orders.get('order'),
-    orders          : state.orders.get('orders'),
-    users           : state.users.get('users'),
+    order           : state.orders.get('order')
 });
 
 const actions = {
     logout,
     approveOrder,
     getOrderById,
-    getOrder,
-    getUsers,
     setActiveTab
 }
 
