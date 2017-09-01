@@ -498,7 +498,7 @@ class EditProduct extends React.Component {
                                 <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} >
                                     { productPictures }
                                     <div style={{ display: 'inline-flex' }} >
-                                        <label className="btn submit-btn" >
+                                        <label className="btn blue" >
                                             { imageBtn }
                                             <input
                                                 type="file"
@@ -566,7 +566,7 @@ class EditProduct extends React.Component {
                                 <textarea name="product-removal-descr" type="text" placeholder="Removal Description" value={this.state.applianceRemovalDescription} onChange={(e) => this.update({ type: 'applianceRemovalDescription', value: e.target.value})} />
                             </div>
                         </div>
-                        <input className="btn submit-btn" type="submit" value={buttonTxt} style={{ width: '89%' }} />
+                        <input className="btn blue" type="submit" value={buttonTxt} style={{ width: '89%' }} />
                         { archiveBtn }
                     </form>
                 </div>

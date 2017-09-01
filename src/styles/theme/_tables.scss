@@ -7,7 +7,7 @@
     border: 1px solid $medium-light-gray;
     background: white;
     box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
-    border-radius: 3px;
+    border-radius: 4px;
     .head {
         tr {
         background: $table-header-gray;
@@ -17,25 +17,25 @@
         border: none !important;
         }
         .table-header {
-        font-size: 14px;
-        font-weight: 600;
-        color: $dark-gray;
-        .sort-arrow {
-            display: inline-block;
-            padding-bottom: 5px;
-            padding-left: 7px;
-        }
-        div {
-            display: inline-block;
             font-size: 14px;
             font-weight: 600;
             color: $dark-gray;
-        }
+            .sort-arrow {
+                display: inline-block;
+                padding-bottom: 5px;
+                padding-left: 7px;
+            }
+            div {
+                display: inline-block;
+                font-size: 14px;
+                font-weight: 600;
+                color: $dark-gray;
+            }
         }
     }
     .table-row-clickable {
         cursor: pointer;
-        }
+    }
     tr {
         border: none !important;
         text-align: left;
@@ -45,6 +45,8 @@
         vertical-align: top;
         text-align: left;
         padding: 20px 22px;
+        font-size: 14px;
+        line-height: 1.3em;
         &:last-child {
             div {
                 max-width: 300px;
@@ -62,13 +64,10 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             max-width: 200px;
-            font-size: 14px;
-            line-height: 1.3em;
-            &.no-limit {
+            &.no-limit, &.DayPickerInput {
                 max-width: none;
-                div {
-                    max-width: none;
-                }
+                text-overflow: initial !important;
+                overflow: initial !important;
             }
         }
         .edit {
@@ -118,3 +117,87 @@
         border-top: none;
     }
 }
+
+//Product-table specific styling
+.product-table-wrapper {
+    box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+    border: 1px solid $medium-light-gray;
+    border-radius: 4px;
+    .product-table, .part-table {
+        .product-image-colspan {
+            width: 12%;
+        }
+        .product-details-colspan {
+            width: 88%;
+        }
+        .head {
+            border-bottom: 1px solid $medium-light-gray;
+            .table-header {
+                &:nth-child(1) {
+                    width: 58%;
+                }
+                &:nth-child(2) {
+                    width: 20%;
+                }
+                &:nth-child(3) {
+                    width: 11%;
+                }
+                &:nth-child(4) {
+                    width: 11%;
+                }
+            }
+        }
+        .product-table-container-row {
+            background: white;
+            border: none;
+            box-shadow: none;
+            border-bottom: 1px solid $medium-light-gray;
+            .product-image-table, .product-details-table {
+                .table {
+                    border: none;
+                    box-shadow: none;
+                    td {
+                        border: none;
+                    }
+                    tbody {
+                        .table-row {
+                            &:nth-child(1) {
+                                td {
+                                    &:nth-child(1) {
+                                        font-size: 16px;
+                                        font-weight: 600;
+                                    }
+                                }
+                            }
+                        }
+                        td {
+                            padding: 10px 22px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .product-table {
+        
+    }
+    .part-table {
+        .table-row {
+            td {
+                &:nth-child(1) {
+                    width: 58%;
+                }
+                &:nth-child(2) {
+                    width: 20%;
+                }
+                &:nth-child(3) {
+                    width: 11%;
+                }
+                &:nth-child(4) {
+                    width: 11%;
+                }
+            }
+        }
+    }
+}
+

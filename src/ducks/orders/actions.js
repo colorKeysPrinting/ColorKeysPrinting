@@ -11,7 +11,10 @@ export const ActionTypes = {
     GET_ORDERS_SUCCESS : 'sibi_ge_admin/products/GET_ORDERS_SUCCESS',
     APPROVE_ORDER_SUCCESS : 'sibi_ge_admin/products/APPROVE_ORDER_SUCCESS',
     UPDATE_ORDER_SUCCESS : 'sibi_ge_admin/products/UPDATE_ORDER_SUCCESS',
+    UPDATE_INSTALL_DATE_SUCCESS: 'sibi_ge_admin/products/UPDATE_INSTALL_DATE_SUCCESS',
+    UPDATE_MODEL_NUMBER_SUCCESS: 'sibi_ge_admin/products/UPDATE_MODEL_NUMBER_SUCCESS',
     CREATE_ORDER_SUCCESS : 'sibi_ge_admin/products/CREATE_ORDER_SUCCESS',
+    PROCESS_ORDER_SUCCESS: 'sibi_ge_admin/products/PROCESS_ORDER_SUCCESS',
     REMOVE_ORDER_SUCCESS : 'sibi_ge_admin/products/REMOVE_ORDER_SUCCESS',
 }
 
@@ -22,14 +25,11 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getOrderById({ token, id }) {
+export function getOrderById({ id }) {
     return (dispatch) => {
         return axios({
             method  : Network.GET,
             url     : `${Network.DOMAIN}/order/${id}`,
-            headers : {
-                'x-auth-token': token
-            }
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_ORDER_BY_ID_SUCCESS , ...payload });
@@ -78,7 +78,7 @@ export function approveOrder({ token, id }) {
     }
 }
 
-export function updateOrder({ token, id, status }) {
+export function updateOrder({ token, order }) {
     return (dispatch) => {
         return axios({
             method  : Network.PATCH,
@@ -87,25 +87,47 @@ export function updateOrder({ token, id, status }) {
                 'x-auth-token': token
             },
             data: {
-                productsAndDestinations,
-                fundPropertyId,
-                tenantFirstName,
-                tenantLastName,
-                tenantPhone,
-                tenantEmail,
-                lockBoxCode,
-                specialInstructions,
-                customerPONumber,
-                occupied,
-                isApplianceHotShotDelivery,
-                installDate,
-                applianceDeliveryTime,
-                installDate,
-                applianceDeliveryTime
+                ...order
             }
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.UPDATE_ORDER_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function updateInstallDate ({ id, installDate }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.PATCH,
+            url     : `${Network.DOMAIN}/order/${id}/updateInstallDate`,
+            data: {
+                installDate
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.UPDATE_INSTALL_DATE_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function updateModelNumber ({ id, data }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/order/${id}/addReplacementModel`,
+            data: {
+                ...data
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.UPDATE_MODEL_NUMBER_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);
@@ -124,6 +146,25 @@ export function createOrder() {
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.CREATE_ORDER_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function processOrder({ id, processedByName, geOrderNumber }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/order/${id}/process`,
+            data    : {
+                processedByName,
+                geOrderNumber
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.PROCESS_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);

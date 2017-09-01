@@ -25,13 +25,15 @@ class HeaderBar extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        if (this.props.location.pathname !== '/process_order') {
+            const { cookies } = this.props;
+            const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt && jwt.token !== '') {
-            this.props.getCurrentUser({ token: jwt.token});
-        } else {
-            console.log('TODO: trigger logout function *** no JWT ***');
+            if (jwt && jwt.token !== '') {
+                this.props.getCurrentUser({ token: jwt.token});
+            } else {
+                console.log('TODO: trigger logout function *** no JWT ***');
+            }
         }
     }
 
@@ -77,41 +79,42 @@ class HeaderBar extends React.Component {
         let loginSection, profileOverlay, pendingUsers = 0, pendingOrders = 0;
 
         const activeUser = this.props.activeUser.toJS();
-        const sibiLogo = assets('./images/SIBI_Logo.png');
 
-        if (!activeUser.type || activeUser.type === 'signUp') {
-            loginSection = <Link to={`/login`} className="btn submit-btn" >Login</Link>;
+        if (this.props.location.pathname !== '/process_order') {
+            if (!activeUser.type || activeUser.type === 'signUp') {
+                loginSection = <Link to={`/login`} className="btn blue" >Login</Link>;
 
-        } else {
-            const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : assets('./images/icon-settings.svg');
+            } else {
+                const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : assets('./images/icon-settings.svg');
 
-            profileOverlay = (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
-                <div id="profile-container">
-                    <div className="arrow-up"></div>
-                    <div className="element" onClick={() => this.props.logout()} >Log out</div>
-                </div>
-            </Overlay> : null;
+                profileOverlay = (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
+                    <div id="profile-container">
+                        <div className="arrow-up"></div>
+                        <div className="element" onClick={() => this.props.logout()} >Log out</div>
+                    </div>
+                </Overlay> : null;
 
-            loginSection = <div onClick={this.showProfile}>
-                <img className="settings-icon" src={profilePic} alt="settingsButtons" width="40px" height="40px" />
-            </div>;
+                loginSection = <div onClick={this.showProfile}>
+                    <img className="settings-icon" src={profilePic} alt="settingsButtons" width="40px" height="40px" />
+                </div>;
 
-            if (this.props.orders.size > 0 &&
-                this.props.users.size > 0) {
+                if (this.props.orders.size > 0 &&
+                    this.props.users.size > 0) {
 
-                _.each(this.props.orders.toJS(), (order) => {
-                    pendingOrders += ((order.orderStatus).toLowerCase() === 'pending') ? 1 : 0;
-                });
+                    _.each(this.props.orders.toJS(), (order) => {
+                        pendingOrders += ((order.orderStatus).toLowerCase() === 'pending') ? 1 : 0;
+                    });
 
-                _.each(this.props.users.toJS(), (user) => {
-                    pendingUsers += ((user.type).toLowerCase() === 'pending') ? 1 : 0;
-                });
+                    _.each(this.props.users.toJS(), (user) => {
+                        pendingUsers += ((user.type).toLowerCase() === 'pending') ? 1 : 0;
+                    });
+                }
             }
         }
 
         return (
             <div id="header-bar">
-                <img src={sibiLogo} id="logo"/>
+                <img src={assets('./images/SIBI_Logo.png')} id="logo"/>
                 <Tabs
                     type={activeUser.type}
                     activeTab={this.props.activeTab}

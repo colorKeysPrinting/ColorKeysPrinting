@@ -52,7 +52,7 @@ class ProductsPage extends React.Component {
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
 
-            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, applianceOrderDisplayNumber: _.size(products[productCategories[0]]) } }} className="btn submit-btn" >Add</Link>;
+            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, applianceOrderDisplayNumber: _.size(products[productCategories[0]]) } }} className="btn blue" >Add</Link>;
 
             tabs = _.map(productCategories, (type) => {
                 return (

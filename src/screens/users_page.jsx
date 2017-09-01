@@ -123,12 +123,12 @@ class UsersPage extends React.Component {
                             { label: 'Yes', value: true }
                         ];
 
-                        value = <Select
+                        value = <div><Select
                             name="auto-approved-orders-select"
                             value={autoApprovedOrders}
                             options={options}
                             onChange={(autoApprovedOrders) => this.handleAutoApprove({ user, autoApprovedOrders })}
-                        />;
+                        /></div>;
 
                     } else if (key === 'status') {
                         value = (user['type'] === 'pending') ? 'Pending' : 'Approved';

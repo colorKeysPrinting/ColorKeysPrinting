@@ -15,7 +15,7 @@ export default class MyTable extends React.Component {
     }
 
     render() {
-        let headers = [];
+        let headers = [], tableClass;
 
         if (this.props.headers) {
             headers = _.map(this.props.headers, (header, id) => {
@@ -31,18 +31,17 @@ export default class MyTable extends React.Component {
                     }
                 }
             });
+            headers = <tr>{ headers }</tr>
         }
 
         const data = _.map(this.props.data, (item, id) => {
-
-            // build extra column here 👇🏼 "name it product Description"
             const col = _.map(item, (col, id) => {
                 if (id !== 'id') {
                     if (id === 'action') {
-                        return (col === 'approve' || this.props.type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" ><div onClick={() => this.state.handleAction({ item })}>{ col }</div></td> : <td key={`table-item-${id}`} className="table-cell"></td>;
+                        return (col === 'approve' || this.props.type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
 
                     } else {
-                        return <td key={`table-item-${id}`} ><div onClick={() => this.state.handleItem({ item })}>{ col }</div></td>;
+                        return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
                     }
                 }
             });
@@ -52,12 +51,10 @@ export default class MyTable extends React.Component {
 
 
         return (
-            <div id="admin-table">
+            <div className={ (this.props.className) ? this.props.className : '' }>
                 <table className="table">
                     <thead className="head">
-                        <tr>
-                            { headers }
-                        </tr>
+                        { headers }
                     </thead>
                     <tbody>
                         { data }

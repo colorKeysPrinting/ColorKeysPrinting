@@ -10,6 +10,7 @@ import { ActionTypes }          from './actions';
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
     order: '',
+    processSuccess: false,
     orders: []
 });
 
@@ -42,9 +43,26 @@ export default (state = initialState, action) => {
 
         break;
 
+    case ActionTypes.UPDATE_INSTALL_DATE_SUCCESS:
+        console.log('update installDate', action.data);
+        state = state.set('order', Immutable.fromJS(action.data));
+        break;
+
+    case ActionTypes.UPDATE_MODEL_NUMBER_SUCCESS:
+        console.log('update modelNum', action.data);
+        state = state.set('order', Immutable.fromJS(action.data));
+        break;
+
     case ActionTypes.CREATE_ORDER_SUCCESS:
         console.log('create order', action.data);
 
+        break;
+
+    case ActionTypes.PROCESS_ORDER_SUCCESS:
+        console.log('process order');
+        if (action.data.processedAt) {
+            state = state.set('order', Immutable.fromJS(action.data));
+        }
         break;
 
     case ActionTypes.REMOVE_ORDER_SUCCESS:

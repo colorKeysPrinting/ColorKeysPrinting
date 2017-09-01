@@ -4,6 +4,7 @@
 @import './reset';
 
 @import 'node_modules/react-tabs/style/react-tabs.scss';
+@import 'node_modules/react-day-picker/lib/style';
 
 // APP STYLES (need to include each file one by one)
 
@@ -37,3 +38,4 @@
 @import "pages/orders-page";
 @import "pages/users-page";
 @import "pages/edit-product-overlay";
+@import "pages/process-order-page";
