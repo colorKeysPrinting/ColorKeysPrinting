@@ -12,12 +12,12 @@ import MyTable                                              from 'components/my_
 // outOfStock
 // modelNumber
 // update
-// updateOrderProducts
+// updateModelNumber
 // showOutOfStock
 
 export default function ProductTable(props) {
     const product = props.product;
-    const imageData = [[<img src={props.image} alt="productImg" height="100" width="auto" />]];
+    const imageData = (!props.replacement) ? [[<img src={props.image} alt="productImg" height="100" width="auto" />]] : null;
 
     const productImageTable = <MyTable
         type="productDetailsImage"
@@ -41,48 +41,49 @@ export default function ProductTable(props) {
             switch(key) {
             case 'productDescription':
                 if (row === 'product') {
-                    value = product.applianceDescription;
+                    value = (!props.replacement) ? product.applianceDescription : null;
 
                 } else if (row === 'outOfStock') {
                     value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn cancel-btn" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
 
                 } else if (row === 'install') {
-                    value = (props.outOfStock !== props.productIndex) ? `Install Description: ${ product.applianceInstallDescription }` : <form onSubmit={(e) => {e.preventDefault(); props.updateOrderProducts();}}>
+                    const description = (!props.replacement) ? `Install Description: ${ product.applianceInstallDescription }` : null;
+                    value = (props.outOfStock !== props.productIndex) ? description : <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
                         <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
                         <input name="model-num-replace" value={props.modelNumber} placeholder="GTE18GT" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
                         <input className="btn blue" type="submit" value="Replace" />
                     </form>;
 
                 } else if (row === 'remove') {
-                    value = (props.outOfStock !== props.productIndex) ? `Remove Appliance Description: ${ product.applianceRemovalDescription }` : '';
+                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Remove Appliance Description: ${ product.applianceRemovalDescription }` : null;
 
                 } else if (row === 'disconnect') {
-                    value = (props.outOfStock !== props.productIndex) ? `Disconnect Fee: ${ '*** missing ***' }` : '';
+                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Disconnect Fee: ${ '*** missing ***' }` : null;
                 }
                 break;
 
             case 'code':
                 if (row === 'product') {
-                    value = `Model #${ product.sibiModelNumber }`;
+                    value = (!props.replacement) ? `#${ product.sibiModelNumber }` : `#${ props.replacement }`;
 
                 } else if (row === 'outOfStock') {
                     value = ''
 
                 } else if (row === 'install') {
-                    value = `Install Code #${ product.applianceInstallCode }`;
+                    value = (!props.replacement) ? `#${ product.applianceInstallCode }` : null;
 
                 } else if (row === 'remove') {
-                    value = `Remove Code #${ product.applianceRemovalCode }`;
+                    value = (!props.replacement) ? `#${ product.applianceRemovalCode }` : null;
 
                 } else if (row === 'disconnect') {
-                    value = `Disconnect Code #${ '*** missing ***' }`;
+                    value = (!props.replacement) ? `#${ '*** missing ***' }` : null;
                 }
 
-                value = (props.outOfStock !== props.productIndex) ? value : '';
+                value = (props.outOfStock !== props.productIndex) ? value : null;
                 break;
 
             case 'qty':
-                value = (row === 'product' && props.outOfStock !== props.productIndex) ? props.qty : '';
+                value = (row === 'product' && props.outOfStock !== props.productIndex && !props.replacement) ? props.qty : null;
                 break;
 
             case 'price':
@@ -102,7 +103,7 @@ export default function ProductTable(props) {
                     value = 'missing';
                 }
 
-                value = (props.outOfStock !== props.productIndex) ? value : '';
+                value = (props.outOfStock !== props.productIndex && !props.replacement) ? value : null;
                 break;
             }
             cols[key] = value;

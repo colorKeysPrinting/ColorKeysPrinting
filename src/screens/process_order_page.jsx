@@ -35,7 +35,7 @@ class ProcessOrderPage extends React.Component {
 
         this.update = this.update.bind(this);
         this.updateOrderDate = this.updateOrderDate.bind(this);
-        this.updateOrderProducts = this.updateOrderProducts.bind(this);
+        this.updateModelNumber = this.updateModelNumber.bind(this);
         this.showOutOfStock = this.showOutOfStock.bind(this);
         this.processOrder = this.processOrder.bind(this);
     }
@@ -62,7 +62,7 @@ class ProcessOrderPage extends React.Component {
                     productsAndDestinations.push(product);
 
                     _.each(product.includedParts, (part) => {
-                        productsAndDestinations.push(part);
+                        productsAndDestinations.push({...part, productOrderId: product.productOrderId});
                     });
                 });
 
@@ -86,14 +86,28 @@ class ProcessOrderPage extends React.Component {
         this.props.updateInstallDate({ id: order.id, installDate });
     }
 
-    updateOrderProducts() {
+    updateModelNumber() {
+        let data;
         const order = this.props.order.toJS();
+        const item = this.state.productsAndParts[this.state.outOfStock];
 
-        _.each(this.state.productsAndParts, (product, index) => {
-            if (this.state.outOfStock === index) {
-                this.props.updateModelNumber({ id: order.id, productOrderId: product.productOrderId, manufacturerModelNumber: this.state.modelNumber });
+        if (item.product) {
+            // products
+            data = { productOrderId: item.productOrderId, modelNumber: this.state.modelNumber };
+
+        } else if (item.part) {
+            if(!item.productOrderId) {
+                // standalone parts
+                data = { partOrderId: item.partOrderId, modelNumber: this.state.modelNumber };
+
+            } else {
+                // included parts
+                data = { productOrderId: item.productOrderId, partId: item.partId, modelNumber: this.state.modelNumber };
             }
-        });
+        }
+
+        this.props.updateModelNumber({ id: order.id, data });
+        this.setState({ outOfStock: '', modelNumber: '' });
     }
 
     showOutOfStock({ productIndex }) {
@@ -247,10 +261,12 @@ class ProcessOrderPage extends React.Component {
             // ***************** PRODUCTS TABLE DATA *****************
             productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
                 if (orderDetail.product) {
+                    const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
                     return <ProductTable
                         key={`product${productIndex}`}
                         productIndex={productIndex}
                         product={orderDetail.product}
+                        replacement={replacement}
                         image={orderDetail.selectedColorInfo.imageUrl}
                         qty={orderDetail.qty}
                         price={orderDetail.ProductPrice.price}
@@ -259,14 +275,16 @@ class ProcessOrderPage extends React.Component {
                         modelNumber={this.state.modelNumber}
 
                         update={this.update}
-                        updateOrderProducts={this.updateOrderProducts}
+                        updateModelNumber={this.updateModelNumber}
                         showOutOfStock={this.showOutOfStock}
                     />;
                 } else if (orderDetail.part) {
+                    const replacement = (orderDetail.replacementModelNumber) ? orderDetail.replacementModelNumber : false;
                     return <PartTable
                         key={`part${productIndex}`}
                         productIndex={productIndex}
                         part={orderDetail.part}
+                        replacement={replacement}
                         qty={orderDetail.qty}
                         price={orderDetail.PartPrice.price}
 
@@ -274,11 +292,10 @@ class ProcessOrderPage extends React.Component {
                         modelNumber={this.state.modelNumber}
 
                         update={this.update}
-                        updateOrderProducts={this.updateOrderProducts}
+                        updateModelNumber={this.updateModelNumber}
                         showOutOfStock={this.showOutOfStock}
                     />;
                 }
-
             });
 
             orderTotalSection = <div className="cost-section">

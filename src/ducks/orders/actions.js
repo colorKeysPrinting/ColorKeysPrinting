@@ -120,14 +120,13 @@ export function updateInstallDate ({ id, installDate }) {
     }
 }
 
-export function updateModelNumber ({ id, productOrderId, manufacturerModelNumber }) {
+export function updateModelNumber ({ id, data }) {
     return (dispatch) => {
         return axios({
             method  : Network.POST,
             url     : `${Network.DOMAIN}/order/${id}/addReplacementModel`,
             data: {
-                productOrderId,
-                manufacturerModelNumber
+                ...data
             }
         })
             .then(payload => {

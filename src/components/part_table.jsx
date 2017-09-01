@@ -11,13 +11,13 @@ import MyTable                                              from 'components/my_
 // outOfStock
 // modelNumber
 // update
-// updateOrderProducts
+// updateModelNumber
 // showOutOfStock
 
 export default function PartTable(props) {
     const part = props.part;
 
-    const imageData = [[<img src={part.imageUrl} alt="productImg" height="100" width="auto" />]];
+    const imageData = (!props.replacement) ? [[<img src={part.imageUrl} alt="productImg" height="100" width="auto" />]] : null;
 
     const partImageTable = <MyTable
         type="partDetailsImage"
@@ -40,13 +40,13 @@ export default function PartTable(props) {
             switch(key) {
             case 'partDescription':
                 if (row === 'part') {
-                    value = part.description;
+                    value = (!props.replacement) ? part.description : null;
 
                 } else if (row === 'outOfStock') {
                     value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn cancel-btn" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
 
                 } else if (row === 'install') {
-                    value = (props.outOfStock === props.productIndex) ? <form onSubmit={(e) => {e.preventDefault(); props.updateOrderProducts();}}>
+                    value = (props.outOfStock === props.productIndex) ? <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
                         <label htmlFor="model-num-replace" >Enter Model # to replace part</label>
                         <input name="model-num-replace" value={props.modelNumber} placeholder="GTE18GT" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
                         <input className="btn blue" type="submit" value="Replace" />
@@ -55,19 +55,20 @@ export default function PartTable(props) {
                 break;
 
             case 'code':
-                value = (row === 'part') ? `Model #${ part.code }` : '';
+                const code = (!props.replacement) ? part.code : props.replacement
+                value = (row === 'part') ? `#${ code }` : null;
 
-                value = (props.outOfStock !== props.productIndex) ? value : '';
+                value = (props.outOfStock !== props.productIndex) ? value : null;
                 break;
 
             case 'qty':
-                value = (row === 'part' && props.outOfStock !== props.productIndex) ? props.qty : '';
+                value = (row === 'part' && props.outOfStock !== props.productIndex && !props.replacement) ? props.qty : null;
                 break;
 
             case 'price':
-                value = (row === 'part') ? props.price : '';
+                value = (row === 'part') ? props.price : null;
 
-                value = (props.outOfStock !== props.productIndex) ? value : '';
+                value = (props.outOfStock !== props.productIndex && !props.replacement) ? value : null;
                 break;
             }
             cols[key] = value;
