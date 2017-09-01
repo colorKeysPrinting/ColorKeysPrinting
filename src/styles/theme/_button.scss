@@ -21,6 +21,12 @@
   &.fill {
     width: 100%;
   }
+  &.borderless {
+    padding: 0;
+    color: $blue;
+    font-size: 14px;
+    font-weight: 500;
+  }
 }
 
 .white-btn {
