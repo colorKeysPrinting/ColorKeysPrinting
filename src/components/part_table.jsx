@@ -43,12 +43,14 @@ export default function PartTable(props) {
                     value = (!props.replacement) ? part.description : null;
 
                 } else if (row === 'outOfStock') {
-                    value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn cancel-btn" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                    value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
 
                 } else if (row === 'install') {
                     value = (props.outOfStock === props.productIndex) ? <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
-                        <label htmlFor="model-num-replace" >Enter Model # to replace part</label>
-                        <input name="model-num-replace" value={props.modelNumber} placeholder="GTE18GT" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
+                        <div className="input-container">
+                            <label htmlFor="model-num-replace" >Enter Model # to replace part</label>
+                            <input name="model-num-replace" value={props.modelNumber} placeholder="GTE18GT" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
+                        </div>
                         <input className="btn blue" type="submit" value="Replace" />
                     </form> : null;
                 }

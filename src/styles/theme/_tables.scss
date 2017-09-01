@@ -69,6 +69,9 @@
                 text-overflow: initial !important;
                 overflow: initial !important;
             }
+            &.input-container {
+                overflow: initial;
+            }
         }
         .edit {
             color: $blue;
