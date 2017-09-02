@@ -23,7 +23,7 @@ export default (
     <Router>
         <div>
             <HeaderBar />
-            <Route path="/" component={Home} />
+            {/* <Route path="/" component={Home} /> */}
             <Route path="/orders" component={OrdersPage} />
             <Route path="/users" component={UsersPage} />
             <Route path="/products" component={ProductsPage} />

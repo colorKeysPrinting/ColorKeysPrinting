@@ -2,6 +2,7 @@ import React                                from 'react';
 import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
+import { withRouter }                       from 'react-router';
 import dateformat                           from 'dateformat';
 import SearchInput                          from 'react-search-input';
 import filter                               from 'libs/filter';
@@ -29,18 +30,30 @@ class OrdersPage extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies } = this.props;
+        const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
+
+        if (activeUser) {
+            const path = (activeUser.size > 0) ? `/orders` : `/login`;
+            this.props.history.push(path);
+        }
 
         if (jwt && jwt.token !== '') {
             this.props.getUsers({ token: jwt.token });
             this.props.getFundProperties({ token: jwt.token });
-            this.props.getOrders({ token: jwt.token, type: this.props.activeUser.type });
+            this.props.getOrders({ token: jwt.token, type: activeUser.toJS().type });
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
         }
 
         this.props.setActiveTab('orders');
+    }
+
+    componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/login`;
+            this.props.history.push(path);
+        }
     }
 
     update({ type, value }) {
@@ -66,7 +79,7 @@ class OrdersPage extends React.Component {
 
     handleItem({ item }) {
         console.log('item pressed', item);
-        this.props.history.push({ pathname: '/order_details', state: { ... item } });
+        this.props.history.push('/order_details', item.id);
     }
 
     render() {
@@ -107,37 +120,37 @@ class OrdersPage extends React.Component {
                     value = item[key];
 
                     if (key === 'id') {
-                        value = <div>{item.id}</div>;
+                        value = item.id;
 
                     } else if (key === 'office') {
-                        value = <div>{user.fundLocation.city}</div>;
+                        value = user.fundLocation.city;
 
                     } else if (key ==='propertyId') {
-                        value = <div>{fundProperty.id}</div>;
+                        value = fundProperty.id;
 
                     } else if (key === 'address') {
-                        value = <div>{`${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`}</div>;
+                        value = `${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
 
                     } else if (key === 'occupied') {
-                        value = <div>{(item[key]) ? 'Occupied' : 'Vacant'}</div>;
+                        value = (item[key]) ? 'Occupied' : 'Vacant';
 
                     } else if (key === 'userId') {
-                        value = <div>{`${user['firstName']} ${user['lastName']}`}</div>;
-                    
+                        value = `${user['firstName']} ${user['lastName']}`;
+
                     } else if (key === 'orderNumber') {
-                        value = <div>{item[key]}</div>;
+                        value = item[key];
 
                     } else if (key === 'createdAt') {
-                        value = <div>{dateformat(new Date(value), 'mmmm dd, yyyy')}</div>;
+                        value = dateformat(new Date(value), 'mmmm dd, yyyy');
 
                     } else if (key === 'totalCost') {
-                        value = <div>{`$ ${item[key]}`}</div>;
+                        value = parseFloat(item[key]);
 
                     } else if (key === 'orderStatus') {
-                        value = <div>{item[key]}</div>;
+                        value = item[key];
 
                     } else if (key === 'action') {
-                        value = <div>{(item['orderStatus'] === 'Pending') ? 'approve' : ''}</div>;
+                        value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
                     }
 
                     cols[key] = value;
@@ -173,6 +186,11 @@ class OrdersPage extends React.Component {
             } else {
                 data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
             }
+
+            data = _.map(data, (item) => {
+                item.totalCost = `$ ${item.totalCost}`;
+                return item;
+            });
         }
 
         return (
@@ -214,4 +232,4 @@ const actions = {
     setActiveTab
 }
 
-export default connect(select, actions, null, { withRef: true })(withCookies(OrdersPage));
+export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(OrdersPage)));

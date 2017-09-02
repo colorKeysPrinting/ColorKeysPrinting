@@ -15,8 +15,13 @@ import MyTable                              from 'components/my_table';
 
 class ProductsPage extends React.Component {
     componentWillMount() {
-        const { cookies } = this.props;
+        const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
+
+        if (activeUser) {
+            const path = (activeUser.size > 0) ? `/products` : `/login`;
+            this.props.history.push(path);
+        }
 
         if (jwt) {
             this.props.getProductCategories({ token: jwt.token });
@@ -28,6 +33,11 @@ class ProductsPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/products` : `/login`;
+            this.props.history.push(path);
+        }
+
         if (!_.isEqual(this.props.productCategories, nextProps.productCategories)) {
             const productCategories = nextProps.productCategories.toJS();
 
@@ -73,9 +83,9 @@ class ProductsPage extends React.Component {
 
                         } else if (key === 'action') {
                             if (product.archived) {
-                                value = <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: type.name, id: product.id }) } >Unarchive</div>;
+                                value = <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: type.name, id: product.id }) } className="product-action">Unarchive</div>;
                             } else {
-                                value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} >Edit</Link>;
+                                value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} className="product-action">Edit</Link>;
                             }
                         } else if (key === 'featured') {
                             if (product.applianceOrderDisplayNumber <= 5) {
@@ -109,25 +119,13 @@ class ProductsPage extends React.Component {
         }
 
         return (
-            <div id="products-page">
-                <div className="container">
-                    <div className="box">
-                        <div className="header">
-                            <div className="pure-g actions">
-                                <div className="pure-u-1-2">
-                                    <h2>Products</h2>
-                                </div>
-                                <div className="pure-u-1-2">
-                                    { addBtn }
-                                </div>
-                            </div>
-                            <div className="pure-g">
-                                <div className="pure-u-1">
-                                    { tabsSection }
-                                </div>
-                            </div>
-                        </div>
+            <div id="products-page" className="container">
+                <div className="table-card">
+                    <div className="card-header">
+                        <h2>Products</h2>
+                        { addBtn }
                     </div>
+                    { tabsSection }
                 </div>
             </div>
         );

@@ -2,6 +2,7 @@ const webpack               = require('webpack');
 const path                  = require('path');
 const HtmlWebpackPlugin     = require('html-webpack-plugin');
 const ExtractTextPlugin     = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin     = require('copy-webpack-plugin');
 
 module.exports = WebpackConfig = (app) => {
 
@@ -18,6 +19,9 @@ module.exports = WebpackConfig = (app) => {
             filename: 'index.html',
             template: '../src/index.html'
         }),
+        new CopyWebpackPlugin([
+            { from: '../_redirects', to: '../dist/' }
+        ]),
         (app.env === 'production') ? new webpack.LoaderOptionsPlugin({
             minimize: true,
             debug: false

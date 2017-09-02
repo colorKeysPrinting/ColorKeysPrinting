@@ -28,21 +28,20 @@ export default (state = initialState, action) => {
     case ActionTypes.LOGIN_SUCCESS:
         console.log('login: ', action.data);
 
-        if (action.data.id) {
-            if (!action.data.disabled) {
+        if (!action.data.disabled) {
+            state = state.set('activeUser', Immutable.fromJS({ ...action.data }));
+            const maxAge = 24 * 60 * 60; // one day in seconds
+            // const maxAge = 60; // one min in seconds
 
-                state = state.set('activeUser', Immutable.fromJS({ ...action.data }));
-                const maxAge = 24 * 60 * 60; // one day in seconds
-                // const maxAge = 60; // one min in seconds
+            cookies.set('sibi-admin-jwt', { token: action.data.token, email: action.data.email }, { path: '/', maxAge });
 
-                cookies.set('sibi-admin-jwt', { token: action.data.token, email: action.data.email }, { path: '/', maxAge });
-
-            } else {
-                alert('Your account has been disabled!\nIf you find this to be an error please contact your fund');
-            }
         } else {
-            alert('Could not find a Username and Password combination matching the provided');
+            alert('Your account has been disabled!\nIf you find this to be an error please contact your fund');
         }
+        break;
+
+    case ActionTypes.LOGIN_ERROR:
+        alert('Could not find a Username and Password combination matching the provided');
         break;
 
     case ActionTypes.PASSWORD_RESET:
