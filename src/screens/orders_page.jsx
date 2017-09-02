@@ -144,7 +144,7 @@ class OrdersPage extends React.Component {
                         value = dateformat(new Date(value), 'mmmm dd, yyyy');
 
                     } else if (key === 'totalCost') {
-                        value = `$ ${item[key]}`;
+                        value = parseFloat(item[key]);
 
                     } else if (key === 'orderStatus') {
                         value = item[key];
@@ -186,6 +186,11 @@ class OrdersPage extends React.Component {
             } else {
                 data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
             }
+
+            data = _.map(data, (item) => {
+                item.totalCost = `$ ${item.totalCost}`;
+                return item;
+            });
         }
 
         return (

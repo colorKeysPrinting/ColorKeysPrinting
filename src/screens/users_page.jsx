@@ -183,7 +183,7 @@ class UsersPage extends React.Component {
                     data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
                 } else {
                     // convert to sort
-                    data = _.map(data, (item, index) => {
+                    data = _.map(data, (item) => {
                         item.autoApprovedOrders = (item.autoApprovedOrders.props.value) ? 'Yes' : 'No';
                         return item;
                     });
