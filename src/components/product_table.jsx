@@ -51,6 +51,8 @@ export default function ProductTable(props) {
                         </div>;
                     }
                 } else if (row === 'install') {
+                    // const wrapper = <div className="install-instructions"></div>
+                    // const bold = <div><div className="bold" > Install Description</div> <div>{product.applianceInstallDescription}</div></div>
                     const description = (!props.replacement) ? `Install Description: ${ product.applianceInstallDescription }` : null;
                     value = (props.outOfStock !== props.productIndex) ? description : <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
                         <div className="input-container">
@@ -64,7 +66,7 @@ export default function ProductTable(props) {
                     value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Remove Appliance Description: ${ product.applianceRemovalDescription }` : null;
 
                 } else if (row === 'disconnect') {
-                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Disconnect Fee: ${ '*** missing ***' }` : null;
+                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Disconnect Fee: ${ product.applianceDisconnectDescription }` : null;
                 }
                 break;
 
@@ -88,7 +90,7 @@ export default function ProductTable(props) {
                     value = (!props.replacement && props.type === 'processOrder') ? `#${ product.applianceRemovalCode }` : null;
 
                 } else if (row === 'disconnect') {
-                    value = (!props.replacement) ? `#${ '*** missing ***' }` : null;
+                    value = (!props.replacement) ? `#${ product.applianceDisconnectCode }` : null;
                 }
 
                 value = (props.outOfStock !== props.productIndex) ? value : null;
@@ -116,7 +118,7 @@ export default function ProductTable(props) {
                     value = product.applianceRemovalPrice;
 
                 } else if (row === 'disconnect') {
-                    value = 'missing';
+                    value = product.applianceDisconnectPrice;
                 }
 
                 value = (props.outOfStock !== props.productIndex && !props.replacement) ? value : null;

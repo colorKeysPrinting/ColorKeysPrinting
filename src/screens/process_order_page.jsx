@@ -16,7 +16,7 @@ import PartTable                                            from 'components/par
 // ************************************************************************************
 //                              TO LOAD THE PAGE
 //
-//    http://localhost:3000/process_order?orderId=92f07c8d-2c65-48a3-bd68-62f1629d12be
+//    http://localhost:3000/process_order?orderId=beb36893-494f-4a09-ae7b-f4955ff5e641
 //
 // ************************************************************************************
 
@@ -122,36 +122,39 @@ class ProcessOrderPage extends React.Component {
     render() {
         let orderPageData;
 
-        //TABLE HEADERS
-        const userHeaders = {
-            orderedBy: 'Ordered By',
-            phoneNumber: 'Phone Number',
-            email: 'Email',
-            hotshotDelivery: 'HotShot Delivery',
-            hotshotInstallDate: '',
-            hotshotCode: ''
-        };
-
-        const occupancyHeaders = {
-            occupancy: 'Occupancy',
-            tenantName: 'Tenant Name',
-            phoneNumber: 'Phone Number',
-            email: 'Email'
-        };
-
-        const officeHeaders = {
-            pmOffice: 'PM Office',
-            phoneNumber: 'Phone Number',
-            email: 'Email'
-        };
-
         if (this.props.order.size > 0) {
             const order = this.props.order.toJS();
+
+            //TABLE HEADERS
+            const userHeaders = {
+                orderedBy: 'Ordered By',
+                phoneNumber: 'Phone Number',
+                email: 'Email',
+                hotshotDelivery: 'HotShot Delivery',
+                hotshotInstallDate: '',
+                hotshotCode: ''
+            };
+
+            const occupancyHeaders = (order.occupied) ? {
+                occupancy: 'Occupancy',
+                tenantName: 'Tenant Name',
+                phoneNumber: 'Phone Number',
+                email: 'Email'
+            } : {
+                occupancy: 'Occupancy',
+                lockBox: 'Lock Box Code'
+            };
+
+            const officeHeaders = {
+                pmOffice: 'PM Office',
+                phoneNumber: 'Phone Number',
+                email: 'Email'
+            };
 
             if (!order.processedAt) {
                 const user = order.createdByUser;
 
-                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hotshot Install Date' : 'Install Date';
+                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'HotShot Install Date' : 'Install Date';
                 userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'HotShot Code' : '';
 
                 const orderProcessHeading = {
@@ -219,10 +222,10 @@ class ProcessOrderPage extends React.Component {
                     value = order[key]
 
                     if (key === 'occupancy') {
-                        value = (!order['occupied']) ? 'Unoccupied' : 'Occupied';
+                        value = (!order.occupied) ? 'Unoccupied' : 'Occupied';
                     }
 
-                    if (order['occupied']) {
+                    if (order.occupied) {
                         if (key === 'tenantName'){
                             value = `${order.tenantFirstName} ${order.tenantLastName}`;
 
@@ -231,6 +234,10 @@ class ProcessOrderPage extends React.Component {
 
                         } else if (key === 'email') {
                             value = <div>{order.tenantEmail}</div>;
+                        }
+                    } else {
+                        if ( key === 'lockBox') {
+                            value = `${order.lockBoxCode}`;
                         }
                     }
 
@@ -310,7 +317,7 @@ class ProcessOrderPage extends React.Component {
                     <div className="cost-row">
                         <h5>Sub Total: <span>${ order.totalCost }</span></h5>
                         <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
-                        <h5>Total: <span>${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</span></h5>
+                        <h5>Total: <span>${ (parseFloat(order.totalCost) + parseFloat(order.salesTax)).toFixed(2) }</span></h5>
                     </div>
                 </div>;
 
@@ -343,7 +350,6 @@ class ProcessOrderPage extends React.Component {
                 orderPageData = <div>
                     <h1>Order Processed</h1>
                     <h4>Your order has been processed.</h4>
-                    <Link to={`/`} className="btn blue" >Done</Link>
                 </div>;
             }
         }
