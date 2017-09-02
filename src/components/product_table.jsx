@@ -60,7 +60,7 @@ export default function ProductTable(props) {
                     value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Remove Appliance Description: ${ product.applianceRemovalDescription }` : null;
 
                 } else if (row === 'disconnect') {
-                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Disconnect Fee: ${ '*** missing ***' }` : null;
+                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Disconnect Fee: ${ product.applianceDisconnectDescription }` : null;
                 }
                 break;
 
@@ -78,7 +78,7 @@ export default function ProductTable(props) {
                     value = (!props.replacement) ? `#${ product.applianceRemovalCode }` : null;
 
                 } else if (row === 'disconnect') {
-                    value = (!props.replacement) ? `#${ '*** missing ***' }` : null;
+                    value = (!props.replacement) ? `#${ product.applianceDisconnectCode }` : null;
                 }
 
                 value = (props.outOfStock !== props.productIndex) ? value : null;
@@ -102,7 +102,7 @@ export default function ProductTable(props) {
                     value = product.applianceRemovalPrice;
 
                 } else if (row === 'disconnect') {
-                    value = 'missing';
+                    value = product.applianceDisconnectPrice;
                 }
 
                 value = (props.outOfStock !== props.productIndex && !props.replacement) ? value : null;
