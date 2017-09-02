@@ -16,7 +16,7 @@ import PartTable                                            from 'components/par
 // ************************************************************************************
 //                              TO LOAD THE PAGE
 //
-//    http://localhost:3000/process_order?orderId=92f07c8d-2c65-48a3-bd68-62f1629d12be
+//    http://localhost:3000/process_order?orderId=beb36893-494f-4a09-ae7b-f4955ff5e641
 //
 // ************************************************************************************
 
@@ -310,7 +310,7 @@ class ProcessOrderPage extends React.Component {
                     <div className="cost-row">
                         <h5>Sub Total: <span>${ order.totalCost }</span></h5>
                         <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
-                        <h5>Total: <span>${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</span></h5>
+                        <h5>Total: <span>${ (parseFloat(order.totalCost) + parseFloat(order.salesTax)).toFixed(2) }</span></h5>
                     </div>
                 </div>;
 
@@ -343,7 +343,6 @@ class ProcessOrderPage extends React.Component {
                 orderPageData = <div>
                     <h1>Order Processed</h1>
                     <h4>Your order has been processed.</h4>
-                    <Link to={`/`} className="btn blue" >Done</Link>
                 </div>;
             }
         }
