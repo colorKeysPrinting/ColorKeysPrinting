@@ -22,11 +22,12 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getUsers({ token }) {
+export function getUsers({ token, type }) {
     return (dispatch) => {
+        type = (type === 'superAdmin') ? 'usersForSuperAdmin' : 'usersForFund';
         return axios({
             method  : Network.GET,
-            url     : `${Network.DOMAIN}/usersForFund`,
+            url     : `${Network.DOMAIN}/${type}`,
             headers : {
                 'x-auth-token': token
             }

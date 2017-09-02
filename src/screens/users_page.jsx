@@ -4,7 +4,7 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import SearchInput                          from 'react-search-input';
-import Select                               from 'components/select_box';
+import Select                               from 'react-select';
 import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
@@ -40,7 +40,7 @@ class UsersPage extends React.Component {
         if (jwt) {
             // const re = /@((?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))/
             // const emailDomain = re.exec(jwt.email);
-            this.props.getUsers({ token: jwt.token });
+            this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
 
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
@@ -135,12 +135,13 @@ class UsersPage extends React.Component {
                             { label: 'Yes', value: true }
                         ];
 
-                        value = <div><Select
+                        value = <Select
                             name="auto-approved-orders-select"
                             value={autoApprovedOrders}
                             options={options}
-                            onChange={(autoApprovedOrders) => this.handleAutoApprove({ user, autoApprovedOrders })}
-                        /></div>;
+                            onChange={(value) => this.handleAutoApprove({ user, autoApprovedOrders: value })}
+                            simpleValue
+                        />;
 
                     } else if (key === 'status') {
                         value = (user['type'] === 'pending') ? 'Pending' : 'Approved';
