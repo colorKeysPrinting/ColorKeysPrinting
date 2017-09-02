@@ -341,9 +341,9 @@ class ProcessOrderPage extends React.Component {
                 </div>
             } else {
                 orderPageData = <div>
-                    <h1>Order Processed</h1>
+                    <h2>Order Processed</h2>
                     <h4>Your order has been processed.</h4>
-                    <Link to={`/`} className="btn blue" >Done</Link>
+                    <h4>You can now close this tab</h4>
                 </div>;
             }
         }
