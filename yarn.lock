@@ -4663,7 +4663,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.0.0, prop-types@^15.5.0, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8:
+prop-types@^15.0.0, prop-types@^15.5.0, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.5.x:
   version "15.5.10"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
   dependencies:
@@ -4788,6 +4788,12 @@ react-dom@^15.5.4:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
     prop-types "^15.5.10"
+
+react-iframe@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/react-iframe/-/react-iframe-1.0.7.tgz#c20fef7ca30e44e1f54922b9f6357c1c49f1d8e9"
+  dependencies:
+    prop-types "^15.5.x"
 
 react-redux@^5.0.4:
   version "5.0.6"
