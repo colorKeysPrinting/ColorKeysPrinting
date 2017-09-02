@@ -261,6 +261,7 @@ class ProcessOrderPage extends React.Component {
                         const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
                         return <ProductTable
                             key={`product${productIndex}`}
+                            type="processOrder"
                             productIndex={productIndex}
                             product={orderDetail.product}
                             replacement={replacement}
@@ -279,6 +280,7 @@ class ProcessOrderPage extends React.Component {
                         const replacement = (orderDetail.replacementModelNumber) ? orderDetail.replacementModelNumber : false;
                         return <PartTable
                             key={`part${productIndex}`}
+                            type="processOrder"
                             productIndex={productIndex}
                             part={orderDetail.part}
                             replacement={replacement}

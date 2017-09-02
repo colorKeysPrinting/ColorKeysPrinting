@@ -21,7 +21,7 @@ export default function ProductTable(props) {
 
     const productImageTable = <MyTable
         type="productDetailsImage"
-        headers={{productImage: 'Product'}}
+        headers={(props.productIndex === 0) ? {productImage: 'Product'} : null}
         data={imageData}
     />;
 
@@ -32,7 +32,7 @@ export default function ProductTable(props) {
         price: 'Cost'
     };
 
-    const productDetailRows = ['product', 'outOfStock', 'install', 'remove', 'disconnect'];
+    const productDetailRows = (props.type === 'processOrder') ? ['product', 'outOfStock', 'install', 'remove', 'disconnect'] : ['product', 'outOfStock', 'install', 'remove'];
 
     const productDetails = _.map(productDetailRows, (row) => {
         let cols = {};
@@ -44,8 +44,19 @@ export default function ProductTable(props) {
                     value = (!props.replacement) ? product.applianceDescription : null;
 
                 } else if (row === 'outOfStock') {
-                    value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                    if (props.type === 'processOrder') {
+                        value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
 
+                    } else if (props.type === 'orderDetails') {
+                        value = <div className="no-limit">
+                            <div className="table-cell-details">{ `Model Number ${product.manufacturerModelNumber}` }</div>
+                            <div className="table-cell-details">{ `Color: ${props.color}` }</div>
+                            <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
+                            <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
+                            <div className="table-cell-details">{ `Height: ${product.applianceHeight}` }</div>
+                            <div className="table-cell-details">{ `Depth: ${product.applianceDepth}` }</div>
+                        </div>;
+                    }
                 } else if (row === 'install') {
                     const description = (!props.replacement) ? `Install Description: ${ product.applianceInstallDescription }` : null;
                     value = (props.outOfStock !== props.productIndex) ? description : <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
@@ -66,16 +77,20 @@ export default function ProductTable(props) {
 
             case 'code':
                 if (row === 'product') {
-                    value = (!props.replacement) ? `#${ product.sibiModelNumber }` : `#${ props.replacement }`;
+                    if (props.type === 'processOrder') {
+                        value = (!props.replacement) ? `#${ product.sibiModelNumber }` : `#${ props.replacement }`;
+                    } else if (props.type === 'orderDetails') {
+                        value = props.address;
+                    }
 
                 } else if (row === 'outOfStock') {
-                    value = ''
+                    value = null;
 
                 } else if (row === 'install') {
-                    value = (!props.replacement) ? `#${ product.applianceInstallCode }` : null;
+                    value = (!props.replacement && props.type === 'processOrder') ? `#${ product.applianceInstallCode }` : null;
 
                 } else if (row === 'remove') {
-                    value = (!props.replacement) ? `#${ product.applianceRemovalCode }` : null;
+                    value = (!props.replacement && props.type === 'processOrder') ? `#${ product.applianceRemovalCode }` : null;
 
                 } else if (row === 'disconnect') {
                     value = (!props.replacement) ? `#${ '*** missing ***' }` : null;
@@ -85,7 +100,11 @@ export default function ProductTable(props) {
                 break;
 
             case 'qty':
-                value = (row === 'product' && props.outOfStock !== props.productIndex && !props.replacement) ? props.qty : null;
+                if (props.type === 'processOrder') {
+                    value = (row === 'product' && props.outOfStock !== props.productIndex && !props.replacement) ? props.qty : null;
+                } else if (props.type === 'orderDetails') {
+                    value = (row === 'product') ? props.qty : null;
+                }
                 break;
 
             case 'price':
@@ -93,7 +112,7 @@ export default function ProductTable(props) {
                     value = props.price;
 
                 } else if (row === 'outOfStock') {
-                    value = '';
+                    value = null;
 
                 } else if (row === 'install') {
                     value = product.applianceInstallPrice;
@@ -115,7 +134,7 @@ export default function ProductTable(props) {
 
     const productDetailsTable = <MyTable
         type="productDetails"
-        headers={productDetailHeaders}
+        headers={(props.productIndex === 0) ? productDetailHeaders : null}
         data={productDetails}
     />;
 
