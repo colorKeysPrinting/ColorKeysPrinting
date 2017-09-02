@@ -179,7 +179,36 @@ class UsersPage extends React.Component {
                 data = data[0].concat(data[1]);
 
             } else {
-                data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+                if(this.state.sortby.column !== 'autoApprovedOrders') {
+                    data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+                } else {
+                    // convert to sort
+                    data = _.map(data, (item, index) => {
+                        item.autoApprovedOrders = (item.autoApprovedOrders.props.value) ? 'Yes' : 'No';
+                        return item;
+                    });
+
+                    // sort
+                    data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+
+                    // convert back
+                    data = _.map(data, (item) => {
+                        const options = [
+                            { label: 'No', value: false },
+                            { label: 'Yes', value: true }
+                        ];
+
+                        const autoApprovedOrders = (item.autoApprovedOrders === 'Yes') ? true : false;
+                        item.autoApprovedOrders = <Select
+                            name="auto-approved-orders-select"
+                            value={autoApprovedOrders}
+                            options={options}
+                            onChange={(value) => this.handleAutoApprove({ user: item.id, autoApprovedOrders: value })}
+                            simpleValue
+                        />;
+                        return item;
+                    });
+                }
             }
         }
 
