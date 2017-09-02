@@ -42,7 +42,7 @@ export default function ProductTable(props) {
 
                     } else if (props.type === 'orderDetails') {
                         value = <div className="no-limit">
-                            <div className="table-cell-details">{ `Model Number ${product.manufacturerModelNumber}` }</div>
+                            <div className="table-cell-details">{ `Model Number ${product.sibiModelNumber}` }</div>
                             <div className="table-cell-details">{ `Color: ${props.color}` }</div>
                             <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
                             <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
