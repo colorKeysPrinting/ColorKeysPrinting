@@ -21,7 +21,6 @@ class EditProduct extends React.Component {
             id: '',
             // ***************** the following are required *****************
             name: '',
-            manufacturerModelNumber: '',
             sibiModelNumber: '',
             productCategoryId: this.props.productCategoryId,
             productSubcategoryId: categories[0].id,
@@ -34,7 +33,7 @@ class EditProduct extends React.Component {
             faq: [],
             videos: [],
             applianceManufacturerName: '',
-            applianceOrderDisplayNumber: this.props.location.state.applianceOrderDisplayNumber + 1,
+            sortIndex: this.props.location.state.sortIndex + 2,
             applianceType: '',
             applianceSize: '',
             applianceDescription: '',
@@ -121,8 +120,8 @@ class EditProduct extends React.Component {
         if (type === 'productSubcategoryId') {
             const products = this.props.products.toJS();
             const categoryName = _.find(this.props.productCategories.toJS(), ['id', value]).name;
-            let applianceOrderDisplayNumber = _.size(products[categoryName]);
-            this.setState({ applianceOrderDisplayNumber });
+            let sortIndex = _.size(products[categoryName]);
+            this.setState({ sortIndex });
         }
     }
 
@@ -263,7 +262,6 @@ class EditProduct extends React.Component {
         const product = {
             // ***************** the following are required *****************
             name: this.state.name,
-            manufacturerModelNumber: this.state.manufacturerModelNumber,
             sibiModelNumber: this.state.sibiModelNumber,
             productCategoryId: this.state.productCategoryId,
             productSubcategoryId: category.id,
@@ -276,7 +274,7 @@ class EditProduct extends React.Component {
             faq: this.state.faq,
             videos: this.state.videos,
             applianceManufacturerName: this.state.applianceManufacturerName,
-            applianceOrderDisplayNumber: this.state.applianceOrderDisplayNumber,
+            sortIndex: this.state.sortIndex,
             applianceType: category.name,
             applianceSize: this.state.applianceSize,
             applianceDescription: this.state.applianceDescription,
@@ -440,7 +438,7 @@ class EditProduct extends React.Component {
 
                                 <div>
                                     <input name="product-manuf-name" type="text" placeholder="Manufacturer Name (e.g. GE)" value={this.state.applianceManufacturerName} onChange={(e) => this.update({ type: 'applianceManufacturerName', value: e.target.value})}  />
-                                    <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.applianceOrderDisplayNumber + 1} onChange={(e) => this.update({ type: 'applianceOrderDisplayNumber', value: e.target.value})} />
+                                    <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.sortIndex} onChange={(e) => this.update({ type: 'sortIndex', value: e.target.value})} />
                                 </div>
 
                                 <div>
@@ -450,7 +448,6 @@ class EditProduct extends React.Component {
                                         options={fuelTypeOptions}
                                         onChange={(value) => this.update({ type: 'applianceFuelType', value })}
                                     />
-                                    <input name="product-manuf-model-num" type="text" placeholder="Manuf. Model #" value={this.state.manufacturerModelNumber} onChange={(e) => this.update({ type: 'manufacturerModelNumber', value: e.target.value})} required />
                                 </div>
 
                                 <div>
