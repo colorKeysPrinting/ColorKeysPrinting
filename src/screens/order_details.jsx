@@ -247,7 +247,9 @@ class OrderDetails extends React.Component {
                         data={orderData}
                     />
                     { tenantInfoSection }
+                <div className="product-table-wrapper">
                     { productData }
+                </div>
                     { orderTotalSection }
                 </div>;
             } else {
@@ -263,7 +265,7 @@ class OrderDetails extends React.Component {
         }
 
         return (
-            <div id="orders-page">
+            <div id="order-details-page">
                 { pageData }
             </div>
         );

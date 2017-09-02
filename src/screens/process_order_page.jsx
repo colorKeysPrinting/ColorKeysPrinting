@@ -154,7 +154,7 @@ class ProcessOrderPage extends React.Component {
             if (!order.processedAt) {
                 const user = order.createdByUser;
 
-                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hotshot Install Date' : 'Install Date';
+                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'HotShot Install Date' : 'Install Date';
                 userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'HotShot Code' : '';
 
                 const orderProcessHeading = {
@@ -317,7 +317,7 @@ class ProcessOrderPage extends React.Component {
                     <div className="cost-row">
                         <h5>Sub Total: <span>${ order.totalCost }</span></h5>
                         <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
-                        <h5>Total: <span>${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</span></h5>
+                        <h5>Total: <span>${ (parseFloat(order.totalCost) + parseFloat(order.salesTax)).toFixed(2) }</span></h5>
                     </div>
                 </div>;
 

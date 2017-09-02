@@ -51,6 +51,8 @@ export default function ProductTable(props) {
                         </div>;
                     }
                 } else if (row === 'install') {
+                    // const wrapper = <div className="install-instructions"></div>
+                    // const bold = <div><div className="bold" > Install Description</div> <div>{product.applianceInstallDescription}</div></div>
                     const description = (!props.replacement) ? `Install Description: ${ product.applianceInstallDescription }` : null;
                     value = (props.outOfStock !== props.productIndex) ? description : <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
                         <div className="input-container">
