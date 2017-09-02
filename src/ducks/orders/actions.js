@@ -7,6 +7,7 @@ import Network          from 'libs/constants/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
+    CONFIGURE_ORDER_PRODUCT : 'sibi_ge_admin/products/CONFIGURE_ORDER_PRODUCT',
     GET_ORDER_BY_ID_SUCCESS : 'sibi_ge_admin/products/GET_ORDER_BY_ID_SUCCESS',
     GET_ORDERS_SUCCESS : 'sibi_ge_admin/products/GET_ORDERS_SUCCESS',
     APPROVE_ORDER_SUCCESS : 'sibi_ge_admin/products/APPROVE_ORDER_SUCCESS',
@@ -21,6 +22,12 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             LOCAL ACTIONS
 // /////////////////////////////////////
+export function configureOrderProduct({ order }) {
+    return {
+        type: ActionTypes.CONFIGURE_ORDER_PRODUCT,
+        order
+    }
+}
 
 // /////////////////////////////////////
 //             ASYNC CALLS

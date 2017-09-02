@@ -10,6 +10,7 @@ import { ActionTypes }          from './actions';
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
     order: '',
+    orderProducts: [],
     processSuccess: false,
     orders: []
 });
@@ -18,6 +19,26 @@ export default (state = initialState, action) => {
     let orders, index;
 
     switch (action.type) {
+    case ActionTypes.CONFIGURE_ORDER_PRODUCT:
+        console.log('configure order products', action.data);
+        const order = action.order;
+
+        if (!order.processedAt) {
+            const productsAndDestinations = [];
+            _.each(order.productsAndDestinations, (product) => {
+                productsAndDestinations.push(product);
+
+                _.each(product.includedParts, (part) => {
+                    productsAndDestinations.push({...part, productOrderId: product.productOrderId});
+                });
+            });
+
+            const orderProducts = productsAndDestinations.concat(order.partsAndDestinations);
+            state = state.set('orderProducts', Immutable.fromJS(orderProducts));
+        }
+
+        break;
+
     case ActionTypes.GET_ORDER_BY_ID_SUCCESS:
         console.log('receiving order by ID', action.data);
         state = state.set('order', Immutable.fromJS(action.data));

@@ -8,7 +8,7 @@ import assets                                               from 'libs/assets';
 import Iframe                                               from 'react-iframe';
 
 import { logout }                                           from 'ducks/active_user/actions';
-import { getOrderById, approveOrder, getProducts }          from 'ducks/orders/actions';
+import { configureOrderProduct, getOrderById, approveOrder }          from 'ducks/orders/actions';
 import { setActiveTab }                                     from 'ducks/header/actions';
 
 import MyTable                                              from 'components/my_table';
@@ -19,9 +19,8 @@ class OrderDetails extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { editOrder: false };
+        this.state = { editOrder: false, orderProducts: {} };
 
-        this.productDataLoader = this.productDataLoader.bind(this);
         this.editOrder = this.editOrder.bind(this);
         this.handleAction = this.handleAction.bind(this);
     }
@@ -39,26 +38,25 @@ class OrderDetails extends React.Component {
         this.props.setActiveTab('orders');
     }
 
-    productDataLoader({ order }) {
-        if (!order.processedAt) {
-            const productsAndDestinations = [];
-            _.each(order.productsAndDestinations, (product) => {
-                productsAndDestinations.push(product);
-
-                _.each(product.includedParts, (part) => {
-                    productsAndDestinations.push({...part, productOrderId: product.productOrderId});
-                });
-            });
-
-            return productsAndDestinations.concat(order.partsAndDestinations);
+    componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.order, this.props.order)) {
+            this.props.configureOrderProduct({ order: nextProps.order.toJS() });
         }
+
+        if (!_.isEqual(nextProps.orderProducts, this.props.orderProducts)) {
+            this.setState({ orderProducts: nextProps.orderProducts });
+        }
+    }
+
+    componentWillUnmount() {
+        this.setState({ orderProducts: {} });
     }
 
     editOrder({ orderId }) {
         this.setState({ editOrder: orderId });
     }
 
-    handleAction({orderId}) {
+    handleAction({ orderId }) {
         console.log('user action:', orderId);
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
@@ -69,7 +67,6 @@ class OrderDetails extends React.Component {
     render() {
         let pageData, productsAndParts, productData = {};
 
-        // show loader
         const productHeaders = {
             productDescription: '',
             address: 'Shipped to',
@@ -87,13 +84,46 @@ class OrderDetails extends React.Component {
             createdBy: 'Ordered By'
         };
 
-        if (this.props.order.size > 0) {
+        if (this.props.order.size > 0 &&
+            this.state.orderProducts.size > 0) {
             const order = this.props.order.toJS();
             const user = order.orderUser;
 
             if (!this.state.editOrder) {
                 const orderId = order.id;
                 const orderStatus = order.orderStatus;
+
+                // *************** product section ***************
+                productData = _.map(this.state.orderProducts.toJS(), (orderDetail, productIndex) => {
+                    if (orderDetail.product) {
+                        const address = <div className="no-limit">
+                            <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
+                            <div>{`${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`}</div>
+                        </div>;
+
+                        return <ProductTable
+                            key={`product${productIndex}`}
+                            type="orderDetails"
+                            productIndex={productIndex}
+                            productHeaders={productHeaders}
+                            product={orderDetail.product}
+                            image={orderDetail.selectedColorInfo.imageUrl}
+                            color={orderDetail.selectedColorInfo.color}
+                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
+                            address={address}
+                            price={orderDetail.ProductPrice.price}
+                        />;
+                    } else if (orderDetail.part) {
+                        return <PartTable
+                            key={`part${productIndex}`}
+                            type="orderDetails"
+                            productIndex={productIndex}
+                            part={orderDetail.part}
+                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
+                            price={orderDetail.PartPrice.price}
+                        />;
+                    }
+                });
 
                 // *************** order & tenant section ***************
                 // **** order section
@@ -144,7 +174,7 @@ class OrderDetails extends React.Component {
                     { buttonSection }
                 </div>;
 
-                // **** order section
+                // **** tenant section
                 let tenantInfoTitle;
                 let tenantInfoDetails;
 
@@ -186,39 +216,6 @@ class OrderDetails extends React.Component {
                     </table>
                 </div>;
 
-                // *************** product section ***************
-                productData = _.map(this.productDataLoader({ order }), (orderDetail, productIndex) => {
-                    if (orderDetail.product) {
-                        const address = <div className="no-limit">
-                            <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
-                            <div>{`${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`}</div>
-                        </div>;
-
-                        return <ProductTable
-                            key={`product${productIndex}`}
-                            type="orderDetails"
-                            productIndex={productIndex}
-                            productHeaders={productHeaders}
-                            product={orderDetail.product}
-                            image={orderDetail.selectedColorInfo.imageUrl}
-                            color={orderDetail.selectedColorInfo.color}
-                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
-                            address={address}
-                            price={orderDetail.ProductPrice.price}
-                        />;
-                    } else if (orderDetail.part) {
-                        return <PartTable
-                            key={`part${productIndex}`}
-                            type="orderDetails"
-                            productIndex={productIndex}
-                            part={orderDetail.part}
-                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
-                            price={orderDetail.PartPrice.price}
-                        />;
-                    }
-                });
-                // disable loader
-
                 // *************** order totals section ***************
                 const orderTotalSection = <div className="cost-section">
                     <h5 className="cost-header">Order Summary </h5>
@@ -252,7 +249,6 @@ class OrderDetails extends React.Component {
                         width={width}
                         height={height}
                         position="relative"
-                        allowFullScreen
                     />
                 </div>;
             }
@@ -267,13 +263,15 @@ class OrderDetails extends React.Component {
 }
 
 const select = (state) => ({
-    order           : state.orders.get('order')
+    order           : state.orders.get('order'),
+    orderProducts   : state.orders.get('orderProducts')
 });
 
 const actions = {
     logout,
-    approveOrder,
+    configureOrderProduct,
     getOrderById,
+    approveOrder,
     setActiveTab
 }
 
