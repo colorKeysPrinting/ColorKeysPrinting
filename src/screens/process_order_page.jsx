@@ -166,7 +166,7 @@ class ProcessOrderPage extends React.Component {
                 //PAGE HEADER
                 const detailsHeaderSection = <div className="page-header">
                     <div className="order-info">
-                        <h2>Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
+                        <h2>GE Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
                         <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
                         <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
                     </div>

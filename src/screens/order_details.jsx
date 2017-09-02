@@ -82,7 +82,6 @@ class OrderDetails extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         const productHeaders = {
-            productImage: 'Product',
             productDescription: '',
             address: 'Shipped to',
             qty: 'Qty',
@@ -247,9 +246,9 @@ class OrderDetails extends React.Component {
                         data={orderData}
                     />
                     { tenantInfoSection }
-                <div className="product-table-wrapper">
-                    { productData }
-                </div>
+                    <div className="product-table-wrapper">
+                        { productData }
+                    </div>
                     { orderTotalSection }
                 </div>;
             } else {
