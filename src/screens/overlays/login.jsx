@@ -42,14 +42,14 @@ class LoginOverlay extends React.Component {
         } else if (type === 'reset') {
             this.props.passwordReset({ email: this.state.email });
         }
-        this.props.history.push('/');
+        this.setState({ password: '' });
     }
 
     render() {
         let close, inputs, actionSection;
 
         if (this.state.type === 'login') {
-            close = <div onClick={this.close} className="icon-close">X</div>;
+            close = <div onClick={this.close} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>;
             inputs = (<div>
                 <input type="email"     placeholder="Email"     value={this.state.email}    onChange={(e) => { this.update('email', e.target.value) }}     style={{ width: '435px' }} required />
                 <input type="password"  placeholder="Password"  value={this.state.password} onChange={(e) => { this.update('password', e.target.value) }}  style={{ width: '435px' }} required />
@@ -65,7 +65,7 @@ class LoginOverlay extends React.Component {
             </div>);
 
         } else if (this.state.type === 'reset') {
-            close = <div onClick={() => this.changeOverlay('login')} className="icon-close">X</div>;
+            close = <div onClick={() => this.changeOverlay('login')} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>;
             inputs = (<div>
                 <p>Enter your email to reset your password.</p>
                 <input type="email" placeholder="Email" value={this.state.email} onChange={(e) => { this.update('email', e.target.value) }} style={{ width: '435px' }} required />

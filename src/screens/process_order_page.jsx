@@ -154,7 +154,7 @@ class ProcessOrderPage extends React.Component {
             if (!order.processedAt) {
                 const user = order.createdByUser;
 
-                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hotshot Install Date' : 'Install Date';
+                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'HotShot Install Date' : 'Install Date';
                 userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'HotShot Code' : '';
 
                 const orderProcessHeading = {
@@ -263,16 +263,25 @@ class ProcessOrderPage extends React.Component {
                 const officeData = {officeCols};
 
                 // ***************** PRODUCTS TABLE DATA *****************
+                const productHeaders = {
+                    productDescription: '',
+                    code: 'Model # or Code #',
+                    qty: 'Qty',
+                    price: 'Cost'
+                };
+
                 const productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
                     if (orderDetail.product) {
                         const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
                         return <ProductTable
                             key={`product${productIndex}`}
+                            type="processOrder"
                             productIndex={productIndex}
+                            productHeaders={productHeaders}
                             product={orderDetail.product}
                             replacement={replacement}
                             image={orderDetail.selectedColorInfo.imageUrl}
-                            qty={orderDetail.qty}
+                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
                             price={orderDetail.ProductPrice.price}
 
                             outOfStock={this.state.outOfStock}
@@ -286,10 +295,11 @@ class ProcessOrderPage extends React.Component {
                         const replacement = (orderDetail.replacementModelNumber) ? orderDetail.replacementModelNumber : false;
                         return <PartTable
                             key={`part${productIndex}`}
+                            type="processOrder"
                             productIndex={productIndex}
                             part={orderDetail.part}
                             replacement={replacement}
-                            qty={orderDetail.qty}
+                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
                             price={orderDetail.PartPrice.price}
 
                             outOfStock={this.state.outOfStock}
@@ -307,7 +317,7 @@ class ProcessOrderPage extends React.Component {
                     <div className="cost-row">
                         <h5>Sub Total: <span>${ order.totalCost }</span></h5>
                         <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
-                        <h5>Total: <span>${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</span></h5>
+                        <h5>Total: <span>${ (parseFloat(order.totalCost) + parseFloat(order.salesTax)).toFixed(2) }</span></h5>
                     </div>
                 </div>;
 
@@ -340,7 +350,6 @@ class ProcessOrderPage extends React.Component {
                 orderPageData = <div>
                     <h1>Order Processed</h1>
                     <h4>Your order has been processed.</h4>
-                    <Link to={`/`} className="btn blue" >Done</Link>
                 </div>;
             }
         }

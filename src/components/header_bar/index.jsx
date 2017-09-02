@@ -39,7 +39,7 @@ class HeaderBar extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
-            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/`;
+            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/login`;
             this.props.history.push(path);
 
             if (nextProps.activeUser.size > 0) {

@@ -25,14 +25,11 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getOrderById({ token, id }) {
+export function getOrderById({ id }) {
     return (dispatch) => {
         return axios({
             method  : Network.GET,
             url     : `${Network.DOMAIN}/order/${id}`,
-            headers : {
-                'x-auth-token': token
-            }
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_ORDER_BY_ID_SUCCESS , ...payload });
