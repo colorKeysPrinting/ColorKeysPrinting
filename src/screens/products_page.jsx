@@ -18,11 +18,6 @@ class ProductsPage extends React.Component {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (activeUser) {
-            const path = (activeUser.size > 0) ? `/products` : `/login`;
-            this.props.history.push(path);
-        }
-
         if (jwt) {
             this.props.getProductCategories({ token: jwt.token });
         } else {

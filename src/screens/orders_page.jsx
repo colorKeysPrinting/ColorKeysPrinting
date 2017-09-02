@@ -33,11 +33,6 @@ class OrdersPage extends React.Component {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (activeUser) {
-            const path = (activeUser.size > 0) ? `/orders` : `/login`;
-            this.props.history.push(path);
-        }
-
         if (jwt && jwt.token !== '') {
             this.props.getFundProperties({ token: jwt.token });
             this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
