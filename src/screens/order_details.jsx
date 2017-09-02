@@ -243,12 +243,18 @@ class OrderDetails extends React.Component {
                     { orderTotalSection }
                 </div>;
             } else {
-                pageData = <Iframe
-                    url={`https://sibi-ge-dev.netlify.com/edit/${this.state.editOrder}`}
-                    width="100%"
-                    height="100%"
-                    allowFullScreen
-                />;
+                const height = (window.innerHeight - 69);
+                const width = window.innerWidth;
+
+                pageData = <div style={{ position: 'absolute', top: '69px', height, width }}>
+                    <Iframe
+                        url={`https://sibi-ge-dev.netlify.com/edit/${this.state.editOrder}`}
+                        width={width}
+                        height={height}
+                        position="relative"
+                        allowFullScreen
+                    />
+                </div>;
             }
         }
 

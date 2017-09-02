@@ -25,13 +25,19 @@ class NewOrderPage extends React.Component {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
+        const height = (window.innerHeight - 69);
+        const width = window.innerWidth;
+
         return (
-            <Iframe
-                url={`https://sibi-ge-dev.netlify.com/new?authToken=${jwt.token}`}
-                width="100%"
-                height="100%"
-                allowFullScreen
-            />
+            <div style={{ position: 'absolute', top: '69px', height, width }}>
+                <Iframe
+                    url={`https://sibi-ge-dev.netlify.com/new?authToken=${jwt.token}`}
+                    width={width}
+                    height={height}
+                    position="relative"
+                    allowFullScreen
+                />
+            </div>
         );
     }
 }
