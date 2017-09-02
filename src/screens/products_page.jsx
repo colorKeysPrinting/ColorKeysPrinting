@@ -62,7 +62,7 @@ class ProductsPage extends React.Component {
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
 
-            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, applianceOrderDisplayNumber: _.size(products[productCategories[0]]) } }} className="btn blue" >Add</Link>;
+            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, sortIndex: _.size(products[productCategories[0]]) } }} className="btn blue" >Add</Link>;
 
             tabs = _.map(productCategories, (type) => {
                 return (
@@ -88,8 +88,8 @@ class ProductsPage extends React.Component {
                                 value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} className="product-action">Edit</Link>;
                             }
                         } else if (key === 'featured') {
-                            if (product.applianceOrderDisplayNumber <= 5) {
-                                value = <div className="featured-column">featured {product.applianceOrderDisplayNumber + 1}</div>;
+                            if (product.sortIndex <= 5) {
+                                value = <div className="featured-column">featured {product.sortIndex + 1}</div>;
                             }
                         }
 
