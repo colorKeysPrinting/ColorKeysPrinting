@@ -4,7 +4,6 @@ import _                        from 'lodash';
 import assets                   from 'libs/assets';
 
 export default class MyTable extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -21,8 +20,12 @@ export default class MyTable extends React.Component {
             headers = _.map(this.props.headers, (header, id) => {
                 if (id !== 'id') {
                     if (id !== 'action') {
-                        if (id === 'createdAt') {
-                            return (<td className="table-header" key={`table-header-${id}`} >{ header }<img className="sort-arrow" src={assets('./images/icon-sort-down.svg')} alt="sortArrow" /></td>);
+                        if (this.props.sortby) {
+                            console.log(this.props.sortby.isAsc);
+                            const image = (this.props.sortby.isAsc !== 'asc') ? <img className="sort-arrow" src={assets('./images/icons-sort-up.png')} alt="sortArrow" /> : <img className="sort-arrow" src={assets('./images/icons-sort-down.png')} alt="sortArrow" />;
+                            const arrow = (id === this.props.sortby.column) ? image : null;
+                            return (<td className="table-header" key={`table-header-${id}`} >{ header }{ arrow }</td>);
+
                         } else {
                             return (<td className="table-header" key={`table-header-${id}`} >{ header }</td>);
                         }

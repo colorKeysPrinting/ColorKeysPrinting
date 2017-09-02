@@ -13,7 +13,7 @@ export default class Tabs extends React.Component {
             orders    : <Link to={`/orders`}    className={(this.props.activeTab === 'orders')    ? 'active' : 'tabs'} >Orders { pendingOrders }</Link>,
             products  : <Link to={`/products`}  className={(this.props.activeTab === 'products')  ? 'active' : 'tabs'} >Products</Link>,
             users     : <Link to={`/users`}     className={(this.props.activeTab === 'users')     ? 'active' : 'tabs'} >Users { pendingUsers }</Link>,
-            // newOrder  : <Link to={`/new_order`} className={(this.props.activeTab === 'newOrder')  ? 'active' : 'tabs'} >New Order</Link>
+            newOrder  : <Link to={`/new_order`} className={(this.props.activeTab === 'newOrder')  ? 'active' : 'tabs'} >New Order</Link>
         };
 
         let activeTabs;
