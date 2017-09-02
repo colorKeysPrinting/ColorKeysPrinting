@@ -78,7 +78,7 @@ class UsersPage extends React.Component {
 
     orderBy({ column }) {
         this.setState((prevState) => {
-            const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc !== 'asc') ? 'asc' : 'desc';
+            const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc === 'asc') ? 'desc' : 'asc';
             const sortby = { column, isAsc };
 
             return { sortby };
@@ -225,6 +225,7 @@ class UsersPage extends React.Component {
                         type="users"
                         headers={headers}
                         data={data}
+                        sortby={this.state.sortby}
                         handleAction={this.handleAction}
                     />
                 </div>

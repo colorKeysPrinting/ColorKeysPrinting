@@ -166,7 +166,7 @@ class ProcessOrderPage extends React.Component {
                 //PAGE HEADER
                 const detailsHeaderSection = <div className="page-header">
                     <div className="order-info">
-                        <h2>Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
+                        <h2>GE Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
                         <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
                         <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
                     </div>
@@ -348,8 +348,9 @@ class ProcessOrderPage extends React.Component {
                 </div>
             } else {
                 orderPageData = <div>
-                    <h1>Order Processed</h1>
+                    <h2>Order Processed</h2>
                     <h4>Your order has been processed.</h4>
+                    <h4>You can now close this tab</h4>
                 </div>;
             }
         }

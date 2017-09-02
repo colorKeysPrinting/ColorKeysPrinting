@@ -20,7 +20,7 @@ class OrdersPage extends React.Component {
 
         this.state = {
             searchTerm: '',
-            sortby: {column: '', isAsc: false }
+            sortby: { column: '', isAsc: false }
         };
 
         this.update = this.update.bind(this);
@@ -62,7 +62,7 @@ class OrdersPage extends React.Component {
 
     orderBy({ column }) {
         this.setState((prevState) => {
-            const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc !== 'asc') ? 'asc' : 'desc';
+            const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc === 'asc') ? 'desc' : 'asc';
             const sortby = { column, isAsc };
 
             return { sortby };
@@ -204,9 +204,10 @@ class OrdersPage extends React.Component {
                     </div>
                     <MyTable
                         type="orders"
-                        headers={headers}
                         dataClassName="table-row-clickable"
+                        headers={headers}
                         data={data}
+                        sortby={this.state.sortby}
                         handleAction={this.handleAction}
                         handleItem={this.handleItem}
                     />
