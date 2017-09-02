@@ -39,8 +39,8 @@ class OrdersPage extends React.Component {
         }
 
         if (jwt && jwt.token !== '') {
-            this.props.getUsers({ token: jwt.token });
             this.props.getFundProperties({ token: jwt.token });
+            this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
             this.props.getOrders({ token: jwt.token, type: activeUser.toJS().type });
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');

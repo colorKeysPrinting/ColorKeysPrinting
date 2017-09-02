@@ -20,6 +20,7 @@ class HeaderBar extends React.Component {
         super(props);
 
         this.state = { isSearch: false, isOpen: false };
+
         this.search = this.search.bind(this);
         this.showProfile = this.showProfile.bind(this);
     }
@@ -43,14 +44,13 @@ class HeaderBar extends React.Component {
             this.props.history.push(path);
 
             if (nextProps.activeUser.size > 0) {
-                const activeUser = nextProps.activeUser.toJS();
                 const { cookies } = this.props;
                 const jwt = cookies.get('sibi-admin-jwt');
 
                 if (jwt && jwt.token !== '') {
                     this.props.getCurrentUser({ token: jwt.token});
-                    this.props.getUsers({ token: jwt.token });
-                    this.props.getOrders({ token: jwt.token, type: activeUser.type });
+                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
 
                 } else {
                     console.log('TODO: trigger logout function *** no JWT ***');
@@ -76,7 +76,7 @@ class HeaderBar extends React.Component {
     }
 
     render() {
-        let loginSection, profileOverlay, pendingUsers = 0, pendingOrders = 0;
+        let loginSection, profileOverlay, pendingOrders = 0, pendingUsers = 0;
 
         const activeUser = this.props.activeUser.toJS();
 
@@ -97,19 +97,20 @@ class HeaderBar extends React.Component {
                 loginSection = <div onClick={this.showProfile}>
                     <img className="settings-icon" src={profilePic} alt="settingsButtons" width="40px" height="40px" />
                 </div>;
-
-                if (this.props.orders.size > 0 &&
-                    this.props.users.size > 0) {
-
-                    _.each(this.props.orders.toJS(), (order) => {
-                        pendingOrders += ((order.orderStatus).toLowerCase() === 'pending') ? 1 : 0;
-                    });
-
-                    _.each(this.props.users.toJS(), (user) => {
-                        pendingUsers += ((user.type).toLowerCase() === 'pending') ? 1 : 0;
-                    });
-                }
             }
+
+            if (this.props.orders.size > 0 &&
+                this.props.users.size > 0) {
+
+                _.each(this.props.orders.toJS(), (order) => {
+                    pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
+                });
+
+                _.each(this.props.users.toJS(), (user) => {
+                    pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
+                });
+            }
+
         }
 
         return (
