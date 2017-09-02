@@ -30,8 +30,13 @@ class OrdersPage extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies } = this.props;
+        const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
+
+        if (activeUser) {
+            const path = (activeUser.size > 0) ? `/orders` : `/login`;
+            this.props.history.push(path);
+        }
 
         if (jwt && jwt.token !== '') {
             this.props.getUsers({ token: jwt.token });
@@ -42,6 +47,13 @@ class OrdersPage extends React.Component {
         }
 
         this.props.setActiveTab('orders');
+    }
+
+    componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/login`;
+            this.props.history.push(path);
+        }
     }
 
     update({ type, value }) {

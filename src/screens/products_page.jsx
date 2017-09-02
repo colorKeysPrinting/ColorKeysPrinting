@@ -15,8 +15,13 @@ import MyTable                              from 'components/my_table';
 
 class ProductsPage extends React.Component {
     componentWillMount() {
-        const { cookies } = this.props;
+        const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
+
+        if (activeUser) {
+            const path = (activeUser.size > 0) ? `/products` : `/login`;
+            this.props.history.push(path);
+        }
 
         if (jwt) {
             this.props.getProductCategories({ token: jwt.token });
@@ -28,6 +33,11 @@ class ProductsPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/products` : `/login`;
+            this.props.history.push(path);
+        }
+
         if (!_.isEqual(this.props.productCategories, nextProps.productCategories)) {
             const productCategories = nextProps.productCategories.toJS();
 

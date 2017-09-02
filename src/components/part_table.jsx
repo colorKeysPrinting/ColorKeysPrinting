@@ -31,7 +31,7 @@ export default function PartTable(props) {
         price: ''
     };
 
-    const partDetailRows = ['part', 'outOfStock', 'install'];
+    const partDetailRows = (props.type === 'processOrder') ? ['part', 'outOfStock', 'install'] : ['part', 'outOfStock'];
 
     const partDetails = _.map(partDetailRows, (row) => {
         let cols = {};
@@ -43,7 +43,14 @@ export default function PartTable(props) {
                     value = (!props.replacement) ? part.description : null;
 
                 } else if (row === 'outOfStock') {
-                    value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                    if (props.type === 'processOrder') {
+                        value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+
+                    } else if (props.type === 'orderDetails') {
+                        value = <div className="no-limit">
+                            <div className="table-cell-details">{ `Part Code ${part.code}` }</div>
+                        </div>;
+                    }
 
                 } else if (row === 'install') {
                     value = (props.outOfStock === props.productIndex) ? <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
@@ -58,13 +65,17 @@ export default function PartTable(props) {
 
             case 'code':
                 const code = (!props.replacement) ? part.code : props.replacement
-                value = (row === 'part') ? `#${ code }` : null;
+                value = (row === 'part' && props.type === 'processOrder') ? `#${ code }` : null;
 
                 value = (props.outOfStock !== props.productIndex) ? value : null;
                 break;
 
             case 'qty':
-                value = (row === 'part' && props.outOfStock !== props.productIndex && !props.replacement) ? props.qty : null;
+                if (props.type === 'processOrder') {
+                    value = (row === 'part' && props.outOfStock !== props.productIndex && !props.replacement) ? props.qty : null;
+                } else if (props.type === 'orderDetails') {
+                    value = (row === 'part') ? props.qty : null;
+                }
                 break;
 
             case 'price':

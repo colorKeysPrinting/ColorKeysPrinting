@@ -256,16 +256,25 @@ class ProcessOrderPage extends React.Component {
                 const officeData = {officeCols};
 
                 // ***************** PRODUCTS TABLE DATA *****************
+                const productHeaders = {
+                    productDescription: '',
+                    code: 'Model # or Code #',
+                    qty: 'Qty',
+                    price: 'Cost'
+                };
+
                 const productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
                     if (orderDetail.product) {
                         const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
                         return <ProductTable
                             key={`product${productIndex}`}
+                            type="processOrder"
                             productIndex={productIndex}
+                            productHeaders={productHeaders}
                             product={orderDetail.product}
                             replacement={replacement}
                             image={orderDetail.selectedColorInfo.imageUrl}
-                            qty={orderDetail.qty}
+                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
                             price={orderDetail.ProductPrice.price}
 
                             outOfStock={this.state.outOfStock}
@@ -279,10 +288,11 @@ class ProcessOrderPage extends React.Component {
                         const replacement = (orderDetail.replacementModelNumber) ? orderDetail.replacementModelNumber : false;
                         return <PartTable
                             key={`part${productIndex}`}
+                            type="processOrder"
                             productIndex={productIndex}
                             part={orderDetail.part}
                             replacement={replacement}
-                            qty={orderDetail.qty}
+                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
                             price={orderDetail.PartPrice.price}
 
                             outOfStock={this.state.outOfStock}

@@ -10,8 +10,13 @@ import { setActiveTab }                     from 'ducks/header/actions';
 class NewOrderPage extends React.Component {
 
     componentWillMount() {
-        const { cookies } = this.props;
+        const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
+
+        if (activeUser) {
+            const path = (activeUser.size > 0) ? `/new_order` : `/login`;
+            this.props.history.push(path);
+        }
 
         if (jwt) {
             console.log('TODO: get new orders data');
@@ -20,6 +25,13 @@ class NewOrderPage extends React.Component {
         }
 
         this.props.setActiveTab('newOrder');
+    }
+
+    componentWillUpdate(nextProps) {
+        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+            const path = (nextProps.activeUser.size > 0) ? `/new_order` : `/login`;
+            this.props.history.push(path);
+        }
     }
 
     render() {

@@ -42,7 +42,7 @@ class LoginOverlay extends React.Component {
         } else if (type === 'reset') {
             this.props.passwordReset({ email: this.state.email });
         }
-        this.props.history.push('/');
+        this.setState({ password: '' });
     }
 
     render() {
