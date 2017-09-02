@@ -117,7 +117,7 @@ class OrderDetails extends React.Component {
                     tenantEmail: order.tenantEmail
                 }
 
-                orderHeaders['lockBoxCode'] = (order.lockBoxCode) ? order.lockBoxCode : 'Tenant';
+                orderHeaders.lockBoxCode = (order.lockBoxCode) ? 'Lock Box Code' : 'Tenant';
 
                 const cols = {};
                 _.each(orderHeaders, (value, key) => {
@@ -132,16 +132,16 @@ class OrderDetails extends React.Component {
                         value = dateformat(order.installDate, 'mm/dd/yy');
 
                     } else if (key === 'installTime') {
-                        value = order.applianceDeliveryTime ? order.applianceDeliveryTime : 'Not Specified';
+                        value = (order.applianceDeliveryTime) ? order.applianceDeliveryTime : 'Not Specified';
 
                     } else if (key === 'occupied') {
-                        value = (order['occupied'] === false) ? 'Unoccupied' : 'Occupied';
+                        value = (order.occupied === false) ? 'Unoccupied' : 'Occupied';
 
                     } else if (key === 'lockBoxCode') {
                         value = (order.lockBoxCode) ? order.lockBoxCode : `${order.tenantFirstName} ${order.tenantLastName}`;
 
                     } else if (key === 'createdBy') {
-                        value = order.createdBy ? order.createdBy : 'Ordered By';
+                        value = `${order.orderUser.firstName} ${order.orderUser.lastName}`;
                     }
 
                     cols[key] = value;
