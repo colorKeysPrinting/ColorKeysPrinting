@@ -19,8 +19,9 @@ class OrderDetails extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { productsAndParts: '', editOrder: false };
+        this.state = { editOrder: false };
 
+        this.productDataLoader = this.productDataLoader.bind(this);
         this.editOrder = this.editOrder.bind(this);
         this.handleAction = this.handleAction.bind(this);
     }
@@ -38,29 +39,19 @@ class OrderDetails extends React.Component {
         this.props.setActiveTab('orders');
     }
 
-    componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.order, this.props.order)) {
-            const order = nextProps.order.toJS();
+    productDataLoader({ order }) {
+        if (!order.processedAt) {
+            const productsAndDestinations = [];
+            _.each(order.productsAndDestinations, (product) => {
+                productsAndDestinations.push(product);
 
-            if (!order.processedAt) {
-                const productsAndDestinations = [];
-                _.each(order.productsAndDestinations, (product) => {
-                    productsAndDestinations.push(product);
-
-                    _.each(product.includedParts, (part) => {
-                        productsAndDestinations.push({...part, productOrderId: product.productOrderId});
-                    });
+                _.each(product.includedParts, (part) => {
+                    productsAndDestinations.push({...part, productOrderId: product.productOrderId});
                 });
+            });
 
-                const productsAndParts = productsAndDestinations.concat(order.partsAndDestinations);
-
-                this.setState({ productsAndParts });
-            }
+            return productsAndDestinations.concat(order.partsAndDestinations);
         }
-    }
-
-    componentWillUnmount() {
-        this.setState({ productsAndParts: '' });
     }
 
     editOrder({ orderId }) {
@@ -76,11 +67,9 @@ class OrderDetails extends React.Component {
     }
 
     render() {
-        let pageData;
+        let pageData, productsAndParts, productData = {};
 
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
-
+        // show loader
         const productHeaders = {
             productDescription: '',
             address: 'Shipped to',
@@ -105,21 +94,11 @@ class OrderDetails extends React.Component {
             if (!this.state.editOrder) {
                 const orderId = order.id;
                 const orderStatus = order.orderStatus;
-                const orderPageHeading = {
-                    address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`,
-                    PM: order.fund.pmOffices[0].name,
-                    orderNumber: order.orderNumber
-                };
 
-                const tenantInfo = {
-                    tenantName: `${order.tenantFirstName} ${order.tenantLastName}`,
-                    tenantPhoneNumber: order.tenantPhone,
-                    tenantEmail: order.tenantEmail
-                }
-
+                // *************** order & tenant section ***************
+                // **** order section
                 orderHeaders.lockBoxCode = (order.lockBoxCode) ? 'Lock Box Code' : 'Tenant';
-
-                const cols = {};
+                const orderDetailsCols = {};
                 _.each(orderHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'orderStatus') {
@@ -144,11 +123,71 @@ class OrderDetails extends React.Component {
                         value = `${order.orderUser.firstName} ${order.orderUser.lastName}`;
                     }
 
-                    cols[key] = value;
+                    orderDetailsCols[key] = value;
                 });
-                const orderData = {cols};
+                const orderData = {orderDetailsCols};
 
-                const productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
+                const orderPageHeading = {
+                    address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`,
+                    PM: order.fund.pmOffices[0].name
+                };
+                const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
+                    <div className="btn blue" onClick={() => this.editOrder({ orderId })}>Edit</div>
+                    <div className="btn blue" onClick={() => this.handleAction({ orderId })}>Approve</div>
+                </div> : null;
+
+                const detailsHeaderSection = <div className="details-header">
+                    <div className="header-property pure-u-2-3">
+                        <h2 className="property-address">{order.orderNumber}</h2>
+                        <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
+                    </div>
+                    { buttonSection }
+                </div>;
+
+                // **** order section
+                let tenantInfoTitle;
+                let tenantInfoDetails;
+
+                if (order.occupied) {
+                    tenantInfoTitle = <tr>
+                        <td><div className="table-header">Tenant Info: </div></td>
+                    </tr>;
+
+                    tenantInfoDetails = <tr>
+                        <td><div>{`${order.tenantFirstName} ${order.tenantLastName}`} ∙ {order.tenantPhone} ∙ {order.tenantEmail}</div></td>
+                    </tr>;
+
+                } else {
+                    tenantInfoTitle = <tr>
+                        <td><div className="table-header">Delivery Contact: </div></td>
+                        <td><div className="table-header">Phone Number: </div></td>
+                    </tr>;
+
+                    tenantInfoDetails = [
+                        <tr>
+                            <td><div>{user.firstName} {user.lastName}</div></td>
+                            <td><div>{user.phoneNumber}</div></td>
+                        </tr>,
+                        <tr>
+                            <td><div>{order.pmOffice.name}</div></td>
+                            <td><div>{order.pmOffice.phoneNumber}</div></td>
+                        </tr>
+                    ];
+                }
+
+                const tenantInfoSection = <div id="admin-table">
+                    <table className="table">
+                        <thead className="head">
+                            { tenantInfoTitle }
+                        </thead>
+                        <tbody>
+                            { tenantInfoDetails }
+                        </tbody>
+                    </table>
+                </div>;
+
+                // *************** product section ***************
+                productData = _.map(this.productDataLoader({ order }), (orderDetail, productIndex) => {
                     if (orderDetail.product) {
                         const address = <div className="no-limit">
                             <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
@@ -178,60 +217,9 @@ class OrderDetails extends React.Component {
                         />;
                     }
                 });
+                // disable loader
 
-                const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
-                    <div className="btn blue" onClick={() => this.editOrder({ orderId })}>Edit</div>
-                    <div className="btn blue" onClick={() => this.handleAction({ orderId })}>Approve</div>
-                </div>
-                    : <div className="button-container pure-u-1-3"></div>;
-
-                const detailsHeaderSection = <div className="details-header">
-                    <div className="header-property pure-u-2-3">
-                        <h2 className="property-address">{orderPageHeading.orderNumber}</h2>
-                        <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
-                    </div>
-                    { buttonSection }
-                </div>;
-
-                let tenantInfoTitle;
-                let tenantInfoDetails;
-                if (order.occupied) {
-                    tenantInfoTitle = <tr>
-                        <td><div className="table-header">Tenant Info: </div></td>
-                    </tr>;
-                    tenantInfoDetails = <tr>
-                        <td><div>{tenantInfo.tenantName} ∙ {tenantInfo.tenantPhoneNumber} ∙ {tenantInfo.tenantEmail}</div></td>
-                    </tr>;
-                } else {
-
-                    tenantInfoTitle = <tr>
-                        <td><div className="table-header">Delivery Contact: </div></td>
-                        <td><div className="table-header">Phone Number: </div></td>
-                    </tr>;
-
-                    tenantInfoDetails = [
-                        <tr>
-                            <td><div>{user.firstName} {user.lastName}</div></td>
-                            <td><div>{user.phoneNumber}</div></td>
-                        </tr>,
-                        <tr>
-                            <td><div>{order.pmOffice.name}</div></td>
-                            <td><div>{order.pmOffice.phoneNumber}</div></td>
-                        </tr>
-                    ];
-                }
-
-                const tenantInfoSection = <div id="admin-table">
-                    <table className="table">
-                        <thead className="head">
-                            { tenantInfoTitle }
-                        </thead>
-                        <tbody>
-                            { tenantInfoDetails }
-                        </tbody>
-                    </table>
-                </div>;
-
+                // *************** order totals section ***************
                 const orderTotalSection = <div className="cost-section">
                     <h5 className="cost-header">Order Summary </h5>
                     <div className="cost-row">
@@ -262,8 +250,6 @@ class OrderDetails extends React.Component {
                     allowFullScreen
                 />;
             }
-
-
         }
 
         return (
