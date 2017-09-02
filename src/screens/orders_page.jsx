@@ -174,6 +174,11 @@ class OrdersPage extends React.Component {
 
             // this initially sets the "Pending" orders before everything and "Approved" orders at the end
             if(this.state.searchTerm !== '') {
+                data = _.map(data, (item) => {
+                    item.totalCost = `${item.totalCost}`;
+                    return item;
+                });
+
                 data = filter(this.state.searchTerm, KEYS_TO_FILTERS, data);
             }
 
@@ -186,11 +191,6 @@ class OrdersPage extends React.Component {
             } else {
                 data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
             }
-
-            data = _.map(data, (item) => {
-                item.totalCost = `$ ${item.totalCost}`;
-                return item;
-            });
         }
 
         return (
