@@ -239,13 +239,15 @@ class OrderDetails extends React.Component {
                     data={orderData}
                 />
                 { tenantInfoSection }
-                { productData }
+                <div className="product-table-wrapper">
+                    { productData }
+                </div>
                 { orderTotalSection }
             </div>
         }
 
         return (
-            <div id="orders-page">
+            <div id="order-details-page">
                 <div className="container">
                     { pageData }
                 </div>

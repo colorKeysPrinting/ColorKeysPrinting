@@ -151,7 +151,7 @@ class ProcessOrderPage extends React.Component {
             if (!order.processedAt) {
                 const user = order.createdByUser;
 
-                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hotshot Install Date' : 'Install Date';
+                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'HotShot Install Date' : 'Install Date';
                 userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'HotShot Code' : '';
 
                 const orderProcessHeading = {
