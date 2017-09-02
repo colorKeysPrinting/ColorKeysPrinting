@@ -122,31 +122,34 @@ class ProcessOrderPage extends React.Component {
     render() {
         let orderPageData;
 
-        //TABLE HEADERS
-        const userHeaders = {
-            orderedBy: 'Ordered By',
-            phoneNumber: 'Phone Number',
-            email: 'Email',
-            hotshotDelivery: 'HotShot Delivery',
-            hotshotInstallDate: '',
-            hotshotCode: ''
-        };
-
-        const occupancyHeaders = {
-            occupancy: 'Occupancy',
-            tenantName: 'Tenant Name',
-            phoneNumber: 'Phone Number',
-            email: 'Email'
-        };
-
-        const officeHeaders = {
-            pmOffice: 'PM Office',
-            phoneNumber: 'Phone Number',
-            email: 'Email'
-        };
-
         if (this.props.order.size > 0) {
             const order = this.props.order.toJS();
+
+            //TABLE HEADERS
+            const userHeaders = {
+                orderedBy: 'Ordered By',
+                phoneNumber: 'Phone Number',
+                email: 'Email',
+                hotshotDelivery: 'HotShot Delivery',
+                hotshotInstallDate: '',
+                hotshotCode: ''
+            };
+
+            const occupancyHeaders = (order.occupied) ? {
+                occupancy: 'Occupancy',
+                tenantName: 'Tenant Name',
+                phoneNumber: 'Phone Number',
+                email: 'Email'
+            } : {
+                occupancy: 'Occupancy',
+                lockBox: 'Lock Box Code'
+            };
+
+            const officeHeaders = {
+                pmOffice: 'PM Office',
+                phoneNumber: 'Phone Number',
+                email: 'Email'
+            };
 
             if (!order.processedAt) {
                 const user = order.createdByUser;
@@ -219,10 +222,10 @@ class ProcessOrderPage extends React.Component {
                     value = order[key]
 
                     if (key === 'occupancy') {
-                        value = (!order['occupied']) ? 'Unoccupied' : 'Occupied';
+                        value = (!order.occupied) ? 'Unoccupied' : 'Occupied';
                     }
 
-                    if (order['occupied']) {
+                    if (order.occupied) {
                         if (key === 'tenantName'){
                             value = `${order.tenantFirstName} ${order.tenantLastName}`;
 
@@ -231,6 +234,10 @@ class ProcessOrderPage extends React.Component {
 
                         } else if (key === 'email') {
                             value = <div>{order.tenantEmail}</div>;
+                        }
+                    } else {
+                        if ( key === 'lockBox') {
+                            value = `${order.lockBoxCode}`;
                         }
                     }
 
