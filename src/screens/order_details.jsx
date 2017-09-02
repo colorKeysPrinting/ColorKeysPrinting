@@ -153,10 +153,11 @@ class OrderDetails extends React.Component {
                         key={`product${productIndex}`}
                         type="orderDetails"
                         productIndex={productIndex}
+                        productHeaders={productHeaders}
                         product={orderDetail.product}
                         image={orderDetail.selectedColorInfo.imageUrl}
                         color={orderDetail.selectedColorInfo.color}
-                        qty={orderDetail.qty}
+                        qty={(orderDetail.qty) ? orderDetail.qty : 1}
                         address={address}
                         price={orderDetail.ProductPrice.price}
                     />;
@@ -166,7 +167,7 @@ class OrderDetails extends React.Component {
                         type="orderDetails"
                         productIndex={productIndex}
                         part={orderDetail.part}
-                        qty={orderDetail.qty}
+                        qty={(orderDetail.qty) ? orderDetail.qty : 1}
                         price={orderDetail.PartPrice.price}
                     />;
                 }
@@ -226,9 +227,9 @@ class OrderDetails extends React.Component {
             </div>;
 
             const orderTotalSection = <div className="cost-section">
-                <div className="cost-row" ><h4>Sub Total:</h4> ${ order.totalCost }</div>
+                <div className="cost-row" ><h4>Sub Total:</h4> ${ order.subTotalCost }</div>
                 <div className="cost-row" ><h4>Sales Tax:</h4> ${ order.salesTax }</div>
-                <div className="cost-row" ><h4>Total:</h4> ${ parseFloat(order.totalCost) + parseFloat(order.salesTax) }</div>
+                <div className="cost-row" ><h4>Total:</h4> ${ order.totalCost }</div>
             </div>;
 
             pageData = <div>

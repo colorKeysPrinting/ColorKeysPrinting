@@ -25,18 +25,11 @@ export default function ProductTable(props) {
         data={imageData}
     />;
 
-    const productDetailHeaders = {
-        productDescription: '',
-        code: 'Model # or Code #',
-        qty: 'Qty',
-        price: 'Cost'
-    };
-
     const productDetailRows = (props.type === 'processOrder') ? ['product', 'outOfStock', 'install', 'remove', 'disconnect'] : ['product', 'outOfStock', 'install', 'remove'];
 
     const productDetails = _.map(productDetailRows, (row) => {
         let cols = {};
-        _.each(productDetailHeaders, (header, key) => {
+        _.each(props.productHeaders, (header, key) => {
             let value;
             switch(key) {
             case 'productDescription':
@@ -76,9 +69,11 @@ export default function ProductTable(props) {
                 break;
 
             case 'code':
+            case 'address':
                 if (row === 'product') {
                     if (props.type === 'processOrder') {
                         value = (!props.replacement) ? `#${ product.sibiModelNumber }` : `#${ props.replacement }`;
+
                     } else if (props.type === 'orderDetails') {
                         value = props.address;
                     }
@@ -134,7 +129,7 @@ export default function ProductTable(props) {
 
     const productDetailsTable = <MyTable
         type="productDetails"
-        headers={(props.productIndex === 0) ? productDetailHeaders : null}
+        headers={(props.productIndex === 0) ? props.productHeaders : null}
         data={productDetails}
     />;
 
