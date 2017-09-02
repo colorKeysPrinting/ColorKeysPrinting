@@ -233,9 +233,12 @@ class OrderDetails extends React.Component {
                 </div>;
 
                 const orderTotalSection = <div className="cost-section">
-                    <div className="cost-row" ><h4>Sub Total:</h4> ${ order.subTotalCost }</div>
-                    <div className="cost-row" ><h4>Sales Tax:</h4> ${ order.salesTax }</div>
-                    <div className="cost-row" ><h4>Total:</h4> ${ order.totalCost }</div>
+                    <h5 className="cost-header">Order Summary </h5>
+                    <div className="cost-row">
+                        <h5>Sub Total: <span>${ order.totalCost }</span></h5>
+                        <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
+                        <h5>Total: <span>${ (parseFloat(order.totalCost) + parseFloat(order.salesTax)).toFixed(2) }</span></h5>
+                    </div>
                 </div>;
 
                 pageData = <div className="container">
