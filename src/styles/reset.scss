@@ -50,6 +50,15 @@ a, a:hover, a:focus, button:focus, button:active {
     text-decoration: none;
     outline: none;
 }
+textarea {
+    border: none;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
 * {
     -moz-box-sizing:border-box;
     -webkit-box-sizing:border-box;

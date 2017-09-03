@@ -17,4 +17,13 @@
             padding-bottom: 13px;
         }
     }
+    .products-table {
+        tbody {
+            td {
+                &:nth-child(1) {
+                    width: 25%;
+                }
+            }
+        }
+    }
 }

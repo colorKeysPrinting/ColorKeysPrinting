@@ -313,41 +313,10 @@ class EditProduct extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         const styles = {
-            titleBar: {
-                display: 'inline-flex',
-                backgroundColor: '#FFF',
-                borderTopLeftRadius: '5px',
-                borderTopRightRadius: '5px',
-                boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-                height: '20%',
-                width: '100%'
-            },
-            title: {
-                textAlign: 'left',
-                padding: '30px',
-                width: '90%'
-            },
-            close: {
-                cursor: 'pointer',
-                textAlign: 'right',
-                padding: '30px',
-                width: '10%'
-            },
-            content: {
-                margin: '20px auto 0px',
-                textAlign: 'left',
-                display: 'inline-grid',
-                maxHeight: '500px',
-                overflowY: 'auto'
-            },
-            checkbox: {
-                // width: '60%',
-                padding: '30px'
-            },
-            text: {
-                margin: '10px'
+            editProductOverlay: {
+                height: window.innerHeight
             }
-        };
+        }
 
         const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
         const title = (this.props.location.state) ? 'Edit' : 'Add';
@@ -411,14 +380,14 @@ class EditProduct extends React.Component {
 
         return (
             <Overlay type="editProduct">
-                <div id="edit-product-overlay" >
-                    <div style={styles.titleBar} >
-                        <div style={styles.title}>{ title } Product</div>
-                        <div onClick={this.close} style={styles.close}>X</div>
+                <div id="edit-product-overlay" style={styles.editProductOverlay}>
+                    <div className="title-bar" >
+                        <div className="title">{ title } Product</div>
+                        <img onClick={this.close} src={assets('./images/icon-x-big.svg')} />
                     </div>
                     <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
-                        <div style={styles.content}>
-                            <div style={{ columnCount: 2 }}>
+                        <div className="content">
+                            <div className="col-2">
                                 <div>
                                     <Select
                                         name="product-category"
@@ -461,11 +430,11 @@ class EditProduct extends React.Component {
 
                             <textarea name="product-description" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})} maxLength="1000" />
 
-                            <div style={{ columnCount: 2 }}>
+                            <div className="col-2">
                                 <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update({ type: 'applianceWidth', value: e.target.value})}  />in.
                             </div>
 
-                            <div style={{ columnCount: 2 }}>
+                            <div className="col-2">
                                 <input name="product-height" type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update({ type: 'applianceHeight', value: e.target.value})} />in.
                                 <input name="product-depth" type="text" placeholder="Depth"  value={this.state.applianceDepth} onChange={(e) => this.update({ type: 'applianceDepth', value: e.target.value})}  />in.
                             </div>
@@ -532,7 +501,7 @@ class EditProduct extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div style={styles.checkbox}>
+                            <div className="checkbox">
                                 <input
                                     id="checkbox-is-ge-install"
                                     type="checkbox"
@@ -546,7 +515,7 @@ class EditProduct extends React.Component {
                                 <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update({ type: 'applianceInstallPrice', value: e.target.value})} />
                                 <textarea name="product-install-descr" type="text" placeholder="Install Description" value={this.state.applianceInstallDescription} onChange={(e) => this.update({ type: 'applianceInstallDescription', value: e.target.value})} />
                             </div>
-                            <div style={styles.checkbox}>
+                            <div className="checkbox">
                                 <input
                                     id="checkbox-is-ge-remove-old"
                                     type="checkbox"

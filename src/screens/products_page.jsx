@@ -104,6 +104,7 @@ class ProductsPage extends React.Component {
                 return (
                     <TabPanel key={`tabPanel${type.name}`}>
                         <MyTable
+                            className="products-table"
                             type="products"
                             tab={type.name}
                             data={data}
