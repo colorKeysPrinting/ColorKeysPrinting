@@ -141,7 +141,7 @@ class OrderDetails extends React.Component {
 
                 // *************** order & tenant section ***************
                 // **** order section
-                orderHeaders.lockBoxCode = (order.lockBoxCode) ? 'Lock Box Code' : 'Tenant';
+                orderHeaders.lockBoxCode = (order.lockBoxCode) ? 'Lockbox Code' : 'Tenant';
                 const orderDetailsCols = {};
                 _.each(orderHeaders, (value, key) => {
                     value = order[key]

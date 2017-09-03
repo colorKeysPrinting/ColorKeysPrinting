@@ -142,7 +142,7 @@ class ProcessOrderPage extends React.Component {
                 email: 'Email'
             } : {
                 occupancy: 'Occupancy',
-                lockBox: 'Lock Box Code'
+                lockBox: 'Lockbox Code'
             };
 
             const officeHeaders = {

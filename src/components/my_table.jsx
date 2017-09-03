@@ -47,10 +47,16 @@ export default class MyTable extends React.Component {
                             return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>${ col }</td>;
 
                         } else if (col === 'Pending') {
-                            return <td key={`table-item-${id}`} className="pending" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                            const lowercase = col.toLowerCase();
+                            return <td key={`table-item-${id}`} className="pending" onClick={() => this.state.handleItem({ item })}>{ lowercase }</td>;
 
                         } else if (col === 'Approved') {
-                            return <td key={`table-item-${id}`} className="approved" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                            const lowercase = col.toLowerCase();
+                            return <td key={`table-item-${id}`} className="approved" onClick={() => this.state.handleItem({ item })}>{ lowercase }</td>;
+
+                        } else if (col === 'Shipped') {
+                            const lowercase = col.toLowerCase();
+                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ lowercase }</td>;
 
                         } else {
                             return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
