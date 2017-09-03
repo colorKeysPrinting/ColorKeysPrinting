@@ -11,6 +11,13 @@ import { setActiveTab }                     from 'ducks/header/actions';
 class NewOrderPage extends React.Component {
 
     componentWillMount() {
+        setTimeout(() => {
+            const { activeUser } = this.props;
+            if (activeUser.size <= 0) {
+                this.props.history.push(`/login`);
+            }
+        }, 250);
+
         this.props.setActiveTab('newOrder');
     }
 

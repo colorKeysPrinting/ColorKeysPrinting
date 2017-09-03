@@ -33,7 +33,7 @@ class EditProduct extends React.Component {
             faq: [],
             videos: [],
             applianceManufacturerName: '',
-            sortIndex: this.props.location.state.sortIndex + 1,
+            sortIndex: this.props.location.state.sortIndex,
             applianceType: '',
             applianceSize: '',
             applianceDescription: '',
@@ -100,15 +100,9 @@ class EditProduct extends React.Component {
                     if (!match) {
                         const picture = image.imageFile.type.split('/');
 
-                    } else {
-                        const fooBar = "don't do anything";
                     }
                 });
             }
-
-            console.log('check for uploaded images/videos');
-            console.log('update urls for images/videos in product object');
-            console.log('send product data to api');
         }
 
         if (nextProps.imageUploadSuccess.size === nextProps.preSignedURLs.size) {
@@ -122,7 +116,7 @@ class EditProduct extends React.Component {
         if (type === 'productSubcategoryId') {
             const products = this.props.products.toJS();
             const categoryName = _.find(this.props.productCategories.toJS(), ['id', value]).name;
-            let sortIndex = _.size(products[categoryName]);
+            let sortIndex = _.size(products[categoryName]) + 1;
             this.setState({ sortIndex });
         }
     }

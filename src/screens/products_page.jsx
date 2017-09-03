@@ -51,13 +51,20 @@ class ProductsPage extends React.Component {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
+        setTimeout(() => {
+            const { activeUser } = this.props;
+            if (activeUser.size <= 0) {
+                this.props.history.push(`/login`);
+            }
+        }, 250);
+
         if (this.props.productCategories.size > 0 &&
             this.props.products.size > 0) {
 
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
 
-            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, sortIndex: _.size(products[productCategories[0]]) } }} className="btn blue" >Add</Link>;
+            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, sortIndex: _.size(products[productCategories[0].name]) } }} className="btn blue" >Add</Link>;
 
             tabs = _.map(productCategories, (type) => {
                 return (
