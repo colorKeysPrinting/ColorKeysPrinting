@@ -50,7 +50,7 @@ export default class Select extends React.Component {
         const arrowImg = (this.state.isActive) ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png');
 
         return (
-            <div className={className} >
+            <div className={className} tabIndex="0" onBlur={this.showOptions} >
                 <div className="input" onClick={this.showOptions}>
                     <div>{ selectedOption.label }</div>
                     <div className="arrow-indicator" ><img src={arrowImg} alt="arrow" height="7px" /></div>

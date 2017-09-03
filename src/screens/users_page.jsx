@@ -4,7 +4,7 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import dateformat                           from 'dateformat';
 import SearchInput                          from 'react-search-input';
-import Select                               from 'react-select';
+import Select                               from 'components/select_box';
 import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
 
@@ -141,7 +141,6 @@ class UsersPage extends React.Component {
                             value={autoApprovedOrders}
                             options={options}
                             onChange={(value) => this.handleAutoApprove({ user, autoApprovedOrders: value })}
-                            simpleValue
                         />;
 
                     } else if (key === 'status') {
@@ -205,7 +204,6 @@ class UsersPage extends React.Component {
                             value={autoApprovedOrders}
                             options={options}
                             onChange={(value) => this.handleAutoApprove({ user: item.id, autoApprovedOrders: value })}
-                            simpleValue
                         />;
                         return item;
                     });
