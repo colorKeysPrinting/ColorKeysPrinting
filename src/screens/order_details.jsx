@@ -10,7 +10,7 @@ import Loader                                               from 'react-loader';
 
 import { logout }                                           from 'ducks/active_user/actions';
 import { triggerSpinner }                                   from 'ducks/ui/actions';
-import { getOrderByIdProductDetails, approveOrder }         from 'ducks/orders/actions';
+import { getOrderByIdProductDetails, approveOrder, clearOrder }         from 'ducks/orders/actions';
 import { setActiveTab }                                     from 'ducks/header/actions';
 
 import MyTable                                              from 'components/my_table';
@@ -48,6 +48,10 @@ class OrderDetails extends React.Component {
 
     componentDidUpdate() {
         this.props.triggerSpinner({ isOn: false });
+    }
+
+    componentWillUnmount() {
+        this.props.clearOrder();
     }
 
     editOrder({ orderId }) {
@@ -273,6 +277,7 @@ const actions = {
     triggerSpinner,
     getOrderByIdProductDetails,
     approveOrder,
+    clearOrder,
     setActiveTab
 }
 

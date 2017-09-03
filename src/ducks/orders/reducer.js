@@ -19,6 +19,12 @@ export default (state = initialState, action) => {
     let orders, index;
 
     switch (action.type) {
+    case ActionTypes.CLEAR_ORDER:
+        console.log('clear orders');
+        state = state.set('order', '');
+        state = state.set('orderProducts', []);
+        break;
+
     case ActionTypes.CONFIGURE_ORDER_PRODUCT:
         console.log('configure order products', action.data);
         const order = action.order;

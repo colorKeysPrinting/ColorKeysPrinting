@@ -33,7 +33,7 @@ class EditProduct extends React.Component {
             faq: [],
             videos: [],
             applianceManufacturerName: '',
-            sortIndex: this.props.location.state.sortIndex + 2,
+            sortIndex: this.props.location.state.sortIndex + 1,
             applianceType: '',
             applianceSize: '',
             applianceDescription: '',
@@ -51,6 +51,8 @@ class EditProduct extends React.Component {
             applianceRemovalPrice: '',
             applianceAssociatedParts: [],
         };
+
+        product.sortIndex += 1;
 
         _.each(product, (value, key) => {
             product[key] = (value === null) ? '' : value;
@@ -292,6 +294,8 @@ class EditProduct extends React.Component {
             applianceRemovalPrice: this.state.applianceRemovalPrice,
             applianceAssociatedParts: this.state.applianceAssociatedParts, // not in api?
         };
+
+        product.sortIndex = ((product.sortIndex - 1) <= 0) ? 0 : product.sortIndex - 1;
 
         _.each(product, (value, key) => {
             if(value === '' || typeof value === 'object' && _.size(value) === 0) {
