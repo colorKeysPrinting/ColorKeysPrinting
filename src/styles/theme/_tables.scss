@@ -74,6 +74,9 @@
                 text-overflow: initial !important;
                 overflow: initial !important;
             }
+            &.DayPickerInput-OverlayWrapper {
+                z-index: 99;
+            }
             &.input-container {
                 overflow: initial;
             }
@@ -138,6 +141,9 @@
             .product-details-table, .product-image-table {
                 .table {
                     tbody {
+                        .cancel-button {
+                            text-align: left;
+                        }
                         .table-row:nth-child(1) {
                             td {
                                 padding: 38px 22px 0px 22px; 

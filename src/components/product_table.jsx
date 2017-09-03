@@ -39,7 +39,7 @@ export default function ProductTable(props) {
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
-                        value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                        value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless cancel-button" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
 
                     } else if (props.type === 'orderDetails') {
                         value = <div className="no-limit">
