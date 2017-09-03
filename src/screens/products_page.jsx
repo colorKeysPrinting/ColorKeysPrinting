@@ -83,7 +83,7 @@ class ProductsPage extends React.Component {
                                 value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} className="product-action">Edit</Link>;
                             }
                         } else if (key === 'featured') {
-                            if (product.sortIndex <= 5) {
+                            if (product.sortIndex <= 4) {
                                 value = <div className="featured-column">featured {product.sortIndex + 1}</div>;
                             }
                         }
