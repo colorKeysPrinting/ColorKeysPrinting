@@ -11,12 +11,6 @@ import { setActiveTab }                     from 'ducks/header/actions';
 class NewOrderPage extends React.Component {
 
     componentWillMount() {
-        const { activeUser } = this.props;
-
-        if (activeUser) {
-            const path = (activeUser.size > 0) ? `/new_order` : `/login`;
-            this.props.history.push(path);
-        }
         this.props.setActiveTab('newOrder');
     }
 
@@ -31,13 +25,19 @@ class NewOrderPage extends React.Component {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
+        const height = (window.innerHeight - 69);
+        const width = window.innerWidth;
+
         return (
-            <Iframe
-                url={`https://sibi-ge-dev.netlify.com/new?authToken=${jwt.token}`}
-                width="100%"
-                height="100%"
-                allowFullScreen
-            />
+            <div style={{ position: 'absolute', top: '69px', height, width }}>
+                <Iframe
+                    url={`https://sibi-ge-dev.netlify.com/new?authToken=${jwt.token}`}
+                    width={`${width}`}
+                    height={`${height}`}
+                    position="relative"
+                    allowFullScreen
+                />
+            </div>
         );
     }
 }

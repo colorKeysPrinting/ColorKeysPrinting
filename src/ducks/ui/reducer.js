@@ -9,7 +9,8 @@ import { ActionTypes }          from './actions';
 //             REDUCER
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
-    currLanguage: 'English'
+    currLanguage : 'English',
+    spinner      : true
 });
 
 export default (state = initialState, action) => {
@@ -22,6 +23,11 @@ export default (state = initialState, action) => {
 
     case ActionTypes.GO_HOME:
         console.log('going home');
+        break;
+
+    case ActionTypes.TRIGGER_SPINNER:
+        console.log('trigger spinner');
+        state = state.set('spinner', !action.isOn);
         break;
 
     default:

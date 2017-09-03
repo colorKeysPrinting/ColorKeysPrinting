@@ -3,9 +3,11 @@
 import _            from 'lodash';
 
 const checkObj = (obj) => {
-    if (obj.type.displayName === 'Select') {
-        const option = _.find(obj.props.options, (option) => { return option.value === obj.props.value });
-        return (option.label).toLowerCase();
+    if(typeof obj === 'object') {
+        if (obj.type.displayName === 'Select') {
+            const option = _.find(obj.props.options, (option) => { return option.value === obj.props.value });
+            return (option.label).toLowerCase();
+        }
     }
 }
 

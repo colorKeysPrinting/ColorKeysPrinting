@@ -7,20 +7,34 @@ import Network          from 'libs/constants/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
+    CLEAR_ORDER             : 'sibi_ge_admin/products/CLEAR_ORDER',
+    CONFIGURE_ORDER_PRODUCT : 'sibi_ge_admin/products/CONFIGURE_ORDER_PRODUCT',
     GET_ORDER_BY_ID_SUCCESS : 'sibi_ge_admin/products/GET_ORDER_BY_ID_SUCCESS',
-    GET_ORDERS_SUCCESS : 'sibi_ge_admin/products/GET_ORDERS_SUCCESS',
-    APPROVE_ORDER_SUCCESS : 'sibi_ge_admin/products/APPROVE_ORDER_SUCCESS',
-    UPDATE_ORDER_SUCCESS : 'sibi_ge_admin/products/UPDATE_ORDER_SUCCESS',
+    GET_ORDERS_SUCCESS      : 'sibi_ge_admin/products/GET_ORDERS_SUCCESS',
+    APPROVE_ORDER_SUCCESS   : 'sibi_ge_admin/products/APPROVE_ORDER_SUCCESS',
+    UPDATE_ORDER_SUCCESS    : 'sibi_ge_admin/products/UPDATE_ORDER_SUCCESS',
     UPDATE_INSTALL_DATE_SUCCESS: 'sibi_ge_admin/products/UPDATE_INSTALL_DATE_SUCCESS',
     UPDATE_MODEL_NUMBER_SUCCESS: 'sibi_ge_admin/products/UPDATE_MODEL_NUMBER_SUCCESS',
-    CREATE_ORDER_SUCCESS : 'sibi_ge_admin/products/CREATE_ORDER_SUCCESS',
-    PROCESS_ORDER_SUCCESS: 'sibi_ge_admin/products/PROCESS_ORDER_SUCCESS',
-    REMOVE_ORDER_SUCCESS : 'sibi_ge_admin/products/REMOVE_ORDER_SUCCESS',
+    CREATE_ORDER_SUCCESS    : 'sibi_ge_admin/products/CREATE_ORDER_SUCCESS',
+    PROCESS_ORDER_SUCCESS   : 'sibi_ge_admin/products/PROCESS_ORDER_SUCCESS',
+    REMOVE_ORDER_SUCCESS    : 'sibi_ge_admin/products/REMOVE_ORDER_SUCCESS',
 }
 
 // /////////////////////////////////////
 //             LOCAL ACTIONS
 // /////////////////////////////////////
+export function clearOrder() {
+    return {
+        type: ActionTypes.CLEAR_ORDER
+    }
+}
+
+const configureOrderProduct = ({ order }) => {
+    return {
+        type: ActionTypes.CONFIGURE_ORDER_PRODUCT,
+        order
+    }
+}
 
 // /////////////////////////////////////
 //             ASYNC CALLS
@@ -33,6 +47,21 @@ export function getOrderById({ id }) {
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_ORDER_BY_ID_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function getOrderByIdProductDetails({ id }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.GET,
+            url     : `${Network.DOMAIN}/order/${id}`,
+        })
+            .then(payload => {
+                dispatch(configureOrderProduct({ order: payload.data }));
             })
             .catch(error => {
                 throw(error);

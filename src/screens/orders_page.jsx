@@ -8,6 +8,7 @@ import SearchInput                          from 'react-search-input';
 import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
+import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
 import { getUsers, getFundProperties }      from 'ducks/users/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
@@ -33,14 +34,9 @@ class OrdersPage extends React.Component {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (activeUser) {
-            const path = (activeUser.size > 0) ? `/orders` : `/login`;
-            this.props.history.push(path);
-        }
-
         if (jwt && jwt.token !== '') {
-            this.props.getUsers({ token: jwt.token });
             this.props.getFundProperties({ token: jwt.token });
+            this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
             this.props.getOrders({ token: jwt.token, type: activeUser.toJS().type });
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
@@ -79,6 +75,7 @@ class OrdersPage extends React.Component {
 
     handleItem({ item }) {
         console.log('item pressed', item);
+        this.props.triggerSpinner({ isOn: false });
         this.props.history.push('/order_details', item.id);
     }
 
@@ -174,6 +171,11 @@ class OrdersPage extends React.Component {
 
             // this initially sets the "Pending" orders before everything and "Approved" orders at the end
             if(this.state.searchTerm !== '') {
+                data = _.map(data, (item) => {
+                    item.totalCost = `${item.totalCost}`;
+                    return item;
+                });
+
                 data = filter(this.state.searchTerm, KEYS_TO_FILTERS, data);
             }
 
@@ -186,11 +188,6 @@ class OrdersPage extends React.Component {
             } else {
                 data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
             }
-
-            data = _.map(data, (item) => {
-                item.totalCost = `$ ${item.totalCost}`;
-                return item;
-            });
         }
 
         return (
@@ -226,6 +223,7 @@ const select = (state) => ({
 
 const actions = {
     logout,
+    triggerSpinner,
     getOrders,
     getUsers,
     getFundProperties,
