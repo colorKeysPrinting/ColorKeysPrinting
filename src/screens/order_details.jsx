@@ -219,7 +219,7 @@ class OrderDetails extends React.Component {
                     ];
                 }
 
-                const tenantInfoSection = <div id="admin-table">
+                const tenantInfoSection = <div className="tenant-info-table">
                     <table className="table">
                         <thead className="head">
                             { tenantInfoTitle }
@@ -243,6 +243,7 @@ class OrderDetails extends React.Component {
                 pageData = <div className="container">
                     { detailsHeaderSection }
                     <MyTable
+                        className="order-details-table"
                         type="orderDetails"
                         headers={orderHeaders}
                         data={orderData}

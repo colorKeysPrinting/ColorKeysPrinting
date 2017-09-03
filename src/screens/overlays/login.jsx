@@ -50,25 +50,21 @@ class LoginOverlay extends React.Component {
 
         if (this.state.type === 'login') {
             close = <div onClick={this.close} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>;
-            inputs = (<div>
-                <input type="email"     placeholder="Email"     value={this.state.email}    onChange={(e) => { this.update('email', e.target.value) }}     style={{ width: '435px' }} required />
-                <input type="password"  placeholder="Password"  value={this.state.password} onChange={(e) => { this.update('password', e.target.value) }}  style={{ width: '435px' }} required />
+            inputs = (<div className="login-inputs">
+                <input type="email"     placeholder="Email"     value={this.state.email}    onChange={(e) => { this.update('email', e.target.value) }} required />
+                <input type="password"  placeholder="Password"  value={this.state.password} onChange={(e) => { this.update('password', e.target.value) }} required />
             </div>);
 
-            actionSection = (<div className="pure-g">
-                <div className="pure-u-1-2">
-                    <div className="btn white-btn fill" onClick={() => this.changeOverlay('reset')}>Forgot password?</div>
-                </div>
-                <div className="pure-u-1-2">
-                    <input className="btn blue fill" type="submit" value="Login"/>
-                </div>
+            actionSection = (<div className="login-buttons">
+                <div className="btn white-btn" onClick={() => this.changeOverlay('reset')}>Forgot password?</div>
+                <input className="btn blue" type="submit" value="Login"/>
             </div>);
 
         } else if (this.state.type === 'reset') {
             close = <div onClick={() => this.changeOverlay('login')} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>;
             inputs = (<div>
                 <p>Enter your email to reset your password.</p>
-                <input type="email" placeholder="Email" value={this.state.email} onChange={(e) => { this.update('email', e.target.value) }} style={{ width: '435px' }} required />
+                <input type="email" placeholder="Email" value={this.state.email} onChange={(e) => { this.update('email', e.target.value) }} required />
             </div>);
 
             actionSection = <input className="btn blue fill" type="submit" value="Submit"/>;
@@ -76,7 +72,7 @@ class LoginOverlay extends React.Component {
 
         return (
             <Overlay type="login">
-                <div className="modal">
+                <div className="modal" id="login-modal">
                     <div className="titleBar">
                         <div className="title">{(this.state.type === 'login') ? 'Login': 'Reset password'}</div>
                         { close }

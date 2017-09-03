@@ -23,3 +23,19 @@ input {
         line-height: 22px;
     }
 }
+
+.search-wrapper {
+    position: relative;
+    .search-icon {
+        position: absolute;
+        top: 16px;
+        left: 13px;
+        z-index: 1;
+    }
+    .search-input {
+        position: relative;
+        input {
+            padding-left: 33px;
+        }
+    }
+}
