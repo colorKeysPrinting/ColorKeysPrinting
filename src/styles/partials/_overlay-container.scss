@@ -1,0 +1,11 @@
+#overlay-container {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    .close-section {
+        height: 100%;
+        width: 100%;
+    }
+}

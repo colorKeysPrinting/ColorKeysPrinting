@@ -10,8 +10,14 @@
         }
     }
     .order-details-table {
+        border-radius: 4px 4px 0 0;
+        border: 1px solid $border-gray;
+        .table {
+            border-radius: 0;
+        }
         thead {
             td {
+                border-bottom: 1px solid $border-gray;
                 //Order Status
                 &:nth-child(1) {
                     width: 10%;
@@ -51,6 +57,12 @@
     }
     .tenant-info-table {
         margin-bottom: 38px;
+        border-radius: 0 0 4px 4px;
+        border: 1px solid $border-gray;
+        border-top: 0;
+        .table {
+            border-radius: 0;
+        }
     }
     .cost-section {
         margin: 18px 0;

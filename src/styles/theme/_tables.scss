@@ -4,9 +4,8 @@
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
-    border: 1px solid $medium-light-gray;
     background: white;
-    box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+    box-shadow: 0 1.5px 1px 0 rgba(34,35,41,0.06);
     border-radius: 4px;
     .head {
         tr {
@@ -111,10 +110,11 @@
 .table-card {
     max-width: 1200px;
     margin: 0 auto;
-    box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+    box-shadow: 0 1.5px 1px 0 rgba(34,35,41,0.06);
+    border-radius: 4px;
+    border: 1px solid $border-gray;
     .card-header {
         background: $table-header-gray;
-        border: 1px solid $medium-light-gray;
         border-bottom: none;
         border-radius: 4px 4px 0 0;
         display: flex;
@@ -133,7 +133,27 @@
     border: 1px solid $medium-light-gray;
     border-radius: 4px;
 
+    .product-table {
+        .product-table-container-row {
+            .product-details-table, .product-image-table {
+                .table {
+                    tbody {
+                        .table-row:nth-child(1) {
+                            td {
+                                padding: 38px 22px 0px 22px; 
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     .product-table, .part-table {
+        vertical-align: top;
+        tbody {
+            vertical-align: top;
+        }
         .product-image-colspan {
             width: 12%;
         }
@@ -162,25 +182,43 @@
             border: none;
             box-shadow: none;
             border-bottom: 1px solid $medium-light-gray;
+            vertical-align: top;
+            td {
+                vertical-align: top;
+            }
             .product-image-table, .product-details-table {
                 .table {
                     border: none;
                     box-shadow: none;
+                    vertical-align: top;
+                    // tr {
+                    //     vertical-align: top;
+                    // }
                     td {
                         border: none;
+                        .product-header {
+                            font-size: 16px;
+                            font-weight: 600;
+                        }
                     }
                     thead {
                         border-bottom: 1px solid $border-gray;
                     }
                     tbody {
+                        vertical-align: top;
                         .table-row {
-                            &:nth-child(1) {
-                                td {
-                                    padding: 38px 22px 0px 22px;
-                                    &:nth-child(1) {
-                                        font-size: 16px;
-                                        font-weight: 600;
-                                    }
+                            td {
+                                &:nth-child(1) {
+                                    width: 58%;
+                                }
+                                &:nth-child(2) {
+                                    width: 20%;
+                                }
+                                &:nth-child(3) {
+                                    width: 11%;
+                                }
+                                &:nth-child(4) {
+                                    width: 11%;
                                 }
                             }
                             &:last-child {
@@ -210,23 +248,28 @@
             }
         }
     }
-    .product-table {
-        
-    }
     .part-table {
-        .table-row {
-            td {
-                &:nth-child(1) {
-                    width: 58%;
+        .product-details-table {
+            .table-row {
+                td {
+                    &:nth-child(1) {
+                        width: 58%;
+                    }
+                    &:nth-child(2) {
+                        width: 20%;
+                    }
+                    &:nth-child(3) {
+                        width: 11%;
+                    }
+                    &:nth-child(4) {
+                        width: 11%;
+                    }
                 }
-                &:nth-child(2) {
-                    width: 20%;
-                }
-                &:nth-child(3) {
-                    width: 11%;
-                }
-                &:nth-child(4) {
-                    width: 11%;
+                &:first-child {
+                    td {
+                        padding: 38px 22px 0px 22px !important;
+                    }
+                    
                 }
             }
         }

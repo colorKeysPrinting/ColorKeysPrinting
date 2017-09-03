@@ -34,7 +34,8 @@ export default function ProductTable(props) {
             switch(key) {
             case 'productDescription':
                 if (row === 'product') {
-                    value = (!props.replacement) ? product.applianceDescription : null;
+                    const valueStyled = <span className="product-header">{product.applianceDescription}</span>;
+                    value = (!props.replacement) ? valueStyled : null;
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {

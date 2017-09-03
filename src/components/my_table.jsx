@@ -44,7 +44,7 @@ export default class MyTable extends React.Component {
 
                     } else {
                         if (id === 'totalCost') {
-                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>$ { col }</td>;
+                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>${ col }</td>;
 
                         } else if (col === 'Pending') {
                             return <td key={`table-item-${id}`} className="pending" onClick={() => this.state.handleItem({ item })}>{ col }</td>;

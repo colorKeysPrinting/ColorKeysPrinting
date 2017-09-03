@@ -40,7 +40,8 @@ export default function PartTable(props) {
             switch(key) {
             case 'partDescription':
                 if (row === 'part') {
-                    value = (!props.replacement) ? part.description : null;
+                    const valueStyled = <span className="product-header">{part.description}</span>;
+                    value = (!props.replacement) ? valueStyled : null;
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
