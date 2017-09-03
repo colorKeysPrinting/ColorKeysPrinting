@@ -99,7 +99,7 @@
         .table-cell-details {
             text-align: left;
             opacity: 0.5;
-            padding: 5px 0;
+            padding: 2px 0;
             max-width: 400px;
         }
         .featured-column {
@@ -132,6 +132,7 @@
     box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
     border: 1px solid $medium-light-gray;
     border-radius: 4px;
+
     .product-table, .part-table {
         .product-image-colspan {
             width: 12%;
@@ -168,19 +169,41 @@
                     td {
                         border: none;
                     }
+                    thead {
+                        border-bottom: 1px solid $border-gray;
+                    }
                     tbody {
                         .table-row {
                             &:nth-child(1) {
                                 td {
+                                    padding: 38px 22px 0px 22px;
                                     &:nth-child(1) {
                                         font-size: 16px;
                                         font-weight: 600;
                                     }
                                 }
                             }
+                            &:last-child {
+                                td {
+                                    padding-bottom: 30px;
+                                }
+                            }
                         }
                         td {
-                            padding: 10px 22px;
+                            padding: 10px 22px 10px 22px;
+                        }
+                        .description {
+                            overflow: initial;
+                            white-space: normal;
+                            max-width: 400px;
+                            span {
+                                color: $medium-dark-gray;
+                                font-weight: 400;
+                                &.bold {
+                                    color: $dark-gray;
+                                    font-weight: 600;
+                                }
+                            }
                         }
                     }
                 }
