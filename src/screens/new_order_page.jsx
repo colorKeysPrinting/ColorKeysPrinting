@@ -32,8 +32,8 @@ class NewOrderPage extends React.Component {
             <div style={{ position: 'absolute', top: '69px', height, width }}>
                 <Iframe
                     url={`https://sibi-ge-dev.netlify.com/new?authToken=${jwt.token}`}
-                    width={width}
-                    height={height}
+                    width={`${width}`}
+                    height={`${height}`}
                     position="relative"
                     allowFullScreen
                 />

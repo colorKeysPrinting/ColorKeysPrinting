@@ -34,6 +34,7 @@ export default (state = initialState, action) => {
             });
 
             const orderProducts = productsAndDestinations.concat(order.partsAndDestinations);
+            state = state.set('order', Immutable.fromJS(order));
             state = state.set('orderProducts', Immutable.fromJS(orderProducts));
         }
 

@@ -22,7 +22,7 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             LOCAL ACTIONS
 // /////////////////////////////////////
-export function configureOrderProduct({ order }) {
+const configureOrderProduct = ({ order }) => {
     return {
         type: ActionTypes.CONFIGURE_ORDER_PRODUCT,
         order
@@ -40,6 +40,21 @@ export function getOrderById({ id }) {
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_ORDER_BY_ID_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function getOrderByIdProductDetails({ id }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.GET,
+            url     : `${Network.DOMAIN}/order/${id}`,
+        })
+            .then(payload => {
+                dispatch(configureOrderProduct({ order: payload.data }));
             })
             .catch(error => {
                 throw(error);

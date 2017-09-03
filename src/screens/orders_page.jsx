@@ -8,6 +8,7 @@ import SearchInput                          from 'react-search-input';
 import filter                               from 'libs/filter';
 
 import { logout }                           from 'ducks/active_user/actions';
+import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
 import { getUsers, getFundProperties }      from 'ducks/users/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
@@ -74,6 +75,7 @@ class OrdersPage extends React.Component {
 
     handleItem({ item }) {
         console.log('item pressed', item);
+        this.props.triggerSpinner({ isOn: false });
         this.props.history.push('/order_details', item.id);
     }
 
@@ -221,6 +223,7 @@ const select = (state) => ({
 
 const actions = {
     logout,
+    triggerSpinner,
     getOrders,
     getUsers,
     getFundProperties,

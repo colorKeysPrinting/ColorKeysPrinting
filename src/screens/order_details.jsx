@@ -6,9 +6,11 @@ import { withCookies }                                      from 'react-cookie';
 import dateformat                                           from 'dateformat';
 import assets                                               from 'libs/assets';
 import Iframe                                               from 'react-iframe';
+import Loader                                               from 'react-loader';
 
 import { logout }                                           from 'ducks/active_user/actions';
-import { configureOrderProduct, getOrderById, approveOrder }          from 'ducks/orders/actions';
+import { triggerSpinner }                                   from 'ducks/ui/actions';
+import { getOrderByIdProductDetails, approveOrder }         from 'ducks/orders/actions';
 import { setActiveTab }                                     from 'ducks/header/actions';
 
 import MyTable                                              from 'components/my_table';
@@ -29,7 +31,7 @@ class OrderDetails extends React.Component {
         const orderId = this.props.location.state;
 
         if (orderId) {
-            this.props.getOrderById({ id: orderId });
+            this.props.getOrderByIdProductDetails({ id: orderId });
 
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
@@ -40,16 +42,12 @@ class OrderDetails extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (!_.isEqual(nextProps.order, this.props.order)) {
-            this.props.configureOrderProduct({ order: nextProps.order.toJS() });
-        }
-
-        if (!_.isEqual(nextProps.orderProducts, this.props.orderProducts)) {
-            this.setState({ orderProducts: nextProps.orderProducts });
+            this.props.triggerSpinner({ isOn: true });
         }
     }
 
-    componentWillUnmount() {
-        this.setState({ orderProducts: {} });
+    componentDidUpdate() {
+        this.props.triggerSpinner({ isOn: false });
     }
 
     editOrder({ orderId }) {
@@ -85,7 +83,7 @@ class OrderDetails extends React.Component {
         };
 
         if (this.props.order.size > 0 &&
-            this.state.orderProducts.size > 0) {
+            this.props.orderProducts.size > 0) {
             const order = this.props.order.toJS();
             const user = order.orderUser;
 
@@ -94,7 +92,7 @@ class OrderDetails extends React.Component {
                 const orderStatus = order.orderStatus;
 
                 // *************** product section ***************
-                productData = _.map(this.state.orderProducts.toJS(), (orderDetail, productIndex) => {
+                productData = _.map(this.props.orderProducts.toJS(), (orderDetail, productIndex) => {
                     if (orderDetail.product) {
                         const address = <div className="no-limit">
                             <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
@@ -194,11 +192,11 @@ class OrderDetails extends React.Component {
                     </tr>;
 
                     tenantInfoDetails = [
-                        <tr>
+                        <tr key='tenantInfoDetails1'>
                             <td><div>{user.firstName} {user.lastName}</div></td>
                             <td><div>{user.phoneNumber}</div></td>
                         </tr>,
-                        <tr>
+                        <tr key='tenantInfoDetails2'>
                             <td><div>{order.pmOffice.name}</div></td>
                             <td><div>{order.pmOffice.phoneNumber}</div></td>
                         </tr>
@@ -246,8 +244,8 @@ class OrderDetails extends React.Component {
                 pageData = <div style={{ position: 'absolute', top: '69px', height, width }}>
                     <Iframe
                         url={`https://sibi-ge-dev.netlify.com/edit/${this.state.editOrder}`}
-                        width={width}
-                        height={height}
+                        width={`${width}`}
+                        height={`${height}`}
                         position="relative"
                     />
                 </div>;
@@ -255,22 +253,25 @@ class OrderDetails extends React.Component {
         }
 
         return (
-            <div id="order-details-page">
-                { pageData }
-            </div>
+            <Loader loaded={this.props.spinner} >
+                <div id="order-details-page">
+                    { pageData }
+                </div>
+            </Loader>
         );
     }
 }
 
 const select = (state) => ({
     order           : state.orders.get('order'),
-    orderProducts   : state.orders.get('orderProducts')
+    orderProducts   : state.orders.get('orderProducts'),
+    spinner         : state.ui.get('spinner')
 });
 
 const actions = {
     logout,
-    configureOrderProduct,
-    getOrderById,
+    triggerSpinner,
+    getOrderByIdProductDetails,
     approveOrder,
     setActiveTab
 }
