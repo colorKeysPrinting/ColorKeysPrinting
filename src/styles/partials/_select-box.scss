@@ -6,7 +6,6 @@
     }
 
     .option {
-        height: 30px;
         cursor: pointer;
     }
 
@@ -21,12 +20,13 @@
         background-color: #FFF;
         max-height: 100px;
         overflow-y: scroll;
-        padding: 5px;
-
+        width: 100px;
         .option {
+            text-align: center;
+            padding: 12px;
+            border-bottom: 1px solid $border-gray;
             &:hover {
-                color: $white;
-                background-color: $light-blue;
+                background-color: $medium-gray;
             }
         }
     }
