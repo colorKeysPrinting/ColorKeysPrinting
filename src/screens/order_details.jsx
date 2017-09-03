@@ -10,7 +10,7 @@ import Loader                                               from 'react-loader';
 
 import { logout }                                           from 'ducks/active_user/actions';
 import { triggerSpinner }                                   from 'ducks/ui/actions';
-import { getOrderByIdProductDetails, approveOrder, clearOrder }         from 'ducks/orders/actions';
+import { getOrderById, approveOrder, clearOrder }           from 'ducks/orders/actions';
 import { setActiveTab }                                     from 'ducks/header/actions';
 
 import MyTable                                              from 'components/my_table';
@@ -31,7 +31,7 @@ class OrderDetails extends React.Component {
         const orderId = this.props.location.state;
 
         if (orderId) {
-            this.props.getOrderByIdProductDetails({ id: orderId });
+            this.props.getOrderById({ id: orderId });
 
         } else {
             console.log('TODO: trigger logout function *** no JWT ***');
@@ -67,7 +67,7 @@ class OrderDetails extends React.Component {
     }
 
     render() {
-        let pageData, productsAndParts, productData = {};
+        let pageData, productsAndParts, productData;
 
         const productHeaders = {
             productDescription: '',
@@ -86,8 +86,7 @@ class OrderDetails extends React.Component {
             createdBy: 'Ordered By'
         };
 
-        if (this.props.order.size > 0 &&
-            this.props.orderProducts.size > 0) {
+        if (this.props.order.size > 0) {
             const order = this.props.order.toJS();
             const user = order.orderUser;
 
@@ -96,7 +95,20 @@ class OrderDetails extends React.Component {
                 const orderStatus = order.orderStatus;
 
                 // *************** product section ***************
-                productData = _.map(this.props.orderProducts.toJS(), (orderDetail, productIndex) => {
+                if (!order.processedAt) {
+                    const productsAndDestinations = [];
+                    _.each(order.productsAndDestinations, (product) => {
+                        productsAndDestinations.push(product);
+
+                        _.each(product.includedParts, (part) => {
+                            productsAndDestinations.push({...part, productOrderId: product.productOrderId});
+                        });
+                    });
+
+                    productData = productsAndDestinations.concat(order.partsAndDestinations);
+                }
+
+                productData = _.map(productData, (orderDetail, productIndex) => {
                     if (orderDetail.product) {
                         const address = <div className="no-limit">
                             <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
@@ -268,14 +280,13 @@ class OrderDetails extends React.Component {
 
 const select = (state) => ({
     order           : state.orders.get('order'),
-    orderProducts   : state.orders.get('orderProducts'),
     spinner         : state.ui.get('spinner')
 });
 
 const actions = {
     logout,
     triggerSpinner,
-    getOrderByIdProductDetails,
+    getOrderById,
     approveOrder,
     clearOrder,
     setActiveTab

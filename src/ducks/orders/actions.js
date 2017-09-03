@@ -8,7 +8,6 @@ import Network          from 'libs/constants/network';
 // /////////////////////////////////////
 export const ActionTypes = {
     CLEAR_ORDER             : 'sibi_ge_admin/products/CLEAR_ORDER',
-    CONFIGURE_ORDER_PRODUCT : 'sibi_ge_admin/products/CONFIGURE_ORDER_PRODUCT',
     GET_ORDER_BY_ID_SUCCESS : 'sibi_ge_admin/products/GET_ORDER_BY_ID_SUCCESS',
     GET_ORDERS_SUCCESS      : 'sibi_ge_admin/products/GET_ORDERS_SUCCESS',
     APPROVE_ORDER_SUCCESS   : 'sibi_ge_admin/products/APPROVE_ORDER_SUCCESS',
@@ -47,21 +46,6 @@ export function getOrderById({ id }) {
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_ORDER_BY_ID_SUCCESS , ...payload });
-            })
-            .catch(error => {
-                throw(error);
-            });
-    }
-}
-
-export function getOrderByIdProductDetails({ id }) {
-    return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/order/${id}`,
-        })
-            .then(payload => {
-                dispatch(configureOrderProduct({ order: payload.data }));
             })
             .catch(error => {
                 throw(error);
