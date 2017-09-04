@@ -55,7 +55,6 @@ class LoginOverlay extends React.Component {
         let close, inputs, actionSection;
 
         if (this.state.type === 'login') {
-            close = <div onClick={this.close} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>;
             inputs = (<div className="login-inputs">
                 <input type="email"     placeholder="Email"     value={this.state.email}    onChange={(e) => { this.update('email', e.target.value) }} required />
                 <input type="password"  placeholder="Password"  value={this.state.password} onChange={(e) => { this.update('password', e.target.value) }} required />
