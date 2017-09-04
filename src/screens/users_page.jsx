@@ -2,7 +2,7 @@ import React                                from 'react';
 import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
-import dateformat                           from 'dateformat';
+import moment                               from 'moment';
 import SearchInput                          from 'react-search-input';
 import Select                               from 'components/select_box';
 import filter                               from 'libs/filter';
@@ -119,7 +119,7 @@ class UsersPage extends React.Component {
                         value = user['email'];
 
                     } else if (key === 'createdAt') {
-                        value = dateformat(new Date(value), 'mmm dd, yyyy');
+                        value = moment(new Date(value)).format('MM DD, YYYY');
 
                     } else if (key === 'autoApprovedOrders') {
                         const autoApprovedOrders = (user.autoApprovedOrders) ? true : false;
@@ -197,6 +197,8 @@ class UsersPage extends React.Component {
                 });
             }
         }
+
+        const sortBy = (this.state.sortby.column !== '') ? this.state.sortby : { column: 'orderStatus', isAsc: 'asc' };
 
         return (
             <div id="users-page" className="container">

@@ -3,7 +3,7 @@ import _                                                    from 'lodash';
 import { connect }                                          from 'react-redux';
 import { withRouter }                                       from 'react-router';
 import { withCookies }                                      from 'react-cookie';
-import dateformat                                           from 'dateformat';
+import moment                                               from 'moment';
 import assets                                               from 'libs/assets';
 import Iframe                                               from 'react-iframe';
 import Loader                                               from 'react-loader';
@@ -92,12 +92,16 @@ class OrderDetails extends React.Component {
             installTime: 'Preferred Install Time',
             occupied: 'Occupancy',
             lockBoxCode: '',
-            createdBy: 'Ordered By'
+            createdBy: 'Ordered By',
+            hotshotDelivery: 'Hot Shot Delivery'
         };
 
         if (this.props.order.size > 0) {
             const order = this.props.order.toJS();
             const user = order.orderUser;
+
+            orderHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
+            orderHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
 
             if (!this.state.editOrder) {
                 const orderId = order.id;
@@ -161,7 +165,7 @@ class OrderDetails extends React.Component {
                         value = order.orderNumber;
 
                     } else if (key === 'deliveryDate') {
-                        value = dateformat(order.installDate, 'mm/dd/yy');
+                        value = moment(order.installDate).format('MM/DD/YYYY');
 
                     } else if (key === 'installTime') {
                         value = (order.applianceDeliveryTime) ? order.applianceDeliveryTime : 'Not Specified';
@@ -174,6 +178,15 @@ class OrderDetails extends React.Component {
 
                     } else if (key === 'createdBy') {
                         value = `${order.orderUser.firstName} ${order.orderUser.lastName}`;
+
+                    } else if (key === 'hotshotDelivery') {
+                        value = (order.isApplianceHotShotDelivery) ? 'Yes' : 'No';
+
+                    } else if (key === 'hotshotInstallDate') {
+                        value = moment(order.installDate).format('MM/DD/YYYY');
+
+                    } else if (key === 'hotshotCode') {
+                        value = (order.isApplianceHotShotDelivery) ? <div>{ order.applianceHotShotCode }</div> : null;
                     }
 
                     orderDetailsCols[key] = value;

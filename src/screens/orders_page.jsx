@@ -3,7 +3,7 @@ import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
-import dateformat                           from 'dateformat';
+import moment                               from 'moment';
 import SearchInput                          from 'react-search-input';
 import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
@@ -139,7 +139,7 @@ class OrdersPage extends React.Component {
                         value = item[key];
 
                     } else if (key === 'createdAt') {
-                        value = dateformat(new Date(value), 'mmm dd, yyyy');
+                        value = moment(new Date(value)).format('MM DD, YYYY');
 
                     } else if (key === 'totalCost') {
                         value = parseFloat(item[key]);
