@@ -92,14 +92,14 @@ class OrdersPage extends React.Component {
             address: 'Property address',
             occupied: 'Occupancy',
             userId: 'Ordered by',
-            orderNumber: 'GE Order #',
+            geOrderNumber: 'GE Order #',
             createdAt: 'Order Date',
             totalCost: 'Cost',
             orderStatus: 'Status',
             action: ''
         };
 
-        const KEYS_TO_FILTERS = ['propertyId','address','occupied','userId','orderNumber','createdAt','totalCost','orderStatus'];
+        const KEYS_TO_FILTERS = ['propertyId','address','occupied','userId','geOrderNumber','createdAt','totalCost','orderStatus'];
 
         if (this.props.orders.size > 0 &&
             this.props.users.size > 0 &&
@@ -135,7 +135,7 @@ class OrdersPage extends React.Component {
                     } else if (key === 'userId') {
                         value = `${user['firstName']} ${user['lastName']}`;
 
-                    } else if (key === 'orderNumber') {
+                    } else if (key === 'geOrderNumber') {
                         value = item[key];
 
                     } else if (key === 'createdAt') {

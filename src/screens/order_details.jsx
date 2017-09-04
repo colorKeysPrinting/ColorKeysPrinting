@@ -87,7 +87,7 @@ class OrderDetails extends React.Component {
 
         const orderHeaders = {
             orderStatus: 'Order Status',
-            orderNumber: 'Order Number',
+            geOrderNumber: 'GE Order #',
             createdBy: 'Ordered By',
             occupied: 'Occupancy',
             lockBoxCode: '',
@@ -162,8 +162,8 @@ class OrderDetails extends React.Component {
                     if (key === 'orderStatus') {
                         value = order.orderStatus;
 
-                    } else if (key === 'orderNumber'){
-                        value = order.orderNumber;
+                    } else if (key === 'geOrderNumber'){
+                        value = order.geOrderNumber;
 
                     } else if (key === 'installTime') {
                         value = (order.applianceDeliveryTime) ? order.applianceDeliveryTime : 'Not Specified';
@@ -202,7 +202,7 @@ class OrderDetails extends React.Component {
 
                 const detailsHeaderSection = <div className="details-header">
                     <div className="header-property pure-u-2-3">
-                        <h2 className="property-address">{order.orderNumber}</h2>
+                        <h2 className="property-address">{orderId}</h2>
                         <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
                     </div>
                     { buttonSection }

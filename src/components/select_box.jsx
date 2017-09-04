@@ -19,10 +19,11 @@ export default class Select extends React.Component {
         this.showOptions = this.showOptions.bind(this);
     }
 
-    showOptions() {
+    showOptions({ options }) {
         this.setState((prevState) => {
-            const isActive = (prevState.isActive) ? false : true;
-            return { isActive };
+            options = (typeof options === 'object') ? <div className="select-options-active">{ options }</div> : null;
+
+            return { options };
         });
     }
 
@@ -38,7 +39,7 @@ export default class Select extends React.Component {
                     key={`option${i}`}
                     className={className}
                     value={option.value}
-                    onClick={() => { this.showOptions(); this.state.onChange(option.value) }}
+                    onClick={() => { this.showOptions({ options: '' }); this.state.onChange({ user: this.props.user, value: option.value }) }}
                 >
                     { option.label }
                 </div>
@@ -46,18 +47,15 @@ export default class Select extends React.Component {
         });
 
         const selectedOption = _.find(this.props.options, (option) => { return option.value === this.props.value });
-        const isActiveClass = (this.state.isActive) ? 'select-options-active' : 'select-options';
         const arrowImg = (this.state.isActive) ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png');
 
         return (
-            <div className={className} tabIndex="0" onBlur={this.showOptions} >
-                <div className="input" onClick={this.showOptions}>
+            <div className={className} tabIndex="0" onBlur={() => this.showOptions({ options: '' })} >
+                <div className="input" onClick={() => this.showOptions({ options })}>
                     <div>{ selectedOption.label }</div>
                     <div className="arrow-indicator" ><img src={arrowImg} alt="arrow" height="7px" /></div>
                 </div>
-                <div className={isActiveClass} >
-                    { options }
-                </div>
+                { this.state.options }
             </div>
         )
     }
