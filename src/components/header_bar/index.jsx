@@ -1,9 +1,9 @@
 import React                    from 'react';
+import _                        from 'lodash';
 import { connect }              from 'react-redux';
 import { withRouter }           from 'react-router';
-import { Link }                 from 'react-router-dom';
-import _                        from 'lodash';
 import { withCookies }          from 'react-cookie';
+import { Link }                 from 'react-router-dom';
 import assets                   from 'libs/assets';
 
 import { getCurrentUser }       from 'ducks/active_user/actions';
@@ -39,22 +39,26 @@ class HeaderBar extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
-            const path = (nextProps.activeUser.size > 0) ? `/orders` : `/login`;
-            this.props.history.push(path);
+        const { cookies, location } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
 
-            if (nextProps.activeUser.size > 0) {
-                const { cookies } = this.props;
-                const jwt = cookies.get('sibi-admin-jwt');
+        if (jwt && jwt.token !== '' && location) {
+            if (!_.isEqual(nextProps.activeUser, this.props.activeUser) &&
+                nextProps.activeUser.size > 0) {
 
-                if (jwt && jwt.token !== '') {
-                    this.props.getCurrentUser({ token: jwt.token});
-                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
-                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                const pathname = (location.pathname === `/` || location.pathname === `/login`) ? `/orders` : location.pathname;
+                const search = (location.search) ? location.search : null;
+                this.props.history.push({ pathname, search });
 
-                }
+                this.props.getCurrentUser({ token: jwt.token});
+                this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
             }
+        } else {
+            this.props.history.push(`/login`);
         }
+
+
 
         if (!_.isEqual(nextProps.isLogout, this.props.isLogout)) {
             this.props.logout();

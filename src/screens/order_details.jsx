@@ -28,13 +28,22 @@ class OrderDetails extends React.Component {
     }
 
     componentWillMount() {
-        const orderId = this.props.location.state;
+        const { cookies, location } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
 
-        if (orderId) {
-            this.props.getOrderById({ id: orderId });
+        if (jwt && jwt.token !== '' && location) {
+            const reOrder = /orderId=(.*)/;
+            const orderId = reOrder.exec(location.search)[1];
 
+            if (orderId) {
+                this.props.getOrderById({ id: orderId });
+
+            } else {
+                alert('No orderId provided routing back to orders');
+                this.props.history.push(`/order`);
+            }
         } else {
-            console.log('TODO: trigger logout function *** no JWT ***');
+            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('orders');
