@@ -13,6 +13,7 @@ export default class Select extends React.Component {
 
         this.state = {
             isActive: '',
+            options: '',
             onChange: (this.props.onChange) ? this.props.onChange : ({value}) => {console.log('using internal function'); this.setState({value})}
         };
 
@@ -21,8 +22,9 @@ export default class Select extends React.Component {
 
     showOptions({ options }) {
         this.setState((prevState) => {
-            options = (typeof options === 'object') ? <div className="select-options-active">{ options }</div> : null;
-            return { options };
+            options = (typeof prevState.options === 'object') ? '' :  <div className="select-options-active">{ options }</div>;
+            const isActive = (options) ? true : false;
+            return { options, isActive };
         });
     }
 
