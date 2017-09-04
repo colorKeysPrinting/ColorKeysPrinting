@@ -34,9 +34,8 @@ class UsersPage extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt && jwt.token !== '') {
-            if (activeUser.size > 0) {
-                this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
-            }
+            this.props.getUsers({ token: jwt.token, type: jwt.type });
+
         } else {
             this.props.history.push(`/login`);
         }
