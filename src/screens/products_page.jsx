@@ -3,7 +3,6 @@ import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
-import { Link }                             from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                               from 'libs/assets';
 
@@ -12,8 +11,16 @@ import { getProducts, getProductCategories, getProductsForSubCategory, unarchive
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
+import EditProduct                          from 'components/edit_product';
 
 class ProductsPage extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { isEditShowing: false, sortIndex: 0, product: '', category: '' };
+
+        this.showEditBox = this.showEditBox.bind(this);
+    }
     componentWillMount() {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
@@ -21,7 +28,7 @@ class ProductsPage extends React.Component {
         if (jwt) {
             this.props.getProductCategories({ token: jwt.token });
         } else {
-            console.log('TODO: trigger logout function *** no JWT ***');
+            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('products');
@@ -45,18 +52,18 @@ class ProductsPage extends React.Component {
         }
     }
 
+    showEditBox({ sortIndex, product, category }) {
+        this.setState((prevState) => {
+            const isEditShowing = (prevState.isEditShowing) ? false : true;
+            return { isEditShowing, sortIndex, product, category };
+        });
+    }
+
     render() {
-        let tabs, tabContent, tabsSection, addBtn;
+        let tabs, tabContent, tabsSection, addBtn, pageContent, editProductSection;
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-
-        setTimeout(() => {
-            const { activeUser } = this.props;
-            if (activeUser.size <= 0) {
-                this.props.history.push(`/login`);
-            }
-        }, 250);
 
         if (this.props.productCategories.size > 0 &&
             this.props.products.size > 0) {
@@ -64,7 +71,7 @@ class ProductsPage extends React.Component {
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
 
-            addBtn = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, sortIndex: _.size(products[productCategories[0].name]) } }} className="btn blue" >Add</Link>;
+            addBtn = <div className="btn blue" onClick={() => this.showEditBox({ sortIndex: _.size(products[productCategories[0].name]) })}>Add</div>;
 
             tabs = _.map(productCategories, (type) => {
                 const upperCase = type.name;
@@ -86,11 +93,9 @@ class ProductsPage extends React.Component {
                             value = { ...product, category: type.id };
 
                         } else if (key === 'action') {
-                            if (product.archived) {
-                                value = <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: type.name, id: product.id }) } className="product-action">Unarchive</div>;
-                            } else {
-                                value = <Link to={{ pathname: `/edit_product`, state: { prevPath: this.props.location.pathname, category: type.id, product } }} className="product-action">Edit</Link>;
-                            }
+                            value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: type.name, id: product.id }) } className="product-action">Unarchive</div>
+                                : <div className="product-action" onClick={() => this.showEditBox({ category: type.id, product })}>Edit</div>;
+
                         } else if (key === 'featured') {
                             if (product.sortIndex <= 4) {
                                 value = <div className="featured-column">featured {product.sortIndex + 1}</div>;
@@ -121,10 +126,17 @@ class ProductsPage extends React.Component {
                 </TabList>
                 { tabContent }
             </Tabs>;
-        }
 
-        return (
-            <div id="products-page" className="container">
+            editProductSection = (this.state.isEditShowing) ? <div style={{ display: (this.state.isEditShowing) ? 'block' : 'none' }}>
+                <EditProduct
+                    sortIndex={this.state.sortIndex}
+                    product={this.state.product}
+                    category={this.state.category}
+                    close={this.showEditBox}
+                />
+            </div> : null;
+
+            pageContent = <div>
                 <div className="table-card">
                     <div className="card-header">
                         <h2>Products</h2>
@@ -132,6 +144,13 @@ class ProductsPage extends React.Component {
                     </div>
                     { tabsSection }
                 </div>
+                { editProductSection }
+            </div>
+        }
+
+        return (
+            <div id="products-page" className="container">
+                { pageContent }
             </div>
         );
     }

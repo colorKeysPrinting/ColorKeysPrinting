@@ -3,7 +3,7 @@ import { withRouter }               from 'react-router';
 import { connect }                  from 'react-redux';
 import assets                       from 'libs/assets';
 
-import { login, logout, passwordReset }     from 'ducks/active_user/actions';
+import { login, logout, resetLoginError, passwordReset }     from 'ducks/active_user/actions';
 
 import Overlay                      from 'components/overlay';
 
@@ -21,6 +21,13 @@ class LoginOverlay extends React.Component {
         this.close = this.close.bind(this);
         this.changeOverlay = this.changeOverlay.bind(this);
         this.submitLoginBtn = this.submitLoginBtn.bind(this);
+    }
+
+    componentWillUpdate(nextProps) {
+        if (nextProps.loginError) {
+            this.setState({ password: '' });
+            this.props.resetLoginError();
+        }
     }
 
     update(type, value) {
@@ -42,7 +49,6 @@ class LoginOverlay extends React.Component {
         } else if (type === 'reset') {
             this.props.passwordReset({ email: this.state.email });
         }
-        this.setState({ password: '' });
     }
 
     render() {
@@ -89,11 +95,14 @@ class LoginOverlay extends React.Component {
     }
 }
 
-const select = (state) => ({});
+const select = (state) => ({
+    loginError  : state.activeUser.get('loginError')
+});
 
 const actions = {
     login,
     logout,
+    resetLoginError,
     passwordReset
 };
 

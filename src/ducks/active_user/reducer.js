@@ -9,7 +9,8 @@ import { ActionTypes }          from './actions';
 //             REDUCER
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
-    activeUser: {}
+    activeUser: {},
+    loginError: false
 });
 
 export default (state = initialState, action) => {
@@ -18,12 +19,15 @@ export default (state = initialState, action) => {
     switch (action.type) {
     case ActionTypes.LOGOUT:
         console.log('logging out');
-
         state = state.set('activeUser', Immutable.fromJS({}));
-
-        cookies.set('sibi-admin-jwt', { token: '', email: '' }, { path: '/' });
-
+        cookies.remove('sibi-admin-jwt');
         break;
+
+    case ActionTypes.RESET_LOGIN_ERROR:
+        console.log('reset login error');
+        state = state.set('loginError', false);
+        break;
+
 
     case ActionTypes.LOGIN_SUCCESS:
         console.log('login: ', action.data);
@@ -37,11 +41,14 @@ export default (state = initialState, action) => {
 
         } else {
             alert('Your account has been disabled!\nIf you find this to be an error please contact your fund');
+            state = state.set('loginError', true);
         }
         break;
 
     case ActionTypes.LOGIN_ERROR:
+        console.log('login error');
         alert('Could not find a Username and Password combination matching the provided');
+        state = state.set('loginError', true);
         break;
 
     case ActionTypes.PASSWORD_RESET:
