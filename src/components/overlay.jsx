@@ -9,10 +9,8 @@ export default withRouter(
                 overlayBackground: {
                     backgroundColor: (this.props.type !== 'profile') ? 'rgba(69, 87, 126, 0.4)' : '',
                     width: window.innerWidth,
-                    height: 'auto',
-                    position: 'absolute',
-                    top: '69px',
-                    left: '0px'
+                    height: window.innerHeight,
+                    position: 'absolute'
                 }
             }
 
