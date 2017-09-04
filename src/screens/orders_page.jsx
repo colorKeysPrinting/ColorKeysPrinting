@@ -36,9 +36,11 @@ class OrdersPage extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt && jwt.token !== '') {
-            this.props.getFundProperties({ token: jwt.token });
-            this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
-            this.props.getOrders({ token: jwt.token, type: activeUser.toJS().type });
+            if (activeUser.size > 0) {
+                this.props.getFundProperties({ token: jwt.token });
+                this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
+                this.props.getOrders({ token: jwt.token, type: activeUser.toJS().type });
+            }
         } else {
             this.props.history.push(`/login`);
         }
