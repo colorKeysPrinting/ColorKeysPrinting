@@ -22,7 +22,6 @@ export default class Select extends React.Component {
     showOptions({ options }) {
         this.setState((prevState) => {
             options = (typeof options === 'object') ? <div className="select-options-active">{ options }</div> : null;
-
             return { options };
         });
     }
