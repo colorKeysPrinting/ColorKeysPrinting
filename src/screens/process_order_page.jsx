@@ -130,7 +130,7 @@ class ProcessOrderPage extends React.Component {
                 orderedBy: 'Ordered By',
                 phoneNumber: 'Phone Number',
                 email: 'Email',
-                hotshotDelivery: 'HotShot Delivery',
+                hotshotDelivery: 'Hot Shot Delivery',
                 hotshotInstallDate: '',
                 hotshotCode: ''
             };
@@ -154,8 +154,8 @@ class ProcessOrderPage extends React.Component {
             if (!order.processedAt) {
                 const user = order.createdByUser;
 
-                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'HotShot Install Date' : 'Install Date';
-                userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'HotShot Code' : '';
+                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
+                userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
 
                 const orderProcessHeading = {
                     accountNumber: (order.pmOffice.applianceGEAccountNumber) ? order.pmOffice.applianceGEAccountNumber : order.fund.applianceGEAccountNumber,
@@ -350,7 +350,7 @@ class ProcessOrderPage extends React.Component {
                 orderPageData = <div>
                     <h2>Order Processed</h2>
                     <h4>Your order has been processed.</h4>
-                    <h4>You can now close this tab</h4>
+                    <h4>You can now close this tab.</h4>
                 </div>;
             }
         }

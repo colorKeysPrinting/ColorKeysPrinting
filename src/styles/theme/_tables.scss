@@ -1,4 +1,13 @@
+table tr:last-child td:first-child {
+    border-top-left-radius: 4px;
+}
+
+table tr:last-child td:last-child {
+    border-top-right-radius: 4px;
+}
+
 .table {
+    border-collapse: separate !important;
     table-layout: fixed;
     width: 100%;
     max-width: 1200px;
@@ -7,6 +16,9 @@
     background: white;
     box-shadow: 0 1.5px 1px 0 rgba(34,35,41,0.06);
     border-radius: 4px;
+    .approve {
+        text-transform: capitalize;
+    }
     .head {
         tr {
         background: $table-header-gray;
@@ -26,7 +38,7 @@
             .sort-arrow {
                 display: inline-block;
                 position: absolute;
-                top: 1px;
+                top: 3px;
                 right: -12px;
             }
             div {

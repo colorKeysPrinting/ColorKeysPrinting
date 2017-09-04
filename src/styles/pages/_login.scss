@@ -1,4 +1,12 @@
 #login-modal {
+    border-radius: 4px;
+    .titleBar {
+        border-radius: 4px 4px 0 0;
+        .icon-close {
+            top: 30px;
+            right: 30px;
+        }
+    }
     .login-inputs {
         input {
             display: block;
