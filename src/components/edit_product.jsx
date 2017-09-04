@@ -15,6 +15,38 @@ import Overlay                  from 'components/overlay';
 class EditProduct extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            activeSection: '',
+            isInstall: false,
+            isRemoval: false,
+            faqQuestion: '',
+            faqAnswer: '',
+            image: '',
+            imageFile: '',
+            color: '',
+            partDescription: '',
+            partCode: '',
+            videoURL: ''
+        };
+
+        this.update = this.update.bind(this);
+        this.updateImage = this.updateImage.bind(this);
+        this.changeActiveSection = this.changeActiveSection.bind(this);
+        this.addColorAndImage = this.addColorAndImage.bind(this);
+        this.removeColorAndImage = this.removeColorAndImage.bind(this);
+        this.addPart = this.addPart.bind(this);
+        this.removePart = this.removePart.bind(this);
+        this.addVideo = this.addVideo.bind(this);
+        this.removeVideo = this.removeVideo.bind(this);
+        this.addFAQ = this.addFAQ.bind(this);
+        this.removeFaq = this.removeFaq.bind(this);
+        this.saveProduct = this.saveProduct.bind(this);
+        this.archiveProduct = this.archiveProduct.bind(this);
+        this.submitProduct = this.submitProduct.bind(this);
+    }
+
+    componentWillMount() {
         let { product, sortIndex } = this.props;
 
         const categories = this.props.productCategories.toJS();
@@ -60,7 +92,7 @@ class EditProduct extends React.Component {
             product[key] = (value === null) ? '' : value;
         });
 
-        this.state = {
+        this.setState({
             activeSection: '',
             isInstall: false,
             isRemoval: false,
@@ -73,22 +105,7 @@ class EditProduct extends React.Component {
             partCode: '',
             videoURL: '',
             ...product
-        };
-
-        this.update = this.update.bind(this);
-        this.updateImage = this.updateImage.bind(this);
-        this.changeActiveSection = this.changeActiveSection.bind(this);
-        this.addColorAndImage = this.addColorAndImage.bind(this);
-        this.removeColorAndImage = this.removeColorAndImage.bind(this);
-        this.addPart = this.addPart.bind(this);
-        this.removePart = this.removePart.bind(this);
-        this.addVideo = this.addVideo.bind(this);
-        this.removeVideo = this.removeVideo.bind(this);
-        this.addFAQ = this.addFAQ.bind(this);
-        this.removeFaq = this.removeFaq.bind(this);
-        this.saveProduct = this.saveProduct.bind(this);
-        this.archiveProduct = this.archiveProduct.bind(this);
-        this.submitProduct = this.submitProduct.bind(this);
+        });
     }
 
     componentWillUpdate(nextProps) {
@@ -111,14 +128,18 @@ class EditProduct extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.setState({});
+    }
+
     update({ type, value }) {
-        this.setState({ [type]: value });
+        this.setState({ [type]: value.value });
 
         if (type === 'productSubcategoryId') {
             const products = this.props.products.toJS();
-            const categoryName = _.find(this.props.productCategories.toJS(), ['id', value]).name;
-            let sortIndex = _.size(products[categoryName]) + 1;
+            let sortIndex = _.size(products[value.label]) + 1;
             this.setState({ sortIndex });
+
         }
     }
 
@@ -302,7 +323,7 @@ class EditProduct extends React.Component {
             this.props.createProduct({ token: jwt.token, category: category.name, product })
         }
 
-        this.props.close();
+        this.props.close({ sortIndex: 0 });
     }
 
     render() {
@@ -372,8 +393,8 @@ class EditProduct extends React.Component {
 
         const fuelTypeOptions = [
             { label: 'Select Fuel Type', value: '', className: 'disabled' },
-            { label: 'Gas', value: 'gas' },
-            { label: 'Electric', value: 'electric' }
+            { label: 'Gas', value: 'Gas' },
+            { label: 'Electric', value: 'Electric' }
         ]
 
         return (
@@ -409,7 +430,7 @@ class EditProduct extends React.Component {
                                 <div>
                                     <Select
                                         name="product-fuel-type"
-                                        value={(this.state.applianceFuelType).toLowerCase()}
+                                        value={this.state.applianceFuelType}
                                         options={fuelTypeOptions}
                                         onChange={(value) => this.update({ type: 'applianceFuelType', value })}
                                     />

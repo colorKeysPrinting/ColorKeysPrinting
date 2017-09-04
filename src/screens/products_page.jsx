@@ -60,7 +60,7 @@ class ProductsPage extends React.Component {
     }
 
     render() {
-        let tabs, tabContent, tabsSection, addBtn, pageContent;
+        let tabs, tabContent, tabsSection, addBtn, pageContent, editProductSection;
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
@@ -127,6 +127,15 @@ class ProductsPage extends React.Component {
                 { tabContent }
             </Tabs>;
 
+            editProductSection = (this.state.isEditShowing) ? <div style={{ display: (this.state.isEditShowing) ? 'block' : 'none' }}>
+                <EditProduct
+                    sortIndex={this.state.sortIndex}
+                    product={this.state.product}
+                    category={this.state.category}
+                    close={this.showEditBox}
+                />
+            </div> : null;
+
             pageContent = <div>
                 <div className="table-card">
                     <div className="card-header">
@@ -135,14 +144,7 @@ class ProductsPage extends React.Component {
                     </div>
                     { tabsSection }
                 </div>
-                <div style={{ display: (this.state.isEditShowing) ? 'block' : 'none' }}>
-                    <EditProduct
-                        sortIndex={this.state.sortIndex}
-                        product={this.state.product}
-                        category={this.state.category}
-                        close={this.showEditBox}
-                    />
-                </div>
+                { editProductSection }
             </div>
         }
 
