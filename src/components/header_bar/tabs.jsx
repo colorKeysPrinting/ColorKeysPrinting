@@ -32,7 +32,8 @@ export default class Tabs extends React.Component {
         case 'fundAdmin':
             activeTabs = (<div className="header-tabs">
                 { tabs['orders'] }
-                { tabs['users'] }
+                { tabs['users'] },
+                { tabs['newOrder'] }
             </div>);
             break;
 

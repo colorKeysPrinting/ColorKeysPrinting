@@ -191,6 +191,8 @@ class OrdersPage extends React.Component {
             }
         }
 
+        const sortBy = (this.state.sortby.column !== '') ? this.state.sortby : { column: 'orderStatus', isAsc: 'asc' };
+
         return (
             <div id="orders-page" className="container">
                 <div className="table-card">
@@ -206,7 +208,7 @@ class OrdersPage extends React.Component {
                         dataClassName="table-row-clickable"
                         headers={headers}
                         data={data}
-                        sortby={this.state.sortby}
+                        sortby={sortBy}
                         handleAction={this.handleAction}
                         handleItem={this.handleItem}
                     />

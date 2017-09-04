@@ -23,6 +23,7 @@ class HeaderBar extends React.Component {
 
         this.search = this.search.bind(this);
         this.showProfile = this.showProfile.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     componentWillMount() {
@@ -77,6 +78,11 @@ class HeaderBar extends React.Component {
         });
     }
 
+    logout() {
+        this.props.history.push(`/login`);
+        this.props.logout();
+    }
+
     render() {
         let loginSection, profileOverlay, pendingOrders = 0, pendingUsers = 0;
 
@@ -92,7 +98,7 @@ class HeaderBar extends React.Component {
                 profileOverlay = (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
                     <div id="profile-container">
                         <div className="arrow-up"></div>
-                        <div className="element" onClick={() => this.props.logout()} >Log Out</div>
+                        <div className="element" onClick={this.logout} >Log Out</div>
                     </div>
                 </Overlay> : null;
 
@@ -112,7 +118,7 @@ class HeaderBar extends React.Component {
                     });
                 }
             } else {
-                loginSection = <Link to={`/login`} className="btn blue" >Login</Link>;
+                loginSection = (this.props.location.pathname !== `/login`) ? <Link to={`/login`} className="btn blue" >Login</Link> : null;
             }
         }
 

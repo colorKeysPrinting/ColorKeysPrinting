@@ -20,7 +20,7 @@ class UsersPage extends React.Component {
 
         this.state = {
             searchTerm: '',
-            sortby: {column: '', isAsc: false }
+            sortby: {column: 'status', isAsc: 'desc' }
         };
 
         this.update = this.update.bind(this);
@@ -167,40 +167,34 @@ class UsersPage extends React.Component {
                 data = filter(this.state.searchTerm, KEYS_TO_FILTERS, data);
             }
 
-            if (this.state.sortby.column === '') {
-                data = _.partition(data, ['status', 'Pending']);
-                data = data[0].concat(data[1]);
-
+            if(this.state.sortby.column !== 'autoApprovedOrders') {
+                data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
             } else {
-                if(this.state.sortby.column !== 'autoApprovedOrders') {
-                    data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
-                } else {
-                    // convert to sort
-                    data = _.map(data, (item) => {
-                        item.autoApprovedOrders = (item.autoApprovedOrders.props.value) ? 'Yes' : 'No';
-                        return item;
-                    });
+                // convert to sort
+                data = _.map(data, (item) => {
+                    item.autoApprovedOrders = (item.autoApprovedOrders.props.value) ? 'Yes' : 'No';
+                    return item;
+                });
 
-                    // sort
-                    data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+                // sort
+                data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
 
-                    // convert back
-                    data = _.map(data, (item) => {
-                        const options = [
-                            { label: 'No', value: false },
-                            { label: 'Yes', value: true }
-                        ];
+                // convert back
+                data = _.map(data, (item) => {
+                    const options = [
+                        { label: 'No', value: false },
+                        { label: 'Yes', value: true }
+                    ];
 
-                        const autoApprovedOrders = (item.autoApprovedOrders === 'Yes') ? true : false;
-                        item.autoApprovedOrders = <Select
-                            name="auto-approved-orders-select"
-                            value={autoApprovedOrders}
-                            options={options}
-                            onChange={(value) => this.handleAutoApprove({ user: item.id, autoApprovedOrders: value })}
-                        />;
-                        return item;
-                    });
-                }
+                    const autoApprovedOrders = (item.autoApprovedOrders === 'Yes') ? true : false;
+                    item.autoApprovedOrders = <Select
+                        name="auto-approved-orders-select"
+                        value={autoApprovedOrders}
+                        options={options}
+                        onChange={(value) => this.handleAutoApprove({ user: item.id, autoApprovedOrders: value })}
+                    />;
+                    return item;
+                });
             }
         }
 
