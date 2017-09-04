@@ -146,7 +146,7 @@ class OrdersPage extends React.Component {
                         value = item[key];
 
                     } else if (key === 'createdAt') {
-                        value = dateformat(new Date(value), 'mmmm dd, yyyy');
+                        value = dateformat(new Date(value), 'mmm dd, yyyy');
 
                     } else if (key === 'totalCost') {
                         value = parseFloat(item[key]);

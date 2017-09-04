@@ -314,7 +314,8 @@ class EditProduct extends React.Component {
 
         const styles = {
             editProductOverlay: {
-                height: window.innerHeight
+                // height: window.innerHeight - 79
+                height: 'auto'
             }
         }
 
@@ -330,39 +331,39 @@ class EditProduct extends React.Component {
 
         const productPictures = _.map(this.state.applianceColorsAndImages, (image, index) => {
             return (
-                <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                <div key={`colorImages${index}`} className="pictures-section" style={{ display: 'inline-flex', width: '100%' }} >
                     <img src={image.imageUrl} alt="picture" width="auto" height="60" />
                     <input type="text" value={image.color} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removeColorAndImage({ color: image.color }) } >X</div>
+                    <div className="btn cancel-btn" onClick={()=> this.removeColorAndImage({ color: image.color }) } ><img onClick={this.close} src={assets('./images/icon-x-big.svg')} /></div>
                 </div>
             );
         });
 
         const productVideos = _.map(this.state.videos, (video, index) => {
             return (
-                <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                <div key={`colorImages${index}`} className="videos-section" style={{ display: 'inline-flex', width: '100%' }} >
                     <input type="text" value={video} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removeVideo({ index }) } >X</div>
+                    <div className="btn cancel-btn" onClick={()=> this.removeVideo({ index }) } ><img onClick={this.close} src={assets('./images/icon-x-big.svg')} /></div>
                 </div>
             );
         });
 
         const productParts = _.map(this.state.applianceAssociatedParts, (part, index) => {
             return (
-                <div key={`parts${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                <div key={`parts${index}`} className="parts-section" style={{ display: 'inline-flex', width: '100%' }} >
                     <input type="text" value={part.description} disabled />
                     <input type="text" value={part.code} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removePart({ partId: (part.id) ? part.id : index }) } >X</div>
+                    <div className="btn cancel-btn" onClick={()=> this.removePart({ partId: (part.id) ? part.id : index }) } ><img onClick={this.close} src={assets('./images/icon-x-big.svg')} /></div>
                 </div>
             )
         });
 
         const productFAQ = _.map(this.state.faq, (faq, index) => {
             return (
-                <div key={`faq${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                <div key={`faq${index}`} className="faq-section" style={{ display: 'inline-flex', width: '100%' }} >
                     <textarea value={faq.Question} disabled />
                     <textarea value={faq.Answer} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removeFaq({ index }) } >X</div>
+                    <div className="btn cancel-btn" onClick={()=> this.removeFaq({ index }) } ><img onClick={this.close} src={assets('./images/icon-x-big.svg')} /></div>
                 </div>
             )
         })

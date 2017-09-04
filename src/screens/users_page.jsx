@@ -126,7 +126,7 @@ class UsersPage extends React.Component {
                         value = user['email'];
 
                     } else if (key === 'createdAt') {
-                        value = dateformat(new Date(value), 'mmmm dd, yyyy');
+                        value = dateformat(new Date(value), 'mmm dd, yyyy');
 
                     } else if (key === 'autoApprovedOrders') {
                         const autoApprovedOrders = (user.autoApprovedOrders) ? true : false;
