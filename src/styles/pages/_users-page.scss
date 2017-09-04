@@ -1,5 +1,6 @@
 //Users Page Specific Styling
 #users-page {
+    padding-top: 49px;
     .table {
         thead {
             td {
@@ -50,6 +51,9 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 max-width: 200px;
+                &.pending {
+                    color: $red;
+                }
             }
         }
     }

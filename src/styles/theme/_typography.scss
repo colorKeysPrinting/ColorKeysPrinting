@@ -59,6 +59,7 @@
   font-family: 'AvenirNext';
   font-weight: 500;
   font-style: normal;
+  color: $dark-gray;
 }
 
 h1, h2, h3, h4, h5, p, label {
@@ -113,6 +114,11 @@ label {
     font-size: 12px;
     line-height: 12px;
     font-weight: 700;
+}
+
+textarea {
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .submit-btn {

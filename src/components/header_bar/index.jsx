@@ -115,6 +115,7 @@ class HeaderBar extends React.Component {
         return (
             <div id="header-bar">
                 <img src={assets('./images/SIBI_Logo.png')} id="logo"/>
+                <span className="logo-text">GE APP ADMIN</span>
                 <Tabs
                     type={activeUser.type}
                     activeTab={this.props.activeTab}

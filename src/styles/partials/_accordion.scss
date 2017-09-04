@@ -1,21 +1,27 @@
 .accordion {
-    .headers {
+    .headers, .headers-active {
         border-bottom: 1px solid rgba(50, 50, 50, 0.1);
         cursor: pointer;
         display: inline-flex;
         text-align: left;
-        padding: 15px;
+        padding: 22px 15px;
         width: 100%;
+        position: relative;
+        &:first-child {
+            border-top: 1px solid rgba(50, 50, 50, 0.1);
+        }
     }
 
     .headers-active {
-        background-color: #06cfe5;
-        color: #FFF;
-        cursor: pointer;
-        display: inline-flex;
-        text-align: left;
-        padding: 15px;
-        width: 100%;
+        border-bottom: none;
+    }
+
+    .accordion-arrow {
+        position: absolute;
+        right: 15px;
+        top: 26px;
+        width: 9px;
+        height: 7px;
     }
 
     .headers > #title, .headers-active > #title {
@@ -31,8 +37,34 @@
         transition: height 2s;
     }
 
-    .headers:hover, .options:hover{
-        color: #FFF;
-        background-color: #06cfe5;
+    .accordion-detail {
+        padding: 20px 0;
+        border-bottom: 1px solid rgba(50, 50, 50, 0.1);
+        transition: 0.5s;
+        .accordion-detail-row {
+            width: 100%;
+            position: relative;
+            align-items: center;
+            display: inline-flex;
+            input {
+                margin: 5px;
+            }
+            .cancel-btn {
+                position: absolute;
+                top: 23px;
+                right: -18px;
+                &.blue {
+                    color: $blue;
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+            }
+        }
+        
     }
+
+    // .headers:hover, .options:hover{
+    //     color: #FFF;
+    //     background-color: #06cfe5;
+    // }
 }

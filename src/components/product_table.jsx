@@ -34,15 +34,16 @@ export default function ProductTable(props) {
             switch(key) {
             case 'productDescription':
                 if (row === 'product') {
-                    value = (!props.replacement) ? product.applianceDescription : null;
+                    const valueStyled = <span className="product-header">{product.applianceDescription}</span>;
+                    value = (!props.replacement) ? valueStyled : null;
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
-                        value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                        value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless cancel-button" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
 
                     } else if (props.type === 'orderDetails') {
                         value = <div className="no-limit">
-                            <div className="table-cell-details">{ `Model Number ${product.sibiModelNumber}` }</div>
+                            <div className="table-cell-details">{ `Model Number: ${product.sibiModelNumber}` }</div>
                             <div className="table-cell-details">{ `Color: ${props.color}` }</div>
                             <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
                             <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
@@ -51,9 +52,8 @@ export default function ProductTable(props) {
                         </div>;
                     }
                 } else if (row === 'install') {
-                    // const wrapper = <div className="install-instructions"></div>
-                    // const bold = <div><div className="bold" > Install Description</div> <div>{product.applianceInstallDescription}</div></div>
-                    const description = (!props.replacement) ? `Install Description: ${ product.applianceInstallDescription }` : null;
+                    const bold = <div className="description"><span className="bold"> Install Description: </span> <span>{product.applianceInstallDescription}</span></div>
+                    const description = (!props.replacement) ? bold : null;
                     value = (props.outOfStock !== props.productIndex) ? description : <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
                         <div className="input-container">
                             <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
@@ -63,7 +63,8 @@ export default function ProductTable(props) {
                     </form>;
 
                 } else if (row === 'remove') {
-                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Remove Appliance Description: ${ product.applianceRemovalDescription }` : null;
+                    const bold = <div className="description"><span className="bold"> Remove Appliance Description: </span> <span>{product.applianceRemovalDescription}</span></div>
+                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? bold : null;
 
                 } else if (row === 'disconnect') {
                     value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Disconnect Fee: ${ product.applianceDisconnectDescription }` : null;

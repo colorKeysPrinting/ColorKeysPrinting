@@ -7,18 +7,9 @@ export default withRouter(
         render() {
             const styles = {
                 overlayBackground: {
-                    display: 'block',
-                    position: 'absolute',
-                    backgroundColor: (this.props.type !== 'profile') ? 'rgba(50, 50, 50, 0.4)' : '',
+                    backgroundColor: (this.props.type !== 'profile') ? 'rgba(69, 87, 126, 0.4)' : '',
                     width: window.innerWidth,
-                    height: window.innerHeight,
-                    top: '0',
-                    left: '0',
-                    zIndex: '999'
-                },
-                closeSection: {
-                    height: '100%',
-                    width: '100%'
+                    height: 'auto'
                 }
             }
 

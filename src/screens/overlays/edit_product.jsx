@@ -313,46 +313,16 @@ class EditProduct extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         const styles = {
-            titleBar: {
-                display: 'inline-flex',
-                backgroundColor: '#FFF',
-                borderTopLeftRadius: '5px',
-                borderTopRightRadius: '5px',
-                boxShadow: '0px 2px 7px 0px rgba(50, 50, 50, 0.4)',
-                height: '20%',
-                width: '100%'
-            },
-            title: {
-                textAlign: 'left',
-                padding: '30px',
-                width: '90%'
-            },
-            close: {
-                cursor: 'pointer',
-                textAlign: 'right',
-                padding: '30px',
-                width: '10%'
-            },
-            content: {
-                margin: '20px auto 0px',
-                textAlign: 'left',
-                display: 'inline-grid',
-                maxHeight: '500px',
-                overflowY: 'auto'
-            },
-            checkbox: {
-                // width: '60%',
-                padding: '30px'
-            },
-            text: {
-                margin: '10px'
+            editProductOverlay: {
+                // height: window.innerHeight - 79
+                height: 'auto'
             }
-        };
+        }
 
         const category = _.find(this.props.productCategories.toJS(), ['id', this.state.productSubcategoryId]);
         const title = (this.props.location.state) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
-        const archiveBtn = (this.state.id) ? <div className="btn cancel-btn" onClick={this.archiveProduct}>Archive Product</div> : null;
+        const archiveBtn = (this.state.id) ? <div className="btn borderless red" onClick={this.archiveProduct}>Archive Product</div> : null;
         const imageBtn = (this.state.image !== '') ? <img src={this.state.image} alt="uploaded-image" height="60" /> : 'Choose File';
 
         const categories = _.map(this.props.productCategories.toJS(), (category) => {
@@ -361,39 +331,39 @@ class EditProduct extends React.Component {
 
         const productPictures = _.map(this.state.applianceColorsAndImages, (image, index) => {
             return (
-                <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                <div key={`colorImages${index}`} className="pictures-section accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
                     <img src={image.imageUrl} alt="picture" width="auto" height="60" />
                     <input type="text" value={image.color} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removeColorAndImage({ color: image.color }) } >X</div>
+                    <div className="cancel-btn" onClick={()=> this.removeColorAndImage({ color: image.color }) } ><img onClick={this.close} src={assets('./images/icon-x-big.svg')} /></div>
                 </div>
             );
         });
 
         const productVideos = _.map(this.state.videos, (video, index) => {
             return (
-                <div key={`colorImages${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                <div key={`colorImages${index}`} className="videos-section accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
                     <input type="text" value={video} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removeVideo({ index }) } >X</div>
+                    <div className="cancel-btn" onClick={()=> this.removeVideo({ index }) } ><img onClick={this.close} src={assets('./images/icon-x-big.svg')} /></div>
                 </div>
             );
         });
 
         const productParts = _.map(this.state.applianceAssociatedParts, (part, index) => {
             return (
-                <div key={`parts${index}`} style={{ display: 'inline-flex', width: '100%' }} >
+                <div key={`parts${index}`} className="parts-section accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
                     <input type="text" value={part.description} disabled />
                     <input type="text" value={part.code} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removePart({ partId: (part.id) ? part.id : index }) } >X</div>
+                    <div className="cancel-btn" onClick={()=> this.removePart({ partId: (part.id) ? part.id : index }) } ><img onClick={this.close} src={assets('./images/icon-x-big.svg')} /></div>
                 </div>
             )
         });
 
         const productFAQ = _.map(this.state.faq, (faq, index) => {
             return (
-                <div key={`faq${index}`} style={{ display: 'inline-flex', width: '100%' }} >
-                    <textarea value={faq.Question} disabled />
-                    <textarea value={faq.Answer} disabled />
-                    <div className="btn cancel-btn" onClick={()=> this.removeFaq({ index }) } >X</div>
+                <div key={`faq${index}`} className="faq-section accordion-detail-row" style={{ display: 'inline-flex'}} >
+                    <input type="text" value={faq.Question} disabled />
+                    <input type="text" value={faq.Answer} disabled />
+                    <div className="cancel-btn" onClick={()=> this.removeFaq({ index }) } ><img onClick={this.close} src={assets('./images/icon-x-big.svg')} /></div>
                 </div>
             )
         })
@@ -411,14 +381,14 @@ class EditProduct extends React.Component {
 
         return (
             <Overlay type="editProduct">
-                <div id="edit-product-overlay" >
-                    <div style={styles.titleBar} >
-                        <div style={styles.title}>{ title } Product</div>
-                        <div onClick={this.close} style={styles.close}>X</div>
+                <div id="edit-product-overlay" style={styles.editProductOverlay}>
+                    <div className="title-bar" >
+                        <div className="title">{ title } Product</div>
+                        <img onClick={this.close} src={assets('./images/icon-x-big.svg')} />
                     </div>
                     <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
-                        <div style={styles.content}>
-                            <div style={{ columnCount: 2 }}>
+                        <div className="content">
+                            <div className="col-2">
                                 <div>
                                     <Select
                                         name="product-category"
@@ -461,11 +431,11 @@ class EditProduct extends React.Component {
 
                             <textarea name="product-description" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})} maxLength="1000" />
 
-                            <div style={{ columnCount: 2 }}>
+                            <div className="col-2">
                                 <input name="product-width" type="text" placeholder="Width"  value={this.state.applianceWidth} onChange={(e) => this.update({ type: 'applianceWidth', value: e.target.value})}  />in.
                             </div>
 
-                            <div style={{ columnCount: 2 }}>
+                            <div className="col-2">
                                 <input name="product-height" type="text" placeholder="Height" value={this.state.applianceHeight} onChange={(e) => this.update({ type: 'applianceHeight', value: e.target.value})} />in.
                                 <input name="product-depth" type="text" placeholder="Depth"  value={this.state.applianceDepth} onChange={(e) => this.update({ type: 'applianceDepth', value: e.target.value})}  />in.
                             </div>
@@ -476,23 +446,25 @@ class EditProduct extends React.Component {
                                 {/* ************************************** faq section ************************************** */}
                                 <div id="accordion-faq" className={(this.state.activeSection === 'faq') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('faq')}>
                                     <div>{ _.size(this.state.faq) } FAQs</div>
+                                    <img className="accordion-arrow" src={(this.state.activeSection === 'faq') ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png') } />
                                 </div>
-                                <div style={{ display: (this.state.activeSection === 'faq') ? 'block' : 'none' }} >
+                                <div className="accordion-detail" style={{ display: (this.state.activeSection === 'faq') ? 'block' : 'none' }} >
                                     { productFAQ }
-                                    <div style={{ display: 'inline-flex' }} >
-                                        <textarea value={this.state.faqQuestion} placeholder="Question" onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })} />
-                                        <textarea value={this.state.faqAnswer}   placeholder="Answer"   onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })} />
-                                        <div onClick={this.addFAQ} className="btn cancel-btn">Add</div>
+                                    <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
+                                        <input type="text" value={this.state.faqQuestion} placeholder="Question" onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })} />
+                                        <input type="text" value={this.state.faqAnswer}   placeholder="Answer"   onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })} />
+                                        <div onClick={this.addFAQ} className="cancel-btn blue">Add</div>
                                     </div>
                                 </div>
 
                                 {/* ************************************** color/pictures section ************************************** */}
                                 <div id="accordion-pictures" className={(this.state.activeSection === 'pictures') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('pictures')}>
                                     <div>{ _.size(this.state.applianceColorsAndImages) } Photos</div>
+                                    <img className="accordion-arrow" src={(this.state.activeSection === 'pictures') ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png') } />
                                 </div>
-                                <div style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} >
+                                <div className="accordion-detail" style={{ display: (this.state.activeSection === 'pictures') ? 'block' : 'none' }} >
                                     { productPictures }
-                                    <div style={{ display: 'inline-flex' }} >
+                                    <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
                                         <label className="btn blue" >
                                             { imageBtn }
                                             <input
@@ -503,36 +475,38 @@ class EditProduct extends React.Component {
                                             />
                                         </label>
                                         <input type="text" value={this.state.color} placeholder="Color name" onChange={(e) => this.update({ type: 'color', value: e.target.value })} />
-                                        <div onClick={this.addColorAndImage} className="btn cancel-btn">Add</div>
+                                        <div onClick={this.addColorAndImage} className="cancel-btn blue">Add</div>
                                     </div>
                                 </div>
 
                                 {/* ************************************** video section ************************************** */}
                                 <div id="accordion-video" className={(this.state.activeSection === 'videos') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('videos')}>
                                     <div>{ _.size(this.state.videos) } Vidoes</div>
+                                    <img className="accordion-arrow" src={(this.state.activeSection === 'videos') ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png') } />
                                 </div>
-                                <div style={{ display: (this.state.activeSection === 'videos') ? 'block' : 'none' }} >
+                                <div className="accordion-detail" style={{ display: (this.state.activeSection === 'videos') ? 'block' : 'none' }} >
                                     { productVideos }
-                                    <div style={{ display: 'inline-flex' }} >
+                                    <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
                                         <input type="url" value={this.state.videoURL} placeholder="video URL" onChange={(e) => this.update({ type: 'videoURL', value: e.target.value })} />
-                                        <div onClick={this.addVideo} className="btn cancel-btn">Add</div>
+                                        <div onClick={this.addVideo} className="cancel-btn blue">Add</div>
                                     </div>
                                 </div>
 
                                 {/* ************************************** parts section ************************************** */}
                                 <div id="accordion-parts" className={(this.state.activeSection === 'parts') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('parts')} >
                                     <div>{ _.size(this.state.applianceAssociatedParts) } Parts</div>
+                                    <img className="accordion-arrow" src={(this.state.activeSection === 'parts') ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png') } />
                                 </div>
-                                <div style={{ display: (this.state.activeSection === 'parts') ? 'block' : 'none' }} >
+                                <div className="accordion-detail" style={{ display: (this.state.activeSection === 'parts') ? 'block' : 'none' }} >
                                     { productParts }
-                                    <div style={{ display: 'inline-flex' }} >
+                                    <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
                                         <input type="text" value={this.state.partDescription} placeholder="Part name"   onChange={(e) => this.update({ type: 'partDescription', value: e.target.value })} />
                                         <input type="text" value={this.state.partCode}        placeholder="Part number" onChange={(e) => this.update({ type: 'partCode', value: e.target.value })} />
-                                        <div onClick={this.addPart} className="btn cancel-btn">Add</div>
+                                        <div onClick={this.addPart} className="cancel-btn blue">Add</div>
                                     </div>
                                 </div>
                             </div>
-                            <div style={styles.checkbox}>
+                            <div className="checkbox">
                                 <input
                                     id="checkbox-is-ge-install"
                                     type="checkbox"
@@ -546,7 +520,7 @@ class EditProduct extends React.Component {
                                 <input name="product-install-value" type="number" placeholder="install value (e.g. 0.00)" value={this.state.applianceInstallPrice} onChange={(e) => this.update({ type: 'applianceInstallPrice', value: e.target.value})} />
                                 <textarea name="product-install-descr" type="text" placeholder="Install Description" value={this.state.applianceInstallDescription} onChange={(e) => this.update({ type: 'applianceInstallDescription', value: e.target.value})} />
                             </div>
-                            <div style={styles.checkbox}>
+                            <div className="checkbox">
                                 <input
                                     id="checkbox-is-ge-remove-old"
                                     type="checkbox"

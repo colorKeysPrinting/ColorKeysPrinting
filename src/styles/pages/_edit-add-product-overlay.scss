@@ -2,7 +2,68 @@
     background-color: $background-gray;
     border-radius: 5px;
     border: 1px solid $border-gray;
-    box-shadow: 0px 2px 7px 0px $border-gray;
     width: 490px;
-    margin: 5em auto;
+    margin: 0 auto 0 auto;
+    .title-bar {
+        display: inline-flex;;
+        background-color: #FFF;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        width: 100%;
+        justify-content: space-between;
+        padding: 30px;
+        img {
+            cursor: pointer;
+        }
+    }
+    .content {
+        margin: 0px auto;
+        text-align: left;
+        // max-height: 500px;
+        padding: 20px 40px;
+        textarea {
+            height: 92px;
+            width: 100%;
+            border: 1px solid $border-gray;
+            margin: 10px 0;
+        }
+        .col-2 {
+            column-count: 2;
+            input {
+                margin: 10px 0;
+                width: 100%;
+            }
+            .select-box {
+                width: 100%;
+                .input {
+                    width: 100%;
+                    height: 46px;
+                    background-color: white;
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 14px;
+                    border: 1px solid $border-gray;
+                    margin-bottom: 10px;
+                }
+            }
+            .select-options-active {
+                width: 200px;
+                .option {
+                    text-align: center;
+                    padding: 12px;
+                    border-bottom: 1px solid $border-gray;
+                    &:hover {
+                        background-color: $medium-gray;
+                    }
+                }
+            }
+        }
+    }
+    .checkbox {
+        // width: 60%;
+        padding: 15px 0;
+    }
+    .text {
+        margin: 10px;
+    }
 }

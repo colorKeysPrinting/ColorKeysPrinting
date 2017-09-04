@@ -23,7 +23,7 @@ export default class MyTable extends React.Component {
                         if (this.props.sortby) {
                             const image = (this.props.sortby.isAsc !== 'asc') ? <img className="sort-arrow" src={assets('./images/icons-sort-up.png')} alt="sortArrow" /> : <img className="sort-arrow" src={assets('./images/icons-sort-down.png')} alt="sortArrow" />;
                             const arrow = (id === this.props.sortby.column) ? image : null;
-                            return (<td className="table-header" key={`table-header-${id}`} >{ header }{ arrow }</td>);
+                            return (<td className="table-header" key={`table-header-${id}`} ><span className="arrow-wrapper">{ header }{ arrow }</span></td>);
 
                         } else {
                             return (<td className="table-header" key={`table-header-${id}`} >{ header }</td>);
@@ -44,7 +44,19 @@ export default class MyTable extends React.Component {
 
                     } else {
                         if (id === 'totalCost') {
-                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>$ { col }</td>;
+                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>${ col }</td>;
+
+                        } else if (col === 'Pending') {
+                            const lowercase = col.toLowerCase();
+                            return <td key={`table-item-${id}`} className="pending" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+
+                        } else if (col === 'Approved') {
+                            const lowercase = col.toLowerCase();
+                            return <td key={`table-item-${id}`} className="approved" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+
+                        } else if (col === 'Shipped') {
+                            const lowercase = col.toLowerCase();
+                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
 
                         } else {
                             return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;

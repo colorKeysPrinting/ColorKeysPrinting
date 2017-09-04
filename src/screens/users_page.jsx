@@ -6,6 +6,7 @@ import dateformat                           from 'dateformat';
 import SearchInput                          from 'react-search-input';
 import Select                               from 'components/select_box';
 import filter                               from 'libs/filter';
+import assets                               from 'libs/assets';
 
 import { logout }                           from 'ducks/active_user/actions';
 import { getUsers, approveUser, autoApproveUserOrders }            from 'ducks/users/actions';
@@ -118,7 +119,7 @@ class UsersPage extends React.Component {
                         value = user['email'];
 
                     } else if (key === 'createdAt') {
-                        value = dateformat(new Date(value), 'mmmm dd, yyyy');
+                        value = dateformat(new Date(value), 'mmm dd, yyyy');
 
                     } else if (key === 'autoApprovedOrders') {
                         const autoApprovedOrders = (user.autoApprovedOrders) ? true : false;
@@ -208,8 +209,9 @@ class UsersPage extends React.Component {
                 <div className="table-card">
                     <div className="card-header">
                         <h2>Users</h2>
-                        <div className="search-bar">
-                            <SearchInput onChange={(value) => this.update({ type: 'searchTerm', value })} />
+                        <div className="search-wrapper">
+                            <img src={assets('./images/icon-search.svg')} className="search-icon"/>
+                            <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} />
                         </div>
                     </div>
                     <MyTable

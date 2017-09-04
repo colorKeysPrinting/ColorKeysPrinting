@@ -1,0 +1,96 @@
+#order-details-page {
+    padding-top: 49px;
+    .tenant-info-table, .order-details-table {
+        tbody {
+            td {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                max-width: 200px;
+            }
+        }
+    }
+    .order-details-table {
+        border-radius: 4px 4px 0 0;
+        border: 1px solid $border-gray;
+        .table {
+            border-radius: 0;
+        }
+        thead {
+            td {
+                border-bottom: 1px solid $border-gray;
+                //Order Status
+                &:nth-child(1) {
+                    width: 10%;
+                }
+
+                //Order Number
+                &:nth-child(2) {
+                    width: 11%;
+                }
+
+                //Delivery Date
+                &:nth-child(3) {
+                    width: 10%;
+                }
+
+                //Preferred Install Time
+                &:nth-child(4) {
+                    width: 14%;
+                }
+
+                //Occupancy
+                &:nth-child(5) {
+                    width: 10%;
+                }
+
+                //Tenant
+                &:nth-child(6) {
+                    width: 11%;
+                }
+
+                //Ordered By
+                &:nth-child(7) {
+                    width: 24%;
+                }
+            }
+        }
+    }
+    .tenant-info-table {
+        margin-bottom: 38px;
+        border-radius: 0 0 4px 4px;
+        border: 1px solid $border-gray;
+        border-top: 0;
+        .table {
+            border-radius: 0;
+        }
+    }
+    .cost-section {
+        margin: 18px 0;
+        border: 1px solid $medium-light-gray;
+        border-radius: 4px;
+        background: white;
+        box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+        width: 100%;
+        padding: 22px 31px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        h5 {
+            font-weight: 600;
+        }
+        .cost-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-self: flex-end;
+            h5 {
+                margin: 0 23px;
+                span {
+                    padding-left: 20px;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+}

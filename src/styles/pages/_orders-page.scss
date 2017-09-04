@@ -1,5 +1,6 @@
 //Orders Page Specific Styling
 #orders-page {
+    padding-top: 49px;
     .table {
         thead {
             td {
@@ -15,7 +16,7 @@
 
                 //Property Address
                 &:nth-child(3) {
-                    width: 14%;
+                    width: 13%;
                 }
 
                 //Occupancy
@@ -45,7 +46,8 @@
 
                 //Status
                 &:nth-child(9) {
-                    width: 9%;
+                    width: 10%;
+
                 }
 
                 //Approval Column
@@ -60,6 +62,9 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 max-width: 200px;
+                &.approved {
+                    color: $green;
+                }
             }
         }
     }

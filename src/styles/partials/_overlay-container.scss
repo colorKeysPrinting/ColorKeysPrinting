@@ -1,0 +1,15 @@
+#overlay-container {
+    display: block;
+    // position: absolute;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 999;
+    height: 100%;
+    .close-section {
+        height: 100%;
+        width: 100%;
+    }
+}

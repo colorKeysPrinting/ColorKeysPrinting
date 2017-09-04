@@ -141,7 +141,7 @@ class OrderDetails extends React.Component {
 
                 // *************** order & tenant section ***************
                 // **** order section
-                orderHeaders.lockBoxCode = (order.lockBoxCode) ? 'Lock Box Code' : 'Tenant';
+                orderHeaders.lockBoxCode = (order.lockBoxCode) ? 'Lockbox Code' : 'Tenant';
                 const orderDetailsCols = {};
                 _.each(orderHeaders, (value, key) => {
                     value = order[key]
@@ -219,7 +219,7 @@ class OrderDetails extends React.Component {
                     ];
                 }
 
-                const tenantInfoSection = <div id="admin-table">
+                const tenantInfoSection = <div className="tenant-info-table">
                     <table className="table">
                         <thead className="head">
                             { tenantInfoTitle }
@@ -243,6 +243,7 @@ class OrderDetails extends React.Component {
                 pageData = <div className="container">
                     { detailsHeaderSection }
                     <MyTable
+                        className="order-details-table"
                         type="orderDetails"
                         headers={orderHeaders}
                         data={orderData}

@@ -1,0 +1,12 @@
+#login-modal {
+    .login-inputs {
+        input {
+            display: block;
+            width: 100%;
+        }
+    }
+    .login-buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+}
