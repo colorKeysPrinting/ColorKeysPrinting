@@ -7,10 +7,11 @@ import Network          from 'libs/constants/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
-    LOGOUT          : 'sibi_ge_admin/activeUser/LOGOUT',
-    LOGIN_SUCCESS   : 'sibi_ge_admin/activeUser/LOGIN_SUCCESS',
-    LOGIN_ERROR     : 'sibi_ge_admin/activeUser/LOGIN_ERROR',
-    PASSWORD_RESET  : 'sibi_ge_admin/activeUser/PASSWORD_RESET',
+    LOGOUT              : 'sibi_ge_admin/activeUser/LOGOUT',
+    RESET_LOGIN_ERROR   : 'sibi_ge_admin/activeUser/RESET_LOGIN_ERROR',
+    LOGIN_SUCCESS       : 'sibi_ge_admin/activeUser/LOGIN_SUCCESS',
+    LOGIN_ERROR         : 'sibi_ge_admin/activeUser/LOGIN_ERROR',
+    PASSWORD_RESET      : 'sibi_ge_admin/activeUser/PASSWORD_RESET',
     GET_CURRENT_USER_SUCCESS : 'sibi_ge_admin/activeUser/GET_CURRENT_USER_SUCCESS',
 }
 
@@ -20,6 +21,12 @@ export const ActionTypes = {
 export function logout() {
     return {
         type: ActionTypes.LOGOUT
+    };
+}
+
+export function resetLoginError() {
+    return {
+        type: ActionTypes.RESET_LOGIN_ERROR
     };
 }
 
@@ -41,7 +48,6 @@ export function login({ email, password }) {
             })
             .catch(error => {
                 dispatch({ type: ActionTypes.LOGIN_ERROR });
-                throw(error);
             });
     }
 }
