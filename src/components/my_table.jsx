@@ -1,8 +1,6 @@
 import React                    from 'react';
 import _                        from 'lodash';
 
-import ReactTooltip             from 'react-tooltip';
-
 import assets                   from 'libs/assets';
 
 export default class MyTable extends React.Component {

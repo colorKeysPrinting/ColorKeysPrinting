@@ -5,7 +5,6 @@ import { withCookies }                      from 'react-cookie';
 import moment                               from 'moment';
 import SearchInput                          from 'react-search-input';
 import Select                               from 'components/select_box';
-import ReactTooltip                         from 'react-tooltip';
 import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
 
