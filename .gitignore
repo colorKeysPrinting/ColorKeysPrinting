@@ -23,7 +23,8 @@ s3_website.yml
 /.bundle
 /vendor/bundle
 
-node_modules
+node_modules/
+node_modules.bak/
 npm-debug.log
 dist/
 
