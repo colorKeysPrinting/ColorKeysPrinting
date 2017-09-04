@@ -32,18 +32,11 @@ class UsersPage extends React.Component {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        setTimeout(() => {
-            const { activeUser } = this.props;
-            if (activeUser.size <= 0) {
-                this.props.history.push(`/login`);
-            }
-        }, 250);
-
         if (jwt) {
             this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
 
         } else {
-            console.log('TODO: trigger logout function *** no JWT ***');
+            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('users');

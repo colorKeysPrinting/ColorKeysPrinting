@@ -21,7 +21,7 @@ class ProductsPage extends React.Component {
         if (jwt) {
             this.props.getProductCategories({ token: jwt.token });
         } else {
-            console.log('TODO: trigger logout function *** no JWT ***');
+            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('products');
@@ -50,13 +50,6 @@ class ProductsPage extends React.Component {
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-
-        setTimeout(() => {
-            const { activeUser } = this.props;
-            if (activeUser.size <= 0) {
-                this.props.history.push(`/login`);
-            }
-        }, 250);
 
         if (this.props.productCategories.size > 0 &&
             this.props.products.size > 0) {

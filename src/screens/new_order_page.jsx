@@ -11,12 +11,14 @@ import { setActiveTab }                     from 'ducks/header/actions';
 class NewOrderPage extends React.Component {
 
     componentWillMount() {
-        setTimeout(() => {
-            const { activeUser } = this.props;
-            if (activeUser.size <= 0) {
-                this.props.history.push(`/login`);
-            }
-        }, 250);
+        const { cookies, activeUser } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+
+        if (jwt) {
+            this.props.getProductCategories({ token: jwt.token });
+        } else {
+            this.props.history.push(`/login`);
+        }
 
         this.props.setActiveTab('newOrder');
     }

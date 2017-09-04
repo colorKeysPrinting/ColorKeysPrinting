@@ -33,7 +33,7 @@ class HeaderBar extends React.Component {
             if (jwt && jwt.token !== '') {
                 this.props.getCurrentUser({ token: jwt.token});
             } else {
-                console.log('TODO: trigger logout function *** no JWT ***');
+                this.props.history.push(`/login`);
             }
         }
     }
@@ -52,8 +52,6 @@ class HeaderBar extends React.Component {
                     this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
                     this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
 
-                } else {
-                    console.log('TODO: trigger logout function *** no JWT ***');
                 }
             }
         }
@@ -81,10 +79,10 @@ class HeaderBar extends React.Component {
         const activeUser = this.props.activeUser.toJS();
 
         if (this.props.location.pathname !== '/process_order') {
-            if (!activeUser.type || activeUser.type === 'signUp') {
-                loginSection = <Link to={`/login`} className="btn blue" >Login</Link>;
+            const { cookies } = this.props;
+            const jwt = cookies.get('sibi-admin-jwt');
 
-            } else {
+            if (jwt) {
                 const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : assets('./images/icon-settings.svg');
 
                 profileOverlay = (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
@@ -97,20 +95,21 @@ class HeaderBar extends React.Component {
                 loginSection = <div onClick={this.showProfile}>
                     <img className="settings-icon" src={profilePic} alt="settingsButtons" width="40px" height="40px" />
                 </div>;
+
+                if (this.props.orders.size > 0 &&
+                    this.props.users.size > 0) {
+
+                    _.each(this.props.orders.toJS(), (order) => {
+                        pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
+                    });
+
+                    _.each(this.props.users.toJS(), (user) => {
+                        pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
+                    });
+                }
+            } else {
+                loginSection = <Link to={`/login`} className="btn blue" >Login</Link>;
             }
-
-            if (this.props.orders.size > 0 &&
-                this.props.users.size > 0) {
-
-                _.each(this.props.orders.toJS(), (order) => {
-                    pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
-                });
-
-                _.each(this.props.users.toJS(), (user) => {
-                    pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
-                });
-            }
-
         }
 
         return (

@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
 
         state = state.set('activeUser', Immutable.fromJS({}));
 
-        cookies.set('sibi-admin-jwt', { token: '', email: '' }, { path: '/' });
+        cookies.remove('sibi-admin-jwt');
 
         break;
 
