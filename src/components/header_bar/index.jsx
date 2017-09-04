@@ -92,7 +92,7 @@ class HeaderBar extends React.Component {
                 profileOverlay = (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
                     <div id="profile-container">
                         <div className="arrow-up"></div>
-                        <div className="element" onClick={() => this.props.logout()} >Log out</div>
+                        <div className="element" onClick={() => this.props.logout()} >Log Out</div>
                     </div>
                 </Overlay> : null;
 
