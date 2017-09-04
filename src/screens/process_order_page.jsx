@@ -281,6 +281,7 @@ class ProcessOrderPage extends React.Component {
                             product={orderDetail.product}
                             replacement={replacement}
                             image={orderDetail.selectedColorInfo.imageUrl}
+                            manufacturerModelNumber={orderDetail.selectedColorInfo.manufacturerModelNumber}
                             qty={(orderDetail.qty) ? orderDetail.qty : 1}
                             price={orderDetail.ProductPrice.price}
 

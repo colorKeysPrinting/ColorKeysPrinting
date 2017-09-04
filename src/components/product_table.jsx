@@ -43,7 +43,7 @@ export default function ProductTable(props) {
 
                     } else if (props.type === 'orderDetails') {
                         value = <div className="no-limit">
-                            <div className="table-cell-details">{ `Model Number: ${product.sibiModelNumber}` }</div>
+                            <div className="table-cell-details">{ `Model Number: ${(props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber}` }</div>
                             <div className="table-cell-details">{ `Color: ${props.color}` }</div>
                             <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
                             <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
@@ -57,7 +57,7 @@ export default function ProductTable(props) {
                     value = (props.outOfStock !== props.productIndex) ? description : <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
                         <div className="input-container">
                             <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
-                            <input name="model-num-replace" value={props.modelNumber} placeholder="GTE18GT" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
+                            <input name="model-num-replace" value={props.modelNumber} placeholder="JGB635DEKBB" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
                         </div>
                         <input className="btn blue" type="submit" value="Replace" />
                     </form>;
@@ -75,7 +75,7 @@ export default function ProductTable(props) {
             case 'address':
                 if (row === 'product') {
                     if (props.type === 'processOrder') {
-                        value = (!props.replacement) ? `#${ product.sibiModelNumber }` : `#${ props.replacement }`;
+                        value = (!props.replacement) ? `#${ (props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber }` : `#${ props.replacement }`;
 
                     } else if (props.type === 'orderDetails') {
                         value = props.address;

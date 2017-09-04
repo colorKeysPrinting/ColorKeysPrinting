@@ -43,26 +43,26 @@ class HeaderBar extends React.Component {
         const { cookies, location } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt && jwt.token !== '' && location) {
-            if (!_.isEqual(nextProps.activeUser, this.props.activeUser) &&
-                nextProps.activeUser.size > 0) {
+        if (this.props.location.pathname !== '/process_order') {
+            if (jwt && jwt.token !== '' && location) {
+                if (!_.isEqual(nextProps.activeUser, this.props.activeUser) &&
+                    nextProps.activeUser.size > 0) {
 
-                const pathname = (location.pathname === `/` || location.pathname === `/login`) ? `/orders` : location.pathname;
-                const search = (location.search) ? location.search : null;
-                this.props.history.push({ pathname, search });
+                    const pathname = (location.pathname === `/` || location.pathname === `/login`) ? `/orders` : location.pathname;
+                    const search = (location.search) ? location.search : null;
+                    this.props.history.push({ pathname, search });
 
-                this.props.getCurrentUser({ token: jwt.token});
-                this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
-                this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                    this.props.getCurrentUser({ token: jwt.token});
+                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                }
+            } else {
+                this.props.history.push(`/login`);
             }
-        } else {
-            this.props.history.push(`/login`);
-        }
 
-
-
-        if (!_.isEqual(nextProps.isLogout, this.props.isLogout)) {
-            this.props.logout();
+            if (!_.isEqual(nextProps.isLogout, this.props.isLogout)) {
+                this.props.logout();
+            }
         }
     }
 
@@ -84,7 +84,7 @@ class HeaderBar extends React.Component {
     }
 
     render() {
-        let loginSection, profileOverlay, pendingOrders = 0, pendingUsers = 0;
+        let loginSection, profileOverlay, pendingOrders = 0, pendingUsers = 0, headerContent;
 
         const activeUser = this.props.activeUser.toJS();
 
@@ -120,12 +120,8 @@ class HeaderBar extends React.Component {
             } else {
                 loginSection = (this.props.location.pathname !== `/login`) ? <Link to={`/login`} className="btn blue" >Login</Link> : null;
             }
-        }
 
-        return (
-            <div id="header-bar">
-                <img src={assets('./images/SIBI_Logo.png')} id="logo"/>
-                <span className="logo-text">GE APP ADMIN</span>
+            headerContent = <div>
                 <Tabs
                     type={activeUser.type}
                     activeTab={this.props.activeTab}
@@ -136,6 +132,14 @@ class HeaderBar extends React.Component {
                     { loginSection }
                 </div>
                 { profileOverlay }
+            </div>;
+        }
+
+        return (
+            <div id="header-bar">
+                <img src={assets('./images/SIBI_Logo.png')} id="logo"/>
+                <span className="logo-text">GE APP ADMIN</span>
+                { headerContent }
             </div>
         );
     }
