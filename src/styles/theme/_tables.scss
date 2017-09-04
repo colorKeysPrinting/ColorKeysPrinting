@@ -148,6 +148,8 @@ table tr:last-child td:last-child {
     box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
     border: 1px solid $medium-light-gray;
     border-radius: 4px;
+    padding-bottom: 6px;
+    background-color: white;
 
     .product-table {
         .product-table-container-row {
@@ -164,6 +166,9 @@ table tr:last-child td:last-child {
                         }
                     }
                 }
+            }
+            &:last-child {
+                border-bottom: none;
             }
         }
     }
@@ -222,6 +227,9 @@ table tr:last-child td:last-child {
                     }
                     thead {
                         border-bottom: 1px solid $border-gray;
+                        td {
+                            border-bottom: 1px solid $border-gray;
+                        }
                     }
                     tbody {
                         vertical-align: top;
