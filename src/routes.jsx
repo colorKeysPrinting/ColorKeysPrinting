@@ -14,7 +14,6 @@ import ProcessOrderPage                    from 'screens/process_order_page';
 
 // overlays
 import LoginOverlay                        from 'screens/overlays/login';
-import EditProductOverlay                  from 'screens/overlays/edit_product';
 import FileUploaderOverlay                 from 'screens/overlays/file_uploader';
 
 import NotFound                            from 'components/common/not_found';
@@ -32,7 +31,6 @@ export default (
             <Route path="/new_order" component={NewOrderPage} />
 
             <Route path="/login" component={LoginOverlay} />
-            <Route path="/edit_product" component={EditProductOverlay} />
             <Route path="/file_uploader" component={FileUploaderOverlay} />
             <Route path="/process_order" component={ProcessOrderPage} />
         </div>
