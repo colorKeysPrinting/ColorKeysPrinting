@@ -30,6 +30,11 @@ class UsersPage extends React.Component {
         this.orderBy = this.orderBy.bind(this);
     }
 
+    focus() {
+        // Explicitly focus the text input using the raw DOM API
+        this.textInput.focus();
+    }
+
     componentWillMount() {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
@@ -204,13 +209,10 @@ class UsersPage extends React.Component {
             <div id="users-page" className="container">
                 <div className="table-card">
                     <div className="card-header">
-                        <h2 data-tip data-for='happyFace'>Users</h2>
-                        <ReactTooltip id='happyFace' type='dark'>
-                            <span>Show happy face</span>
-                        </ReactTooltip>
+                        <h2>Users</h2>
                         <div className="search-wrapper">
-                            <img src={assets('./images/icon-search.svg')} className="search-icon" />
-                            <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} />
+                            <img src={assets('./images/icon-search.svg')} className="search-icon" onClick={this.focus} />
+                            <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} ref={(input) => { this.textInput = input; }} />
                         </div>
                     </div>
                     <MyTable
