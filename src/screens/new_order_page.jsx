@@ -14,9 +14,7 @@ class NewOrderPage extends React.Component {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt) {
-            this.props.getProductCategories({ token: jwt.token });
-        } else {
+        if (!jwt) {
             this.props.history.push(`/login`);
         }
 
@@ -31,21 +29,25 @@ class NewOrderPage extends React.Component {
     }
 
     render() {
+        let iFrame;
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-
         const height = (window.innerHeight - 69);
         const width = window.innerWidth;
 
+        if(jwt && jwt.token !== '') {
+            iFrame = <Iframe
+                url={`https://sibi-ge-dev.netlify.com/new?authToken=${jwt.token}`}
+                width={`${width}`}
+                height={`${height}`}
+                position="relative"
+                allowFullScreen
+            />
+        }
+
         return (
             <div style={{ position: 'absolute', top: '69px', height, width }}>
-                <Iframe
-                    url={`https://sibi-ge-dev.netlify.com/new?authToken=${jwt.token}`}
-                    width={`${width}`}
-                    height={`${height}`}
-                    position="relative"
-                    allowFullScreen
-                />
+                { iFrame }
             </div>
         );
     }

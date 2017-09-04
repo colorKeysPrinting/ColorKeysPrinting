@@ -77,7 +77,7 @@ class OrdersPage extends React.Component {
     handleItem({ item }) {
         console.log('item pressed', item);
         this.props.triggerSpinner({ isOn: false });
-        this.props.history.push('/order_details', item.id);
+        this.props.history.push({ pathname: `/order_details/`, search: `orderId=${item.id}` });
     }
 
     render() {
