@@ -1,6 +1,8 @@
 import React                    from 'react';
 import _                        from 'lodash';
 
+import ReactTooltip             from 'react-tooltip';
+
 import assets                   from 'libs/assets';
 
 export default class MyTable extends React.Component {
@@ -44,22 +46,22 @@ export default class MyTable extends React.Component {
 
                     } else {
                         if (id === 'totalCost') {
-                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>${ col }</td>;
+                            return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>${ col }</td>;
 
                         } else if (col === 'Pending') {
                             const lowercase = col.toLowerCase();
-                            return <td key={`table-item-${id}`} className="pending" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                            return <td title={col} key={`table-item-${id}`} className="pending" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
 
                         } else if (col === 'Approved') {
                             const lowercase = col.toLowerCase();
-                            return <td key={`table-item-${id}`} className="approved" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                            return <td title={col} key={`table-item-${id}`} className="approved" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
 
                         } else if (col === 'Shipped') {
                             const lowercase = col.toLowerCase();
-                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                            return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
 
                         } else {
-                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                            return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
                         }
                     }
                 }
