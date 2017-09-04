@@ -33,9 +33,10 @@ class UsersPage extends React.Component {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt) {
-            this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
-
+        if (jwt && jwt.token !== '') {
+            if (activeUser.size > 0) {
+                this.props.getUsers({ token: jwt.token, type: activeUser.toJS().type });
+            }
         } else {
             this.props.history.push(`/login`);
         }
@@ -131,9 +132,10 @@ class UsersPage extends React.Component {
 
                         value = <Select
                             name="auto-approved-orders-select"
+                            user={user}
                             value={autoApprovedOrders}
                             options={options}
-                            onChange={(value) => this.handleAutoApprove({ user, autoApprovedOrders: value })}
+                            onChange={({ user, value }) => this.handleAutoApprove({ user, autoApprovedOrders: value })}
                         />;
 
                     } else if (key === 'status') {
@@ -197,8 +199,6 @@ class UsersPage extends React.Component {
                 });
             }
         }
-
-        const sortBy = (this.state.sortby.column !== '') ? this.state.sortby : { column: 'orderStatus', isAsc: 'asc' };
 
         return (
             <div id="users-page" className="container">
