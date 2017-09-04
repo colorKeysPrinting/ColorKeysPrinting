@@ -20,15 +20,15 @@
         margin: 0px auto;
         text-align: left;
         // max-height: 500px;
-        padding: 20px 0;
+        padding: 20px 40px;
         textarea {
             height: 92px;
             width: 100%;
             border: 1px solid $border-gray;
+            margin: 10px 0;
         }
         .col-2 {
             column-count: 2;
-            padding: 0 40px;
             input {
                 margin: 10px 0;
                 width: 100%;
@@ -61,7 +61,7 @@
     }
     .checkbox {
         // width: 60%;
-        padding: 30px;
+        padding: 15px 0;
     }
     .text {
         margin: 10px;
