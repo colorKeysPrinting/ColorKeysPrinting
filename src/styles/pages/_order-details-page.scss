@@ -13,6 +13,9 @@
     .order-details-table {
         border-radius: 4px 4px 0 0;
         border: 1px solid $border-gray;
+        td {
+            padding: 20px 18px;
+        }
         thead {
             td {
                 border-bottom: 1px solid $border-gray;
@@ -23,7 +26,7 @@
 
                 //Order Number
                 &:nth-child(2) {
-                    width: 11%;
+                    width: 12%;
                 }
 
                 //Delivery Date
@@ -33,22 +36,30 @@
 
                 //Preferred Install Time
                 &:nth-child(4) {
-                    width: 14%;
+                    width: 10%;
                 }
 
                 //Occupancy
                 &:nth-child(5) {
-                    width: 10%;
+                    width: 8%;
                 }
 
                 //Tenant
                 &:nth-child(6) {
-                    width: 11%;
+                    width: 12%;
                 }
 
                 //Ordered By
                 &:nth-child(7) {
-                    width: 24%;
+                    width: 12%;
+                }
+
+                &:nth-child(8) {
+                    width: 12%;
+                }
+
+                &:nth-child(9) {
+                    width: 12%;
                 }
             }
         }

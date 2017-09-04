@@ -1,12 +1,16 @@
 #header-bar {
     height: 69px;
     width: 100%;
+    min-width: 1010px;
     position: fixed;
     top: 0px;
     left: 0px;
     z-index: 9999;
     background: #2D324C;
     box-shadow: 0px 2px 7px 0px rgba(50, 50, 50, 0.4);
+    @media (max-width: 1011px) {
+        position: absolute;
+    }
 }
 
 #logo {
@@ -35,14 +39,15 @@
     a {
         display: inline-flex;
         height: 69px;
-        color: white;
+        color: $off-text;
         padding: 28px 20px;
         font-size: 16px;
         font-weight: 400;
         font-style: normal;
 
         &.active {
-        border-bottom: 3px solid $blue;
+            border-bottom: 3px solid $blue;
+            color: white;
         }
     }
 

@@ -34,11 +34,12 @@ table tr:last-child td:last-child {
             position: relative;
             .arrow-wrapper {
                 position: relative;
+                display: inline-block;
             }
             .sort-arrow {
                 display: inline-block;
                 position: absolute;
-                top: 3px;
+                top: 4px;
                 right: -12px;
             }
             div {

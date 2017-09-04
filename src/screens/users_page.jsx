@@ -119,7 +119,7 @@ class UsersPage extends React.Component {
                         value = user['email'];
 
                     } else if (key === 'createdAt') {
-                        value = moment(new Date(value)).format('MM DD, YYYY');
+                        value = moment(new Date(value)).format('MMM DD, YYYY');
 
                     } else if (key === 'autoApprovedOrders') {
                         const autoApprovedOrders = (user.autoApprovedOrders) ? true : false;

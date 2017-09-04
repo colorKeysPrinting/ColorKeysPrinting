@@ -139,7 +139,7 @@ class OrdersPage extends React.Component {
                         value = item[key];
 
                     } else if (key === 'createdAt') {
-                        value = moment(new Date(value)).format('MM DD, YYYY');
+                        value = moment(new Date(value)).format('MMM DD, YYYY');
 
                     } else if (key === 'totalCost') {
                         value = parseFloat(item[key]);
