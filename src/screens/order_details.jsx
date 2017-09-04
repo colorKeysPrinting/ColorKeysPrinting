@@ -88,12 +88,13 @@ class OrderDetails extends React.Component {
         const orderHeaders = {
             orderStatus: 'Order Status',
             orderNumber: 'Order Number',
-            deliveryDate: 'Delivery Date',
-            installTime: 'Preferred Install Time',
+            createdBy: 'Ordered By',
             occupied: 'Occupancy',
             lockBoxCode: '',
-            createdBy: 'Ordered By',
-            hotshotDelivery: 'Hot Shot Delivery'
+            installTime: 'Preferred Install Time',
+            hotshotDelivery: 'Hot Shot Delivery',
+            hotshotInstallDate: '',
+            hotshotCode: '',
         };
 
         if (this.props.order.size > 0) {
@@ -164,9 +165,6 @@ class OrderDetails extends React.Component {
                     } else if (key === 'orderNumber'){
                         value = order.orderNumber;
 
-                    } else if (key === 'deliveryDate') {
-                        value = moment(order.installDate).format('MM/DD/YYYY');
-
                     } else if (key === 'installTime') {
                         value = (order.applianceDeliveryTime) ? order.applianceDeliveryTime : 'Not Specified';
 
@@ -186,7 +184,7 @@ class OrderDetails extends React.Component {
                         value = moment(order.installDate).format('MM/DD/YYYY');
 
                     } else if (key === 'hotshotCode') {
-                        value = (order.isApplianceHotShotDelivery) ? <div>{ order.applianceHotShotCode }</div> : null;
+                        value = (order.isApplianceHotShotDelivery) ? order.applianceHotShotCode : null;
                     }
 
                     orderDetailsCols[key] = value;
