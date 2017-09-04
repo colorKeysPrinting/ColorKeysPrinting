@@ -60,6 +60,7 @@
   font-weight: 500;
   font-style: normal;
   color: $dark-gray;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 h1, h2, h3, h4, h5, p, label {

@@ -210,7 +210,7 @@ class UsersPage extends React.Component {
                     <div className="card-header">
                         <h2>Users</h2>
                         <div className="search-wrapper">
-                            <img src={assets('./images/icon-search.svg')} className="search-icon"/>
+                            <img src={assets('./images/icon-search.svg')} className="search-icon" />
                             <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} />
                         </div>
                     </div>
