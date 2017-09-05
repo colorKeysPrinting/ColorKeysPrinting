@@ -25,7 +25,7 @@ export default function ProductTable(props) {
         data={imageData}
     />;
 
-    const productDetailRows = (props.type === 'processOrder') ? ['product', 'outOfStock', 'install', 'remove', 'disconnect'] : ['product', 'outOfStock', 'install', 'remove'];
+    const productDetailRows = ['product', 'outOfStock', 'install', 'remove', 'disconnect'];
 
     const productDetails = _.map(productDetailRows, (row) => {
         let cols = {};
