@@ -31,7 +31,7 @@ class OrderDetails extends React.Component {
         const { cookies, location } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt && jwt.token !== '' && location) {
+        if (jwt) {
             const reOrder = /orderId=(.*)/;
             const orderId = reOrder.exec(location.search)[1];
 
@@ -40,19 +40,13 @@ class OrderDetails extends React.Component {
 
             } else {
                 alert('No orderId provided routing back to orders');
-                this.props.history.push(`/order`);
+                this.props.history.push(`/orders`);
             }
         } else {
             this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('orders');
-    }
-
-    componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.order, this.props.order)) {
-            this.props.triggerSpinner({ isOn: true });
-        }
     }
 
     componentDidUpdate() {
@@ -280,7 +274,7 @@ class OrderDetails extends React.Component {
 
                 pageData = <div style={{ position: 'absolute', top: '69px', height, width }}>
                     <Iframe
-                        url={`http://undertaker-acceptor-11504.netlify.com/edit/${this.state.editOrder}`}
+                        url={`https://undertaker-acceptor-11504.netlify.com/edit/${this.state.editOrder}`}
                         width={`${width}`}
                         height={`${height}`}
                         position="relative"
