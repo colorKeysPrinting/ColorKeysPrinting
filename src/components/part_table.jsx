@@ -80,7 +80,7 @@ export default function PartTable(props) {
                 break;
 
             case 'price':
-                value = (row === 'part') ? props.price : null;
+                value = (row === 'part') ? ('$' + props.price) : null;
 
                 value = (props.outOfStock !== props.productIndex && !props.replacement) ? value : null;
                 break;
