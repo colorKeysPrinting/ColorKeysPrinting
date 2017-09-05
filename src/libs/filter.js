@@ -3,7 +3,6 @@
 import _            from 'lodash';
 
 const checkObj = (obj) => {
-    console.log('object', obj)
     if(typeof obj === 'object') {
         const re = new RegExp(/select/, 'i');
         const match = re.exec(obj.props.name);
