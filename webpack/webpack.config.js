@@ -15,7 +15,7 @@ module.exports = WebpackConfig = (app) => {
         }),
         new ExtractTextPlugin(`${app.APP_NAME}_[hash].css`),
         new HtmlWebpackPlugin({
-            title: JSON.stringify(app.name),
+            title: JSON.stringify(app.APP_NAME),
             filename: 'index.html',
             template: '../src/index.html'
         }),
@@ -32,8 +32,8 @@ module.exports = WebpackConfig = (app) => {
         { test: /\.(js|jsx)$/,                      use: ['babel-loader','eslint-loader'], exclude: /node_modules/ },
         { test: /\.(js|jsx)$/,                      use: 'source-map-loader',              exclude: /node_modules/, enforce: 'pre' },
         { test: /\.scss$/,                          use: ExtractTextPlugin.extract('css-loader!postcss-loader!sass-loader')},
-        { test: /\.*\.(pdf|gif|png|jpg|jpeg|svg)$/,  loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/images') } },
-        { test: /\.*\.(eot|woff2|woff|ttf)$/,        loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/fonts') } }
+        { test: /\.*\.(pdf|gif|png|jpg|jpeg|svg)$/, loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/images') } },
+        { test: /\.*\.(eot|woff2|woff|ttf)$/,       loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/fonts') } }
     ];
 
     return {
@@ -62,8 +62,8 @@ module.exports = WebpackConfig = (app) => {
             contentBase: '../src',
             historyApiFallback: true,
             inline: true,
-            host: app.HOST,
-            port: parseInt(app.ASSETS_PORT, 10) || 8080,
+            host: app.HOST || 'localhost',
+            port: parseInt(app.PORT, 10) || 3000,
             stats: {
                 cached: false,
                 exclude: [/node_modules[\\/]react(-router)?[\\/]/]
