@@ -8,6 +8,8 @@ import assets                                               from 'libs/assets';
 import Iframe                                               from 'react-iframe';
 import Loader                                               from 'react-loader';
 
+import { formatPhoneNumbers }                               from 'libs/reformat';
+
 import { logout }                                           from 'ducks/active_user/actions';
 import { triggerSpinner }                                   from 'ducks/ui/actions';
 import { getOrderById, approveOrder, clearOrder }           from 'ducks/orders/actions';
@@ -205,15 +207,19 @@ class OrderDetails extends React.Component {
                 let tenantInfoDetails;
 
                 if (order.occupied) {
+                    const formatTenantPhone = formatPhoneNumbers(order.tenantPhone);
                     tenantInfoTitle = <tr>
                         <td><div className="table-header">Tenant Info: </div></td>
                     </tr>;
 
                     tenantInfoDetails = <tr>
-                        <td><div>{`${order.tenantFirstName} ${order.tenantLastName}`} ∙ {order.tenantPhone} ∙ {order.tenantEmail}</div></td>
+                        <td><div>{`${order.tenantFirstName} ${order.tenantLastName}`} ∙ {formatTenantPhone} ∙ {order.tenantEmail}</div></td>
                     </tr>;
 
                 } else {
+                    const formatUserPhone = formatPhoneNumbers(user.phoneNumber);
+                    const formatOfficePhone = formatPhoneNumbers(order.pmOffice.phoneNumber);
+
                     tenantInfoTitle = <tr>
                         <td><div className="table-header">Delivery Contact: </div></td>
                         <td><div className="table-header">Phone Number: </div></td>
@@ -222,11 +228,11 @@ class OrderDetails extends React.Component {
                     tenantInfoDetails = [
                         <tr key='tenantInfoDetails1'>
                             <td><div>{user.firstName} {user.lastName}</div></td>
-                            <td><div>{user.phoneNumber}</div></td>
+                            <td><div>{formatUserPhone}</div></td>
                         </tr>,
                         <tr key='tenantInfoDetails2'>
                             <td><div>{order.pmOffice.name}</div></td>
-                            <td><div>{order.pmOffice.phoneNumber}</div></td>
+                            <td><div>{formatOfficePhone}</div></td>
                         </tr>
                     ];
                 }
@@ -246,7 +252,7 @@ class OrderDetails extends React.Component {
                 const orderTotalSection = <div className="cost-section">
                     <h5 className="cost-header">Order Summary </h5>
                     <div className="cost-row">
-                        <h5>Sub Total: <span>${ order.totalCost }</span></h5>
+                        <h5>Subtotal: <span>${ order.totalCost }</span></h5>
                         <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
                         <h5>Total: <span>${ (parseFloat(order.totalCost) + parseFloat(order.salesTax)).toFixed(2) }</span></h5>
                     </div>

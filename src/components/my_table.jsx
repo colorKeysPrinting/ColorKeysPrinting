@@ -2,6 +2,7 @@ import React                    from 'react';
 import _                        from 'lodash';
 
 import assets                   from 'libs/assets';
+import { formatPhoneNumbers }   from 'libs/reformat';
 
 export default class MyTable extends React.Component {
     constructor(props) {
@@ -44,7 +45,7 @@ export default class MyTable extends React.Component {
 
                     } else {
                         if (id === 'totalCost') {
-                            return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>${ col }</td>;
+                            return <td title={`$${col}`} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>${ col }</td>;
 
                         } else if (col === 'Pending') {
                             const lowercase = col.toLowerCase();
@@ -57,6 +58,13 @@ export default class MyTable extends React.Component {
                         } else if (col === 'Shipped') {
                             const lowercase = col.toLowerCase();
                             return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                        
+                        } else if (id === 'phoneNumber') {
+                            const phoneFormat = formatPhoneNumbers(col);
+                            return <td title={phoneFormat} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ phoneFormat }</td>;
+
+                        } else if ((typeof col) !== 'string') {
+                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
 
                         } else {
                             return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;

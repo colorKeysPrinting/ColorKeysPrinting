@@ -108,19 +108,19 @@ export default function ProductTable(props) {
 
             case 'price':
                 if (row === 'product') {
-                    value = props.price;
+                    value = ('$' + props.price);
 
                 } else if (row === 'outOfStock') {
                     value = null;
 
                 } else if (row === 'install') {
-                    value = product.applianceInstallPrice;
+                    value = ('$' + product.applianceInstallPrice);
 
                 } else if (row === 'remove') {
-                    value = product.applianceRemovalPrice;
+                    value = ('$' + product.applianceRemovalPrice);
 
                 } else if (row === 'disconnect') {
-                    value = product.applianceDisconnectPrice;
+                    value = ('$' + product.applianceDisconnectPrice);
                 }
 
                 value = (props.outOfStock !== props.productIndex && !props.replacement) ? value : null;
