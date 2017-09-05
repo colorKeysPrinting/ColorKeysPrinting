@@ -174,11 +174,11 @@ class ProcessOrderPage extends React.Component {
                     <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.processOrder();}}>
                         <div className="input-container">
                             <label htmlFor="processed-by">Processed By</label>
-                            <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Jane Doe" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
+                            <input name="processed-by" type="text" value={this.state.processedBy} placeholder="name" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
                         </div>
                         <div className="input-container">
                             <label htmlFor="ge-order-number">GE Order Number</label>
-                            <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="1234-5678" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
+                            <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="number" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
                         </div>
                         <input className="btn blue" type="submit" value="Process Order" />
                     </form>
