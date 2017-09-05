@@ -105,18 +105,16 @@ class OrderDetails extends React.Component {
                 const orderStatus = order.orderStatus;
 
                 // *************** product section ***************
-                if (!order.processedAt) {
-                    const productsAndDestinations = [];
-                    _.each(order.productsAndDestinations, (product) => {
-                        productsAndDestinations.push(product);
+                const productsAndDestinations = [];
+                _.each(order.productsAndDestinations, (product) => {
+                    productsAndDestinations.push(product);
 
-                        _.each(product.includedParts, (part) => {
-                            productsAndDestinations.push({...part, productOrderId: product.productOrderId});
-                        });
+                    _.each(product.includedParts, (part) => {
+                        productsAndDestinations.push({...part, productOrderId: product.productOrderId});
                     });
+                });
 
-                    productData = productsAndDestinations.concat(order.partsAndDestinations);
-                }
+                productData = productsAndDestinations.concat(order.partsAndDestinations);
 
                 productData = _.map(productData, (orderDetail, productIndex) => {
                     if (orderDetail.product) {
