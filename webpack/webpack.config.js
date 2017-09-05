@@ -21,11 +21,12 @@ module.exports = WebpackConfig = (app) => {
         }),
         new CopyWebpackPlugin([
             { from: '../_redirects', to: '../dist/' }
-        ]),
-        (app.env === 'production') ? new webpack.LoaderOptionsPlugin({
-            minimize: true,
-            debug: false
-        }) : null
+        ])
+        // ,
+        // (app.env === 'production') ? new webpack.LoaderOptionsPlugin({
+        //     minimize: true,
+        //     debug: false
+        // }) : null
     ].filter(Boolean);
 
     const loaders = [

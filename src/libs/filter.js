@@ -3,6 +3,7 @@
 import _            from 'lodash';
 
 const checkObj = (obj) => {
+    console.log('object', obj)
     if(typeof obj === 'object') {
         if (obj.type.name === 'Select') {
             const option = _.find(obj.props.options, (option) => { return option.value === obj.props.value });
