@@ -42,9 +42,10 @@ class ProcessOrderPage extends React.Component {
     }
 
     componentWillMount() {
+        const { location } = this.props;
         const reOrder = /orderId=(.*)/;
 
-        const orderId = reOrder.exec(this.props.location.search)[1];
+        const orderId = reOrder.exec(location.search)[1];
 
         if (orderId) {
             this.props.getOrderById({ id: orderId });

@@ -19,7 +19,10 @@ class HeaderBar extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { isSearch: false, isOpen: false };
+        this.state = {
+            isSearch: false,
+            isOpen: false
+        };
 
         this.search = this.search.bind(this);
         this.showProfile = this.showProfile.bind(this);
@@ -27,15 +30,18 @@ class HeaderBar extends React.Component {
     }
 
     componentWillMount() {
-        if (this.props.location.pathname !== '/process_order') {
-            const { cookies } = this.props;
+        const { cookies, location, history } = this.props;
+
+        if (location.pathname !== '/process_order') {
             const jwt = cookies.get('sibi-admin-jwt');
 
-            if (jwt && jwt.token !== '') {
+            if (jwt) {
                 this.props.getCurrentUser({ token: jwt.token});
             } else {
-                this.props.history.push(`/login`);
+                history.push(`/login`);
             }
+        } else {
+            cookies.remove('sibi-admin-jwt');
         }
     }
 
@@ -43,26 +49,34 @@ class HeaderBar extends React.Component {
         const { cookies, location } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (this.props.location.pathname !== '/process_order') {
-            if (jwt && jwt.token !== '' && location) {
-                if (!_.isEqual(nextProps.activeUser, this.props.activeUser) &&
-                    nextProps.activeUser.size > 0) {
+        if (!_.isEqual(nextProps.isLogout, this.props.isLogout)) {
+            this.props.logout();
+        }
 
-                    const pathname = (location.pathname === `/` || location.pathname === `/login`) ? `/orders` : location.pathname;
-                    const search = (location.search) ? location.search : null;
-                    this.props.history.push({ pathname, search });
+        const pathname = (location.pathname === `/` || location.pathname === `/login`) ? `/orders` : location.pathname;
 
-                    this.props.getCurrentUser({ token: jwt.token});
-                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
-                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+        if (pathname !== '/process_order') {
+            if (jwt) {
+                if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+                    if (nextProps.activeUser.size > 0) {
+
+
+                        const search = (location.search) ? location.search : null;
+                        this.props.history.push({ pathname, search });
+
+                        this.props.getCurrentUser({ token: jwt.token});
+                        this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                        this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                    } else {
+                        cookies.remove('sibi-admin-jwt');
+                        this.props.history.push(`/login`);
+                    }
                 }
             } else {
                 this.props.history.push(`/login`);
             }
-
-            if (!_.isEqual(nextProps.isLogout, this.props.isLogout)) {
-                this.props.logout();
-            }
+        } else {
+            cookies.remove('sibi-admin-jwt');
         }
     }
 
@@ -84,42 +98,40 @@ class HeaderBar extends React.Component {
     }
 
     render() {
-        let loginSection, profileOverlay, pendingOrders = 0, pendingUsers = 0, headerContent;
+        let headerContent, loginSection;
+        const { cookies, isLogout } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
 
-        const activeUser = this.props.activeUser.toJS();
+        if (jwt) {
+            let pendingOrders = 0, pendingUsers = 0;
 
-        if (this.props.location.pathname !== '/process_order') {
-            const { cookies } = this.props;
-            const jwt = cookies.get('sibi-admin-jwt');
+            const activeUser = this.props.activeUser.toJS();
+            const profilePic = (activeUser.profilePic) ? assets(activeUser.profilePic) : assets('./images/icon-settings.svg');
 
-            if (jwt) {
-                const profilePic = (this.props.activeUser.profilePic) ? assets(this.props.activeUser.profilePic) : assets('./images/icon-settings.svg');
+            const profileOverlay = (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
+                <div id="profile-container">
+                    <div className="arrow-up"></div>
+                    <div className="element" onClick={this.logout} >Log Out</div>
+                </div>
+            </Overlay> : null;
 
-                profileOverlay = (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
-                    <div id="profile-container">
-                        <div className="arrow-up"></div>
-                        <div className="element" onClick={this.logout} >Log Out</div>
-                    </div>
-                </Overlay> : null;
+            loginSection = <div onClick={this.showProfile}>
+                <img className="settings-icon" src={profilePic} alt="settingsButtons" width="40px" height="40px" />
+            </div>;
 
-                loginSection = <div onClick={this.showProfile}>
-                    <img className="settings-icon" src={profilePic} alt="settingsButtons" width="40px" height="40px" />
-                </div>;
+            if (this.props.orders.size > 0 &&
+                this.props.users.size > 0) {
 
-                if (this.props.orders.size > 0 &&
-                    this.props.users.size > 0) {
+                _.each(this.props.orders.toJS(), (order) => {
+                    pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
+                });
 
-                    _.each(this.props.orders.toJS(), (order) => {
-                        pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
-                    });
-
-                    _.each(this.props.users.toJS(), (user) => {
-                        pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
-                    });
-                }
-            } else {
-                loginSection = (this.props.location.pathname !== `/login`) ? <Link to={`/login`} className="btn blue" >Login</Link> : null;
+                _.each(this.props.users.toJS(), (user) => {
+                    pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
+                });
             }
+
+            // loginSection = (this.props.location.pathname !== `/login`) ? <Link to={`/login`} className="btn blue" >Login</Link> : null; // TODO when we add a home screen this will need to go back in somewhere
 
             headerContent = <div>
                 <Tabs
@@ -128,9 +140,6 @@ class HeaderBar extends React.Component {
                     pendingOrders={pendingOrders}
                     pendingUsers={pendingUsers}
                 />
-                <div className="login-section">
-                    { loginSection }
-                </div>
                 { profileOverlay }
             </div>;
         }
@@ -140,6 +149,9 @@ class HeaderBar extends React.Component {
                 <img src={assets('./images/SIBI_Logo.png')} id="logo"/>
                 <span className="logo-text">GE APP ADMIN</span>
                 { headerContent }
+                <div className="login-section">
+                    { loginSection }
+                </div>
             </div>
         );
     }
