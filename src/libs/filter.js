@@ -5,7 +5,9 @@ import _            from 'lodash';
 const checkObj = (obj) => {
     console.log('object', obj)
     if(typeof obj === 'object') {
-        if (obj.type.name === 'Select') {
+        const re = new RegExp(/select/, 'i');
+        const match = re.exec(obj.props.name);
+        if (match) {
             const option = _.find(obj.props.options, (option) => { return option.value === obj.props.value });
             return (option.label).toLowerCase();
         }
