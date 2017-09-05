@@ -192,7 +192,7 @@ class ProcessOrderPage extends React.Component {
                         value = user.firstName + ' ' + user.lastName;
 
                     } else if (key === 'phoneNumber'){
-                        value = <div>{user.phoneNumber}</div>;
+                        value = user.phoneNumber;
 
                     } else if (key === 'email') {
                         value = user.email;
