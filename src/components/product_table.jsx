@@ -92,7 +92,7 @@ export default function ProductTable(props) {
                     value = (!props.replacement && props.type === 'processOrder') ? `#${ product.applianceRemovalCode }` : null;
 
                 } else if (row === 'disconnect') {
-                    value = (!props.replacement) ? `#${ product.applianceDisconnectCode }` : null;
+                    value = (!props.replacement && props.type === 'processOrder') ? `#${ product.applianceDisconnectCode }` : null;
                 }
 
                 value = (props.outOfStock !== props.productIndex) ? value : null;

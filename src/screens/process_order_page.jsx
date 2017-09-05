@@ -192,7 +192,7 @@ class ProcessOrderPage extends React.Component {
                         value = user.firstName + ' ' + user.lastName;
 
                     } else if (key === 'phoneNumber'){
-                        value = <div>{user.phoneNumber}</div>;
+                        value = user.phoneNumber;
 
                     } else if (key === 'email') {
                         value = user.email;
@@ -231,10 +231,10 @@ class ProcessOrderPage extends React.Component {
                             value = `${order.tenantFirstName} ${order.tenantLastName}`;
 
                         } else if (key === 'phoneNumber') {
-                            value = <div>{order.tenantPhone}</div>;
+                            value = order.tenantPhone;
 
                         } else if (key === 'email') {
-                            value = <div>{order.tenantEmail}</div>;
+                            value = order.tenantEmail;
                         }
                     } else {
                         if ( key === 'lockBox') {
@@ -251,13 +251,13 @@ class ProcessOrderPage extends React.Component {
                 _.each(officeHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'pmOffice') {
-                        value = <div>{ order.pmOffice.name }</div>;
+                        value = order.pmOffice.name;
 
                     } else if (key === 'phoneNumber'){
-                        value = <div>{ order.pmOffice.phoneNumber }</div>;
+                        value = order.pmOffice.phoneNumber;
 
                     } else if (key === 'email') {
-                        value = <div>{ order.pmOffice.email }</div>;
+                        value = order.pmOffice.email;
                     }
                     officeCols[key] = value;
                 });
