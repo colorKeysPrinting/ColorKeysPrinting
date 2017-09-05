@@ -20,7 +20,7 @@ module.exports = WebpackConfig = (app) => {
             template: '../src/index.html'
         }),
         new CopyWebpackPlugin([
-            { from: '../_redirects', to: '../dist/' }
+            { from: '../_redirects', to: `./` }
         ]),
         (app.env === 'production') ? new webpack.LoaderOptionsPlugin({
             minimize: true,
@@ -31,16 +31,16 @@ module.exports = WebpackConfig = (app) => {
     const loaders = [
         { test: /\.(js|jsx)$/,                      use: ['babel-loader','eslint-loader'], exclude: /node_modules/ },
         { test: /\.(js|jsx)$/,                      use: 'source-map-loader',              exclude: /node_modules/, enforce: 'pre' },
-        { test: /\.scss$/,                          use: ExtractTextPlugin.extract('css-loader!postcss-loader!sass-loader')},
-        { test: /\.*\.(pdf|gif|png|jpg|jpeg|svg)$/, loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/images') } },
-        { test: /\.*\.(eot|woff2|woff|ttf)$/,       loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, '../dist/fonts') } }
+        { test: /\.scss$/,                          use: ExtractTextPlugin.extract('css-loader!postcss-loader!sass-loader') },
+        { test: /\.*\.(pdf|gif|png|jpg|jpeg|svg)$/, loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, `../build/${app.env}/images`) }},
+        { test: /\.*\.(eot|woff2|woff|ttf)$/,       loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, `../build/${app.env}/fonts`) }}
     ];
 
     return {
         context: path.resolve(__dirname, '../src'),
         entry: 'app',
         output: {
-            path: path.resolve(__dirname, `../dist`),
+            path: path.resolve(__dirname, `../build/${app.env}/`),
             filename: `${app.APP_NAME}_[hash].bundle.js`,
             sourceMapFilename: `[file].map`,
             devtoolModuleFilenameTemplate: (info) => {

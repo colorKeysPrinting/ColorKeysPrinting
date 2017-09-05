@@ -16,18 +16,15 @@ secrets.js
 .env
 .vscode/
 
-config/secrets.js
-s3_website.yml
-
 ## Environment normalisation:
 /.bundle
 /vendor/bundle
 
 node_modules/
-node_modules.bak/
 npm-debug.log
-dist/
 
-coverage/
+build/
+build/production
+build/development
 
 yarn-error.log
