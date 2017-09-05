@@ -38,7 +38,7 @@ class UsersPage extends React.Component {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt && jwt.token !== '') {
+        if (jwt) {
             this.props.getUsers({ token: jwt.token, type: jwt.type });
 
         } else {

@@ -35,7 +35,7 @@ class NewOrderPage extends React.Component {
         const height = (window.innerHeight - 69);
         const width = window.innerWidth;
 
-        if(jwt && jwt.token !== '') {
+        if(jwt) {
             iFrame = <Iframe
                 url={`https://undertaker-acceptor-11504.netlify.com/new?authToken=${jwt.token}`}
                 width={`${width}`}
