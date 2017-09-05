@@ -67,7 +67,8 @@ export default function ProductTable(props) {
                     value = (props.outOfStock !== props.productIndex && !props.replacement) ? bold : null;
 
                 } else if (row === 'disconnect') {
-                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? `Disconnect Fee: ${ product.applianceDisconnectDescription }` : null;
+                    const bold = <div className="description"><span className="bold"> Disconnect Fee: </span> <span>{product.applianceDisconnectDescription}</span></div>
+                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? bold : null;
                 }
                 break;
 
