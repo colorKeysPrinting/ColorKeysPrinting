@@ -72,7 +72,7 @@ MIT
 Available run commands
 -----------------------
 `hot:` starts up the webpack-dev-server default port 3000, has hot reload enable\
+`build:` builds a production level build found in build/production which can be uploaded to netlify, this also minifies and removes debug capabilies.\
 `build_dev:` builds a dev level build found in build/development\
 `build_dev_uat:` builds a dev level build found in build/development which can be uploaded to netlify\
-`build_prod:` builds a production level build found in build/production which can be uploaded to netlify, this also minifies and removes debug capabilies.\
 `nuke:` wipes out the node_modules directory for the ability to clean install node_modules\
