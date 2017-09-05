@@ -7,11 +7,13 @@ import Network          from 'libs/constants/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
-    LOGOUT              : 'sibi_ge_admin/activeUser/LOGOUT',
-    RESET_LOGIN_ERROR   : 'sibi_ge_admin/activeUser/RESET_LOGIN_ERROR',
-    LOGIN_SUCCESS       : 'sibi_ge_admin/activeUser/LOGIN_SUCCESS',
-    LOGIN_ERROR         : 'sibi_ge_admin/activeUser/LOGIN_ERROR',
-    PASSWORD_RESET      : 'sibi_ge_admin/activeUser/PASSWORD_RESET',
+    LOGOUT                   : 'sibi_ge_admin/activeUser/LOGOUT',
+    RESET_LOGIN_ERROR        : 'sibi_ge_admin/activeUser/RESET_LOGIN_ERROR',
+    RESET_SENT_EMAIL         : 'sibi_ge_admin/activeUser/RESET_SENT_EMAIL',
+    LOGIN_SUCCESS            : 'sibi_ge_admin/activeUser/LOGIN_SUCCESS',
+    LOGIN_ERROR              : 'sibi_ge_admin/activeUser/LOGIN_ERROR',
+    FORGOT_PASSWORD_SUCCESS  : 'sibi_ge_admin/activeUser/FORGOT_PASSWORD_SUCCESS',
+    PASSWORD_RESET_SUCCESS   : 'sibi_ge_admin/activeUser/PASSWORD_RESET_SUCCESS',
     GET_CURRENT_USER_SUCCESS : 'sibi_ge_admin/activeUser/GET_CURRENT_USER_SUCCESS',
 }
 
@@ -27,6 +29,12 @@ export function logout() {
 export function resetLoginError() {
     return {
         type: ActionTypes.RESET_LOGIN_ERROR
+    };
+}
+
+export function resetSentEmail() {
+    return {
+        type: ActionTypes.RESET_SENT_EMAIL
     };
 }
 
@@ -52,6 +60,24 @@ export function login({ email, password }) {
     }
 }
 
+export function forgotPassword({ email }) {
+    return (dispatch) => {
+        return axios({
+            method: Network.POST,
+            url: `${Network.DOMAIN}/forgot`,
+            data: {
+                email
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.FORGOT_PASSWORD_SUCCESS, ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
 export function passwordReset({ token, password }) {
     return (dispatch) => {
         return axios({
@@ -63,7 +89,7 @@ export function passwordReset({ token, password }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.PASSWORD_RESET, ...payload });
+                dispatch({ type: ActionTypes.PASSWORD_RESET_SUCCESS, ...payload });
             })
             .catch(error => {
                 throw(error);

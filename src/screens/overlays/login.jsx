@@ -3,7 +3,7 @@ import { withRouter }               from 'react-router';
 import { connect }                  from 'react-redux';
 import assets                       from 'libs/assets';
 
-import { login, logout, resetLoginError, passwordReset }     from 'ducks/active_user/actions';
+import { login, logout, resetLoginError, forgotPassword, resetSentEmail }     from 'ducks/active_user/actions';
 
 import Overlay                      from 'components/overlay';
 
@@ -28,6 +28,12 @@ class LoginOverlay extends React.Component {
             this.setState({ password: '' });
             this.props.resetLoginError();
         }
+
+        if (nextProps.emailSent) {
+            this.props.resetSentEmail();
+            this.setState({ email: '', password: '' });
+            this.changeOverlay('login');
+        }
     }
 
     update(type, value) {
@@ -46,8 +52,8 @@ class LoginOverlay extends React.Component {
         if (type === 'login') {
             this.props.login({ email: this.state.email, password: this.state.password});
 
-        } else if (type === 'reset') {
-            this.props.passwordReset({ email: this.state.email });
+        } else if (type === 'forgot') {
+            this.props.forgotPassword({ email: this.state.email });
         }
     }
 
@@ -61,11 +67,11 @@ class LoginOverlay extends React.Component {
             </div>);
 
             actionSection = (<div className="login-buttons">
-                <div className="btn white-btn" onClick={() => this.changeOverlay('reset')}>Forgot password?</div>
+                <div className="btn white-btn" onClick={() => this.changeOverlay('forgot')}>Forgot password?</div>
                 <input className="btn blue" type="submit" value="Login"/>
             </div>);
 
-        } else if (this.state.type === 'reset') {
+        } else if (this.state.type === 'forgot') {
             close = <div onClick={() => this.changeOverlay('login')} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>;
             inputs = (<div>
                 <p>Enter your email to reset your password.</p>
@@ -95,14 +101,16 @@ class LoginOverlay extends React.Component {
 }
 
 const select = (state) => ({
-    loginError  : state.activeUser.get('loginError')
+    loginError  : state.activeUser.get('loginError'),
+    emailSent   : state.activeUser.get('emailSent'),
 });
 
 const actions = {
     login,
     logout,
     resetLoginError,
-    passwordReset
+    forgotPassword,
+    resetSentEmail
 };
 
 export default connect(select, actions, null, { withRef: true })(withRouter(LoginOverlay));

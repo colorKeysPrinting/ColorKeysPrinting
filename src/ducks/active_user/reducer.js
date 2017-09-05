@@ -10,7 +10,8 @@ import { ActionTypes }          from './actions';
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
     activeUser: {},
-    loginError: false
+    loginError: false,
+    emailSent: false,
 });
 
 export default (state = initialState, action) => {
@@ -27,6 +28,10 @@ export default (state = initialState, action) => {
         state = state.set('loginError', false);
         break;
 
+    case ActionTypes.RESET_SENT_EMAIL:
+        console.log('reset sent email');
+        state = state.set('emailSent', false);
+        break;
 
     case ActionTypes.LOGIN_SUCCESS:
         console.log('login: ', action.data);
@@ -50,10 +55,17 @@ export default (state = initialState, action) => {
         state = state.set('loginError', true);
         break;
 
-    case ActionTypes.PASSWORD_RESET:
+    case ActionTypes.FORGOT_PASSWORD_SUCCESS:
+        console.log('forgot password');
+        if (action.data.emailSent) {
+            alert("An email has been sent to reset your password");
+        }
+
+        state = state.set('emailSent', action.data.emailSent);
+        break;
+
+    case ActionTypes.PASSWORD_RESET_SUCCESS:
         console.log('password reset', action.email);
-        state = state.set('activeOverlay', '');
-        // TODO: call API function
         break;
 
     case ActionTypes.GET_CURRENT_USER_SUCCESS:
