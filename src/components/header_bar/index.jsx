@@ -30,15 +30,15 @@ class HeaderBar extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies } = this.props;
+        const { cookies, location, history } = this.props;
 
-        if (this.props.location.pathname !== '/process_order') {
+        if (location.pathname !== '/process_order') {
             const jwt = cookies.get('sibi-admin-jwt');
 
             if (jwt) {
                 this.props.getCurrentUser({ token: jwt.token});
             } else {
-                this.props.history.push(`/login`);
+                history.push(`/login`);
             }
         } else {
             cookies.remove('sibi-admin-jwt');
@@ -53,12 +53,14 @@ class HeaderBar extends React.Component {
             this.props.logout();
         }
 
-        if (location.pathname !== '/process_order') {
+        const pathname = (location.pathname === `/` || location.pathname === `/login`) ? `/orders` : location.pathname;
+
+        if (pathname !== '/process_order') {
             if (jwt) {
                 if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
                     if (nextProps.activeUser.size > 0) {
 
-                        const pathname = (location.pathname === `/` || location.pathname === `/login`) ? `/orders` : location.pathname;
+
                         const search = (location.search) ? location.search : null;
                         this.props.history.push({ pathname, search });
 

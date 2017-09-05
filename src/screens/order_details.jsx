@@ -280,7 +280,7 @@ class OrderDetails extends React.Component {
 
                 pageData = <div style={{ position: 'absolute', top: '69px', height, width }}>
                     <Iframe
-                        url={`https://sibi-ge-dev.netlify.com/edit/${this.state.editOrder}`}
+                        url={`http://undertaker-acceptor-11504.netlify.com/edit/${this.state.editOrder}`}
                         width={`${width}`}
                         height={`${height}`}
                         position="relative"
