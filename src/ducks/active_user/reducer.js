@@ -19,8 +19,7 @@ export default (state = initialState, action) => {
     switch (action.type) {
     case ActionTypes.LOGOUT:
         console.log('logging out');
-        state = state.set('activeUser', Immutable.fromJS({}));
-        cookies.remove('sibi-admin-jwt');
+        state = state.set('activeUser', {});
         break;
 
     case ActionTypes.RESET_LOGIN_ERROR:
