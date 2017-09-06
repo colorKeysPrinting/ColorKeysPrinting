@@ -11,6 +11,7 @@ import DashboardPage                       from 'screens/dashboard_page';
 import OrderDetails                        from 'screens/order_details';
 import NewOrderPage                        from 'screens/new_order_page';
 import ProcessOrderPage                    from 'screens/process_order_page';
+import EditProductPage                     from 'screens/edit_product_page';
 
 // overlays
 import LoginOverlay                        from 'screens/overlays/login';
@@ -29,10 +30,11 @@ export default (
             <Route path="/dashboard" component={DashboardPage} />
             <Route path="/order_details" component={OrderDetails} />
             <Route path="/new_order" component={NewOrderPage} />
+            <Route path="/process_order" component={ProcessOrderPage} />
+            <Route path="/edit_product(/:productId)" component={EditProductPage} />
 
             <Route path="/login" component={LoginOverlay} />
             <Route path="/file_uploader" component={FileUploaderOverlay} />
-            <Route path="/process_order" component={ProcessOrderPage} />
         </div>
     </Router>
 )

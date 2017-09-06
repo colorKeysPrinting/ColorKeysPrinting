@@ -7,6 +7,7 @@ import Network          from 'libs/constants/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
+    GET_PRODUCT_BY_ID_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCT_BY_ID_SUCCESS',
     GET_PRODUCTS_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_SUCCESS',
     GET_PRODUCT_CATEGORIES_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCT_CATEGORIES_SUCCESS',
     GET_PRODUCTS_FOR_CATEGORY_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_FOR_CATEGORY_SUCCESS',
@@ -24,6 +25,24 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
+export function getProductById({ token, id }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.GET,
+            url     : `${Network.DOMAIN}/products/${id}`,
+            headers : {
+                'x-auth-token': token
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.GET_PRODUCT_BY_ID_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
 export function getProducts({ token }) {
     return (dispatch) => {
         return axios({

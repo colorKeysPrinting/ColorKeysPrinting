@@ -3,6 +3,7 @@ import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
+import { Link }                             from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import assets                               from 'libs/assets';
 
@@ -11,16 +12,14 @@ import { getProducts, getProductCategories, getProductsForSubCategory, unarchive
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
-import EditProduct                          from 'components/edit_product';
 
 class ProductsPage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = { isEditShowing: false, sortIndex: 0, product: '', category: '' };
-
-        this.showEditBox = this.showEditBox.bind(this);
     }
+
     componentWillMount() {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
@@ -52,13 +51,6 @@ class ProductsPage extends React.Component {
         }
     }
 
-    showEditBox({ sortIndex, product, category }) {
-        this.setState((prevState) => {
-            const isEditShowing = (prevState.isEditShowing) ? false : true;
-            return { isEditShowing, sortIndex, product, category };
-        });
-    }
-
     render() {
         let tabs, tabContent, tabsSection, addBtn, pageContent, editProductSection;
 
@@ -71,7 +63,7 @@ class ProductsPage extends React.Component {
             const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
 
-            addBtn = <div className="btn blue" onClick={() => this.showEditBox({ sortIndex: _.size(products[productCategories[0].name]) })}>Add</div>;
+            addBtn = <Link to={{ pathname: `/edit_product`, state: { sortIndex: _.size(products[productCategories[0].name]) } }} className="btn blue" >Add</Link>;
 
             tabs = _.map(productCategories, (type) => {
                 const upperCase = type.name;
@@ -94,7 +86,7 @@ class ProductsPage extends React.Component {
 
                         } else if (key === 'action') {
                             value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: type.name, id: product.id }) } className="product-action">Unarchive</div>
-                                : <div className="product-action" onClick={() => this.showEditBox({ category: type.id, product })}>Edit</div>;
+                                : <Link to={{ pathname: `/edit_product/${product.id}`, state: { category: type.id, product } }} className="product-action">Edit</Link>;
 
                         } else if (key === 'featured') {
                             if (product.sortIndex <= 4) {
