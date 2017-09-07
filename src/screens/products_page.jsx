@@ -62,7 +62,7 @@ class ProductsPage extends React.Component {
 
             const products = this.props.products.toJS();
 
-            addBtn = <Link to={{ pathname: `/edit_product`, state: { sortIndex: _.size(products[productSubCategories.toJS()[0].name]) } }} className="btn blue" >Add</Link>;
+            addBtn = <Link to={`/edit_product`} className="btn blue" >Add</Link>;
 
             tabs = _.map(productSubCategories.toJS(), (type) => {
                 const upperCase = type.name;

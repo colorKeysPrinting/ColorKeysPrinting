@@ -5,9 +5,12 @@ import { withCookies }          from 'react-cookie';
 import _                        from 'lodash';
 import assets                   from 'libs/assets';
 import Select                   from 'react-select';
+import Loader                   from 'react-loader';
 
+import { triggerSpinner }       from 'ducks/ui/actions';
 import { clearProduct, getProductById, getProductCategories, updateProduct, createProduct, archiveProduct }      from 'ducks/products/actions';
 import { getPresignedUrls }     from 'ducks/assets/actions';
+import { setActiveTab }         from 'ducks/header/actions';
 
 import Appliance                from 'components/products/appliance';
 import Hvac                     from 'components/products/hvac';
@@ -27,6 +30,55 @@ class EditProductPage extends React.Component {
             partDescription: '',
             partCode: '',
             videoURL: '',
+            id: '',
+            // ***************** the following are required for new products *****************
+            name: '',
+            sibiModelNumber: '',
+            productCategoryId: '',
+            productSubcategoryId: '',
+            sku: '',
+
+            // ***************** the following are optional *****************
+            serialNumber: '',
+            shortDescription: '',
+            overview: '',
+            faq: [],
+            videos: [],
+            sortIndex: 0,
+
+            // ***************** product category section (no required) *****************
+            // *****************
+            applianceManufacturerName: '',
+            applianceType: '',
+            applianceSize: '',
+            applianceDescription: '',
+            applianceFuelType: '',
+            applianceWidth: '',
+            applianceHeight: '',
+            applianceDepth: '',
+            applianceInstallDescription: '',
+            applianceInstallPrice: '',
+            applianceInstallCode: '',
+            applianceColorsInfo: [],
+            applianceSpecSheetUrl: '',
+            applianceRemovalDescription: '',
+            applianceRemovalCode: '',
+            applianceRemovalPrice: '',
+            applianceAssociatedParts: [],
+            // *****************
+            hvacSeerRating: '',
+            hvacEfficiencyRating: '',
+            hvacVoltageRating: '',
+            hvacTonnage: '',
+            hvacBtuAmount: '',
+            // *****************
+            paintCategory: '',
+            paintType: '',
+            paintQuantitySize: '',
+            paintFinish: '',
+            paintQuality: '',
+            paintColorNumber: '',
+            paintColorName: ''
         };
 
         this.productCheck = this.productCheck.bind(this);
@@ -47,8 +99,10 @@ class EditProductPage extends React.Component {
     }
 
     componentWillMount() {
+        this.props.triggerSpinner({ isOn: true });
         this.productCheck({ product: {} });
         this.props.getProductCategories();
+        this.props.setActiveTab('products');
     }
 
     componentWillUpdate(nextProps) {
@@ -59,8 +113,8 @@ class EditProductPage extends React.Component {
         if (!_.isEqual(nextProps.preSignedURLs, this.props.preSignedURLs)) {
             const re = /http(s)?:\/\//;
 
-            if (_.size(this.state.applianceColorsAndImages) > 0) {
-                _.each(this.state.applianceColorsAndImages, (image) => {
+            if (_.size(this.state.applianceColorsInfo) > 0) {
+                _.each(this.state.applianceColorsInfo, (image) => {
                     const match = re.exec(image.imageUrl);
                     if (!match) {
                         const picture = image.imageFile.type.split('/');
@@ -83,31 +137,32 @@ class EditProductPage extends React.Component {
         let { cookies, location, productCategories } = this.props;
 
         const reProduct = /productId=(.*)/;
-        const productId = reProduct.exec(location.search)[1];
+        const match = reProduct.exec(location.search);
 
         if (location.state) {
             product = location.state.product;
+            product.sortIndex += 1;
 
-        } else if (productId) {
+        } else if (match) {
+            const productId = match[1];
 
             if(product.size > 0) {
                 product = product.toJS();
+                product.sortIndex += 1;
 
             } else {
                 const jwt = cookies.get('sibi-admin-jwt');
                 this.props.getProductById({ token: jwt.token, id: productId });
             }
         } else {
-            const categories = productCategories.toJS();
-            const subCategories = productSubCategories.toJS();
 
             product = {
                 id: '',
                 // ***************** the following are required for new products *****************
                 name: '',
                 sibiModelNumber: '',
-                productCategoryId: this.props.productCategoryId,
-                productSubcategoryId: (_.size(subCategories) > 0) ? subCategories[0].id : '',
+                productCategoryId: '',
+                productSubcategoryId: '',
                 sku: '',
 
                 // ***************** the following are optional *****************
@@ -116,7 +171,10 @@ class EditProductPage extends React.Component {
                 overview: '',
                 faq: [],
                 videos: [],
-                sortIndex: (location.state.sortIndex) ? location.state.sortIndex: 0,
+                sortIndex: 0,
+
+                // ***************** product category section (no required) *****************
+                // *****************
                 applianceManufacturerName: '',
                 applianceType: '',
                 applianceSize: '',
@@ -134,23 +192,31 @@ class EditProductPage extends React.Component {
                 applianceRemovalCode: '',
                 applianceRemovalPrice: '',
                 applianceAssociatedParts: [],
+                // *****************
+                hvacSeerRating: '',
+                hvacEfficiencyRating: '',
+                hvacVoltageRating: '',
+                hvacTonnage: '',
+                hvacBtuAmount: '',
+                // *****************
+                paintCategory: '',
+                paintType: '',
+                paintQuantitySize: '',
+                paintFinish: '',
+                paintQuality: '',
+                paintColorNumber: '',
+                paintColorName: ''
             };
         }
-
-        product.sortIndex += 1;
-
-        _.each(product, (value, key) => {
-            product[key] = (value) ? value : '';
-        });
 
         this.setState({ ...product });
     }
 
     update({ type, value }) {
 
-        this.setState({ [type]: (value) ? value.value : '' });
+        this.setState({ [type]: value });
 
-        if (type === 'productSubcategoryId' && value) {
+        if (type === 'productSubcategoryId') {
             const products = this.props.products.toJS();
             let sortIndex = _.size(products[value.label]) + 1;
             this.setState({ sortIndex });
@@ -179,18 +245,18 @@ class EditProductPage extends React.Component {
     addColorAndImage() {
         console.log('adding color & image');
         this.setState((prevState) => {
-            prevState.applianceColorsAndImages.push({ imageUrl: prevState.image, color: prevState.color, imageFile: prevState.imageFile });
+            prevState.applianceColorsInfo.push({ imageUrl: prevState.image, color: prevState.color, imageFile: prevState.imageFile });
 
-            return { applianceColorsAndImages: prevState.applianceColorsAndImages, color: '', image: '' };
+            return { applianceColorsInfo: prevState.applianceColorsInfo, color: '', image: '' };
         });
     }
 
     removeColorAndImage({ color }) {
         console.log('removeColorAndImage with color: ', color);
         this.setState((prevState) => {
-            const applianceColorsAndImages = _.remove(prevState.applianceColorsAndImages, (element) => { return element.color !== color } );
+            const applianceColorsInfo = _.remove(prevState.applianceColorsInfo, (element) => { return element.color !== color } );
 
-            return { applianceColorsAndImages };
+            return { applianceColorsInfo };
         });
     }
 
@@ -254,8 +320,8 @@ class EditProductPage extends React.Component {
         const re = /http(s)?:\/\//;
         const types = [];
 
-        if (_.size(this.state.applianceColorsAndImages) > 0) {
-            _.each(this.state.applianceColorsAndImages, (image) => {
+        if (_.size(this.state.applianceColorsInfo) > 0) {
+            _.each(this.state.applianceColorsInfo, (image) => {
                 const match = re.exec(image.imageUrl);
                 if (!match) {
                     const picture = image.imageFile.type.split('/');
@@ -276,228 +342,234 @@ class EditProductPage extends React.Component {
     archiveProduct() {
         const { cookies, productCategories } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        const category = _.find(productCategories.toJS(), ['id', this.state.productSubcategoryId]);
+        const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
+        const subCategory = _.find(category.subcategories, ['id', this.state.productSubcategoryId]);
 
-        this.props.archiveProduct({ token: jwt.token, category: category.name, id: this.state.id })
-        this.props.history.push(`/products`);
+        this.props.archiveProduct({ token: jwt.token, category: subCategory.name, id: this.state.id })
+        this.props.history.goBack();
     }
 
     submitProduct() {
         const { cookies, productCategories } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        const category = _.find(productCategories.toJS(), ['id', this.state.productSubcategoryId]);
+        const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
+        const subCategory = _.find(category.subcategories, ['id', this.state.productSubcategoryId]);
 
-        const product = {
-            // ***************** the following are required *****************
-            name: this.state.name,
-            sibiModelNumber: this.state.sibiModelNumber,
-            productCategoryId: this.state.productCategoryId,
-            productSubcategoryId: category.id,
-            sku: this.state.sku,
+        const product = {};
+        _.each(this.state, (value, key) => {
+            product[key] = value;
 
-            // ***************** the following are optional *****************
-            serialNumber: this.state.serialNumber,
-            shortDescription: this.state.shortDescription,
-            overview: this.state.overview,
-            faq: this.state.faq,
-            videos: this.state.videos,
-            applianceManufacturerName: this.state.applianceManufacturerName,
-            sortIndex: this.state.sortIndex,
-            applianceType: category.name,
-            applianceSize: this.state.applianceSize,
-            applianceDescription: this.state.applianceDescription,
-            applianceFuelType: this.state.applianceFuelType,
-            applianceWidth: this.state.applianceWidth,
-            applianceHeight: this.state.applianceHeight,
-            applianceDepth: this.state.applianceDepth,
-            applianceInstallDescription: this.state.applianceInstallDescription,
-            applianceInstallPrice: this.state.applianceInstallPrice,
-            applianceInstallCode: this.state.applianceInstallCode,
-            applianceColorsAndImages: this.state.applianceColorsAndImages,
-            applianceSpecSheetUrl: this.state.applianceSpecSheetUrl,
-            applianceRemovalDescription: this.state.applianceRemovalDescription,
-            applianceRemovalCode: this.state.applianceRemovalCode,
-            applianceRemovalPrice: this.state.applianceRemovalPrice,
-            applianceAssociatedParts: this.state.applianceAssociatedParts, // not in api?
-        };
+            if (key === 'activeSection' ||
+                key === 'faqQuestion' ||
+                key === 'faqAnswer' ||
+                key === 'image' ||
+                key === 'imageFile' ||
+                key === 'color' ||
+                key === 'partDescription' ||
+                key === 'partCode' ||
+                key === 'videoURL') {
 
-        product.sortIndex = ((product.sortIndex - 1) <= 0) ? 0 : product.sortIndex - 1;
+                delete product[key];
+            }
+        });
 
+        product['sortIndex'] = ((product.sortIndex - 1) <= 0) ? 0 : product.sortIndex - 1;
+
+        // remove un-needed/empty fields
         _.each(product, (value, key) => {
             if(value === '' || typeof value === 'object' && _.size(value) === 0) {
                 delete product[key];
             }
         });
 
-        if (this.state.id) {
-            product['id'] = this.state.id;
-            this.props.updateProduct({ token: jwt.token, category: category.name, product });
+        if (product.id) {
+            this.props.updateProduct({ token: jwt.token, category: subCategory.name, product });
 
         } else {
-            this.props.createProduct({ token: jwt.token, category: category.name, product })
+            this.props.createProduct({ token: jwt.token, category: subCategory.name, product })
         }
 
-        this.props.close({ sortIndex: 0 });
+        this.props.history.goBack();
     }
 
     render() {
-        let subCategorySelect, productType;
-        const { isEditShowing, product, productCategories } = this.props;
+        const { product, productCategories, activeUser } = this.props;
+        let subCategorySelect, productType, productDetails;
 
         const title = (product) ? 'Edit' : 'Add';
-        const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
         const archiveBtn = (this.state.id) ? <div className="btn borderless red" onClick={this.archiveProduct}>Archive Product</div> : null;
 
-        const categories = _.map(productCategories.toJS(), (category) => {
-            return { label: category.name, value: category.id };
-        });
+        if (activeUser.size > 0 &&
+            productCategories.size > 0) {
 
-        const categoryOptions = [
-            { label: 'Select Category', value: '', disabled: true },
-            ...categories
-        ];
+            const isDisabled = (activeUser.toJS().type === 'superAdmin') ? false : true;
+            const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
 
-        if ((_.size(category) > 0)) {
-            const subCategories = _.map(category.subcategories, (subcategory) => {
-                return { label: subcategory.name, value: subcategory.id };
+            const categories = _.map(productCategories.toJS(), (category) => {
+                return { label: category.name, value: category.id };
             });
 
-            const subCategoryOptions = [
-                { label: 'Select Sub-Category', value: '', disabled: true },
-                ...subCategories
+            const categoryOptions = [
+                { label: 'Select Category', value: '', disabled: true },
+                ...categories
             ];
 
-            subCategorySelect = <Select
-                name="product-sub-category"
-                value={this.state.productSubcategoryId}
-                options={subCategoryOptions}
-                onChange={(value) => this.update({ type: 'productSubcategoryId', value })}
-                required
-            />
-        }
+            if ((_.size(category) > 0)) {
+                const subCategories = _.map(category.subcategories, (subcategory) => {
+                    return { label: subcategory.name, value: subcategory.id };
+                });
 
+                const subCategoryOptions = [
+                    { label: 'Select Sub-Category', value: '', disabled: true },
+                    ...subCategories
+                ];
 
-        const productFAQ = _.map(this.state.faq, (faq, index) => {
-            return (
-                <div key={`faq${index}`} className="faq-section accordion-detail-row" style={{ display: 'inline-flex'}} >
-                    <input type="text" value={faq.Question} disabled />
-                    <input type="text" value={faq.Answer} disabled />
-                    <div className="cancel-btn" onClick={()=> this.removeFaq({ index }) } ><img src={assets('./images/icon-x-big.svg')} /></div>
-                </div>
-            );
-        });
-
-        const productVideos = _.map(this.state.videos, (video, index) => {
-            return (
-                <div key={`colorImages${index}`} className="videos-section accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
-                    <input type="text" value={video} disabled />
-                    <div className="cancel-btn" onClick={()=> this.removeVideo({ index }) } ><img src={assets('./images/icon-x-big.svg')} /></div>
-                </div>
-            );
-        });
-
-        if (category) {
-            if (category.name === 'APPLIANCES') {
-                productType = <Appliance
-                    applianceManufacturerName={this.state.applianceManufacturerName}
-                    applianceType={this.state.applianceType}
-                    applianceSize={this.state.applianceSize}
-                    applianceDescription={this.state.applianceDescription}
-                    applianceFuelType={this.state.applianceFuelType}
-                    applianceWidth={this.state.applianceWidth}
-                    applianceHeight={this.state.applianceHeight}
-                    applianceDepth={this.state.applianceDepth}
-                    applianceInstallDescription={this.state.applianceInstallDescription}
-                    applianceInstallPrice={this.state.applianceInstallPrice}
-                    applianceInstallCode={this.state.applianceInstallCode}
-                    applianceInstallDescription2={this.state.applianceInstallDescription2}
-                    applianceInstallPrice2={this.state.applianceInstallPrice2}
-                    applianceInstallCode2={this.state.applianceInstallCode2}
-                    applianceColorsInfo={this.state.applianceColorsInfo}
-                    applianceSpecSheetUrl={this.state.applianceSpecSheetUrl}
-                    applianceRemovalDescription={this.state.applianceRemovalDescription}
-                    applianceRemovalCode={this.state.applianceRemovalCode}
-                    applianceRemovalPrice={this.state.applianceRemovalPrice}
-                    applianceDisconnectDescription={this.state.applianceDisconnectDescription}
-                    applianceDisconnectCode={this.state.applianceDisconnectCode}
-                    applianceDisconnectPrice={this.state.applianceDisconnectPrice}
-                    applianceAssociatedParts={this.state.applianceAssociatedParts}
-
-                    update={this.update}
-                    updateImage={this.updateImage}
-                    addColorAndImage={this.addColorAndImage}
-                    removeColorAndImage={this.removeColorAndImage}
-                />;
-
-            } else if (category.name === 'HVAC') {
-                productType = <Hvac />;
-
-            } else if (category.name === 'PAINT') {
-                productType = <Paint />;
+                subCategorySelect = <Select
+                    name="product-sub-category"
+                    value={this.state.productSubcategoryId}
+                    options={subCategoryOptions}
+                    onChange={(selected) => (!isDisabled) ? this.update({ type: 'productSubcategoryId', value: selected.value }) : console.log(`you don't have permission to change!`)}
+                    required
+                />
             }
+
+            const productFAQ = _.map(this.state.faq, (faq, index) => {
+                return (
+                    <div key={`faq${index}`} className="faq-section accordion-detail-row" style={{ display: 'inline-flex'}} >
+                        <input type="text" value={faq.Question} disabled />
+                        <input type="text" value={faq.Answer} disabled />
+                        {(!isDisabled) ? <div className="cancel-btn" onClick={()=> this.removeFaq({ index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
+                    </div>
+                );
+            });
+
+            const addFAQSection = (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
+                <input type="text" value={this.state.faqQuestion} placeholder="Question" onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })} />
+                <input type="text" value={this.state.faqAnswer}   placeholder="Answer"   onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })} />
+                <div onClick={this.addFAQ} className="cancel-btn blue">Add</div>
+            </div> : null;
+
+            const productVideos = _.map(this.state.videos, (video, index) => {
+                return (
+                    <div key={`colorImages${index}`} className="videos-section accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
+                        <input type="text" value={video} disabled />
+                        {(!isDisabled) ? <div className="cancel-btn" onClick={()=> this.removeVideo({ index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
+                    </div>
+                );
+            });
+
+            const addVideoSection = (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
+                <input type="url" value={this.state.videoURL} placeholder="video URL" onChange={(e) => this.update({ type: 'videoURL', value: e.target.value })} />
+                <div onClick={this.addVideo} className="cancel-btn blue">Add</div>
+            </div> : null;
+
+            if (category) {
+                if (category.name === 'APPLIANCES') {
+                    productType = <Appliance
+                        isDisabled={isDisabled}
+                        image={this.state.image}
+                        color={this.state.color}
+                        applianceManufacturerName={this.state.applianceManufacturerName}
+                        applianceType={this.state.applianceType}
+                        applianceSize={this.state.applianceSize}
+                        applianceDescription={this.state.applianceDescription}
+                        applianceFuelType={this.state.applianceFuelType}
+                        applianceWidth={this.state.applianceWidth}
+                        applianceHeight={this.state.applianceHeight}
+                        applianceDepth={this.state.applianceDepth}
+                        applianceInstallDescription={this.state.applianceInstallDescription}
+                        applianceInstallPrice={parseFloat(this.state.applianceInstallPrice)}
+                        applianceInstallCode={this.state.applianceInstallCode}
+                        applianceInstallDescription2={this.state.applianceInstallDescription2}
+                        applianceInstallPrice2={parseFloat(this.state.applianceInstallPrice2)}
+                        applianceInstallCode2={this.state.applianceInstallCode2}
+                        applianceColorsInfo={this.state.applianceColorsInfo}
+                        applianceSpecSheetUrl={this.state.applianceSpecSheetUrl}
+                        applianceRemovalDescription={this.state.applianceRemovalDescription}
+                        applianceRemovalCode={this.state.applianceRemovalCode}
+                        applianceRemovalPrice={parseFloat(this.state.applianceRemovalPrice)}
+                        applianceDisconnectDescription={this.state.applianceDisconnectDescription}
+                        applianceDisconnectCode={this.state.applianceDisconnectCode}
+                        applianceDisconnectPrice={parseFloat(this.state.applianceDisconnectPrice)}
+                        applianceAssociatedParts={this.state.applianceAssociatedParts}
+
+                        update={this.update}
+                        updateImage={this.updateImage}
+                        addColorAndImage={this.addColorAndImage}
+                        removeColorAndImage={this.removeColorAndImage}
+                    />;
+
+                } else if (category.name === 'HVAC') {
+                    productType = <Hvac />;
+
+                } else if (category.name === 'PAINT') {
+                    productType = <Paint />;
+                }
+            }
+
+            productDetails = <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
+                <div className="content">
+                    <Select
+                        name="product-category"
+                        value={this.state.productCategoryId}
+                        options={categoryOptions}
+                        onChange={(selected) => (!isDisabled) ? this.update({ type: 'productCategoryId', value: selected.value }) : console.log(`you don't have permission to change!`)}
+                        required
+                    />
+                    { subCategorySelect }
+                    <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update({ type: 'name', value: e.target.value})} required disabled={isDisabled} />
+                    <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update({ type: 'sibiModelNumber', value: e.target.value})} required disabled={isDisabled} />
+                    <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.sortIndex} onChange={(e) => this.update({ type: 'sortIndex', value: e.target.value})} />
+                    <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update({ type: 'sku', value: e.target.value})} required disabled={isDisabled} />
+                    <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update({ type: 'serialNumber', value: e.target.value})} disabled={isDisabled} />
+
+                    <div className="accordion">
+                        {/* ************************************** faq section ************************************** */}
+                        <div id="accordion-faq" className={(this.state.activeSection === 'faq') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('faq')}>
+                            <div>{ _.size(this.state.faq) } FAQs</div>
+                            <img className="accordion-arrow" src={(this.state.activeSection === 'faq') ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png') } />
+                        </div>
+                        <div className="accordion-detail" style={{ display: (this.state.activeSection === 'faq') ? 'block' : 'none' }} >
+                            { productFAQ }
+                            { addFAQSection }
+                        </div>
+
+                        {/* ************************************** video section ************************************** */}
+                        <div id="accordion-video" className={(this.state.activeSection === 'videos') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('videos')}>
+                            <div>{ _.size(this.state.videos) } Vidoes</div>
+                            <img className="accordion-arrow" src={(this.state.activeSection === 'videos') ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png') } />
+                        </div>
+                        <div className="accordion-detail" style={{ display: (this.state.activeSection === 'videos') ? 'block' : 'none' }} >
+                            { productVideos }
+                            { addVideoSection }
+                        </div>
+                    </div>
+
+                    { productType}
+
+                    <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
+                </div>
+                <input className="btn blue fill" type="submit" value={buttonTxt} />
+                { archiveBtn }
+            </form>;
+
+            this.props.triggerSpinner({ isOn: false });
         }
 
         return (
-            <div id="edit-product-page">
-                <form onSubmit={() => {e.preventDefault(); this.saveProduct();}} >
-                    <div className="content">
-                        <Select
-                            name="product-category"
-                            value={this.state.productCategoryId}
-                            options={categoryOptions}
-                            onChange={(value) => this.update({ type: 'productCategoryId', value })}
-                            required
-                        />
-                        { subCategorySelect }
-                        <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update({ type: 'name', value: e.target.value})} required />
-                        <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update({ type: 'sibiModelNumber', value: e.target.value})} required />
-                        <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.sortIndex} onChange={(e) => this.update({ type: 'sortIndex', value: e.target.value})} />
-                        <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update({ type: 'sku', value: e.target.value})} required />
-                        <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update({ type: 'serialNumber', value: e.target.value})}  />
-
-                        <div className="accordion">
-                            {/* ************************************** faq section ************************************** */}
-                            <div id="accordion-faq" className={(this.state.activeSection === 'faq') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('faq')}>
-                                <div>{ _.size(this.state.faq) } FAQs</div>
-                                <img className="accordion-arrow" src={(this.state.activeSection === 'faq') ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png') } />
-                            </div>
-                            <div className="accordion-detail" style={{ display: (this.state.activeSection === 'faq') ? 'block' : 'none' }} >
-                                { productFAQ }
-                                <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
-                                    <input type="text" value={this.state.faqQuestion} placeholder="Question" onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })} />
-                                    <input type="text" value={this.state.faqAnswer}   placeholder="Answer"   onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })} />
-                                    <div onClick={this.addFAQ} className="cancel-btn blue">Add</div>
-                                </div>
-                            </div>
-
-                            {/* ************************************** video section ************************************** */}
-                            <div id="accordion-video" className={(this.state.activeSection === 'videos') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('videos')}>
-                                <div>{ _.size(this.state.videos) } Vidoes</div>
-                                <img className="accordion-arrow" src={(this.state.activeSection === 'videos') ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png') } />
-                            </div>
-                            <div className="accordion-detail" style={{ display: (this.state.activeSection === 'videos') ? 'block' : 'none' }} >
-                                { productVideos }
-                                <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
-                                    <input type="url" value={this.state.videoURL} placeholder="video URL" onChange={(e) => this.update({ type: 'videoURL', value: e.target.value })} />
-                                    <div onClick={this.addVideo} className="cancel-btn blue">Add</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        { productType}
-
-                        <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" />
-                    </div>
-                    <input className="btn blue fill" type="submit" value={buttonTxt} />
-                    { archiveBtn }
-                </form>
-            </div>
+            <Loader loaded={this.props.spinner} >
+                <div id="edit-product-page">
+                    { productDetails }
+                </div>
+            </Loader>
         );
     }
 }
 
 const select = (state) => ({
+    spinner              : state.ui.get('spinner'),
+    activeUser           : state.activeUser.get('activeUser'),
     product              : state.products.get('product'),
     products             : state.products.get('products'),
     productCategories    : state.products.get('productCategories'),
@@ -507,13 +579,15 @@ const select = (state) => ({
 });
 
 const actions = {
+    triggerSpinner,
     clearProduct,
     getProductById,
     getProductCategories,
     updateProduct,
     createProduct,
     archiveProduct,
-    getPresignedUrls
+    getPresignedUrls,
+    setActiveTab
 };
 
 export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(EditProductPage)));

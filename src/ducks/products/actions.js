@@ -7,6 +7,7 @@ import Network          from 'libs/constants/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
+    CLEAR_PRODUCT : 'sibi_ge_admin/products/CLEAR_PRODUCT',
     GET_PRODUCT_BY_ID_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCT_BY_ID_SUCCESS',
     GET_PRODUCTS_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_SUCCESS',
     GET_PRODUCT_CATEGORIES_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCT_CATEGORIES_SUCCESS',
