@@ -4,11 +4,13 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import moment                               from 'moment';
 import SearchInput                          from 'react-search-input';
+import Loader                               from 'react-loader';
+
 import Select                               from 'components/select_box';
 import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
 
-import { logout }                           from 'ducks/active_user/actions';
+import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getUsers, approveUser, autoApproveUserOrders }            from 'ducks/users/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
@@ -39,6 +41,7 @@ class UsersPage extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
+            this.props.triggerSpinner({ isOn: true });
             this.props.getUsers({ token: jwt.token, type: jwt.type });
 
         } else {
@@ -202,37 +205,43 @@ class UsersPage extends React.Component {
                     return item;
                 });
             }
+
+            this.props.triggerSpinner({ isOn: false });
         }
 
         return (
-            <div id="users-page" className="container">
-                <div className="table-card">
-                    <div className="card-header">
-                        <h2>Users</h2>
-                        <div className="search-wrapper">
-                            <img src={assets('./images/icon-search.svg')} className="search-icon" onClick={this.focus} />
-                            <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} ref={(input) => { this.textInput = input; }} />
+            <Loader loaded={this.props.spinner} >
+                <div id="users-page" className="container">
+                    <div className="table-card">
+                        <div className="card-header">
+                            <h2>Users</h2>
+                            <div className="search-wrapper">
+                                <img src={assets('./images/icon-search.svg')} className="search-icon" onClick={this.focus} />
+                                <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} ref={(input) => { this.textInput = input; }} />
+                            </div>
                         </div>
+                        <MyTable
+                            type="users"
+                            headers={headers}
+                            data={data}
+                            sortby={this.state.sortby}
+                            handleAction={this.handleAction}
+                        />
                     </div>
-                    <MyTable
-                        type="users"
-                        headers={headers}
-                        data={data}
-                        sortby={this.state.sortby}
-                        handleAction={this.handleAction}
-                    />
                 </div>
-            </div>
+            </Loader>
         );
     }
 }
 
 const select = (state) => ({
+    spinner         : state.ui.get('spinner'),
     activeUser      : state.activeUser.get('activeUser'),
     users           : state.users.get('users')
 });
 
 const action = {
+    triggerSpinner,
     getUsers,
     approveUser,
     autoApproveUserOrders,

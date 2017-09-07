@@ -5,10 +5,11 @@ import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
 import moment                               from 'moment';
 import SearchInput                          from 'react-search-input';
+import Loader                               from 'react-loader';
+
 import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
 
-import { logout }                           from 'ducks/active_user/actions';
 import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
 import { getUsers, getFundProperties }      from 'ducks/users/actions';
@@ -36,6 +37,7 @@ class OrdersPage extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
+            this.props.triggerSpinner({ isOn: true });
             this.props.getFundProperties({ token: jwt.token });
             this.props.getUsers({ token: jwt.token, type: jwt.type });
             this.props.getOrders({ token: jwt.token, type: jwt.type });
@@ -189,36 +191,41 @@ class OrdersPage extends React.Component {
             } else {
                 data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
             }
+
+            this.props.triggerSpinner({ isOn: false });
         }
 
         const sortBy = (this.state.sortby.column !== '') ? this.state.sortby : { column: 'orderStatus', isAsc: 'asc' };
 
         return (
-            <div id="orders-page" className="container">
-                <div className="table-card">
-                    <div className="card-header">
-                        <h2>Orders</h2>
-                        <div className="search-wrapper">
-                            <img src={assets('./images/icon-search.svg')} className="search-icon"/>
-                            <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} />
+            <Loader loaded={this.props.spinner} >
+                <div id="orders-page" className="container">
+                    <div className="table-card">
+                        <div className="card-header">
+                            <h2>Orders</h2>
+                            <div className="search-wrapper">
+                                <img src={assets('./images/icon-search.svg')} className="search-icon"/>
+                                <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} />
+                            </div>
                         </div>
+                        <MyTable
+                            type="orders"
+                            dataClassName="table-row-clickable"
+                            headers={headers}
+                            data={data}
+                            sortby={sortBy}
+                            handleAction={this.handleAction}
+                            handleItem={this.handleItem}
+                        />
                     </div>
-                    <MyTable
-                        type="orders"
-                        dataClassName="table-row-clickable"
-                        headers={headers}
-                        data={data}
-                        sortby={sortBy}
-                        handleAction={this.handleAction}
-                        handleItem={this.handleItem}
-                    />
                 </div>
-            </div>
+            </Loader>
         );
     }
 }
 
 const select = (state) => ({
+    spinner         : state.ui.get('spinner'),
     activeUser      : state.activeUser.get('activeUser'),
     orders          : state.orders.get('orders'),
     users           : state.users.get('users'),
@@ -226,7 +233,6 @@ const select = (state) => ({
 });
 
 const actions = {
-    logout,
     triggerSpinner,
     getOrders,
     getUsers,

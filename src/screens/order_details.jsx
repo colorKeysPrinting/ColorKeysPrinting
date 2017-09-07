@@ -51,10 +51,6 @@ class OrderDetails extends React.Component {
         this.props.setActiveTab('orders');
     }
 
-    componentDidUpdate() {
-        this.props.triggerSpinner({ isOn: false });
-    }
-
     componentWillUnmount() {
         this.props.clearOrder();
     }
@@ -285,6 +281,8 @@ class OrderDetails extends React.Component {
                     />
                 </div>;
             }
+
+            this.props.triggerSpinner({ isOn: false });
         }
 
         return (

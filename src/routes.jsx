@@ -17,7 +17,7 @@ import EditProductPage                     from 'screens/edit_product_page';
 import LoginOverlay                        from 'screens/overlays/login';
 import FileUploaderOverlay                 from 'screens/overlays/file_uploader';
 
-import NotFound                            from 'components/common/not_found';
+import NotFound                            from 'screens/not_found';
 
 export default (
     <Router>
@@ -31,7 +31,7 @@ export default (
             <Route path="/order_details" component={OrderDetails} />
             <Route path="/new_order" component={NewOrderPage} />
             <Route path="/process_order" component={ProcessOrderPage} />
-            <Route path="/edit_product(/:productId)" component={EditProductPage} />
+            <Route path="/edit_product" component={EditProductPage} />
 
             <Route path="/login" component={LoginOverlay} />
             <Route path="/file_uploader" component={FileUploaderOverlay} />

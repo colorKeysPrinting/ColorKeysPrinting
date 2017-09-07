@@ -6,10 +6,10 @@ import { withCookies }          from 'react-cookie';
 import { Link }                 from 'react-router-dom';
 import assets                   from 'libs/assets';
 
+import { logout }               from 'ducks/active_user/actions';
 import { getCurrentUser }       from 'ducks/active_user/actions';
 import { getUsers }             from 'ducks/users/actions';
 import { getOrders }            from 'ducks/orders/actions';
-import { logout }               from 'ducks/active_user/actions';
 
 import Tabs                     from './tabs';
 import Overlay                  from 'components/overlay';
@@ -166,10 +166,10 @@ const select = (state) => ({
 });
 
 const actions = {
+    logout,
     getCurrentUser,
     getUsers,
     getOrders,
-    logout
 }
 
 export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(HeaderBar)));

@@ -1,17 +1,20 @@
-import React                                                from 'react';
-import _                                                    from 'lodash';
-import { connect }                                          from 'react-redux';
-import { withRouter }                                       from 'react-router';
-import { Link }                                             from 'react-router-dom';
-import moment                                               from 'moment';
-import DayPickerInput                                       from 'react-day-picker/DayPickerInput';
-import assets                                               from 'libs/assets';
+import React                                from 'react';
+import _                                    from 'lodash';
+import { connect }                          from 'react-redux';
+import { withRouter }                       from 'react-router';
+import { Link }                             from 'react-router-dom';
+import moment                               from 'moment';
+import DayPickerInput                       from 'react-day-picker/DayPickerInput';
+import Loader                               from 'react-loader';
 
+import assets                               from 'libs/assets';
+
+import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getOrderById, processOrder, updateInstallDate, updateModelNumber }          from 'ducks/orders/actions';
 
-import MyTable                                              from 'components/my_table';
-import ProductTable                                         from 'components/product_table';
-import PartTable                                            from 'components/part_table';
+import MyTable                              from 'components/my_table';
+import ProductTable                         from 'components/product_table';
+import PartTable                            from 'components/part_table';
 
 // ************************************************************************************
 //                              TO LOAD THE PAGE
@@ -48,6 +51,7 @@ class ProcessOrderPage extends React.Component {
         const orderId = reOrder.exec(location.search)[1];
 
         if (orderId) {
+            this.props.triggerSpinner({ isOn: true });
             this.props.getOrderById({ id: orderId });
         }
     }
@@ -355,24 +359,30 @@ class ProcessOrderPage extends React.Component {
                     <h4>You can now close this tab.</h4>
                 </div>;
             }
+
+            this.props.triggerSpinner({ isOn: false });
         }
 
         return (
-            <div id="process-orders-page">
-                <div className="container">
-                    { orderPageData }
+            <Loader loaded={this.props.spinner} >
+                <div id="process-orders-page">
+                    <div className="container">
+                        { orderPageData }
+                    </div>
                 </div>
-            </div>
+            </Loader>
         );
     }
 }
 
 const select = (state) => ({
+    spinner         : state.ui.get('spinner'),
     order           : state.orders.get('order'),
     processSuccess  : state.orders.get('processSuccess')
 });
 
 const actions = {
+    triggerSpinner,
     getOrderById,
     processOrder,
     updateInstallDate,

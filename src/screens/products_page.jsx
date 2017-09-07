@@ -5,10 +5,12 @@ import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
 import { Link }                             from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
+import Loader                               from 'react-loader';
+
 import assets                               from 'libs/assets';
 
-import { logout }                           from 'ducks/active_user/actions';
-import { getProducts, getProductCategories, getProductsForSubCategory, unarchiveProduct }          from 'ducks/products/actions';
+import { triggerSpinner }                   from 'ducks/ui/actions';
+import { getProducts, getUserProductCategories, getProductsForSubCategory, unarchiveProduct }          from 'ducks/products/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
@@ -25,7 +27,8 @@ class ProductsPage extends React.Component {
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
-            this.props.getProductCategories({ token: jwt.token });
+            this.props.triggerSpinner({ isOn: true });
+            this.props.getUserProductCategories({ token: jwt.token });
         } else {
             this.props.history.push(`/login`);
         }
@@ -34,38 +37,34 @@ class ProductsPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        const { cookies } = this.props;
+
         if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
             const path = (nextProps.activeUser.size > 0) ? `/products` : `/login`;
             this.props.history.push(path);
         }
 
-        if (!_.isEqual(this.props.productCategories, nextProps.productCategories)) {
-            const productCategories = nextProps.productCategories.toJS();
-
-            const { cookies } = this.props;
+        if (!_.isEqual(this.props.productSubCategories, nextProps.productSubCategories)) {
             const jwt = cookies.get('sibi-admin-jwt');
 
-            _.each(productCategories, (category) => {
+            _.each(nextProps.productSubCategories.toJS(), (category) => {
                 this.props.getProductsForSubCategory({ token: jwt.token, categoryId: category.id, category: category.name });
             });
         }
     }
 
     render() {
+        const { cookies, productSubCategories } = this.props;
         let tabs, tabContent, tabsSection, addBtn, pageContent, editProductSection;
 
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
-
-        if (this.props.productCategories.size > 0 &&
+        if (productSubCategories.size > 0 &&
             this.props.products.size > 0) {
 
-            const productCategories = this.props.productCategories.toJS();
             const products = this.props.products.toJS();
 
-            addBtn = <Link to={{ pathname: `/edit_product`, state: { sortIndex: _.size(products[productCategories[0].name]) } }} className="btn blue" >Add</Link>;
+            addBtn = <Link to={{ pathname: `/edit_product`, state: { sortIndex: _.size(products[productSubCategories.toJS()[0].name]) } }} className="btn blue" >Add</Link>;
 
-            tabs = _.map(productCategories, (type) => {
+            tabs = _.map(productSubCategories.toJS(), (type) => {
                 const upperCase = type.name;
                 console.log("STRING " + upperCase);
                 return (
@@ -73,7 +72,7 @@ class ProductsPage extends React.Component {
                 );
             });
 
-            tabContent = _.map(productCategories, (type) => {
+            tabContent = _.map(productSubCategories.toJS(), (type) => {
 
                 const data = _.map(products[type.name], (product) => {
                     const cols = {};
@@ -85,8 +84,10 @@ class ProductsPage extends React.Component {
                             value = { ...product, category: type.id };
 
                         } else if (key === 'action') {
+                            const jwt = cookies.get('sibi-admin-jwt');
+
                             value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: type.name, id: product.id }) } className="product-action">Unarchive</div>
-                                : <Link to={{ pathname: `/edit_product/${product.id}`, state: { category: type.id, product } }} className="product-action">Edit</Link>;
+                                : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}`, state: { category: type.id, product } }} className="product-action">Edit</Link>;
 
                         } else if (key === 'featured') {
                             if (product.sortIndex <= 4) {
@@ -137,26 +138,32 @@ class ProductsPage extends React.Component {
                     { tabsSection }
                 </div>
                 { editProductSection }
-            </div>
+            </div>;
+
+            this.props.triggerSpinner({ isOn: false });
         }
 
         return (
-            <div id="products-page" className="container">
-                { pageContent }
-            </div>
+            <Loader loaded={this.props.spinner} >
+                <div id="products-page" className="container">
+                    { pageContent }
+                </div>
+            </Loader>
         );
     }
 }
 
 const select = (state) => ({
-    activeUser          : state.activeUser.get('activeUser'),
-    products            : state.products.get('products'),
-    productCategories   : state.products.get('productCategories')
+    spinner                 : state.ui.get('spinner'),
+    activeUser              : state.activeUser.get('activeUser'),
+    products                : state.products.get('products'),
+    productSubCategories    : state.products.get('productSubCategories')
 });
 
 const actions = {
+    triggerSpinner,
     getProducts,
-    getProductCategories,
+    getUserProductCategories,
     getProductsForSubCategory,
     unarchiveProduct,
     setActiveTab
