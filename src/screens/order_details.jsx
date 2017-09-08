@@ -101,7 +101,6 @@ class OrderDetails extends React.Component {
             orderHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
 
             if (!this.state.editOrder) {
-                const orderId = order.id;
                 const orderStatus = order.orderStatus;
 
                 // *************** product section ***************
@@ -190,13 +189,13 @@ class OrderDetails extends React.Component {
                     PM: order.fund.pmOffices[0].name
                 };
                 const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
-                    <div className="btn blue" onClick={() => this.editOrder({ orderId })}>Edit</div>
-                    <div className="btn blue" onClick={() => this.handleAction({ orderId })}>Approve</div>
+                    <div className="btn blue" onClick={() => this.editOrder({ orderId: order.id })}>Edit</div>
+                    <div className="btn blue" onClick={() => this.handleAction({ orderId: order.id })}>Approve</div>
                 </div> : null;
 
                 const detailsHeaderSection = <div className="details-header">
                     <div className="header-property pure-u-2-3">
-                        <h2 className="property-address">{orderId}</h2>
+                        <h2 className="order-number">Order #: { order.orderNumber }</h2>
                         <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
                     </div>
                     { buttonSection }
