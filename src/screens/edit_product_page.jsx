@@ -8,7 +8,7 @@ import Select                   from 'react-select';
 import Loader                   from 'react-loader';
 
 import { triggerSpinner }       from 'ducks/ui/actions';
-import { clearProduct, getProductById, getProductCategories, updateProduct, createProduct, archiveProduct }      from 'ducks/products/actions';
+import { clearProduct, getProducts, getProductById, getProductCategories, updateProduct, createProduct, archiveProduct }      from 'ducks/products/actions';
 import { getPresignedUrls }     from 'ducks/assets/actions';
 import { setActiveTab }         from 'ducks/header/actions';
 
@@ -99,9 +99,18 @@ class EditProductPage extends React.Component {
     }
 
     componentWillMount() {
-        this.props.triggerSpinner({ isOn: true });
-        this.productCheck({ product: {} });
-        this.props.getProductCategories();
+        const { cookies, activeUser } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+
+        if (jwt) {
+            this.props.triggerSpinner({ isOn: true });
+            this.productCheck({ product: {} });
+            this.props.getProducts({ token: jwt.token });
+
+        } else {
+            this.props.history.push(`/login`);
+        }
+
         this.props.setActiveTab('products');
     }
 
@@ -213,13 +222,19 @@ class EditProductPage extends React.Component {
     }
 
     update({ type, value }) {
+        const { products } = this.props;
 
         this.setState({ [type]: value });
 
         if (type === 'productSubcategoryId') {
-            const products = this.props.products.toJS();
+            const products = products.toJS();
             let sortIndex = _.size(products[value.label]) + 1;
             this.setState({ sortIndex });
+        }
+
+        if (type === 'sibiModelNumber') {
+            const product = _.find(products.toJS(), ['modelNumber', value]);
+            console.log(product);
         }
     }
 
@@ -340,17 +355,17 @@ class EditProductPage extends React.Component {
     }
 
     archiveProduct() {
-        const { cookies, productCategories } = this.props;
+        const { cookies, productCategories, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
         const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
         const subCategory = _.find(category.subcategories, ['id', this.state.productSubcategoryId]);
 
-        this.props.archiveProduct({ token: jwt.token, category: subCategory.name, id: this.state.id })
+        this.props.archiveProduct({ token: jwt.token, category: category.name, subCategory: subCategory.name, id: this.state.id })
         this.props.history.goBack();
     }
 
     submitProduct() {
-        const { cookies, productCategories } = this.props;
+        const { cookies, productCategories, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
         const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
         const subCategory = _.find(category.subcategories, ['id', this.state.productSubcategoryId]);
@@ -383,10 +398,10 @@ class EditProductPage extends React.Component {
         });
 
         if (product.id) {
-            this.props.updateProduct({ token: jwt.token, category: subCategory.name, product });
+            this.props.updateProduct({ token: jwt.token, category: activeUser.toJS().trade, subCategory: subCategory.name, product });
 
         } else {
-            this.props.createProduct({ token: jwt.token, category: subCategory.name, product })
+            this.props.createProduct({ token: jwt.token, category: activeUser.toJS().trade, subCategory: subCategory.name, product })
         }
 
         this.props.history.goBack();
@@ -407,7 +422,9 @@ class EditProductPage extends React.Component {
             const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
 
             const categories = _.map(productCategories.toJS(), (category) => {
-                return { label: category.name, value: category.id };
+                if (category.name === activeUser.toJS().trade) { // TODO: need to update this to account for all category types, if user has multiple trades.
+                    return { label: category.name, value: category.id };
+                }
             });
 
             const categoryOptions = [
@@ -429,7 +446,7 @@ class EditProductPage extends React.Component {
                     name="product-sub-category"
                     value={this.state.productSubcategoryId}
                     options={subCategoryOptions}
-                    onChange={(selected) => (!isDisabled) ? this.update({ type: 'productSubcategoryId', value: selected.value }) : console.log(`you don't have permission to change!`)}
+                    onChange={(selected) => (!isDisabled) ? this.update({ type: 'productSubcategoryId', value: (selected) ? selected.value : null }) : console.log(`you don't have permission to change!`)}
                     required
                 />
             }
@@ -510,16 +527,16 @@ class EditProductPage extends React.Component {
 
             productDetails = <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
                 <div className="content">
+                    <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update({ type: 'sibiModelNumber', value: e.target.value})} required disabled={isDisabled} />
                     <Select
                         name="product-category"
                         value={this.state.productCategoryId}
                         options={categoryOptions}
-                        onChange={(selected) => (!isDisabled) ? this.update({ type: 'productCategoryId', value: selected.value }) : console.log(`you don't have permission to change!`)}
+                        onChange={(selected) => (!isDisabled) ? this.update({ type: 'productCategoryId', value: (selected) ? selected.value : null }) : console.log(`you don't have permission to change!`)}
                         required
                     />
                     { subCategorySelect }
                     <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update({ type: 'name', value: e.target.value})} required disabled={isDisabled} />
-                    <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update({ type: 'sibiModelNumber', value: e.target.value})} required disabled={isDisabled} />
                     <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.sortIndex} onChange={(e) => this.update({ type: 'sortIndex', value: e.target.value})} />
                     <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update({ type: 'sku', value: e.target.value})} required disabled={isDisabled} />
                     <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update({ type: 'serialNumber', value: e.target.value})} disabled={isDisabled} />
@@ -581,6 +598,7 @@ const select = (state) => ({
 const actions = {
     triggerSpinner,
     clearProduct,
+    getProducts,
     getProductById,
     getProductCategories,
     updateProduct,

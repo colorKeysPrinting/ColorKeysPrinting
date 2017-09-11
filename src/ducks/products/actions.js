@@ -83,13 +83,14 @@ export function getProductCategories() {
     }
 }
 
-export function getUserProductCategories({ token }) {
+export function getUserProductCategories({ token, category }) {
     return (dispatch) => {
         return axios({
             method  : Network.GET,
             url     : `${Network.DOMAIN}/productCategoriesForUser`,
             headers : {
-                'x-auth-token': token
+                'x-auth-token': token,
+                category
             }
         })
             .then(payload => {
@@ -120,14 +121,15 @@ export function getProductsForCategory({ token, categoryId, category }) {
     }
 }
 
-export function getProductsForSubCategory({ token, categoryId, category }) {
+export function getProductsForSubCategory({ token, category, subCategory }) {
     return (dispatch) => {
         return axios({
             method  : Network.GET,
-            url     : `${Network.DOMAIN}/productsForSubcategory?subcategoryId=${categoryId}`,
+            url     : `${Network.DOMAIN}/productsForSubcategory?subcategoryId=${subCategory.id}`,
             headers : {
                 'x-auth-token': token,
-                category
+                category,
+                subCategory: subCategory.name
             }
         })
             .then(payload => {
@@ -139,14 +141,15 @@ export function getProductsForSubCategory({ token, categoryId, category }) {
     }
 }
 
-export function updateProduct({ token, category, product }) {
+export function updateProduct({ token, category, subCategory, product }) {
     return (dispatch) => {
         return axios({
             method  : Network.PATCH,
-            url     : `${Network.DOMAIN}/products/${product.id}`,
+            url     : `${Network.DOMAIN}/products/${subCategory.id}`,
             headers : {
                 'x-auth-token': token,
-                category
+                category,
+                subCategory: subCategory.name
             },
             data: {
                 ...product
@@ -161,14 +164,15 @@ export function updateProduct({ token, category, product }) {
     }
 }
 
-export function createProduct({ token, category, product }) {
+export function createProduct({ token, category, subCategory, product }) {
     return (dispatch) => {
         return axios({
             method  : Network.POST,
             url     : `${Network.DOMAIN}/createProduct`,
             headers : {
                 'x-auth-token': token,
-                category
+                category,
+                subCategory
             },
             data: {
                 ...product
@@ -183,7 +187,7 @@ export function createProduct({ token, category, product }) {
     }
 }
 
-export function archiveProduct({ token, category, id }) {
+export function archiveProduct({ token, category, subCategory, id }) {
     return (dispatch) => {
         return axios({
             method  : Network.POST,
@@ -191,6 +195,7 @@ export function archiveProduct({ token, category, id }) {
             headers : {
                 'x-auth-token': token,
                 category,
+                subCategory,
                 id
             }
         })
@@ -203,7 +208,7 @@ export function archiveProduct({ token, category, id }) {
     }
 }
 
-export function unarchiveProduct({ token, category, id }) {
+export function unarchiveProduct({ token, category, subCategory, id }) {
     return (dispatch) => {
         return axios({
             method  : Network.POST,
@@ -211,6 +216,7 @@ export function unarchiveProduct({ token, category, id }) {
             headers : {
                 'x-auth-token': token,
                 category,
+                subCategory,
                 id
             }
         })
