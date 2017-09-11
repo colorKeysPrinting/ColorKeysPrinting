@@ -126,7 +126,7 @@ class OrdersPage extends React.Component {
                         value = user.fundLocation.city;
 
                     } else if (key ==='propertyId') {
-                        value = fundProperty.id;
+                        value = fundProperty.propertyUnitId;
 
                     } else if (key === 'address') {
                         value = `${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
