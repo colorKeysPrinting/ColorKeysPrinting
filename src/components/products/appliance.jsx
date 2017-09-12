@@ -78,11 +78,11 @@ export default class ApplianceProducts extends React.Component {
 
         const addPictureSection = (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
             <label className="btn blue" >
-                { (image !== '') ? <img src={image} alt="uploaded-image" height="60" /> : 'Choose File' }
+                { (image !== '') ? <img src={image.imageUrl} alt="uploaded-image" height="60" /> : 'Choose File' }
                 <input
                     type="file"
                     accept=".png,.jpg,.jpeg,.svg"
-                    onChange={(e) => {e.preventDefault(); this.props.updateImage({ image: e.target.files[0] }); }}
+                    onChange={(e) => {e.preventDefault(); this.props.updateImage({ imageFile: e.target.files[0] }); }}
                     style={{ display: 'none' }}
                 />
             </label>
