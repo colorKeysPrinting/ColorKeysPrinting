@@ -9,7 +9,7 @@ import Loader                   from 'react-loader';
 
 import { triggerSpinner }       from 'ducks/ui/actions';
 import * as productActions      from 'ducks/products/actions';
-import { getPresignedUrls }     from 'ducks/assets/actions';
+import { uploadImage }          from 'ducks/assets/actions';
 import { setActiveTab }         from 'ducks/header/actions';
 
 import Appliance                from 'components/products/appliance';
@@ -91,21 +91,12 @@ class EditProductPage extends React.Component {
             this.productCheck({ product: nextProps.product });
         }
 
-        if (!_.isEqual(nextProps.preSignedURLs, this.props.preSignedURLs)) {
-            const re = /http(s)?:\/\//;
+        if (!_.isEqual(nextProps.imageUploadSuccess, this.props.imageUploadSuccess)) {
+            this.setState((prevState) => {
+                prevState.applianceColorsInfo.push({ imageUrl: nextProps.imageUploadSuccess, color: prevState.color });
 
-            if (_.size(this.state.applianceColorsInfo) > 0) {
-                _.each(this.state.applianceColorsInfo, (image) => {
-                    const match = re.exec(image.imageUrl);
-                    if (!match) {
-                        const picture = image.imageFile.type.split('/');
-                    }
-                });
-            }
-        }
-
-        if (nextProps.imageUploadSuccess.size === nextProps.preSignedURLs.size) {
-            this.submitProduct();
+                return { applianceColorsInfo: prevState.applianceColorsInfo, image: '', color: '' };
+            });
         }
 
         if (!_.isEqual(productCategories, nextProps.productCategories)) {
@@ -142,15 +133,17 @@ class EditProductPage extends React.Component {
         }
     }
 
-    updateImage({ image }) {
+    updateImage({ imageFile }) {
         const reader = new FileReader();
-        this.setState({ imageFile: image });
 
         reader.onload = (e) => {
-            this.setState({ image: e.target.result });
+            // imageUrl - use to show the image on the button
+            // imageFile - use this to upload to server
+
+            this.setState({ image: { imageUrl: e.target.result, imageFile } });
         }
 
-        reader.readAsDataURL(image);
+        reader.readAsDataURL(imageFile);
     }
 
     checkModelNum() {
@@ -264,12 +257,14 @@ class EditProductPage extends React.Component {
     }
 
     addColorAndImage() {
-        console.log('adding color & image');
-        this.setState((prevState) => {
-            prevState.applianceColorsInfo.push({ imageUrl: prevState.image, color: prevState.color, imageFile: prevState.imageFile });
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const image = this.state.image;
 
-            return { applianceColorsInfo: prevState.applianceColorsInfo, color: '', image: '' };
-        });
+        const type = image.imageFile.type;
+        const imageFile = image.imageFile;
+
+        this.props.uploadImage({ token: jwt.token, type, imageFile });
     }
 
     removeColorAndImage({ color }) {
@@ -369,7 +364,7 @@ class EditProductPage extends React.Component {
         }
 
         if (_.size(types) > 0) {
-            this.props.getPresignedUrls({ types });
+            this.props.uploadImage({ types });
 
         } else {
             console.log('save product', this.state.id);
@@ -646,15 +641,13 @@ const select = (state) => ({
     productsInCategory   : state.products.get('productsInCategory'),
     productCategories    : state.products.get('productCategories'),
     productSubCategories : state.products.get('productSubCategories'),
-    preSignedURLs        : state.assets.get('preSignedURLs'),
-    imageUploadSuccess   : state.assets.get('imageUploadSuccess'),
-    imageUploadFailed    : state.assets.get('imageUploadFailed')
+    imageUploadSuccess   : state.assets.get('imageUploadSuccess')
 });
 
 const actions = {
     triggerSpinner,
     ...productActions,
-    getPresignedUrls,
+    uploadImage,
     setActiveTab
 };
 

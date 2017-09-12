@@ -7,7 +7,6 @@ import Network          from 'libs/constants/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
-    GET_PRESIGNED_URLS_SUCCESS: 'sibi_ge_admin/ui/GET_PRESIGNED_URLS_SUCCESS',
     UPLOAD_IMAGES_S3_SUCCESS: 'sibi_ge_admin/ui/UPLOAD_IMAGES_S3_SUCCESS',
     UPLOAD_IMAGES_S3_FAILED: 'sibi_ge_admin/ui/UPLOAD_IMAGES_S3_FAILED'
 }
@@ -19,17 +18,51 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getPresignedUrls({ types }) {
+const uploadImageS3 = ({ url, type, formData }) => {
     return (dispatch) => {
+        const options = {
+            headers: {
+                'Content-Type': type
+            }
+        };
+
+        return axios.post(url, formData, options)
+            .then(payload => {
+                dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_SUCCESS, ...payload });
+            })
+            .catch(error => {
+                alert('Image Failed to upload please click "Add" to try again\nor please try again later');
+                throw(error);
+            });
+    }
+}
+
+export function uploadImage({ token, type, imageFile }) {
+    return (dispatch) => {
+        const imageType = type.split('/');
+        const urlInfo = [{ type: imageType[0], fileType: imageType[1] }];
         return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/imageUploadUrl`,
-            data    : {
-                urlInfo: types
+            method: Network.POST,
+            url: `${Network.DOMAIN}/getPresignedUrl`,
+            headers : {
+                'x-auth-token': token
+            },
+            data: {
+                urlInfo
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.GET_PRESIGNED_URLS_SUCCESS , ...payload });
+                const data = payload.data.presignedUrlInfo[0];
+
+                let formData = new FormData();
+                _.each(data.params, (value, key) => {
+                    formData.append(key, value);
+                });
+                formData.append('file', imageFile);
+
+                const url = data.upload_url.replace(/https/, 'http');
+
+                dispatch(uploadImageS3({ url, type, formData }));
             })
             .catch(error => {
                 throw(error);
@@ -37,21 +70,3 @@ export function getPresignedUrls({ types }) {
     }
 }
 
-export function uploadImagesS3({ url, image }) {
-    return (dispatch) => {
-        return axios({
-            method  : Network.PUT,
-            url,
-            data    : {
-                image
-            }
-        })
-            .then(payload => {
-                dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_SUCCESS , ...payload });
-            })
-            .catch(error => {
-                dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_FAILED , ...payload });
-                throw(error);
-            });
-    }
-}

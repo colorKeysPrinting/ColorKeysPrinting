@@ -1,0 +1,17 @@
+#overlay-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+
+    .dark-background {
+        position: absolute;
+        background-color: rgba(50, 50, 50, 0.4);
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+    }
+}
