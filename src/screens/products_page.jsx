@@ -85,7 +85,7 @@ class ProductsPage extends React.Component {
                                 const jwt = cookies.get('sibi-admin-jwt');
 
                                 value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: subCategory.name, id: product.id }) } className="product-action">Unarchive</div>
-                                    : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}`, state: { category: category.name, subCategory: subCategory.name, product } }} className="product-action">Edit</Link>;
+                                    : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}`, state: { product } }} className="product-action">Edit</Link>;
 
                             } else if (key === 'featured') {
                                 if (product.sortIndex <= 4) {

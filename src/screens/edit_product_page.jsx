@@ -8,7 +8,7 @@ import Select                   from 'react-select';
 import Loader                   from 'react-loader';
 
 import { triggerSpinner }       from 'ducks/ui/actions';
-import { clearProduct, getProducts, getProductById, getProductCategories, updateProduct, createProduct, archiveProduct }      from 'ducks/products/actions';
+import * as productActions      from 'ducks/products/actions';
 import { getPresignedUrls }     from 'ducks/assets/actions';
 import { setActiveTab }         from 'ducks/header/actions';
 
@@ -20,7 +20,11 @@ class EditProductPage extends React.Component {
     constructor(props) {
         super(props);
 
+        const product = this.createProductObj({ product: {} });
+
         this.state = {
+            isModelNumFound: true,
+            showDialogBox: false,
             activeSection: '',
             faqQuestion: '',
             faqAnswer: '',
@@ -30,61 +34,20 @@ class EditProductPage extends React.Component {
             partDescription: '',
             partCode: '',
             videoURL: '',
-            id: '',
-            // ***************** the following are required for new products *****************
-            name: '',
-            sibiModelNumber: '',
-            productCategoryId: '',
-            productSubcategoryId: '',
-            sku: '',
-
-            // ***************** the following are optional *****************
-            serialNumber: '',
-            shortDescription: '',
-            overview: '',
-            faq: [],
-            videos: [],
-            sortIndex: 0,
-
-            // ***************** product category section (no required) *****************
-            // *****************
-            applianceManufacturerName: '',
-            applianceType: '',
-            applianceSize: '',
-            applianceDescription: '',
-            applianceFuelType: '',
-            applianceWidth: '',
-            applianceHeight: '',
-            applianceDepth: '',
-            applianceInstallDescription: '',
-            applianceInstallPrice: '',
-            applianceInstallCode: '',
-            applianceColorsInfo: [],
-            applianceSpecSheetUrl: '',
-            applianceRemovalDescription: '',
-            applianceRemovalCode: '',
-            applianceRemovalPrice: '',
-            applianceAssociatedParts: [],
-            // *****************
-            hvacSeerRating: '',
-            hvacEfficiencyRating: '',
-            hvacVoltageRating: '',
-            hvacTonnage: '',
-            hvacBtuAmount: '',
-            // *****************
-            paintCategory: '',
-            paintType: '',
-            paintQuantitySize: '',
-            paintFinish: '',
-            paintQuality: '',
-            paintColorNumber: '',
-            paintColorName: ''
+            ...product
         };
 
+        // check function
+        this.checkModelNum = this.checkModelNum.bind(this);
         this.productCheck = this.productCheck.bind(this);
+        this.createProductObj = this.createProductObj.bind(this);
+
+        // update function
         this.update = this.update.bind(this);
         this.updateImage = this.updateImage.bind(this);
         this.changeActiveSection = this.changeActiveSection.bind(this);
+
+        // product attr. functions
         this.addColorAndImage = this.addColorAndImage.bind(this);
         this.removeColorAndImage = this.removeColorAndImage.bind(this);
         this.addPart = this.addPart.bind(this);
@@ -93,13 +56,17 @@ class EditProductPage extends React.Component {
         this.removeVideo = this.removeVideo.bind(this);
         this.addFAQ = this.addFAQ.bind(this);
         this.removeFaq = this.removeFaq.bind(this);
+
+        // action functions
+        this.createNew = this.createNew.bind(this);
+        this.modifyExisting = this.modifyExisting.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
         this.archiveProduct = this.archiveProduct.bind(this);
         this.submitProduct = this.submitProduct.bind(this);
     }
 
     componentWillMount() {
-        const { cookies, activeUser } = this.props;
+        const { cookies, activeUser, productCategories } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
@@ -107,6 +74,9 @@ class EditProductPage extends React.Component {
             this.productCheck({ product: {} });
             this.props.getProducts({ token: jwt.token });
 
+            if (productCategories.size <= 0) {
+                this.props.getUserProductCategories({ token: jwt.token, category: 'APPLIANCES' });
+            }
         } else {
             this.props.history.push(`/login`);
         }
@@ -115,6 +85,8 @@ class EditProductPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
+        const { cookies, productCategories, location } = this.props;
+
         if (!_.isEqual(nextProps.product, this.props.product)) {
             this.productCheck({ product: nextProps.product });
         }
@@ -135,6 +107,16 @@ class EditProductPage extends React.Component {
         if (nextProps.imageUploadSuccess.size === nextProps.preSignedURLs.size) {
             this.submitProduct();
         }
+
+        if (!_.isEqual(productCategories, nextProps.productCategories)) {
+            const jwt = cookies.get('sibi-admin-jwt');
+
+            _.each(nextProps.productCategories.toJS(), (category) => {
+                _.each(category.subcategories, (subCategory) => {
+                    this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory });
+                });
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -142,99 +124,21 @@ class EditProductPage extends React.Component {
         this.props.clearProduct();
     }
 
-    productCheck({ product }) {
-        let { cookies, location, productCategories } = this.props;
-
-        const reProduct = /productId=(.*)/;
-        const match = reProduct.exec(location.search);
-
-        if (location.state) {
-            product = location.state.product;
-            product.sortIndex += 1;
-
-        } else if (match) {
-            const productId = match[1];
-
-            if(product.size > 0) {
-                product = product.toJS();
-                product.sortIndex += 1;
-
-            } else {
-                const jwt = cookies.get('sibi-admin-jwt');
-                this.props.getProductById({ token: jwt.token, id: productId });
-            }
-        } else {
-
-            product = {
-                id: '',
-                // ***************** the following are required for new products *****************
-                name: '',
-                sibiModelNumber: '',
-                productCategoryId: '',
-                productSubcategoryId: '',
-                sku: '',
-
-                // ***************** the following are optional *****************
-                serialNumber: '',
-                shortDescription: '',
-                overview: '',
-                faq: [],
-                videos: [],
-                sortIndex: 0,
-
-                // ***************** product category section (no required) *****************
-                // *****************
-                applianceManufacturerName: '',
-                applianceType: '',
-                applianceSize: '',
-                applianceDescription: '',
-                applianceFuelType: '',
-                applianceWidth: '',
-                applianceHeight: '',
-                applianceDepth: '',
-                applianceInstallDescription: '',
-                applianceInstallPrice: '',
-                applianceInstallCode: '',
-                applianceColorsInfo: [],
-                applianceSpecSheetUrl: '',
-                applianceRemovalDescription: '',
-                applianceRemovalCode: '',
-                applianceRemovalPrice: '',
-                applianceAssociatedParts: [],
-                // *****************
-                hvacSeerRating: '',
-                hvacEfficiencyRating: '',
-                hvacVoltageRating: '',
-                hvacTonnage: '',
-                hvacBtuAmount: '',
-                // *****************
-                paintCategory: '',
-                paintType: '',
-                paintQuantitySize: '',
-                paintFinish: '',
-                paintQuality: '',
-                paintColorNumber: '',
-                paintColorName: ''
-            };
-        }
-
-        this.setState({ ...product });
-    }
-
     update({ type, value }) {
-        const { products } = this.props;
+        const { productsInCategory, productCategories, productSubCategories } = this.props;
 
         this.setState({ [type]: value });
 
-        if (type === 'productSubcategoryId') {
-            const products = products.toJS();
-            let sortIndex = _.size(products[value.label]) + 1;
+        if (type === 'productSubcategoryId' &&
+            productsInCategory.size > 0) {
+            const products = productsInCategory.toJS();
+            const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
+            const subCategory = _.find(productSubCategories.toJS(), ['id', value]);
+            let sortIndex = _.size(products[category.name][subCategory.name]) + 1;
             this.setState({ sortIndex });
-        }
 
-        if (type === 'sibiModelNumber') {
-            const product = _.find(products.toJS(), ['modelNumber', value]);
-            console.log(product);
+        } else if (type === 'sibiModelNumber' && !_.isEqual(value, this.state.sibiModelNumber)) {
+            this.setState({ isModelNumFound: true });
         }
     }
 
@@ -247,6 +151,108 @@ class EditProductPage extends React.Component {
         }
 
         reader.readAsDataURL(image);
+    }
+
+    checkModelNum() {
+        const { products } = this.props;
+
+        const product = _.find(products.toJS(), ['sibiModelNumber', this.state.sibiModelNumber]);
+        let isModelNumFound = true, showDialogBox = false;
+
+        if (!product) {
+            console.log('success no modelnumber found for:', this.state.sibiModelNumber);
+            isModelNumFound = false;
+
+        } else {
+            showDialogBox = true;
+        }
+
+        this.setState({ isModelNumFound, showDialogBox });
+    }
+
+    productCheck({ product }) {
+        let isModelNumFound, { cookies, location, productCategories } = this.props;
+
+        const reProduct = /productId=(.*)/;
+        const match = reProduct.exec(location.search);
+
+        if (location.state) {
+            product = location.state.product;
+            product.sortIndex += 1;
+            isModelNumFound = false;
+
+        } else if (match) {
+            const productId = match[1];
+
+            if(product.size > 0) {
+                product = product.toJS();
+                product.sortIndex += 1;
+                isModelNumFound = false;
+
+            } else {
+                const jwt = cookies.get('sibi-admin-jwt');
+                this.props.getProductById({ token: jwt.token, id: productId });
+            }
+        } else {
+            product = this.createProductObj({ product: {} });
+            isModelNumFound = true;
+        }
+
+        this.setState({ ...product, isModelNumFound });
+    }
+
+    createProductObj({ product }) {
+        return product = {
+            id                          : product.id || '',
+            // ***************** the following are required for new products *****************
+            name                        : product.name || '',
+            sibiModelNumber             : product.sibiModelNumber || '',
+            productCategoryId           : product.productCategoryId || '',
+            productSubcategoryId        : product.productSubcategoryId || '',
+            sku                         : product.sku || '',
+
+            // ***************** the following are optional *****************
+            serialNumber                : product.serialNumber || '',
+            shortDescription            : product.shortDescription || '',
+            overview                    : product.overview || '',
+            faq                         : product.faq || [],
+            videos                      : product.videos || [],
+            sortIndex                   : product.sortIndex || 0,
+
+            // ***************** product category section (no required) *****************
+            // *****************
+            applianceManufacturerName   : product.applianceManufacturerName || '',
+            applianceType               : product.applianceType || '',
+            applianceSize               : product.applianceSize || '',
+            applianceDescription        : product.applianceDescription || '',
+            applianceFuelType           : product.applianceFuelType || '',
+            applianceWidth              : product.applianceWidth || '',
+            applianceHeight             : product.applianceHeight || '',
+            applianceDepth              : product.applianceDepth || '',
+            applianceInstallDescription : product.applianceInstallDescription || '',
+            applianceInstallPrice       : product.applianceInstallPrice || '',
+            applianceInstallCode        : product.applianceInstallCode || '',
+            applianceColorsInfo         : product.applianceColorsInfo || [],
+            applianceSpecSheetUrl       : product.applianceSpecSheetUrl || '',
+            applianceRemovalDescription : product.applianceRemovalDescription || '',
+            applianceRemovalCode        : product.applianceRemovalCode || '',
+            applianceRemovalPrice       : product.applianceRemovalPrice || '',
+            applianceAssociatedParts    : product.applianceAssociatedParts || [],
+            // *****************
+            hvacSeerRating              : product.hvacSeerRating || '',
+            hvacEfficiencyRating        : product.hvacEfficiencyRating || '',
+            hvacVoltageRating           : product.hvacVoltageRating || '',
+            hvacTonnage                 : product.hvacTonnage || '',
+            hvacBtuAmount               : product.hvacBtuAmount || '',
+            // *****************
+            paintCategory               : product.paintCategory || '',
+            paintType                   : product.paintType || '',
+            paintQuantitySize           : product.paintQuantitySize || '',
+            paintFinish                 : product.paintFinish || '',
+            paintQuality                : product.paintQuality || '',
+            paintColorNumber            : product.paintColorNumber || '',
+            paintColorName              : product.paintColorName || ''
+        };
     }
 
     changeActiveSection(activeSection) {
@@ -331,6 +337,23 @@ class EditProductPage extends React.Component {
         });
     }
 
+    createNew() {
+        const sibiModelNumber = this.state.sibiModelNumber;
+
+        const product = this.createProductObj({ product: { sibiModelNumber } });
+
+        this.setState({ ...product, showDialogBox: false, isModelNumFound: false });
+    }
+
+    modifyExisting() {
+        const { products, history } = this.props;
+
+        const product = _.find(products.toJS(), ['sibiModelNumber', this.state.sibiModelNumber]);
+
+        history.push({ pathname: `/edit_product`, search: `productId=${product.id}`, state: { product } });
+        this.setState({ ...product, showDialogBox: false, isModelNumFound: false });
+    }
+
     saveProduct() {
         const re = /http(s)?:\/\//;
         const types = [];
@@ -355,20 +378,20 @@ class EditProductPage extends React.Component {
     }
 
     archiveProduct() {
-        const { cookies, productCategories, activeUser } = this.props;
+        const { cookies, productCategories, activeUser, history } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
         const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
         const subCategory = _.find(category.subcategories, ['id', this.state.productSubcategoryId]);
 
         this.props.archiveProduct({ token: jwt.token, category: category.name, subCategory: subCategory.name, id: this.state.id })
-        this.props.history.goBack();
+        history.push(`/products`);
     }
 
     submitProduct() {
-        const { cookies, productCategories, activeUser } = this.props;
+        const { cookies, productCategories, productSubCategories, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
         const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
-        const subCategory = _.find(category.subcategories, ['id', this.state.productSubcategoryId]);
+        const subCategory = _.find(productSubCategories.toJS(), ['id', this.state.productSubcategoryId]);
 
         const product = {};
         _.each(this.state, (value, key) => {
@@ -404,21 +427,22 @@ class EditProductPage extends React.Component {
             this.props.createProduct({ token: jwt.token, category: activeUser.toJS().trade, subCategory: subCategory.name, product })
         }
 
-        this.props.history.goBack();
+        history.push(`/products`);
     }
 
     render() {
         const { product, productCategories, activeUser } = this.props;
-        let subCategorySelect, productType, productDetails;
+        let subCategorySelect, productType, productDetails, isDisabled, archiveBtn;
 
         const title = (product) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
-        const archiveBtn = (this.state.id) ? <div className="btn borderless red" onClick={this.archiveProduct}>Archive Product</div> : null;
 
         if (activeUser.size > 0 &&
             productCategories.size > 0) {
 
-            const isDisabled = (activeUser.toJS().type === 'superAdmin') ? false : true;
+            isDisabled = (activeUser.toJS().type === 'superAdmin') ? false : true;
+            archiveBtn = (this.state.id && !isDisabled) ? <div className="btn borderless red" onClick={this.archiveProduct}>Archive Product</div> : null;
+
             const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
 
             const categories = _.map(productCategories.toJS(), (category) => {
@@ -525,9 +549,8 @@ class EditProductPage extends React.Component {
                 }
             }
 
-            productDetails = <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
+            productDetails = (!this.state.isModelNumFound) ? <div>
                 <div className="content">
-                    <input name="product-sibi-model-num" type="text" placeholder="SIBI Model #" value={this.state.sibiModelNumber} onChange={(e) => this.update({ type: 'sibiModelNumber', value: e.target.value})} required disabled={isDisabled} />
                     <Select
                         name="product-category"
                         value={this.state.productCategoryId}
@@ -569,16 +592,47 @@ class EditProductPage extends React.Component {
                 </div>
                 <input className="btn blue fill" type="submit" value={buttonTxt} />
                 { archiveBtn }
-            </form>;
+            </div> : null;
 
             this.props.triggerSpinner({ isOn: false });
         }
 
+        const modelNumAdd = (this.state.isModelNumFound && !isDisabled) ? <input className="btn blue" type="submit" value="Add"/> : null;
+        const dialogBox = (this.state.showDialogBox) ? <dialog open>
+            <form method="dialog">
+                Alert:
+                <p>A product with this Sibi Model Number already exists!</p>
+                Do you wish to:
+                <p> - continue creating a new product (this will completely replace the existing product)</p>
+                <p> - modify the existing product?</p>
+                <input className="btn red" type="submit" value="Create New" onClick={this.createNew} />
+                <input className="btn blue" type="submit" value="Modify Existing" onClick={this.modifyExisting} />
+            </form>
+        </dialog> : null;
+
         return (
             <Loader loaded={this.props.spinner} >
                 <div id="edit-product-page">
-                    { productDetails }
+                    <form onSubmit={(e) => {e.preventDefault(); this.checkModelNum();}} >
+                        <div className="content">
+                            <input
+                                name="product-sibi-model-num"
+                                className="search-input"
+                                type="text"
+                                placeholder="SIBI Model #"
+                                value={this.state.sibiModelNumber}
+                                onChange={(e) => this.update({ type: 'sibiModelNumber', value: e.target.value })}
+                                disabled={isDisabled}
+                                required
+                            />
+                            { modelNumAdd }
+                        </div>
+                    </form>
+                    <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
+                        { productDetails }
+                    </form>
                 </div>
+                { dialogBox }
             </Loader>
         );
     }
@@ -589,7 +643,9 @@ const select = (state) => ({
     activeUser           : state.activeUser.get('activeUser'),
     product              : state.products.get('product'),
     products             : state.products.get('products'),
+    productsInCategory   : state.products.get('productsInCategory'),
     productCategories    : state.products.get('productCategories'),
+    productSubCategories : state.products.get('productSubCategories'),
     preSignedURLs        : state.assets.get('preSignedURLs'),
     imageUploadSuccess   : state.assets.get('imageUploadSuccess'),
     imageUploadFailed    : state.assets.get('imageUploadFailed')
@@ -597,13 +653,7 @@ const select = (state) => ({
 
 const actions = {
     triggerSpinner,
-    clearProduct,
-    getProducts,
-    getProductById,
-    getProductCategories,
-    updateProduct,
-    createProduct,
-    archiveProduct,
+    ...productActions,
     getPresignedUrls,
     setActiveTab
 };
