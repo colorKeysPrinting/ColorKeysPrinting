@@ -220,7 +220,6 @@ class OrderDetails extends React.Component {
                     const formatOfficePhone = (order.pmOffice) ? formatPhoneNumbers(order.pmOffice.phoneNumber) : '';
                     const pmOfficeName = (order.pmOffice) ? order.pmOffice.name : orderPageHeading.PM;
 
-
                     tenantInfoTitle = <tr>
                         <td><div className="table-header">Delivery Contact: </div></td>
                         <td><div className="table-header">Phone Number: </div></td>
