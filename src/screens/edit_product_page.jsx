@@ -12,6 +12,8 @@ import * as productActions      from 'ducks/products/actions';
 import { uploadImage }          from 'ducks/assets/actions';
 import { setActiveTab }         from 'ducks/header/actions';
 
+import EditPartOverlay          from 'components/edit_part_overlay';
+
 import Appliance                from 'components/products/appliance';
 import Hvac                     from 'components/products/hvac';
 import Paint                    from 'components/products/paint';
@@ -21,36 +23,47 @@ class EditProductPage extends React.Component {
         super(props);
 
         const product = this.createProductObj({ product: {} });
+        const part = {
+            id          : '',
+            description : '',
+            code        : '',
+            imageUrl    : '',
+            modelNumber : '',
+            gePrice     : '',
+            sibiPrice   : ''
+        };
 
         this.state = {
-            isModelNumFound: true,
-            showDialogBox: false,
+            isSibiModelNumFound: true,
+            isPartShowing: false,
+            showDialog: false,
+            isPartModelNumFound: true,
+            showPartsDialog: false,
+            isProductImage: false,
             activeSection: '',
             faqQuestion: '',
             faqAnswer: '',
             image: '',
             imageFile: '',
             color: '',
-            partDescription: '',
-            partCode: '',
             videoURL: '',
-            ...product
+            ...product,
+            part
         };
 
         // check function
         this.checkModelNum = this.checkModelNum.bind(this);
         this.productCheck = this.productCheck.bind(this);
-        this.createProductObj = this.createProductObj.bind(this);
 
         // update function
         this.update = this.update.bind(this);
         this.updateImage = this.updateImage.bind(this);
         this.changeActiveSection = this.changeActiveSection.bind(this);
+        this.showAddPart = this.showAddPart.bind(this);
 
         // product attr. functions
         this.addColorAndImage = this.addColorAndImage.bind(this);
         this.removeColorAndImage = this.removeColorAndImage.bind(this);
-        this.addPart = this.addPart.bind(this);
         this.removePart = this.removePart.bind(this);
         this.addVideo = this.addVideo.bind(this);
         this.removeVideo = this.removeVideo.bind(this);
@@ -58,8 +71,10 @@ class EditProductPage extends React.Component {
         this.removeFaq = this.removeFaq.bind(this);
 
         // action functions
-        this.createNew = this.createNew.bind(this);
-        this.modifyExisting = this.modifyExisting.bind(this);
+        this.createProductObj = this.createProductObj.bind(this);
+        this.createNewProduct = this.createNewProduct.bind(this);
+        this.modifyExistingProduct = this.modifyExistingProduct.bind(this);
+        this.savePart = this.savePart.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
         this.archiveProduct = this.archiveProduct.bind(this);
         this.submitProduct = this.submitProduct.bind(this);
@@ -73,6 +88,7 @@ class EditProductPage extends React.Component {
             this.props.triggerSpinner({ isOn: true });
             this.productCheck({ product: {} });
             this.props.getProducts({ token: jwt.token });
+            this.props.getParts({ token: jwt.token });
 
             if (productCategories.size <= 0) {
                 this.props.getUserProductCategories({ token: jwt.token, category: 'APPLIANCES' });
@@ -92,11 +108,18 @@ class EditProductPage extends React.Component {
         }
 
         if (!_.isEqual(nextProps.imageUploadSuccess, this.props.imageUploadSuccess)) {
-            this.setState((prevState) => {
-                prevState.applianceColorsInfo.push({ imageUrl: nextProps.imageUploadSuccess, color: prevState.color });
+            if (!this.state.isProductImage) {
+                this.setState((prevState) => {
+                    prevState.applianceColorsInfo.push({ imageUrl: nextProps.imageUploadSuccess, color: prevState.color });
 
-                return { applianceColorsInfo: prevState.applianceColorsInfo, image: '', color: '' };
-            });
+                    return { applianceColorsInfo: prevState.applianceColorsInfo, image: '', color: '' };
+                });
+            } else {
+                this.setState((prevState) => {
+                    prevState.part['imageUrl'] = nextProps.imageUploadSuccess;
+                    return { isProductImage: false, part: prevState.part };
+                });
+            }
         }
 
         if (!_.isEqual(productCategories, nextProps.productCategories)) {
@@ -117,54 +140,92 @@ class EditProductPage extends React.Component {
 
     update({ type, value }) {
         const { productsInCategory, productCategories, productSubCategories } = this.props;
+        const re = /^part(.*)/;
+        const match = re.exec(type)
 
-        this.setState({ [type]: value });
+        if (match) {
+            const type = (match[1]);
 
-        if (type === 'productSubcategoryId' &&
-            productsInCategory.size > 0) {
-            const products = productsInCategory.toJS();
-            const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
-            const subCategory = _.find(productSubCategories.toJS(), ['id', value]);
-            let sortIndex = _.size(products[category.name][subCategory.name]) + 1;
-            this.setState({ sortIndex });
+            if (type === 'modelNumber' && !_.isEqual(value, this.state.part.modelNumber)) {
+                this.setState({ isPartModelNumFound: true });
+            }
+            this.setState((prevState) => {
+                prevState.part[type] = value;
+                return { part: prevState.part };
+            });
 
-        } else if (type === 'sibiModelNumber' && !_.isEqual(value, this.state.sibiModelNumber)) {
-            this.setState({ isModelNumFound: true });
+        } else {
+            this.setState({ [type]: value });
+
+            if (type === 'productSubcategoryId' &&
+                productsInCategory.size > 0) {
+                const products = productsInCategory.toJS();
+                const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
+                const subCategory = _.find(productSubCategories.toJS(), ['id', value]);
+                let sortIndex = _.size(products[category.name][subCategory.name]) + 1;
+                this.setState({ sortIndex });
+
+            } else if (type === 'sibiModelNumber' && !_.isEqual(value, this.state.sibiModelNumber)) {
+                this.setState({ isSibiModelNumFound: true });
+            }
         }
+
     }
 
-    updateImage({ imageFile }) {
+    updateImage({ type, imageFile }) {
+        const { cookies } = this.props;
         const reader = new FileReader();
 
         reader.onload = (e) => {
-            // imageUrl - use to show the image on the button
-            // imageFile - use this to upload to server
+            if (type === 'product') {
+                // imageUrl - use to show the image on the button
+                // imageFile - use this to upload to server
+                this.setState({ image: { imageUrl: e.target.result, imageFile } });
 
-            this.setState({ image: { imageUrl: e.target.result, imageFile } });
+            } else if (type === 'part') {
+                this.setState({ isProductImage: true });
+                const jwt = cookies.get('sibi-admin-jwt');
+                this.props.uploadImage({ token: jwt.token, type: imageFile.type, imageFile });
+            }
         }
-
         reader.readAsDataURL(imageFile);
     }
 
-    checkModelNum() {
-        const { products } = this.props;
+    checkModelNum({ type }) {
+        const { products, parts } = this.props;
 
-        const product = _.find(products.toJS(), ['sibiModelNumber', this.state.sibiModelNumber]);
-        let isModelNumFound = true, showDialogBox = false;
+        if (type === 'product') {
+            const product = _.find(products.toJS(), ['sibiModelNumber', this.state.sibiModelNumber]);
+            let isSibiModelNumFound = true, showDialog = false;
 
-        if (!product) {
-            console.log('success no modelnumber found for:', this.state.sibiModelNumber);
-            isModelNumFound = false;
+            if (!product) {
+                console.log('success no modelnumber found for:', this.state.sibiModelNumber);
+                isSibiModelNumFound = false;
 
-        } else {
-            showDialogBox = true;
+            } else {
+                showDialog = true;
+            }
+
+            this.setState({ isSibiModelNumFound, showDialog });
+
+        } else if (type === 'part') {
+            const part = _.find(parts.toJS(), ['modelNumber', this.state.part.modelNumber]);
+            let isPartModelNumFound = true, showPartsDialog = false;
+
+            if(!part) {
+                console.log('success no modelNumber found for:', this.state.part.modelNumber);
+                isPartModelNumFound = false;
+
+            } else {
+                showPartsDialog = true;
+            }
+
+            this.setState({ isPartModelNumFound, showPartsDialog });
         }
-
-        this.setState({ isModelNumFound, showDialogBox });
     }
 
     productCheck({ product }) {
-        let isModelNumFound, { cookies, location, productCategories } = this.props;
+        let isSibiModelNumFound, { cookies, location, productCategories } = this.props;
 
         const reProduct = /productId=(.*)/;
         const match = reProduct.exec(location.search);
@@ -172,7 +233,7 @@ class EditProductPage extends React.Component {
         if (location.state) {
             product = location.state.product;
             product.sortIndex += 1;
-            isModelNumFound = false;
+            isSibiModelNumFound = false;
 
         } else if (match) {
             const productId = match[1];
@@ -180,7 +241,7 @@ class EditProductPage extends React.Component {
             if(product.size > 0) {
                 product = product.toJS();
                 product.sortIndex += 1;
-                isModelNumFound = false;
+                isSibiModelNumFound = false;
 
             } else {
                 const jwt = cookies.get('sibi-admin-jwt');
@@ -188,10 +249,100 @@ class EditProductPage extends React.Component {
             }
         } else {
             product = this.createProductObj({ product: {} });
-            isModelNumFound = true;
+            isSibiModelNumFound = true;
         }
 
-        this.setState({ ...product, isModelNumFound });
+        this.setState({ ...product, isSibiModelNumFound });
+    }
+
+    changeActiveSection(activeSection) {
+        this.setState((prevState) => {
+            activeSection = (prevState.activeSection !== activeSection) ? activeSection : '';
+
+            return { activeSection };
+        });
+    }
+
+    showAddPart({ part }) {
+        this.setState((prevState) => {
+            const isPartShowing = (prevState.isPartShowing) ? false : true;
+            part = (part) ? part : {
+                id          : '',
+                description : '',
+                code        : '',
+                imageUrl    : '',
+                modelNumber : '',
+                gePrice     : '',
+                sibiPrice   : ''
+            };
+            return { isPartShowing, part };
+        });
+    }
+
+    addColorAndImage() {
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
+        const image = this.state.image;
+
+        const type = image.imageFile.type;
+        const imageFile = image.imageFile;
+
+        this.props.uploadImage({ token: jwt.token, type, imageFile });
+    }
+
+    removeColorAndImage({ color }) {
+        console.log('removeColorAndImage with color: ', color);
+        this.setState((prevState) => {
+            const applianceColorsInfo = _.remove(prevState.applianceColorsInfo, (element) => { return element.color !== color } );
+
+            return { applianceColorsInfo };
+        });
+    }
+
+    removePart({ partId }) {
+        console.log('removePart with partNumber: ', partId);
+        this.setState((prevState) => {
+            const applianceAssociatedParts = _.remove(prevState.applianceAssociatedParts, (element) => { return element.id !== partId } );
+
+            return { applianceAssociatedParts };
+        });
+    }
+
+    addVideo() {
+        console.log('adding video');
+        this.setState((prevState) => {
+            prevState.videos.push(prevState.videoURL);
+
+            return { videos: prevState.videos, videoURL: '' };
+        });
+    }
+
+    removeVideo({ index }) {
+        console.log('removing video at: ', index);
+        this.setState((prevState) => {
+            const videos = _.remove(prevState.videos, (element, i) => { return i !== index } ); // I'm using this in place of splice because the videos will probably change to obj
+
+            return { videos };
+        });
+    }
+
+    addFAQ() {
+        console.log('adding faq');
+        this.setState((prevState) => {
+            const id = _.size(prevState.faq);
+            prevState.faq.push({ Question: prevState.faqQuestion, Answer: prevState.faqAnswer });
+
+            return { faq: prevState.faq, faqQuestion: '', faqAnswer: '' };
+        });
+    }
+
+    removeFaq({ index }) {
+        console.log('removeFaq at: ', index);
+        this.setState((prevState) => {
+            const faq = _.remove(prevState.faq, (element, i) => { return i !== index } );
+
+            return { faq };
+        });
     }
 
     createProductObj({ product }) {
@@ -248,105 +399,39 @@ class EditProductPage extends React.Component {
         };
     }
 
-    changeActiveSection(activeSection) {
-        this.setState((prevState) => {
-            activeSection = (prevState.activeSection !== activeSection) ? activeSection : '';
-
-            return { activeSection };
-        });
-    }
-
-    addColorAndImage() {
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
-        const image = this.state.image;
-
-        const type = image.imageFile.type;
-        const imageFile = image.imageFile;
-
-        this.props.uploadImage({ token: jwt.token, type, imageFile });
-    }
-
-    removeColorAndImage({ color }) {
-        console.log('removeColorAndImage with color: ', color);
-        this.setState((prevState) => {
-            const applianceColorsInfo = _.remove(prevState.applianceColorsInfo, (element) => { return element.color !== color } );
-
-            return { applianceColorsInfo };
-        });
-    }
-
-    addPart() {
-        console.log('adding part');
-        this.setState((prevState) => {
-            const id = _.size(prevState.applianceAssociatedParts);
-            prevState.applianceAssociatedParts.push({ id, description: prevState.partDescription, code: prevState.partCode });
-
-            return { applianceAssociatedParts: prevState.applianceAssociatedParts, partDescription: '', partCode: '' };
-        });
-    }
-
-    removePart({ partId }) {
-        console.log('removePart with partNumber: ', partId);
-        this.setState((prevState) => {
-            const applianceAssociatedParts = _.remove(prevState.applianceAssociatedParts, (element) => { return element.id !== partId } );
-
-            return { applianceAssociatedParts };
-        });
-    }
-
-    addVideo() {
-        console.log('adding video');
-        this.setState((prevState) => {
-            prevState.videos.push(prevState.videoURL);
-
-            return { videos: prevState.videos, videoURL: '' };
-        });
-    }
-
-    removeVideo({ index }) {
-        console.log('removing video at: ', index);
-        this.setState((prevState) => {
-            const videos = _.remove(prevState.videos, (element, i) => { return i !== index } ); // I'm using this in place of splice because the videos will probably change to obj
-
-            return { videos };
-        });
-    }
-
-    addFAQ() {
-        console.log('adding faq');
-        this.setState((prevState) => {
-            const id = _.size(prevState.faq);
-            prevState.faq.push({ Question: prevState.faqQuestion, Answer: prevState.faqAnswer });
-
-            return { faq: prevState.faq, faqQuestion: '', faqAnswer: '' };
-        });
-    }
-
-    removeFaq({ index }) {
-        console.log('removeFaq at: ', index);
-        this.setState((prevState) => {
-            const faq = _.remove(prevState.faq, (element, i) => { return i !== index } );
-
-            return { faq };
-        });
-    }
-
-    createNew() {
+    createNewProduct() {
         const sibiModelNumber = this.state.sibiModelNumber;
 
         const product = this.createProductObj({ product: { sibiModelNumber } });
 
-        this.setState({ ...product, showDialogBox: false, isModelNumFound: false });
+        this.setState({ ...product, showDialog: false, isSibiModelNumFound: false });
     }
 
-    modifyExisting() {
+    modifyExistingProduct() {
         const { products, history } = this.props;
 
         const product = _.find(products.toJS(), ['sibiModelNumber', this.state.sibiModelNumber]);
 
         history.push({ pathname: `/edit_product`, search: `productId=${product.id}`, state: { product } });
-        this.setState({ ...product, showDialogBox: false, isModelNumFound: false });
+        this.setState({ ...product, showDialog: false, isSibiModelNumFound: false });
+    }
+
+    savePart() {
+        const { part } = this.state;
+
+        console.log('saving part');
+
+        // const part = {
+        //     id          : '',
+        //     description : '',
+        //     code        : '',
+        //     imageUrl    : '',
+        //     modelNumber : '',
+        //     gePrice     : '',
+        //     sibiPrice   : ''
+        // };
+
+        // call to create part
     }
 
     saveProduct() {
@@ -534,6 +619,8 @@ class EditProductPage extends React.Component {
                         updateImage={this.updateImage}
                         addColorAndImage={this.addColorAndImage}
                         removeColorAndImage={this.removeColorAndImage}
+                        removePart={this.removePart}
+                        showAddPart={this.showAddPart}
                     />;
 
                 } else if (category.name === 'HVAC') {
@@ -544,7 +631,7 @@ class EditProductPage extends React.Component {
                 }
             }
 
-            productDetails = (!this.state.isModelNumFound) ? <div>
+            productDetails = (!this.state.isSibiModelNumFound) ? <div>
                 <div className="content">
                     <Select
                         name="product-category"
@@ -558,7 +645,9 @@ class EditProductPage extends React.Component {
                     <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.sortIndex} onChange={(e) => this.update({ type: 'sortIndex', value: e.target.value})} />
                     <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update({ type: 'sku', value: e.target.value})} required disabled={isDisabled} />
                     <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update({ type: 'serialNumber', value: e.target.value})} disabled={isDisabled} />
-
+                    { productType}
+                    <textarea name="product-shortDescription" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
+                    <textarea name="product-overview" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
                     <div className="accordion">
                         {/* ************************************** faq section ************************************** */}
                         <div id="accordion-faq" className={(this.state.activeSection === 'faq') ? 'headers-active' : 'headers' } onClick={() => this.changeActiveSection('faq')}>
@@ -580,10 +669,6 @@ class EditProductPage extends React.Component {
                             { addVideoSection }
                         </div>
                     </div>
-
-                    { productType}
-
-                    <textarea name="product-overview" type="text" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
                 </div>
                 <input className="btn blue fill" type="submit" value={buttonTxt} />
                 { archiveBtn }
@@ -592,23 +677,43 @@ class EditProductPage extends React.Component {
             this.props.triggerSpinner({ isOn: false });
         }
 
-        const modelNumAdd = (this.state.isModelNumFound && !isDisabled) ? <input className="btn blue" type="submit" value="Add"/> : null;
-        const dialogBox = (this.state.showDialogBox) ? <dialog open>
+        const addPartOverlay = (this.state.isPartShowing) ? (
+            <EditPartOverlay
+                id={this.state.part.id}
+                imageUrl={this.state.part.imageUrl}
+                description={this.state.part.description}
+                code={this.state.part.code}
+                modelNumber={this.state.part.modelNumber}
+                gePrice={parseFloat(this.state.part.gePrice)}
+                sibiPrice={parseFloat(this.state.part.sibiPrice)}
+
+                isPartModelNumFound={this.state.isPartModelNumFound}
+                showPartsDialog={this.state.showPartsDialog}
+
+                update={this.update}
+                updateImage={this.updateImage}
+                savePart={this.savePart}
+                showAddPart={this.showAddPart}
+                checkModelNum={this.checkModelNum}
+            />) : null;
+
+        const modelNumAdd = (this.state.isSibiModelNumFound && !isDisabled) ? <input className="btn blue" type="submit" value="Add"/> : null;
+        const dialogBox = (this.state.showDialog) ? <dialog open>
             <form method="dialog">
                 Alert:
                 <p>A product with this Sibi Model Number already exists!</p>
                 Do you wish to:
                 <p> - continue creating a new product (this will completely replace the existing product)</p>
                 <p> - modify the existing product?</p>
-                <input className="btn red" type="submit" value="Create New" onClick={this.createNew} />
-                <input className="btn blue" type="submit" value="Modify Existing" onClick={this.modifyExisting} />
+                <input className="btn red" type="submit" value="Create New" onClick={this.createNewProduct} />
+                <input className="btn blue" type="submit" value="Modify Existing" onClick={this.modifyExistingProduct} />
             </form>
         </dialog> : null;
 
         return (
             <Loader loaded={this.props.spinner} >
                 <div id="edit-product-page">
-                    <form onSubmit={(e) => {e.preventDefault(); this.checkModelNum();}} >
+                    <form onSubmit={(e) => {e.preventDefault(); this.checkModelNum({ type: 'product' });}} >
                         <div className="content">
                             <input
                                 name="product-sibi-model-num"
@@ -628,6 +733,7 @@ class EditProductPage extends React.Component {
                     </form>
                 </div>
                 { dialogBox }
+                { addPartOverlay }
             </Loader>
         );
     }
@@ -638,6 +744,7 @@ const select = (state) => ({
     activeUser           : state.activeUser.get('activeUser'),
     product              : state.products.get('product'),
     products             : state.products.get('products'),
+    parts                : state.products.get('parts'),
     productsInCategory   : state.products.get('productsInCategory'),
     productCategories    : state.products.get('productCategories'),
     productSubCategories : state.products.get('productSubCategories'),

@@ -11,6 +11,7 @@ import { ActionTypes }          from './actions';
 const initialState = Immutable.fromJS({
     product: {},
     products: {},
+    parts: {},
     productsInCategory: {},
     productCategories: [],
     productSubCategories: [],
@@ -92,6 +93,11 @@ export default (state = initialState, action) => {
         products[index].archived = action.data.archived;
 
         state = state.updateIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory], value => Immutable.fromJS(products));
+        break;
+
+    case ActionTypes.GET_PARTS_SUCCESS:
+        console.log('receiving parts)');
+        state = state.set('parts', Immutable.fromJS(action.data));
         break;
 
     default:

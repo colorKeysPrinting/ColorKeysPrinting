@@ -1,8 +1,8 @@
-import React                   from 'react';
-import _                       from 'lodash';
-import { PropTypes }           from 'prop-types';
-import Select                  from 'react-select';
-import assets                  from 'libs/assets';
+import React                    from 'react';
+import _                        from 'lodash';
+import { PropTypes }            from 'prop-types';
+import Select                   from 'react-select';
+import assets                   from 'libs/assets';
 
 export default class ApplianceProducts extends React.Component {
     static propTypes = {
@@ -82,7 +82,7 @@ export default class ApplianceProducts extends React.Component {
                 <input
                     type="file"
                     accept=".png,.jpg,.jpeg,.svg"
-                    onChange={(e) => {e.preventDefault(); this.props.updateImage({ imageFile: e.target.files[0] }); }}
+                    onChange={(e) => {e.preventDefault(); this.props.updateImage({ type: 'product', imageFile: e.target.files[0] }); }}
                     style={{ display: 'none' }}
                 />
             </label>
@@ -95,16 +95,15 @@ export default class ApplianceProducts extends React.Component {
                 <div key={`parts${index}`} className="parts-section accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
                     <input type="text" value={part.description} disabled />
                     <input type="text" value={part.code} disabled />
-                    {(!isDisabled) ? <div className="cancel-btn" onClick={()=> this.removePart({ partId: (part.id) ? part.id : index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
+                    {(!isDisabled) ? <div className="cancel-btn" onClick={()=> this.props.showAddPart({ part }) } >Edit</div> : null}
+                    {(!isDisabled) ? <div className="cancel-btn" onClick={()=> this.props.removePart({ partId: (part.id) ? part.id : index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
                 </div>
             );
         });
 
-        // const addPartSection = (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
-        //     <input type="text" value={this.props.partDescription} placeholder="Part name" onChange={(e) => this.props.update({ type: 'partDescription', value: e.target.value })} />
-        //     <input type="text" value={this.props.partCode} placeholder="Part number" onChange={(e) => this.props.update({ type: 'partCode', value: e.target.value })} />
-        //     <div onClick={this.addPart} className="cancel-btn blue">Add</div>
-        // </div> : null;
+        const addPartSection = (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
+            <div onClick={this.props.showAddPart} className="btn blue">Add Part</div>
+        </div> : null;
 
         return (
             <div id="appliance-product" className="container">
@@ -130,7 +129,7 @@ export default class ApplianceProducts extends React.Component {
 
                 <div className="accordion-detail" >
                     { productParts }
-                    {/* { addPartSection } */}
+                    { addPartSection }
                 </div>
 
                 <input
@@ -139,6 +138,7 @@ export default class ApplianceProducts extends React.Component {
                     onClick={() => this.showCheckboxSection({ type: 'isInstallShowing' })}
                     checked={this.state.isInstallShowing}
                     style={{ height: '15px', width: '30px' }} /> Option for GE to install
+
                 <div style={{ display: (this.state.isInstallShowing) ? 'inline-flex' : 'none' }} >
                     <input name="appliance-install-code" type="text" placeholder="install code (e.g. M106)" value={applianceInstallCode} onChange={(e) => this.props.update({ type: 'applianceInstallCode', value: e.target.value})} disabled={isDisabled} />
                     <input name="appliance-install-value" type="number" placeholder="install value (e.g. 0.00)" value={applianceInstallPrice} onChange={(e) => this.props.update({ type: 'applianceInstallPrice', value: e.target.value})} disabled={isDisabled} />
