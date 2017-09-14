@@ -146,7 +146,7 @@ class HeaderBar extends React.Component {
 
         return (
             <div id="header-bar">
-                <img src={assets('./images/sibi-logo@2x.png')} id="logo"/>
+                <img src={assets('./images/sibi-logo.png')} id="logo"/>
                 <span className="logo-text">GE APP ADMIN</span>
                 { headerContent }
                 <div className="login-section">
