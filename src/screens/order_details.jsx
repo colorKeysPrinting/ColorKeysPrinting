@@ -88,7 +88,7 @@ class OrderDetails extends React.Component {
             occupied: 'Occupancy',
             lockBoxCode: '',
             installTime: 'Preferred Install Time',
-            hotshotDelivery: 'Hot Shot Delivery',
+            hotshotDelivery: 'Hot Shot',
             hotshotInstallDate: '',
             hotshotCode: '',
         };
