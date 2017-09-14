@@ -174,7 +174,7 @@ class UsersPage extends React.Component {
             }
 
             if(this.state.sortby.column !== 'autoApprovedOrders') {
-                data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+                data = _.orderBy(data, [this.state.sortby.column, 'createdAt'], [this.state.sortby.isAsc, 'desc']);
             } else {
                 // convert to sort
                 data = _.map(data, (item) => {
