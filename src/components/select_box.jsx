@@ -21,13 +21,11 @@ export default class Select extends React.Component {
     }
 
     showOptions({ options }) {
-        if (!this.props.disabled) {
-            this.setState((prevState) => {
-                options = (typeof prevState.options === 'object') ? '' :  <div className="select-options-active">{ options }</div>;
-                const isActive = (options) ? true : false;
-                return { options, isActive };
-            });
-        }
+        this.setState((prevState) => {
+            options = (typeof prevState.options === 'object') ? '' :  <div className="select-options-active">{ options }</div>;
+            const isActive = (options !== '') ? true : false;
+            return { options, isActive };
+        });
     }
 
     render() {
@@ -42,7 +40,7 @@ export default class Select extends React.Component {
                     key={`option${i}`}
                     className={className}
                     value={option.value}
-                    onClick={() => { this.showOptions({ options: '' }); this.state.onChange({ user: this.props.user, value: option.value }) }}
+                    onClick={() => { this.setState({ options: '', isActive: false }); this.state.onChange({ user: this.props.user, value: option.value }) }}
                 >
                     { option.label }
                 </div>
@@ -53,7 +51,7 @@ export default class Select extends React.Component {
         const arrowImg = (this.state.isActive) ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png');
 
         return (
-            <div className={className} tabIndex="0" onBlur={() => this.showOptions({ options: '' })} >
+            <div className={className} tabIndex="0" onBlur={() => this.setState({ options: '', isActive: false }) } >
                 <div className="input" onClick={() => this.showOptions({ options })}>
                     <div>{ selectedOption.label }</div>
                     <div className="arrow-indicator" ><img src={arrowImg} alt="arrow" height="7px" /></div>

@@ -30,8 +30,8 @@ export default (state = initialState, action) => {
 
         state = state.set('users', Immutable.fromJS(users));
         break;
-    
-    case ActionTypes.AUTO_APPROVE_USER_ORDERS: 
+
+    case ActionTypes.AUTO_APPROVE_USER_ORDERS:
         console.log('receiving auto approve user info');
         users = state.get('users').toJS();
         index = _.findIndex(users, ['id', action.data.id]);
@@ -39,11 +39,11 @@ export default (state = initialState, action) => {
 
         state = state.set('users', Immutable.fromJS(users));
         break;
-    
+
     case ActionTypes.DISABLE_USER_SUCCESS:
         console.log('receiving disable user');
         break;
-    
+
     case ActionTypes.GET_FUNDS_SUCCESS:
         console.log('receiving funds');
         state = state.set('funds', Immutable.fromJS(action.data));
@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
         state = state.set('fundProperties', Immutable.fromJS(action.data));
         break;
 
-    default: 
+    default:
         return state;
     }
     return state;

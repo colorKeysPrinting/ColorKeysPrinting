@@ -84,7 +84,7 @@ class OrderDetails extends React.Component {
             occupied: 'Occupancy',
             lockBoxCode: '',
             installTime: 'Preferred Install Time',
-            hotshotDelivery: 'Hot Shot Delivery',
+            hotshotDelivery: 'Hot Shot',
             hotshotInstallDate: '',
             hotshotCode: '',
         };
@@ -212,8 +212,9 @@ class OrderDetails extends React.Component {
                     </tr>;
 
                 } else {
-                    const formatUserPhone = formatPhoneNumbers(user.phoneNumber);
-                    const formatOfficePhone = formatPhoneNumbers(order.pmOffice.phoneNumber);
+                    const formatUserPhone = (user.phoneNumber) ? formatPhoneNumbers(user.phoneNumber) : '';
+                    const formatOfficePhone = (order.pmOffice) ? formatPhoneNumbers(order.pmOffice.phoneNumber) : '';
+                    const pmOfficeName = (order.pmOffice) ? order.pmOffice.name : orderPageHeading.PM;
 
                     tenantInfoTitle = <tr>
                         <td><div className="table-header">Delivery Contact: </div></td>
@@ -226,7 +227,7 @@ class OrderDetails extends React.Component {
                             <td><div>{formatUserPhone}</div></td>
                         </tr>,
                         <tr key='tenantInfoDetails2'>
-                            <td><div>{order.pmOffice.name}</div></td>
+                            <td><div>{pmOfficeName}</div></td>
                             <td><div>{formatOfficePhone}</div></td>
                         </tr>
                     ];

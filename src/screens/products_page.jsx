@@ -4,9 +4,10 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
 import { Link }                             from 'react-router-dom';
-import { Tab, Tabs, TabList, TabPanel }     from 'react-tabs';
 import Loader                               from 'react-loader';
-
+import Tabs, { TabPane }                    from 'rc-tabs';
+import TabContent                           from 'rc-tabs/lib/TabContent';
+import ScrollableInkTabBar                  from 'rc-tabs/lib/ScrollableInkTabBar';
 import assets                               from 'libs/assets';
 
 import { triggerSpinner }                   from 'ducks/ui/actions';
@@ -19,7 +20,7 @@ class ProductsPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { isEditShowing: false, sortIndex: 0, product: '', category: '' };
+        this.state = { isEditShowing: false, sortIndex: 0, product: '', category: '', activeKey: '0'};
     }
 
     componentWillMount() {
@@ -57,7 +58,7 @@ class ProductsPage extends React.Component {
 
     render() {
         const { cookies, productCategories, productSubCategories, productsInCategory, activeUser } = this.props;
-        let tabs = [], tabContent, tabsSection, addBtn, pageContent, editProductSection;
+        let tabs, tabContent, addBtn, pageContent, editProductSection;
 
         if (productCategories.size > 0 &&
             productSubCategories.size > 0 &&
@@ -68,11 +69,10 @@ class ProductsPage extends React.Component {
             addBtn = <Link to={`/edit_product`} className="btn blue" >Add</Link>;
 
             tabContent = _.map(productCategories.toJS(), (category) => {
-                return _.map(category.subcategories, (subCategory) => {
+                return _.map(category.subcategories, (subCategory, index) => {
+                    const name = subCategory.name;
 
-                    tabs.push(<Tab key={subCategory.id} >{ subCategory.pluralName }</Tab>);
-
-                    const data = _.map(products[category.name][subCategory.name], (product) => {
+                    const data = _.map(products[category.name][name], (product) => {
                         const cols = {};
 
                         _.each(['id','name','featured','action'], (key) => {
@@ -84,7 +84,7 @@ class ProductsPage extends React.Component {
                             } else if (key === 'action') {
                                 const jwt = cookies.get('sibi-admin-jwt');
 
-                                value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: subCategory.name, id: product.id }) } className="product-action">Unarchive</div>
+                                value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: name, id: product.id }) } className="product-action">Unarchive</div>
                                     : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}`, state: { product } }} className="product-action">Edit</Link>;
 
                             } else if (key === 'featured') {
@@ -100,24 +100,21 @@ class ProductsPage extends React.Component {
                     });
 
                     return (
-                        <TabPanel key={`tabPanel${subCategory.name}`}>
+                        <TabPane
+                            tab={name}
+                            key={index}
+                        >
                             <MyTable
                                 className="products-table"
                                 type="products"
-                                tab={subCategory.name}
+                                tab={name}
                                 data={data}
                             />
-                        </TabPanel>
+                        </TabPane>
                     );
                 });
             });
 
-            tabsSection = <Tabs defaultIndex={0} >
-                <TabList>
-                    { tabs }
-                </TabList>
-                { tabContent }
-            </Tabs>;
 
             editProductSection = (this.state.isEditShowing) ? <div style={{ display: (this.state.isEditShowing) ? 'block' : 'none' }}>
                 <EditProduct
@@ -134,7 +131,15 @@ class ProductsPage extends React.Component {
                         <h2>Products</h2>
                         { addBtn }
                     </div>
-                    { tabsSection }
+                    <Tabs
+                        tabBarPosition="top"
+                        activeKey={this.state.activeKey}
+                        onChange={(activeKey) => {console.log('onChange - activeKey', activeKey); this.setState({ activeKey })}}
+                        renderTabBar={()=><ScrollableInkTabBar />}
+                        renderTabContent={()=><TabContent />}
+                    >
+                        { tabContent }
+                    </Tabs>
                 </div>
                 { editProductSection }
             </div>;

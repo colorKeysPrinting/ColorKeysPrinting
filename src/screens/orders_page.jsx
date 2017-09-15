@@ -184,8 +184,11 @@ class OrdersPage extends React.Component {
 
             if (this.state.sortby.column === '') {
                 data = _.partition(data, ['orderStatus', 'Pending']);
+                data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
                 data = data[0].concat(data[1]);
+
                 data = _.partition(data, ['orderStatus', 'Approved']);
+                data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
                 data = data[1].concat(data[0]);
 
             } else {
