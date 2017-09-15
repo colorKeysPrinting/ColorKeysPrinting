@@ -13,15 +13,17 @@ export default class EditPartOverlay extends React.Component {
         description         : PropTypes.string.isRequired,
         code                : PropTypes.string.isRequired,
         modelNumber         : PropTypes.string.isRequired,
-        gePrice             : PropTypes.number.isRequired,
-        sibiPrice           : PropTypes.number.isRequired,
+        gePrice             : PropTypes.number,
+        sibiPrice           : PropTypes.number,
         isPartModelNumFound : PropTypes.bool.isRequired,
         showPartsDialog     : PropTypes.bool.isRequired,
         update              : PropTypes.func.isRequired,
         updateImage         : PropTypes.func.isRequired,
         savePart            : PropTypes.func.isRequired,
         showAddPart         : PropTypes.func.isRequired,
-        checkModelNum       : PropTypes.func.isRequired
+        checkModelNum       : PropTypes.func.isRequired,
+        createNewPart       : PropTypes.func.isRequired,
+        modifyExistingPart  : PropTypes.func.isRequired
     };
 
     render() {
@@ -36,8 +38,8 @@ export default class EditPartOverlay extends React.Component {
                 Do you wish to:
                 <p> - continue creating a new part (this will completely replace the existing part)</p>
                 <p> - modify the existing part?</p>
-                <input className="btn red" type="submit" value="Create New" onClick={this.createNew} />
-                <input className="btn blue" type="submit" value="Modify Existing" onClick={this.modifyExisting} />
+                <input className="btn red" type="submit" value="Create New" onClick={this.props.createNewPart} />
+                <input className="btn blue" type="submit" value="Modify Existing" onClick={this.props.modifyExistingPart} />
             </form>
         </dialog> : null;
 

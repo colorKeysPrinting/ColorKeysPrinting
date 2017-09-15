@@ -93,6 +93,7 @@ export default class ApplianceProducts extends React.Component {
         const productParts = _.map(applianceAssociatedParts, (part, index) => {
             return (
                 <div key={`parts${index}`} className="parts-section accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
+                    <img src={(part.imageUrl) ? part.imageUrl : null } alt="part image" height="50"/>
                     <input type="text" value={part.description} disabled />
                     <input type="text" value={part.code} disabled />
                     {(!isDisabled) ? <div className="cancel-btn" onClick={()=> this.props.showAddPart({ part }) } >Edit</div> : null}

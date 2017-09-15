@@ -11,6 +11,7 @@ import { ActionTypes }          from './actions';
 const initialState = Immutable.fromJS({
     product: {},
     products: {},
+    part: {},
     parts: {},
     productsInCategory: {},
     productCategories: [],
@@ -77,6 +78,10 @@ export default (state = initialState, action) => {
         state = state.updateIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory], value => Immutable.fromJS(products));
         break;
 
+    case ActionTypes.CREATE_PRODUCT_PART_SUCCESS:
+        console.log('create product part success');
+        break;
+
     case ActionTypes.ARCHIVE_PRODUCT_SUCCESS:
         console.log('archive call back');
         products = state.getIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory]).toJS();
@@ -98,6 +103,22 @@ export default (state = initialState, action) => {
     case ActionTypes.GET_PARTS_SUCCESS:
         console.log('receiving parts)');
         state = state.set('parts', Immutable.fromJS(action.data));
+        break;
+
+    case ActionTypes.CREATE_PART_SUCCESS:
+        console.log('create part success');
+        const parts = state.get('parts').toJS();
+        parts.push({ isNew: true, ...action.data });
+        state = state.set('part', Immutable.fromJS(action.data));
+        state = state.set('parts', Immutable.fromJS(parts));
+        break;
+
+    case ActionTypes.UPDATE_PART_SUCCESS:
+        console.log('update part success');
+        const product = state.get('product').toJS();
+        index = _.findIndex(product.applianceAssociatedParts, ['id', action.data.id]);
+        products.applianceAssociatedParts[index] = action.data;
+        state = state.set('products', Immutable.fromJS(products));
         break;
 
     default:

@@ -73,7 +73,9 @@ class EditProductPage extends React.Component {
         // action functions
         this.createProductObj = this.createProductObj.bind(this);
         this.createNewProduct = this.createNewProduct.bind(this);
+        this.createNewPart = this.createNewPart.bind(this);
         this.modifyExistingProduct = this.modifyExistingProduct.bind(this);
+        this.modifyExistingPart = this.modifyExistingPart.bind(this);
         this.savePart = this.savePart.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
         this.archiveProduct = this.archiveProduct.bind(this);
@@ -101,7 +103,7 @@ class EditProductPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        const { cookies, productCategories, location } = this.props;
+        const { cookies, productCategories, location, part } = this.props;
 
         if (!_.isEqual(nextProps.product, this.props.product)) {
             this.productCheck({ product: nextProps.product });
@@ -130,6 +132,18 @@ class EditProductPage extends React.Component {
                     this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory });
                 });
             });
+        }
+
+        if(!_.isEqual(part, nextProps.part)) {
+            const part = nextProps.part.toJS();
+            const index = _.find(this.state.applianceAssociatedParts, ['id', part.id]);
+
+            if (index) {
+                this.state.applianceAssociatedParts[index] = part;
+
+            } else {
+                this.state.applianceAssociatedParts.push(nextProps.part);
+            }
         }
     }
 
@@ -266,6 +280,7 @@ class EditProductPage extends React.Component {
     showAddPart({ part }) {
         this.setState((prevState) => {
             const isPartShowing = (prevState.isPartShowing) ? false : true;
+            const isPartModelNumFound = (part) ? false : true;
             part = (part) ? part : {
                 id          : '',
                 description : '',
@@ -275,7 +290,7 @@ class EditProductPage extends React.Component {
                 gePrice     : '',
                 sibiPrice   : ''
             };
-            return { isPartShowing, part };
+            return { isPartShowing, isPartModelNumFound, part };
         });
     }
 
@@ -407,6 +422,19 @@ class EditProductPage extends React.Component {
         this.setState({ ...product, showDialog: false, isSibiModelNumFound: false });
     }
 
+    createNewPart() {
+        const part = {
+            id          : '',
+            description : '',
+            code        : '',
+            imageUrl    : '',
+            modelNumber : this.state.part.modelNumber,
+            gePrice     : '',
+            sibiPrice   : ''
+        };
+        this.setState({ part, showPartsDialog: false, isPartModelNumFound: false });
+    }
+
     modifyExistingProduct() {
         const { products, history } = this.props;
 
@@ -416,43 +444,45 @@ class EditProductPage extends React.Component {
         this.setState({ ...product, showDialog: false, isSibiModelNumFound: false });
     }
 
+    modifyExistingPart() {
+        const { parts, history } = this.props;
+
+        const part = _.find(parts.toJS(), ['modelNumber', this.state.part.modelNumber]);
+        this.setState({ part, showPartsDialog: false, isPartModelNumFound: false });
+    }
+
     savePart() {
-        const { part } = this.state;
+        const { cookies } = this.props;
+        let { part } = this.state;
 
-        console.log('saving part');
+        const jwt = cookies.get('sibi-admin-jwt');
 
-        // const part = {
-        //     id          : '',
-        //     description : '',
-        //     code        : '',
-        //     imageUrl    : '',
-        //     modelNumber : '',
-        //     gePrice     : '',
-        //     sibiPrice   : ''
-        // };
+        // (part.id) ? this.props.updatePart({ token: jwt.token, part }) : this.props.createPart({ token: jwt.token, part });
 
-        // call to create part
+        part = {
+            id          : '',
+            description : '',
+            code        : '',
+            imageUrl    : '',
+            modelNumber : '',
+            gePrice     : '',
+            sibiPrice   : ''
+        };
+
+        this.setState({ isPartShowing: false, showPartsDialog: false, part });
     }
 
     saveProduct() {
-        const re = /http(s)?:\/\//;
-        const types = [];
+        let hasNewParts = false;
 
-        if (_.size(this.state.applianceColorsInfo) > 0) {
-            _.each(this.state.applianceColorsInfo, (image) => {
-                const match = re.exec(image.imageUrl);
-                if (!match) {
-                    const picture = image.imageFile.type.split('/');
-                    types.push({ type: picture[0], fileType: picture[1] });
-                }
-            });
-        }
+        _.each(this.state.applianceAssociatedParts, (part, index) => {
+            if (part.isNew) {
+                this.props.createProductPart({ token, productId: this.state.id, partId: part.id });
+                hasNewParts = true;
+            }
+        });
 
-        if (_.size(types) > 0) {
-            this.props.uploadImage({ types });
-
-        } else {
-            console.log('save product', this.state.id);
+        if (!hasNewParts) {
             this.submitProduct();
         }
     }
@@ -695,6 +725,8 @@ class EditProductPage extends React.Component {
                 savePart={this.savePart}
                 showAddPart={this.showAddPart}
                 checkModelNum={this.checkModelNum}
+                createNewPart={this.createNewPart}
+                modifyExistingPart={this.modifyExistingPart}
             />) : null;
 
         const modelNumAdd = (this.state.isSibiModelNumFound && !isDisabled) ? <input className="btn blue" type="submit" value="Add"/> : null;
@@ -744,6 +776,7 @@ const select = (state) => ({
     activeUser           : state.activeUser.get('activeUser'),
     product              : state.products.get('product'),
     products             : state.products.get('products'),
+    part                 : state.products.get('part'),
     parts                : state.products.get('parts'),
     productsInCategory   : state.products.get('productsInCategory'),
     productCategories    : state.products.get('productCategories'),

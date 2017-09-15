@@ -21,11 +21,13 @@ export default class Select extends React.Component {
     }
 
     showOptions({ options }) {
-        this.setState((prevState) => {
-            options = (typeof prevState.options === 'object') ? '' :  <div className="select-options-active">{ options }</div>;
-            const isActive = (options !== '') ? true : false;
-            return { options, isActive };
-        });
+        if (!this.props.disabled) {
+            this.setState((prevState) => {
+                options = (typeof prevState.options === 'object') ? '' :  <div className="select-options-active">{ options }</div>;
+                const isActive = (options !== '') ? true : false;
+                return { options, isActive };
+            });
+        }
     }
 
     render() {

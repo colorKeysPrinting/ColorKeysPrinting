@@ -58,15 +58,13 @@ class ProductsPage extends React.Component {
 
     render() {
         const { cookies, productCategories, productSubCategories, productsInCategory, activeUser } = this.props;
-        let tabs, tabContent, addBtn, pageContent, editProductSection;
+        let tabs, tabContent, pageContent, editProductSection;
 
         if (productCategories.size > 0 &&
             productSubCategories.size > 0 &&
             productsInCategory.size > 0) {
 
             const products = productsInCategory.toJS();
-
-            addBtn = <Link to={`/edit_product`} className="btn blue" >Add</Link>;
 
             tabContent = _.map(productCategories.toJS(), (category) => {
                 return _.map(category.subcategories, (subCategory, index) => {
@@ -129,14 +127,14 @@ class ProductsPage extends React.Component {
                 <div className="table-card">
                     <div className="card-header">
                         <h2>Products</h2>
-                        { addBtn }
+                        { (activeUser.toJS().type === 'superAdmin') ? <Link to={`/edit_product`} className="btn blue" >Add</Link> : null }
                     </div>
                     <Tabs
                         tabBarPosition="top"
                         activeKey={this.state.activeKey}
                         onChange={(activeKey) => {console.log('onChange - activeKey', activeKey); this.setState({ activeKey })}}
                         renderTabBar={()=><ScrollableInkTabBar />}
-                        renderTabContent={()=><TabContent />}
+                        renderTabContent={()=><TabContent style={{ overflow: 'none' }} />}
                     >
                         { tabContent }
                     </Tabs>

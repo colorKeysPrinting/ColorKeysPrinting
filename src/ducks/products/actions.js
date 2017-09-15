@@ -16,9 +16,12 @@ export const ActionTypes = {
     GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS',
     UPDATE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/UPDATE_PRODUCT_SUCCESS',
     CREATE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/CREATE_PRODUCT_SUCCESS',
+    CREATE_PRODUCT_PART_SUCCESS : 'sibi_ge_admin/products/CREATE_PRODUCT_PART_SUCCESS',
     ARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/ARCHIVE_PRODUCT_SUCCESS',
     UNARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/UNARCHIVE_PRODUCT_SUCCESS',
     GET_PARTS_SUCCESS : 'sibi_ge_admin/products/GET_PARTS_SUCCESS',
+    CREATE_PART_SUCCESS : 'sibi_ge_admin/products/CREATE_PART_SUCCESS',
+    UPDATE_PART_SUCCESS : 'sibi_ge_admin/products/UPDATE_PART_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -152,7 +155,7 @@ export function updateProduct({ token, category, subCategory, product }) {
                 category,
                 subCategory: subCategory.name
             },
-            data: {
+            data    : {
                 ...product
             }
         })
@@ -175,12 +178,34 @@ export function createProduct({ token, category, subCategory, product }) {
                 category,
                 subCategory
             },
-            data: {
+            data    : {
                 ...product
             }
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.CREATE_PRODUCT_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function createProductPart({ token, productId, partId }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/createProductPart`,
+            headers : {
+                'x-auth-token': token
+            },
+            data    : {
+                productId,
+                partId
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.CREATE_PRODUCT_PART_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);
@@ -241,6 +266,48 @@ export function getParts({ token }) {
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PARTS_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function createPart({ token, part }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/createPart`,
+            headers : {
+                'x-auth-token': token
+            },
+            data    : {
+                ...part
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.CREATE_PART_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function updatePart({ token, part }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.PATCH,
+            url     : `${Network.DOMAIN}/parts/${part.id}`,
+            headers : {
+                'x-auth-token': token
+            },
+            data    : {
+                ...part
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.UPDATE_PART_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);
