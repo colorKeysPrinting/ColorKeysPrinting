@@ -16,7 +16,6 @@ export const ActionTypes = {
     GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS',
     UPDATE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/UPDATE_PRODUCT_SUCCESS',
     CREATE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/CREATE_PRODUCT_SUCCESS',
-    CREATE_PRODUCT_PART_SUCCESS : 'sibi_ge_admin/products/CREATE_PRODUCT_PART_SUCCESS',
     ARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/ARCHIVE_PRODUCT_SUCCESS',
     UNARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/UNARCHIVE_PRODUCT_SUCCESS',
     GET_PARTS_SUCCESS : 'sibi_ge_admin/products/GET_PARTS_SUCCESS',
@@ -205,7 +204,7 @@ export function createProductPart({ token, productId, partId }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.CREATE_PRODUCT_PART_SUCCESS , ...payload });
+                console.log('create product part success');
             })
             .catch(error => {
                 throw(error);

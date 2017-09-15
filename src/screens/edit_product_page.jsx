@@ -183,7 +183,6 @@ class EditProductPage extends React.Component {
                 this.setState({ isSibiModelNumFound: true });
             }
         }
-
     }
 
     updateImage({ type, imageFile }) {
@@ -317,7 +316,7 @@ class EditProductPage extends React.Component {
     removePart({ partId }) {
         console.log('removePart with partNumber: ', partId);
         this.setState((prevState) => {
-            const applianceAssociatedParts = _.remove(prevState.applianceAssociatedParts, (element) => { return element.id !== partId } );
+            const applianceAssociatedParts = _.remove(prevState.applianceAssociatedParts, (part) => { return part.id !== partId } );
 
             return { applianceAssociatedParts };
         });
@@ -457,7 +456,7 @@ class EditProductPage extends React.Component {
 
         const jwt = cookies.get('sibi-admin-jwt');
 
-        // (part.id) ? this.props.updatePart({ token: jwt.token, part }) : this.props.createPart({ token: jwt.token, part });
+        (part.id) ? this.props.updatePart({ token: jwt.token, part }) : this.props.createPart({ token: jwt.token, part });
 
         part = {
             id          : '',
@@ -473,18 +472,14 @@ class EditProductPage extends React.Component {
     }
 
     saveProduct() {
-        let hasNewParts = false;
 
         _.each(this.state.applianceAssociatedParts, (part, index) => {
             if (part.isNew) {
                 this.props.createProductPart({ token, productId: this.state.id, partId: part.id });
-                hasNewParts = true;
             }
         });
 
-        if (!hasNewParts) {
-            this.submitProduct();
-        }
+        this.submitProduct();
     }
 
     archiveProduct() {
@@ -498,7 +493,7 @@ class EditProductPage extends React.Component {
     }
 
     submitProduct() {
-        const { cookies, productCategories, productSubCategories, activeUser } = this.props;
+        const { cookies, productCategories, productSubCategories, activeUser, history } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
         const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
         const subCategory = _.find(productSubCategories.toJS(), ['id', this.state.productSubcategoryId]);
@@ -525,7 +520,7 @@ class EditProductPage extends React.Component {
 
         // remove un-needed/empty fields
         _.each(product, (value, key) => {
-            if(value === '' || typeof value === 'object' && _.size(value) === 0) {
+            if(key === 'applianceAssociatedParts' || value === '' || typeof value === 'object' && _.size(value) === 0) {
                 delete product[key];
             }
         });

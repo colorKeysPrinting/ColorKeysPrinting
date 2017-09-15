@@ -117,8 +117,8 @@ export default (state = initialState, action) => {
         console.log('update part success');
         const product = state.get('product').toJS();
         index = _.findIndex(product.applianceAssociatedParts, ['id', action.data.id]);
-        products.applianceAssociatedParts[index] = action.data;
-        state = state.set('products', Immutable.fromJS(products));
+        product.applianceAssociatedParts[index] = action.data;
+        state = state.set('product', Immutable.fromJS(product));
         break;
 
     default:
