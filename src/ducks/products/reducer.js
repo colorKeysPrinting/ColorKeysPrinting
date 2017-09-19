@@ -108,8 +108,11 @@ export default (state = initialState, action) => {
     case ActionTypes.CREATE_PART_SUCCESS:
         console.log('create part success');
         const parts = state.get('parts').toJS();
-        parts.push({ isNew: true, ...action.data });
-        state = state.set('part', Immutable.fromJS(action.data));
+        const part = { isNew: true, ...action.data };
+
+        parts.push(part);
+
+        state = state.set('part', Immutable.fromJS(part));
         state = state.set('parts', Immutable.fromJS(parts));
         break;
 

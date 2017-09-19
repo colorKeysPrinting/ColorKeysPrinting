@@ -53,10 +53,10 @@ export default class EditPartOverlay extends React.Component {
                     style={{ display: 'none' }}
                 />
             </label>
-            <input name="part-description"  type="text"     placeholder="Name"          value={description} onChange={(e) => this.props.update({ type: 'partdescription', value: e.target.value})} required />
-            <input name="part-Code"         type="text"     placeholder="Code"          value={code}        onChange={(e) => this.props.update({ type: 'partcode', value: e.target.value})} required />
-            <input name="part-gePrice"      type="number"   placeholder="GE Price"      value={gePrice}     onChange={(e) => this.props.update({ type: 'partgePrice', value: e.target.value})} required />
-            <input name="part-sibiPrice"    type="number"   placeholder="SIBI Price"    value={sibiPrice}   onChange={(e) => this.props.update({ type: 'partsibiPrice', value: e.target.value})} required />
+            <input name="part-description" type="text"   placeholder="Name"       value={description} onChange={(e) => this.props.update({ type: 'partdescription', value: e.target.value})} required />
+            <input name="part-Code"        type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ type: 'partcode', value: e.target.value})} required />
+            <input name="part-gePrice"     type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ type: 'partgePrice', value: e.target.value})} required />
+            <input name="part-sibiPrice"   type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ type: 'partsibiPrice', value: e.target.value})} required />
 
             <input className="btn blue fill" type="submit" value={buttonText} />
         </div> : null;

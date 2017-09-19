@@ -24,13 +24,14 @@ class EditProductPage extends React.Component {
 
         const product = this.createProductObj({ product: {} });
         const part = {
-            id          : '',
-            description : '',
-            code        : '',
-            imageUrl    : '',
-            modelNumber : '',
-            gePrice     : '',
-            sibiPrice   : ''
+            productCategoryId : '',
+            id                : '',
+            description       : '',
+            code              : '',
+            imageUrl          : '',
+            modelNumber       : '',
+            gePrice           : '',
+            sibiPrice         : ''
         };
 
         this.state = {
@@ -135,14 +136,14 @@ class EditProductPage extends React.Component {
         }
 
         if(!_.isEqual(part, nextProps.part)) {
-            const part = nextProps.part.toJS();
-            const index = _.find(this.state.applianceAssociatedParts, ['id', part.id]);
+            const newPart = nextProps.part.toJS();
+            const index = _.find(this.state.applianceAssociatedParts, ['id', newPart.id]);
 
             if (index) {
-                this.state.applianceAssociatedParts[index] = part;
+                this.state.applianceAssociatedParts[index] = newPart;
 
             } else {
-                this.state.applianceAssociatedParts.push(nextProps.part);
+                this.state.applianceAssociatedParts.push(newPart);
             }
         }
     }
@@ -281,6 +282,7 @@ class EditProductPage extends React.Component {
             const isPartShowing = (prevState.isPartShowing) ? false : true;
             const isPartModelNumFound = (part) ? false : true;
             part = (part) ? part : {
+                productCategoryId: prevState.productCategoryId,
                 id          : '',
                 description : '',
                 code        : '',
@@ -422,12 +424,14 @@ class EditProductPage extends React.Component {
     }
 
     createNewPart() {
-        const part = {
+        let { productCategoryId, part } = this.state;
+        part = {
+            productCategoryId,
             id          : '',
             description : '',
             code        : '',
             imageUrl    : '',
-            modelNumber : this.state.part.modelNumber,
+            modelNumber : part.modelNumber,
             gePrice     : '',
             sibiPrice   : ''
         };
@@ -452,13 +456,21 @@ class EditProductPage extends React.Component {
 
     savePart() {
         const { cookies } = this.props;
-        let { part } = this.state;
+        let { part, productCategoryId } = this.state;
 
         const jwt = cookies.get('sibi-admin-jwt');
 
-        (part.id) ? this.props.updatePart({ token: jwt.token, part }) : this.props.createPart({ token: jwt.token, part });
+        if (part.id) {
+            this.props.updatePart({ token: jwt.token, part });
+        } else {
+            delete part['id'];
+            delete part['gePrice']; // TODO: we need to redo how pricing is handled once that is updated REMOVE this line.
+            delete part['sibiPrice']; // TODO: we need to redo how pricing is handled once that is updated REMOVE this line.
+            this.props.createPart({ token: jwt.token, part });
+        }
 
         part = {
+            productCategoryId,
             id          : '',
             description : '',
             code        : '',
@@ -472,10 +484,13 @@ class EditProductPage extends React.Component {
     }
 
     saveProduct() {
+        const { cookies } = this.props;
 
         _.each(this.state.applianceAssociatedParts, (part, index) => {
             if (part.isNew) {
-                this.props.createProductPart({ token, productId: this.state.id, partId: part.id });
+                const jwt = cookies.get('sibi-admin-jwt');
+
+                this.props.createProductPart({ token: jwt.token, productId: this.state.id, partId: part.id });
             }
         });
 
