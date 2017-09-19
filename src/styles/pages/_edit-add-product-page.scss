@@ -1,0 +1,50 @@
+#edit-product-page {
+    max-width: 925px;
+    margin: 0 auto;
+    background-color: $white;
+    .title-bar {
+        display: inline-flex;
+        background-color: #FFF;
+        width: 100%;
+        height: 80px;
+        justify-content: space-between;
+        padding: 30px;
+    }
+    .model-number-section {
+        margin: 0px auto;
+        text-align: left;
+        padding: 20px 40px;
+    }
+    .product-details {
+        margin: 0px auto;
+        text-align: left;
+        padding: 20px 40px;
+        .Select-control {
+            overflow: auto;
+        }
+        textarea {
+            height: 92px;
+            width: 100%;
+            border: 1px solid $border-gray;
+            margin: 10px 0;
+        }
+        input {
+            margin: 10px 0;
+            width: 100%;
+        }
+        input[type=checkbox] {
+            padding: 15px 0;
+        }
+        .left-col, .center-col, .right-col {
+            float: left;
+            width: 33%;
+        }
+        #checkbox-is-ge-install, #checkbox-is-ge-remove, #checkbox-is-ge-disconnect {
+            display: block;
+            width: 100%;
+            .row {
+                display: inline-flex;
+            }
+        }
+    }
+}

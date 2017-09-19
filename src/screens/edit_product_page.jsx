@@ -89,7 +89,7 @@ class EditProductPage extends React.Component {
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
-            this.productCheck({ product: {} });
+            this.productCheck();
             this.props.getProducts({ token: jwt.token });
             this.props.getParts({ token: jwt.token });
 
@@ -107,7 +107,16 @@ class EditProductPage extends React.Component {
         const { cookies, productCategories, location, part } = this.props;
 
         if (!_.isEqual(nextProps.product, this.props.product)) {
-            this.productCheck({ product: nextProps.product });
+            const product = nextProps.product.toJS();
+            _.each(this.state.applianceAssociatedParts, (part, index) => {
+                if (part.isNew && this.state.id) {
+                    const jwt = cookies.get('sibi-admin-jwt');
+
+                    this.props.createProductPart({ token: jwt.token, productId: this.state.id, partId: part.id });
+                }
+            });
+
+            this.setState({ ...product });
         }
 
         if (!_.isEqual(nextProps.imageUploadSuccess, this.props.imageUploadSuccess)) {
@@ -238,8 +247,8 @@ class EditProductPage extends React.Component {
         }
     }
 
-    productCheck({ product }) {
-        let isSibiModelNumFound, { cookies, location, productCategories } = this.props;
+    productCheck() {
+        let isSibiModelNumFound, product, { cookies, location, productCategories } = this.props;
 
         const reProduct = /productId=(.*)/;
         const match = reProduct.exec(location.search);
@@ -251,16 +260,8 @@ class EditProductPage extends React.Component {
 
         } else if (match) {
             const productId = match[1];
-
-            if(product.size > 0) {
-                product = product.toJS();
-                product.sortIndex += 1;
-                isSibiModelNumFound = false;
-
-            } else {
-                const jwt = cookies.get('sibi-admin-jwt');
-                this.props.getProductById({ token: jwt.token, id: productId });
-            }
+            const jwt = cookies.get('sibi-admin-jwt');
+            this.props.getProductById({ token: jwt.token, id: productId });
         } else {
             product = this.createProductObj({ product: {} });
             isSibiModelNumFound = true;
@@ -316,12 +317,11 @@ class EditProductPage extends React.Component {
     }
 
     removePart({ partId }) {
-        console.log('removePart with partNumber: ', partId);
-        this.setState((prevState) => {
-            const applianceAssociatedParts = _.remove(prevState.applianceAssociatedParts, (part) => { return part.id !== partId } );
+        const { cookies } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
 
-            return { applianceAssociatedParts };
-        });
+        console.log('removePart with partNumber: ', partId);
+        this.props.removePart({ token: jwt.token, productId: this.state.id, partId });
     }
 
     addVideo() {
@@ -487,7 +487,7 @@ class EditProductPage extends React.Component {
         const { cookies } = this.props;
 
         _.each(this.state.applianceAssociatedParts, (part, index) => {
-            if (part.isNew) {
+            if (part.isNew && this.state.id) {
                 const jwt = cookies.get('sibi-admin-jwt');
 
                 this.props.createProductPart({ token: jwt.token, productId: this.state.id, partId: part.id });
@@ -551,17 +551,17 @@ class EditProductPage extends React.Component {
     }
 
     render() {
-        const { product, productCategories, activeUser } = this.props;
+        const { product, productCategories, activeUser, location } = this.props;
         let subCategorySelect, productType, productDetails, isDisabled, archiveBtn;
 
-        const title = (product) ? 'Edit' : 'Add';
+        const title = (location.search) ? 'Edit' : 'Add';
         const buttonTxt = (this.state.id) ? 'Update' : 'Add';
 
         if (activeUser.size > 0 &&
             productCategories.size > 0) {
 
             isDisabled = (activeUser.toJS().type === 'superAdmin') ? false : true;
-            archiveBtn = (this.state.id && !isDisabled) ? <div className="btn borderless red" onClick={this.archiveProduct}>Archive Product</div> : null;
+            archiveBtn = (this.state.id && !isDisabled) ? <div className="btn borderless red fill" onClick={this.archiveProduct}>Archive Product</div> : null;
 
             const category = _.find(productCategories.toJS(), ['id', this.state.productCategoryId]);
 
@@ -588,6 +588,7 @@ class EditProductPage extends React.Component {
 
                 subCategorySelect = <Select
                     name="product-sub-category"
+                    className="center-col"
                     value={this.state.productSubcategoryId}
                     options={subCategoryOptions}
                     onChange={(selected) => (!isDisabled) ? this.update({ type: 'productSubcategoryId', value: (selected) ? selected.value : null }) : console.log(`you don't have permission to change!`)}
@@ -600,7 +601,7 @@ class EditProductPage extends React.Component {
                     <div key={`faq${index}`} className="faq-section accordion-detail-row" style={{ display: 'inline-flex'}} >
                         <input type="text" value={faq.Question} disabled />
                         <input type="text" value={faq.Answer} disabled />
-                        {(!isDisabled) ? <div className="cancel-btn" onClick={()=> this.removeFaq({ index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
+                        {(!isDisabled) ? <div className="add-btn" onClick={()=> this.removeFaq({ index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
                     </div>
                 );
             });
@@ -608,21 +609,21 @@ class EditProductPage extends React.Component {
             const addFAQSection = (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
                 <input type="text" value={this.state.faqQuestion} placeholder="Question" onChange={(e) => this.update({ type: 'faqQuestion', value: e.target.value })} />
                 <input type="text" value={this.state.faqAnswer}   placeholder="Answer"   onChange={(e) => this.update({ type: 'faqAnswer', value: e.target.value })} />
-                <div onClick={this.addFAQ} className="cancel-btn blue">Add</div>
+                <div onClick={this.addFAQ} className="add-btn blue">Add</div>
             </div> : null;
 
             const productVideos = _.map(this.state.videos, (video, index) => {
                 return (
                     <div key={`colorImages${index}`} className="videos-section accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
                         <input type="text" value={video} disabled />
-                        {(!isDisabled) ? <div className="cancel-btn" onClick={()=> this.removeVideo({ index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
+                        {(!isDisabled) ? <div className="add-btn" onClick={()=> this.removeVideo({ index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
                     </div>
                 );
             });
 
             const addVideoSection = (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
                 <input type="url" value={this.state.videoURL} placeholder="video URL" onChange={(e) => this.update({ type: 'videoURL', value: e.target.value })} />
-                <div onClick={this.addVideo} className="cancel-btn blue">Add</div>
+                <div onClick={this.addVideo} className="add-btn blue">Add</div>
             </div> : null;
 
             if (category) {
@@ -672,19 +673,20 @@ class EditProductPage extends React.Component {
             }
 
             productDetails = (!this.state.isSibiModelNumFound) ? <div>
-                <div className="content">
+                <div className="product-details" >
                     <Select
                         name="product-category"
+                        className="left-col"
                         value={this.state.productCategoryId}
                         options={categoryOptions}
                         onChange={(selected) => (!isDisabled) ? this.update({ type: 'productCategoryId', value: (selected) ? selected.value : null }) : console.log(`you don't have permission to change!`)}
                         required
                     />
                     { subCategorySelect }
-                    <input name="product-name" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update({ type: 'name', value: e.target.value})} required disabled={isDisabled} />
-                    <input name="product-ordering" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.sortIndex} onChange={(e) => this.update({ type: 'sortIndex', value: e.target.value})} />
-                    <input name="product-sku" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update({ type: 'sku', value: e.target.value})} required disabled={isDisabled} />
-                    <input name="product-serial-num" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update({ type: 'serialNumber', value: e.target.value})} disabled={isDisabled} />
+                    <input name="product-name" className="right-col" type="text" placeholder="Product name" value={this.state.name} onChange={(e) => this.update({ type: 'name', value: e.target.value})} required disabled={isDisabled} />
+                    <input name="product-ordering" className="left-col" type="number" placeholder="Feature Placement (e.g. 2)" value={this.state.sortIndex} onChange={(e) => this.update({ type: 'sortIndex', value: e.target.value})} />
+                    <input name="product-sku" className="center-col" type="text" placeholder="sku" value={this.state.sku} onChange={(e) => this.update({ type: 'sku', value: e.target.value})} required disabled={isDisabled} />
+                    <input name="product-serial-num" className="right-col" type="text" placeholder="Serial #" value={this.state.serialNumber} onChange={(e) => this.update({ type: 'serialNumber', value: e.target.value})} disabled={isDisabled} />
                     { productType}
                     <textarea name="product-shortDescription" placeholder="Short Description" value={this.state.shortDescription} onChange={(e) => this.update({ type: 'shortDescription', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
                     <textarea name="product-overview" placeholder="overview" value={this.state.overview} onChange={(e) => this.update({ type: 'overview', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
@@ -709,9 +711,9 @@ class EditProductPage extends React.Component {
                             { addVideoSection }
                         </div>
                     </div>
+                    <input className="btn blue fill" type="submit" value={buttonTxt} />
+                    { archiveBtn }
                 </div>
-                <input className="btn blue fill" type="submit" value={buttonTxt} />
-                { archiveBtn }
             </div> : null;
 
             this.props.triggerSpinner({ isOn: false });
@@ -755,8 +757,12 @@ class EditProductPage extends React.Component {
         return (
             <Loader loaded={this.props.spinner} >
                 <div id="edit-product-page">
+                    <div className="title-bar">
+                        <h2>{ title } Product</h2>
+                    </div>
+                    <hr />
                     <form onSubmit={(e) => {e.preventDefault(); this.checkModelNum({ type: 'product' });}} >
-                        <div className="content">
+                        <div className="model-number-section">
                             <input
                                 name="product-sibi-model-num"
                                 className="search-input"
@@ -770,11 +776,12 @@ class EditProductPage extends React.Component {
                             { modelNumAdd }
                         </div>
                     </form>
+                    { dialogBox }
+                    <hr/>
                     <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
                         { productDetails }
                     </form>
                 </div>
-                { dialogBox }
                 { addPartOverlay }
             </Loader>
         );

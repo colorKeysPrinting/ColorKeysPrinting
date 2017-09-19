@@ -21,6 +21,7 @@ export const ActionTypes = {
     GET_PARTS_SUCCESS : 'sibi_ge_admin/products/GET_PARTS_SUCCESS',
     CREATE_PART_SUCCESS : 'sibi_ge_admin/products/CREATE_PART_SUCCESS',
     UPDATE_PART_SUCCESS : 'sibi_ge_admin/products/UPDATE_PART_SUCCESS',
+    REMOVE_PART_SUCCESS : 'sibi_ge_admin/products/REMOVE_PART_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -307,6 +308,30 @@ export function updatePart({ token, part }) {
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.UPDATE_PART_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function removePart({ toekn, productId, partId }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.DEL,
+            url     : `${Network.DOMAIN}/REMOVE_PART_SUCCESS`,
+            headers : {
+                'x-auth-token': token,
+                productId,
+                partId
+            },
+            data    : {
+                productId,
+                partId
+            }
+        })
+            .then(payload => {
+                dispatch({ type: ActionTypes.REMOVE_PART_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);

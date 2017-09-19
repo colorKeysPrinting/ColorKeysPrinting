@@ -20,7 +20,7 @@ const initialState = Immutable.fromJS({
 });
 
 export default (state = initialState, action) => {
-    let products, index, category;
+    let products, product, index, category;
 
     switch (action.type) {
     case ActionTypes.CLEAR_PRODUCT:
@@ -75,6 +75,7 @@ export default (state = initialState, action) => {
         products = state.getIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory]).toJS();
         products.push(action.data);
 
+        state = state.set('product', Immutable.fromJS(action.data));
         state = state.updateIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory], value => Immutable.fromJS(products));
         break;
 
@@ -118,10 +119,21 @@ export default (state = initialState, action) => {
 
     case ActionTypes.UPDATE_PART_SUCCESS:
         console.log('update part success');
-        const product = state.get('product').toJS();
+        product = state.get('product').toJS();
         index = _.findIndex(product.applianceAssociatedParts, ['id', action.data.id]);
         product.applianceAssociatedParts[index] = action.data;
         state = state.set('product', Immutable.fromJS(product));
+        break;
+
+    case ActionTypes.REMOVE_PART_SUCCESS:
+        console.log('remove part success');
+        products = state.get('products').toJS();
+        index = _.findIndex(products, ['id', action.config.headers.productId]);
+        product = products[index];
+        const applianceAssociatedParts = _.remove(product.applianceAssociatedParts, (part) => { return part.id !== action.config.headers.partId });
+        product.applianceAssociatedParts = applianceAssociatedParts;
+        products[index] = product;
+        state = state.set('products', Immutable.fromJS(products));
         break;
 
     default:
