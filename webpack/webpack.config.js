@@ -10,7 +10,8 @@ module.exports = WebpackConfig = (app) => {
         new webpack.DefinePlugin({
             'process.env'   : Object.assign({}, {
                 NODE_ENV    : JSON.stringify(app.env),
-                API_URL     : JSON.stringify(app.API_URL)
+                API_URL     : JSON.stringify(app.API_URL),
+                ORDER_URL   : JSON.stringify(app.ORDER_URL)
             })
         }),
         new ExtractTextPlugin(`${app.APP_NAME}_[hash].css`),

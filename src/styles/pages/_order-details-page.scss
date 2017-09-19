@@ -21,12 +21,12 @@
                 border-bottom: 1px solid $border-gray;
                 //Order Status
                 &:nth-child(1) {
-                    width: 10%;
+                    width: 11%;
                 }
 
                 //Order Number
                 &:nth-child(2) {
-                    width: 12%;
+                    width: 10%;
                 }
 
                 //Delivery Date
@@ -41,21 +41,21 @@
 
                 //Occupancy
                 &:nth-child(5) {
-                    width: 8%;
+                    width: 12%;
                 }
 
                 //Tenant
                 &:nth-child(6) {
-                    width: 12%;
+                    width: 15%;
                 }
 
                 //Ordered By
                 &:nth-child(7) {
-                    width: 12%;
+                    width: 9%;
                 }
 
                 &:nth-child(8) {
-                    width: 12%;
+                    width: 15%;
                 }
 
                 &:nth-child(9) {

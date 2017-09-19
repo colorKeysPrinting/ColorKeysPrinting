@@ -67,7 +67,7 @@ table tr:last-child td:last-child {
         line-height: 1.3em;
         &:last-child {
             div {
-                max-width: 300px;
+                max-width: 400px;
             }
         }
         &.approve {
@@ -168,7 +168,7 @@ table tr:last-child td:last-child {
                         }
                         .table-row:nth-child(1) {
                             td {
-                                padding: 38px 22px 0px 22px; 
+                                padding: 38px 22px 0px 22px;
                             }
                         }
                     }
@@ -297,7 +297,7 @@ table tr:last-child td:last-child {
                     td {
                         padding: 38px 22px 0px 22px !important;
                     }
-                    
+
                 }
             }
         }

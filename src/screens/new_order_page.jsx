@@ -37,7 +37,7 @@ class NewOrderPage extends React.Component {
 
         if(jwt) {
             iFrame = <Iframe
-                url={`https://undertaker-acceptor-11504.netlify.com/new?authToken=${jwt.token}`}
+                url={`${process.env.ORDER_URL}/new?authToken=${jwt.token}`}
                 width={`${width}`}
                 height={`${height}`}
                 position="relative"
