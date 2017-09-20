@@ -252,6 +252,7 @@ class OrderDetails extends React.Component {
                 const orderTotalSection = <div className="cost-section">
                     <h5 className="cost-header">Order Summary </h5>
                     <div className="cost-row">
+                        {(order.applianceHotShotPrice) ? <h5>Hotshot Delivery: <span>${ order.applianceHotShotPrice }</span></h5> : null}
                         <h5>Subtotal: <span>${ order.subTotalCost }</span></h5>
                         <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
                         <h5>Total: <span>${ order.totalCost }</span></h5>
