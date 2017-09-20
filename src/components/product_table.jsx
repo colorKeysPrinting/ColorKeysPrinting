@@ -52,23 +52,35 @@ export default function ProductTable(props) {
                         </div>;
                     }
                 } else if (row === 'install') {
-                    const bold = <div className="description"><span className="bold"> Install Description: </span> <span>{product.applianceInstallDescription}</span></div>
-                    const description = (!props.replacement) ? bold : null;
-                    value = (props.outOfStock !== props.productIndex) ? description : <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
-                        <div className="input-container">
-                            <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
-                            <input name="model-num-replace" value={props.modelNumber} placeholder="JGB635DEKBB" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
-                        </div>
-                        <input className="btn blue" type="submit" value="Replace" />
-                    </form>;
+                    if (props.installAppliance) {
+                        const bold = <div className="description"><span className="bold"> Install Description: </span> <span>{product.applianceInstallDescription}</span></div>
+                        const description = (!props.replacement) ? bold : null;
+                        value = (props.outOfStock !== props.productIndex) ? description : <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
+                            <div className="input-container">
+                                <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
+                                <input name="model-num-replace" value={props.modelNumber} placeholder="JGB635DEKBB" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
+                            </div>
+                            <input className="btn blue" type="submit" value="Replace" />
+                        </form>;
+                    } else {
+                        value = null;
+                    }
 
                 } else if (row === 'remove') {
-                    const bold = <div className="description"><span className="bold"> Remove Appliance Description: </span> <span>{product.applianceRemovalDescription}</span></div>
-                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? bold : null;
+                    if (props.removeOldAppliance) {
+                        const bold = <div className="description"><span className="bold"> Remove Appliance Description: </span> <span>{product.applianceRemovalDescription}</span></div>
+                        value = (props.outOfStock !== props.productIndex && !props.replacement) ? bold : null;
+                    } else {
+                        value = null;
+                    }
 
                 } else if (row === 'disconnect') {
-                    const bold = <div className="description"><span className="bold"> Disconnect Fee: </span> <span>{product.applianceDisconnectDescription}</span></div>
-                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? bold : null;
+                    if (props.removeOldAppliance) {
+                        const bold = <div className="description"><span className="bold"> Disconnect Fee: </span> <span>{product.applianceDisconnectDescription}</span></div>
+                        value = (props.outOfStock !== props.productIndex && !props.replacement) ? bold : null;
+                    } else {
+                        value = null;
+                    }
                 }
                 break;
 
@@ -86,13 +98,13 @@ export default function ProductTable(props) {
                     value = null;
 
                 } else if (row === 'install') {
-                    value = (!props.replacement && props.type === 'processOrder') ? `#${ product.applianceInstallCode }` : null;
+                    value = (!props.replacement && props.type === 'processOrder' && props.installAppliance) ? `#${ product.applianceInstallCode }` : null;
 
                 } else if (row === 'remove') {
-                    value = (!props.replacement && props.type === 'processOrder') ? `#${ product.applianceRemovalCode }` : null;
+                    value = (!props.replacement && props.type === 'processOrder' && props.removeOldAppliance) ? `#${ product.applianceRemovalCode }` : null;
 
                 } else if (row === 'disconnect') {
-                    value = (!props.replacement && props.type === 'processOrder') ? `#${ product.applianceDisconnectCode }` : null;
+                    value = (!props.replacement && props.type === 'processOrder' && props.removeOldAppliance) ? `#${ product.applianceDisconnectCode }` : null;
                 }
 
                 value = (props.outOfStock !== props.productIndex) ? value : null;
@@ -114,13 +126,13 @@ export default function ProductTable(props) {
                     value = null;
 
                 } else if (row === 'install') {
-                    value = ('$' + product.applianceInstallPrice);
+                    value = (props.installAppliance) ? ('$' + product.applianceInstallPrice) : null;
 
                 } else if (row === 'remove') {
-                    value = ('$' + product.applianceRemovalPrice);
+                    value = (props.removeOldAppliance) ? ('$' + product.applianceRemovalPrice) : null;
 
                 } else if (row === 'disconnect') {
-                    value = ('$' + product.applianceDisconnectPrice);
+                    value = (props.removeOldAppliance) ? ('$' + product.applianceDisconnectPrice) : null;
                 }
 
                 value = (props.outOfStock !== props.productIndex && !props.replacement) ? value : null;

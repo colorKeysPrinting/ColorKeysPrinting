@@ -131,6 +131,8 @@ class OrderDetails extends React.Component {
                             image={orderDetail.selectedColorInfo.imageUrl}
                             color={orderDetail.selectedColorInfo.color}
                             qty={(orderDetail.qty) ? orderDetail.qty : 1}
+                            installAppliance={orderDetail.installAppliance}
+                            removeOldAppliance={orderDetail.removeOldAppliance}
                             address={address}
                             price={orderDetail.ProductPrice.price}
                         />;
