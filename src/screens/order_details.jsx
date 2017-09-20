@@ -88,7 +88,7 @@ class OrderDetails extends React.Component {
             occupied: 'Occupancy',
             lockBoxCode: '',
             installTime: 'Preferred Install Time',
-            hotshotDelivery: 'Hot Shot Delivery',
+            hotshotDelivery: 'Hot Shot',
             hotshotInstallDate: '',
             hotshotCode: '',
         };
@@ -252,9 +252,10 @@ class OrderDetails extends React.Component {
                 const orderTotalSection = <div className="cost-section">
                     <h5 className="cost-header">Order Summary </h5>
                     <div className="cost-row">
-                        <h5>Subtotal: <span>${ order.totalCost }</span></h5>
+                        {(order.applianceHotShotPrice) ? <h5>Hotshot Delivery: <span>${ order.applianceHotShotPrice }</span></h5> : null}
+                        <h5>Subtotal: <span>${ order.subTotalCost }</span></h5>
                         <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
-                        <h5>Total: <span>${ (parseFloat(order.totalCost) + parseFloat(order.salesTax)).toFixed(2) }</span></h5>
+                        <h5>Total: <span>${ order.totalCost }</span></h5>
                     </div>
                 </div>;
 
@@ -278,7 +279,7 @@ class OrderDetails extends React.Component {
 
                 pageData = <div style={{ position: 'absolute', top: '69px', height, width }}>
                     <Iframe
-                        url={`https://undertaker-acceptor-11504.netlify.com/edit/${this.state.editOrder}`}
+                        url={`${process.env.ORDER_URL}/edit/${this.state.editOrder}`}
                         width={`${width}`}
                         height={`${height}`}
                         position="relative"

@@ -15,9 +15,9 @@
 
 #logo {
     position: absolute;
-    top: 20px;
+    top: 25px;
     left: 20px;
-    height: 30px;
+    height: 15px;
 }
 
 .logo-text {
@@ -25,8 +25,8 @@
     font-weight: 400;
     color: $blue;
     position: absolute;
-    top: 31px;
-    left: 143px;
+    top: 29px;
+    left: 100px;
     letter-spacing: 1px;
 }
 
@@ -70,6 +70,7 @@
         background: $light-blue;
         top: 14px;
         position: absolute;
+        padding-left: 1px;
     }
 }
 .login-section {
