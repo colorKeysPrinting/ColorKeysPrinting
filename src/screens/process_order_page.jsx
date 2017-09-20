@@ -163,7 +163,7 @@ class ProcessOrderPage extends React.Component {
                 userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
 
                 const orderProcessHeading = {
-                    accountNumber: (order.pmOffice.applianceGEAccountNumber) ? order.pmOffice.applianceGEAccountNumber : order.fund.applianceGEAccountNumber,
+                    accountNumber: (order.pmOffice) ? order.pmOffice.applianceGEAccountNumber : order.fund.applianceGEAccountNumber,
                     fund: order.fund.name,
                     address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`
                 };
@@ -255,13 +255,13 @@ class ProcessOrderPage extends React.Component {
                 _.each(officeHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'pmOffice') {
-                        value = order.pmOffice.name;
+                        value = (order.fund.pmOffices[0]) ? order.fund.pmOffices[0].name : null;
 
                     } else if (key === 'phoneNumber'){
-                        value = order.pmOffice.phoneNumber;
+                        value = (order.fund.pmOffices[0]) ? order.fund.pmOffices[0].phoneNumber : null;
 
                     } else if (key === 'email') {
-                        value = order.pmOffice.email;
+                        value = (order.fund.pmOffices[0]) ? order.fund.pmOffices[0].email : null;
                     }
                     officeCols[key] = value;
                 });
@@ -288,6 +288,8 @@ class ProcessOrderPage extends React.Component {
                             image={orderDetail.selectedColorInfo.imageUrl}
                             manufacturerModelNumber={orderDetail.selectedColorInfo.manufacturerModelNumber}
                             qty={(orderDetail.qty) ? orderDetail.qty : 1}
+                            installAppliance={orderDetail.installAppliance}
+                            removeOldAppliance={orderDetail.removeOldAppliance}
                             price={orderDetail.ProductPrice.price}
 
                             outOfStock={this.state.outOfStock}
