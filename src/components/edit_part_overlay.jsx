@@ -36,10 +36,12 @@ export default class EditPartOverlay extends React.Component {
                 Alert:
                 <p>A part with this Sibi Model Number already exists!</p>
                 Do you wish to:
+                <p> - Use the existing part</p>
                 <p> - continue creating a new part (this will completely replace the existing part)</p>
                 <p> - modify the existing part?</p>
-                <input className="btn red" type="submit" value="Create New" onClick={this.props.createNewPart} />
-                <input className="btn blue" type="submit" value="Modify Existing" onClick={this.props.modifyExistingPart} />
+                <input className="btn blue" type="submit" value="Add" onClick={this.props.addPart} />
+                <input className="btn borderless red fill" type="submit" value="Create New" onClick={this.props.createNewPart} />
+                <input className="add-btn blue" type="submit" value="Modify Existing" onClick={this.props.modifyExistingPart} />
             </form>
         </dialog> : null;
 

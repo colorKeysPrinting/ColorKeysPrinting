@@ -16,6 +16,7 @@ export const ActionTypes = {
     GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS',
     UPDATE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/UPDATE_PRODUCT_SUCCESS',
     CREATE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/CREATE_PRODUCT_SUCCESS',
+    CREATE_PRODUCT_PART_SUCCESS : 'sibi_ge_admin/products/CREATE_PRODUCT_PART_SUCCESS',
     ARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/ARCHIVE_PRODUCT_SUCCESS',
     UNARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/UNARCHIVE_PRODUCT_SUCCESS',
     GET_PARTS_SUCCESS : 'sibi_ge_admin/products/GET_PARTS_SUCCESS',
@@ -197,7 +198,9 @@ export function createProductPart({ token, productId, partId }) {
             method  : Network.POST,
             url     : `${Network.DOMAIN}/createProductPart`,
             headers : {
-                'x-auth-token': token
+                'x-auth-token': token,
+                productId,
+                partId
             },
             data    : {
                 productId,
@@ -205,7 +208,7 @@ export function createProductPart({ token, productId, partId }) {
             }
         })
             .then(payload => {
-                console.log('create product part success');
+                dispatch({ type: ActionTypes.CREATE_PRODUCT_PART_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);
@@ -315,11 +318,11 @@ export function updatePart({ token, part }) {
     }
 }
 
-export function removePart({ toekn, productId, partId }) {
+export function removePart({ token, productId, partId }) {
     return (dispatch) => {
         return axios({
             method  : Network.DEL,
-            url     : `${Network.DOMAIN}/REMOVE_PART_SUCCESS`,
+            url     : `${Network.DOMAIN}/productPart`,
             headers : {
                 'x-auth-token': token,
                 productId,

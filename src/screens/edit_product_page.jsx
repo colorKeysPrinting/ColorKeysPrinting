@@ -48,8 +48,9 @@ class EditProductPage extends React.Component {
             imageFile: '',
             color: '',
             videoURL: '',
-            ...product,
-            part
+            tempPart: {},
+            part,
+            ...product
         };
 
         // check function
@@ -78,6 +79,7 @@ class EditProductPage extends React.Component {
         this.modifyExistingProduct = this.modifyExistingProduct.bind(this);
         this.modifyExistingPart = this.modifyExistingPart.bind(this);
         this.savePart = this.savePart.bind(this);
+        this.addPart = this.addPart.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
         this.archiveProduct = this.archiveProduct.bind(this);
         this.submitProduct = this.submitProduct.bind(this);
@@ -241,6 +243,7 @@ class EditProductPage extends React.Component {
 
             } else {
                 showPartsDialog = true;
+                this.setState({ tempPart: part });
             }
 
             this.setState({ isPartModelNumFound, showPartsDialog });
@@ -318,10 +321,14 @@ class EditProductPage extends React.Component {
 
     removePart({ partId }) {
         const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
 
-        console.log('removePart with partNumber: ', partId);
-        this.props.removePart({ token: jwt.token, productId: this.state.id, partId });
+        if (this.state.id) {
+            const jwt = cookies.get('sibi-admin-jwt');
+            this.props.removePart({ token: jwt.token, productId: this.state.id, partId });
+        } else {
+            const applianceAssociatedParts = _.remove(this.state.applianceAssociatedParts, (part) => { return part.id !== partId });
+            this.setState({ applianceAssociatedParts });
+        }
     }
 
     addVideo() {
@@ -483,6 +490,21 @@ class EditProductPage extends React.Component {
         this.setState({ isPartShowing: false, showPartsDialog: false, part });
     }
 
+    addPart() {
+        const { cookies } = this.props;
+        if (this.state.id) {
+            const jwt = cookies.get('sibi-admin-jwt');
+            this.props.createProductPart({ token: jwt.token, productId: this.state.id, partId: this.state.tempPart.id });
+            this.setState({ tempPart: {}, isPartShowing: false });
+
+        } else {
+            this.setState((prevState) => {
+                prevState.applianceAssociatedParts.push({ isNew: true, ...prevState.tempPart});
+                return { applianceAssociatedParts: prevState.applianceAssociatedParts, tempPart: {}, isPartShowing: false };
+            });
+        }
+    }
+
     saveProduct() {
         const { cookies } = this.props;
 
@@ -517,15 +539,21 @@ class EditProductPage extends React.Component {
         _.each(this.state, (value, key) => {
             product[key] = value;
 
-            if (key === 'activeSection' ||
+            if (key === 'isSibiModelNumFound' ||
+                key === 'isPartShowing' ||
+                key === 'showDialog' ||
+                key === 'isPartModelNumFound' ||
+                key === 'showPartsDialog' ||
+                key === 'isProductImage' ||
+                key === 'activeSection' ||
                 key === 'faqQuestion' ||
                 key === 'faqAnswer' ||
                 key === 'image' ||
                 key === 'imageFile' ||
                 key === 'color' ||
-                key === 'partDescription' ||
-                key === 'partCode' ||
-                key === 'videoURL') {
+                key === 'videoURL' ||
+                key === 'tempPart' ||
+                key === 'part') {
 
                 delete product[key];
             }
@@ -735,6 +763,7 @@ class EditProductPage extends React.Component {
                 update={this.update}
                 updateImage={this.updateImage}
                 savePart={this.savePart}
+                addPart={this.addPart}
                 showAddPart={this.showAddPart}
                 checkModelNum={this.checkModelNum}
                 createNewPart={this.createNewPart}
@@ -749,7 +778,7 @@ class EditProductPage extends React.Component {
                 Do you wish to:
                 <p> - continue creating a new product (this will completely replace the existing product)</p>
                 <p> - modify the existing product?</p>
-                <input className="btn red" type="submit" value="Create New" onClick={this.createNewProduct} />
+                <input className="btn borderless red fill" type="submit" value="Create New" onClick={this.createNewProduct} />
                 <input className="btn blue" type="submit" value="Modify Existing" onClick={this.modifyExistingProduct} />
             </form>
         </dialog> : null;

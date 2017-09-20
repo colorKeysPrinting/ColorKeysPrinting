@@ -20,7 +20,7 @@ const initialState = Immutable.fromJS({
 });
 
 export default (state = initialState, action) => {
-    let products, product, index, category;
+    let products, product, parts, part, index, category;
 
     switch (action.type) {
     case ActionTypes.CLEAR_PRODUCT:
@@ -81,6 +81,15 @@ export default (state = initialState, action) => {
 
     case ActionTypes.CREATE_PRODUCT_PART_SUCCESS:
         console.log('create product part success');
+        products = state.get('products').toJS();
+        parts = state.get('parts').toJS();
+        index = _.findIndex(products, ['id', action.config.headers.productId]);
+        part = _.find(parts, ['id', action.config.headers.partId]);
+        product = products[index];
+        product.applianceAssociatedParts.push(part);
+        products[index] = product;
+        state = state.set('product', Immutable.fromJS(product));
+        state = state.set('products', Immutable.fromJS(products));
         break;
 
     case ActionTypes.ARCHIVE_PRODUCT_SUCCESS:
@@ -108,8 +117,8 @@ export default (state = initialState, action) => {
 
     case ActionTypes.CREATE_PART_SUCCESS:
         console.log('create part success');
-        const parts = state.get('parts').toJS();
-        const part = { isNew: true, ...action.data };
+        parts = state.get('parts').toJS();
+        part = { isNew: true, ...action.data };
 
         parts.push(part);
 
@@ -133,6 +142,7 @@ export default (state = initialState, action) => {
         const applianceAssociatedParts = _.remove(product.applianceAssociatedParts, (part) => { return part.id !== action.config.headers.partId });
         product.applianceAssociatedParts = applianceAssociatedParts;
         products[index] = product;
+        state = state.set('product', Immutable.fromJS(product));
         state = state.set('products', Immutable.fromJS(products));
         break;
 
