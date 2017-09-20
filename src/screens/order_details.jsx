@@ -250,7 +250,7 @@ class OrderDetails extends React.Component {
 
                 // *************** order totals section ***************
                 const orderTotalSection = <div>
-                    {(order.applianceHotShotPrice) ? <div className="cost-section" >
+                    {(order.isApplianceHotShotDelivery) ? <div className="cost-section" >
                         <h5 style={{right: '8%', position: 'absolute', margin: '-6px' }}>Hotshot Delivery: <span>${ order.applianceHotShotPrice }</span></h5>
                     </div> : null}
                     <div className="cost-section">
