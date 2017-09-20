@@ -251,13 +251,13 @@ class ProcessOrderPage extends React.Component {
                 _.each(officeHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'pmOffice') {
-                        value = (order.pmOffice) ? order.pmOffice.name : null;
+                        value = (order.fund.pmOffices[0]) ? order.fund.pmOffices[0].name : null;
 
                     } else if (key === 'phoneNumber'){
-                        value = (order.pmOffice) ? order.pmOffice.phoneNumber : null;
+                        value = (order.fund.pmOffices[0]) ? order.fund.pmOffices[0].phoneNumber : null;
 
                     } else if (key === 'email') {
-                        value = (order.pmOffice) ? order.pmOffice.email : null;
+                        value = (order.fund.pmOffices[0]) ? order.fund.pmOffices[0].email : null;
                     }
                     officeCols[key] = value;
                 });
