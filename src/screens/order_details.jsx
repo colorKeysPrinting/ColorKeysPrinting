@@ -183,7 +183,7 @@ class OrderDetails extends React.Component {
                 const orderData = {orderDetailsCols};
 
                 const orderPageHeading = {
-                    address: `${order.fundProperty.addressLineOne} ${(order.fundProperty.addressLineTwo) ? order.fundProperty.addressLineTwo : ''} ${(order.fundProperty.addressLineThree) ? order.fundProperty.addressLineThree : ''}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`,
+                    address: `${order.fundProperty.addressLineOne} ${(order.fundProperty.addressLineTwo) ? order.fundProperty.addressLineTwo : ''} ${(order.fundProperty.addressLineThree) ? order.fundProperty.addressLineThree : ''}, ${order.fundProperty.city}, ${order.fundProperty.state} ${order.fundProperty.zipcode}`,
                     PM: order.fund.pmOffices[0].name
                 };
                 const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
