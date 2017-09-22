@@ -34,7 +34,10 @@ export default function ProductTable(props) {
             switch(key) {
             case 'productDescription':
                 if (row === 'product') {
-                    const valueStyled = <span className="product-header">{product.applianceDescription}</span>;
+                    const valueStyled = <div className="no-limit">
+                        <span className="product-header">{product.applianceDescription}</span>
+                        <div className="table-cell-details">{ `Model Number: ${(props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber}` }</div>
+                    </div>;
                     value = (!props.replacement) ? valueStyled : null;
 
                 } else if (row === 'outOfStock') {
@@ -43,7 +46,6 @@ export default function ProductTable(props) {
 
                     } else if (props.type === 'orderDetails') {
                         value = <div className="no-limit">
-                            <div className="table-cell-details">{ `Model Number: ${(props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber}` }</div>
                             <div className="table-cell-details">{ `Color: ${props.color}` }</div>
                             <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
                             <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>

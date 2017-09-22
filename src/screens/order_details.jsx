@@ -72,7 +72,7 @@ class OrderDetails extends React.Component {
     }
 
     render() {
-        let pageData, productsAndParts, productData;
+        let pageData;
 
         const productHeaders = {
             productDescription: '',
@@ -103,7 +103,6 @@ class OrderDetails extends React.Component {
             if (!this.state.editOrder) {
                 const orderStatus = order.orderStatus;
 
-                // *************** product section ***************
                 const productsAndDestinations = [];
                 _.each(order.productsAndDestinations, (product) => {
                     productsAndDestinations.push(product);
@@ -112,98 +111,11 @@ class OrderDetails extends React.Component {
                         productsAndDestinations.push({...part, productOrderId: product.productOrderId});
                     });
                 });
-
-                productData = productsAndDestinations.concat(order.partsAndDestinations);
-
-                productData = _.map(productData, (orderDetail, productIndex) => {
-                    if (orderDetail.product) {
-                        const address = <div className="no-limit">
-                            <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
-                            <div>{`${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`}</div>
-                        </div>;
-
-                        return <ProductTable
-                            key={`product${productIndex}`}
-                            type="orderDetails"
-                            productIndex={productIndex}
-                            productHeaders={productHeaders}
-                            product={orderDetail.product}
-                            image={orderDetail.selectedColorInfo.imageUrl}
-                            color={orderDetail.selectedColorInfo.color}
-                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
-                            installAppliance={orderDetail.installAppliance}
-                            removeOldAppliance={orderDetail.removeOldAppliance}
-                            address={address}
-                            price={orderDetail.ProductPrice.price}
-                        />;
-                    } else if (orderDetail.part) {
-                        return <PartTable
-                            key={`part${productIndex}`}
-                            type="orderDetails"
-                            productIndex={productIndex}
-                            part={orderDetail.part}
-                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
-                            price={orderDetail.PartPrice.price}
-                        />;
-                    }
-                });
-
-                // *************** order & tenant section ***************
-                // **** order section
-                orderHeaders.lockBoxCode = (order.lockBoxCode) ? 'Lockbox Code' : 'Tenant';
-                const orderDetailsCols = {};
-                _.each(orderHeaders, (value, key) => {
-                    value = order[key]
-                    if (key === 'orderStatus') {
-                        value = order.orderStatus;
-
-                    } else if (key === 'geOrderNumber'){
-                        value = order.geOrderNumber;
-
-                    } else if (key === 'installTime') {
-                        value = (order.applianceDeliveryTime) ? order.applianceDeliveryTime : 'Not Specified';
-
-                    } else if (key === 'occupied') {
-                        value = (order.occupied === false) ? 'Unoccupied' : 'Occupied';
-
-                    } else if (key === 'lockBoxCode') {
-                        value = (order.lockBoxCode) ? order.lockBoxCode : `${order.tenantFirstName} ${order.tenantLastName}`;
-
-                    } else if (key === 'createdBy') {
-                        value = `${order.orderUser.firstName} ${order.orderUser.lastName}`;
-
-                    } else if (key === 'hotshotDelivery') {
-                        value = (order.isApplianceHotShotDelivery) ? 'Yes' : 'No';
-
-                    } else if (key === 'hotshotInstallDate') {
-                        value = moment(order.installDate).format('MM/DD/YYYY');
-
-                    } else if (key === 'hotshotCode') {
-                        value = (order.isApplianceHotShotDelivery) ? order.applianceHotShotCode : null;
-                    }
-
-                    orderDetailsCols[key] = value;
-                });
-                const orderData = {orderDetailsCols};
-
                 const orderPageHeading = {
                     address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`,
                     PM: order.fund.pmOffices[0].name
                 };
-                const buttonSection = (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
-                    <div className="btn blue" onClick={() => this.editOrder({ orderId: order.id })}>Edit</div>
-                    <div className="btn blue" onClick={() => this.handleAction({ orderId: order.id })}>Approve</div>
-                </div> : null;
 
-                const detailsHeaderSection = <div className="details-header">
-                    <div className="header-property pure-u-2-3">
-                        <h2 className="order-number">Order #: { order.orderNumber }</h2>
-                        <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
-                    </div>
-                    { buttonSection }
-                </div>;
-
-                // **** tenant section
                 let tenantInfoTitle;
                 let tenantInfoDetails;
 
@@ -239,45 +151,116 @@ class OrderDetails extends React.Component {
                     ];
                 }
 
-                const tenantInfoSection = <div className="tenant-info-table">
-                    <table className="table">
-                        <thead className="head">
-                            { tenantInfoTitle }
-                        </thead>
-                        <tbody>
-                            { tenantInfoDetails }
-                        </tbody>
-                    </table>
-                </div>;
+                const productData = productsAndDestinations.concat(order.partsAndDestinations);
+                const orderDetailsCols = {};
+                orderHeaders.lockBoxCode = (order.lockBoxCode) ? 'Lockbox Code' : 'Tenant';
+                _.each(orderHeaders, (value, key) => {
+                    value = order[key]
+                    if (key === 'orderStatus') {
+                        value = order.orderStatus;
 
-                // *************** order totals section ***************
-                const orderTotalSection = <div>
-                    {(order.isApplianceHotShotDelivery) ? <div className="cost-section" >
-                        <h5 style={{right: '8%', position: 'absolute', margin: '-6px' }}>Hotshot Delivery: <span>${ order.applianceHotShotPrice }</span></h5>
-                    </div> : null}
-                    <div className="cost-section">
-                        <h5 className="cost-header">Order Summary </h5>
-                        <div className="cost-row">
-                            <h5>Subtotal: <span>${ order.subTotalCost }</span></h5>
-                            <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
-                            <h5>Total: <span>${ order.totalCost }</span></h5>
-                        </div>
-                    </div>
-                </div>;
+                    } else if (key === 'geOrderNumber'){
+                        value = order.geOrderNumber;
+
+                    } else if (key === 'installTime') {
+                        value = (order.applianceDeliveryTime) ? order.applianceDeliveryTime : 'Not Specified';
+
+                    } else if (key === 'occupied') {
+                        value = (order.occupied === false) ? 'Unoccupied' : 'Occupied';
+
+                    } else if (key === 'lockBoxCode') {
+                        value = (order.lockBoxCode) ? order.lockBoxCode : `${order.tenantFirstName} ${order.tenantLastName}`;
+
+                    } else if (key === 'createdBy') {
+                        value = `${order.orderUser.firstName} ${order.orderUser.lastName}`;
+
+                    } else if (key === 'hotshotDelivery') {
+                        value = (order.isApplianceHotShotDelivery) ? 'Yes' : 'No';
+
+                    } else if (key === 'hotshotInstallDate') {
+                        value = moment(order.installDate).format('MM/DD/YYYY');
+
+                    } else if (key === 'hotshotCode') {
+                        value = (order.isApplianceHotShotDelivery) ? order.applianceHotShotCode : null;
+                    }
+
+                    orderDetailsCols[key] = value;
+                });
 
                 pageData = <div className="container">
-                    { detailsHeaderSection }
+                    <div className="details-header">
+                        <div className="header-property pure-u-2-3">
+                            <h2 className="order-number">Order: { order.orderNumber }</h2>
+                            <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
+                        </div>
+                        { (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
+                            <div className="btn blue" onClick={() => this.editOrder({ orderId: order.id })}>Edit</div>
+                            <div className="btn blue" onClick={() => this.handleAction({ orderId: order.id })}>Approve</div>
+                        </div> : null }
+                    </div>
                     <MyTable
                         className="order-details-table"
                         type="orderDetails"
                         headers={orderHeaders}
-                        data={orderData}
+                        data={{orderDetailsCols}}
                     />
-                    { tenantInfoSection }
-                    <div className="product-table-wrapper">
-                        { productData }
+                    <div className="tenant-info-table">
+                        <table className="table">
+                            <thead className="head">
+                                { tenantInfoTitle }
+                            </thead>
+                            <tbody>
+                                { tenantInfoDetails }
+                            </tbody>
+                        </table>
                     </div>
-                    { orderTotalSection }
+                    <div className="product-table-wrapper">
+                        { _.map(productData, (orderDetail, productIndex) => {
+                            if (orderDetail.product) {
+                                const address = <div className="no-limit">
+                                    <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
+                                    <div>{`${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`}</div>
+                                </div>;
+
+                                return <ProductTable
+                                    key={`product${productIndex}`}
+                                    type="orderDetails"
+                                    productIndex={productIndex}
+                                    productHeaders={productHeaders}
+                                    product={orderDetail.product}
+                                    image={orderDetail.selectedColorInfo.imageUrl}
+                                    color={orderDetail.selectedColorInfo.color}
+                                    qty={(orderDetail.qty) ? orderDetail.qty : 1}
+                                    installAppliance={orderDetail.installAppliance}
+                                    removeOldAppliance={orderDetail.removeOldAppliance}
+                                    address={address}
+                                    price={orderDetail.ProductPrice.price}
+                                />;
+                            } else if (orderDetail.part) {
+                                return <PartTable
+                                    key={`part${productIndex}`}
+                                    type="orderDetails"
+                                    productIndex={productIndex}
+                                    part={orderDetail.part}
+                                    qty={(orderDetail.qty) ? orderDetail.qty : 1}
+                                    price={orderDetail.PartPrice.price}
+                                />;
+                            }
+                        }) }
+                    </div>
+                    <div>
+                        {(order.isApplianceHotShotDelivery) ? <div className="cost-section" >
+                            <h5 style={{right: '8%', position: 'absolute', margin: '-6px' }}>Hotshot Delivery: <span>${ order.applianceHotShotPrice }</span></h5>
+                        </div> : null}
+                        <div className="cost-section">
+                            <h5 className="cost-header">Order Summary </h5>
+                            <div className="cost-row">
+                                <h5>Subtotal: <span>${ order.subTotalCost }</span></h5>
+                                <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
+                                <h5>Total: <span>${ order.totalCost }</span></h5>
+                            </div>
+                        </div>
+                    </div>
                 </div>;
             } else {
                 const height = (window.innerHeight - 69);
