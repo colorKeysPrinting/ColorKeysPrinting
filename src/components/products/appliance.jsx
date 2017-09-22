@@ -66,93 +66,85 @@ export default class ApplianceProducts extends React.Component {
             { label: 'Electric', value: 'Electric' }
         ]
 
-        const productPictures = _.map(applianceColorsInfo, (image, index) => {
-            return (
-                <div key={`colorImages${index}`} className="accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
-                    <img src={image.imageUrl} alt="picture" width="auto" height="60" />
-                    <input type="text" value={image.color} disabled />
-                    {(!isDisabled) ? <div className="add-btn" onClick={()=> this.props.removeColorAndImage({ color: image.color }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
-                </div>
-            );
-        });
-
-        const addPictureSection = (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
-            <label className="btn blue" >
-                { (image !== '') ? <img src={image.imageUrl} alt="uploaded-image" height="60" /> : 'Choose File' }
-                <input
-                    type="file"
-                    accept=".png,.jpg,.jpeg,.svg"
-                    onChange={(e) => {e.preventDefault(); this.props.updateImage({ type: 'product', imageFile: e.target.files[0] }); }}
-                    style={{ display: 'none' }}
-                />
-            </label>
-            <input type="text" value={color} placeholder="Color name" onChange={(e) => this.props.update({ type: 'color', value: e.target.value })} />
-            <div onClick={this.props.addColorAndImage} className="add-btn blue">Add</div>
-        </div> : null;
-
-        const productParts = _.map(applianceAssociatedParts, (part, index) => {
-            return (
-                <div key={`parts${index}`} className="accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
-                    <img src={(part.imageUrl) ? part.imageUrl : null } alt="part image" height="50"/>
-                    <input type="text" value={part.description} disabled />
-                    <input type="text" value={part.code} disabled />
-                    {(!isDisabled) ? <div className="add-btn blue" onClick={()=> this.props.showAddPart({ part }) } >Edit</div> : null}
-                    {(!isDisabled) ? <div className="add-btn" onClick={()=> this.props.removePart({ partId: (part.id) ? part.id : index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
-                </div>
-            );
-        });
-
-        const addPartSection = (!isDisabled) ? <div className="" style={{ display: 'inline-flex' }} >
-            <div onClick={this.props.showAddPart} className="btn blue">Add Part</div>
-        </div> : null;
-
         return (
             <div id="appliance-product">
-                <input name="appliance-manuf-name" className="left-col" type="text" placeholder="Manufacturer Name (e.g. GE)" value={applianceManufacturerName} onChange={(e) => this.props.update({ type: 'applianceManufacturerName', value: e.target.value})} disabled={isDisabled} />
-                <input name="appliance-type" className="center-col" type="text" placeholder="Type" value={applianceType} onChange={(e) => this.props.update({ type: 'applianceType', value: e.target.value})} disabled={isDisabled} />
-                <input name="appliance-size" className="right-col" type="text" placeholder="Size" value={applianceSize} onChange={(e) => this.props.update({ type: 'applianceSize', value: e.target.value})} disabled={isDisabled} />
-                <input name="appliance-width" className="left-col" type="text" placeholder="Width"  value={applianceWidth} onChange={(e) => this.props.update({ type: 'applianceWidth', value: e.target.value})} disabled={isDisabled} />
-                <input name="appliance-height" className="center-col" type="text" placeholder="Height" value={applianceHeight} onChange={(e) => this.props.update({ type: 'applianceHeight', value: e.target.value})}disabled={isDisabled} />
-                <input name="appliance-depth" className="right-col" type="text" placeholder="Depth"  value={applianceDepth} onChange={(e) => this.props.update({ type: 'applianceDepth', value: e.target.value})} disabled={isDisabled} />
+                <input name="appliance-manuf-name" className="left-col" type="text" placeholder="Manufacturer Name (e.g. GE)" value={applianceManufacturerName} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceManufacturerName', value: e.target.value})} disabled={isDisabled} />
+                <input name="appliance-type" className="center-col" type="text" placeholder="Type" value={applianceType} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceType', value: e.target.value})} disabled={isDisabled} />
+                <input name="appliance-size" className="right-col" type="text" placeholder="Size" value={applianceSize} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceSize', value: e.target.value})} disabled={isDisabled} />
+                <input name="appliance-width" className="left-col" type="text" placeholder="Width"  value={applianceWidth} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceWidth', value: e.target.value})} disabled={isDisabled} />
+                <input name="appliance-height" className="center-col" type="text" placeholder="Height" value={applianceHeight} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceHeight', value: e.target.value})}disabled={isDisabled} />
+                <input name="appliance-depth" className="right-col" type="text" placeholder="Depth"  value={applianceDepth} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceDepth', value: e.target.value})} disabled={isDisabled} />
                 <Select
                     name="appliance-fuel-type"
                     className="left-col"
                     value={applianceFuelType}
                     options={fuelTypeOptions}
-                    onChange={(selected) => (!isDisabled) ? this.props.update({ type: 'applianceFuelType', value: (selected) ? selected.value : '' }) : console.log(`you don't have permission to change!`)}
+                    onChange={(selected) => (!isDisabled) ? this.props.update({ isProduct: true, key: 'applianceFuelType', value: (selected) ? selected.value : '' }) : console.log(`you don't have permission to change!`)}
                     required
                 />
-                <input name="appliance-spec-sheet" className="center-col" type="url" placeholder="Spec Sheet URL" value={applianceSpecSheetUrl} onChange={(e) => this.props.update({ type: 'applianceSpecSheetUrl', value: e.target.value})} disabled={isDisabled} />
-                <textarea name="appliance-description" placeholder="Description" value={applianceDescription} onChange={(e) => this.props.update({ type: 'applianceDescription', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
+                <input name="appliance-spec-sheet" className="center-col" type="url" placeholder="Spec Sheet URL" value={applianceSpecSheetUrl} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceSpecSheetUrl', value: e.target.value})} disabled={isDisabled} />
+                <textarea name="appliance-description" placeholder="Description" value={applianceDescription} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceDescription', value: e.target.value})} maxLength="1000" disabled={isDisabled} />
                 <hr />
                 <div className="accordion">
                     <div className="accordion-detail">
-                        { productPictures }
-                        { addPictureSection }
+                        { _.map(applianceColorsInfo, (image, index) => {
+                            return (
+                                <div key={`colorImages${index}`} className="accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
+                                    <img src={image.imageUrl} alt="picture" width="auto" height="60" />
+                                    <input type="text" value={image.color} disabled />
+                                    {(!isDisabled) ? <div className="add-btn" onClick={()=> this.props.removeColorAndImage({ color: image.color }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
+                                </div>
+                            );
+                        }) }
+                        {/* { (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
+                            <label className="btn blue" >
+                                { (image !== '') ? <img src={image.imageUrl} alt="uploaded-image" height="60" /> : 'Choose File' }
+                                <input
+                                    type="file"
+                                    accept=".png,.jpg,.jpeg,.svg"
+                                    onChange={(e) => {e.preventDefault(); this.props.updateImage({ key: 'product', imageFile: e.target.files[0] }); }}
+                                    style={{ display: 'none' }}
+                                />
+                            </label>
+                            <input type="text" value={color} placeholder="Color name" onChange={(e) => this.props.update({ isProduct: true, key: 'color', value: e.target.value })} />
+                            <div onClick={this.props.addColorAndImage} className="add-btn blue">Add</div>
+                        </div> : null } */}
                     </div>
                     <div className="accordion-detail">
-                        { productParts }
-                        { addPartSection }
+                        { _.map(applianceAssociatedParts, (part, index) => {
+                            return (
+                                <div key={`parts${index}`} className="accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
+                                    <img src={(part.imageUrl) ? part.imageUrl : null } alt="part image" height="50"/>
+                                    <input type="text" value={part.description} disabled />
+                                    <input type="text" value={part.code} disabled />
+                                    {(!isDisabled) ? <div className="add-btn blue" onClick={()=> this.props.showAddPart({ part }) } >Edit</div> : null}
+                                    {(!isDisabled) ? <div className="add-btn" onClick={()=> this.props.removePart({ partId: (part.id) ? part.id : index }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
+                                </div>
+                            );
+                        }) }
+                        { (!isDisabled) ? <div className="" style={{ display: 'inline-flex' }} >
+                            <div onClick={this.props.showAddPart} className="btn blue">Add Part</div>
+                        </div> : null }
                     </div>
                 </div>
                 <div id="checkbox-is-ge-install">
                     <input
                         type="checkbox"
-                        onClick={() => this.showCheckboxSection({ type: 'isInstallShowing' })}
+                        onClick={() => this.showCheckboxSection({ key: 'isInstallShowing' })}
                         checked={this.state.isInstallShowing}
                         style={{ height: '15px', width: '30px' }} /> Option for GE to install
 
                     <div style={{ display: (this.state.isInstallShowing) ? 'inline-flex' : 'none' }} >
                         <div style={{ display: 'block' }}>
                             <div className="row" >
-                                <input name="appliance-install-code" type="text" placeholder="install code (e.g. M106)" value={applianceInstallCode} onChange={(e) => this.props.update({ type: 'applianceInstallCode', value: e.target.value})} disabled={isDisabled} />
-                                <input name="appliance-install-value" type="number" placeholder="install value (e.g. 0.00)" value={applianceInstallPrice} onChange={(e) => this.props.update({ type: 'applianceInstallPrice', value: e.target.value})} disabled={isDisabled} />
-                                <input name="appliance-install-descr" type="text" placeholder="Install Description" value={applianceInstallDescription} onChange={(e) => this.props.update({ type: 'applianceInstallDescription', value: e.target.value})} disabled={isDisabled} />
+                                <input name="appliance-install-code" type="text" placeholder="install code (e.g. M106)" value={applianceInstallCode} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceInstallCode', value: e.target.value})} disabled={isDisabled} />
+                                <input name="appliance-install-value" type="number" placeholder="install value (e.g. 0.00)" value={applianceInstallPrice} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceInstallPrice', value: e.target.value})} disabled={isDisabled} />
+                                <input name="appliance-install-descr" type="text" placeholder="Install Description" value={applianceInstallDescription} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceInstallDescription', value: e.target.value})} disabled={isDisabled} />
                             </div>
                             <div className="row">
-                                <input name="appliance-install-code" type="text" placeholder="install code 2 (e.g. M106)" value={applianceInstallCode2} onChange={(e) => this.props.update({ type: 'applianceInstallCode2', value: e.target.value})} disabled={isDisabled} />
-                                <input name="appliance-install-value" type="number" placeholder="install value 2 (e.g. 0.00)" value={applianceInstallPrice2} onChange={(e) => this.props.update({ type: 'applianceInstallPrice2', value: e.target.value})} disabled={isDisabled} />
-                                <input name="appliance-install-descr" type="text" placeholder="Install Description 2" value={applianceInstallDescription2} onChange={(e) => this.props.update({ type: 'applianceInstallDescription2', value: e.target.value})} disabled={isDisabled} />
+                                <input name="appliance-install-code" type="text" placeholder="install code 2 (e.g. M106)" value={applianceInstallCode2} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceInstallCode2', value: e.target.value})} disabled={isDisabled} />
+                                <input name="appliance-install-value" type="number" placeholder="install value 2 (e.g. 0.00)" value={applianceInstallPrice2} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceInstallPrice2', value: e.target.value})} disabled={isDisabled} />
+                                <input name="appliance-install-descr" type="text" placeholder="Install Description 2" value={applianceInstallDescription2} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceInstallDescription2', value: e.target.value})} disabled={isDisabled} />
                             </div>
                         </div>
                     </div>
@@ -160,25 +152,25 @@ export default class ApplianceProducts extends React.Component {
                 <div id="checkbox-is-ge-remove">
                     <input
                         type="checkbox"
-                        onClick={() => this.showCheckboxSection({ type: 'isRemovalShowing' })}
+                        onClick={() => this.showCheckboxSection({ key: 'isRemovalShowing' })}
                         checked={this.state.isRemovalShowing}
                         style={{ height: '15px', width: '30px' }} />Option for GE to remove old appliance
                     <div style={{ display: (this.state.isRemovalShowing) ? 'inline-flex' : 'none' }} >
-                        <input name="appliance-removal-code" type="text" placeholder="removal code (e.g. M106)" value={applianceRemovalCode} onChange={(e) => this.props.update({ type: 'applianceRemovalCode', value: e.target.value})} disabled={isDisabled} />
-                        <input name="appliance-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={applianceRemovalPrice} onChange={(e) => this.props.update({ type: 'applianceRemovalPrice', value: e.target.value})}disabled={isDisabled} />
-                        <input name="appliance-removal-descr" type="text" placeholder="Removal Description" value={applianceRemovalDescription} onChange={(e) => this.props.update({ type: 'applianceRemovalDescription', value: e.target.value})} disabled={isDisabled} />
+                        <input name="appliance-removal-code" type="text" placeholder="removal code (e.g. M106)" value={applianceRemovalCode} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceRemovalCode', value: e.target.value})} disabled={isDisabled} />
+                        <input name="appliance-removal-value" type="number" placeholder="removal value (e.g. 0.00)" value={applianceRemovalPrice} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceRemovalPrice', value: e.target.value})}disabled={isDisabled} />
+                        <input name="appliance-removal-descr" type="text" placeholder="Removal Description" value={applianceRemovalDescription} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceRemovalDescription', value: e.target.value})} disabled={isDisabled} />
                     </div>
                 </div>
                 <div id="checkbox-is-ge-disconnect">
                     <input
                         type="checkbox"
-                        onClick={() => this.showCheckboxSection({ type: 'isDisconnectShowing' })}
+                        onClick={() => this.showCheckboxSection({ key: 'isDisconnectShowing' })}
                         checked={this.state.isDisconnectShowing}
                         style={{ height: '15px', width: '30px' }} />Option for GE to remove old appliance
                     <div style={{ display: (this.state.isDisconnectShowing) ? 'inline-flex' : 'none' }} >
-                        <input name="appliance-Disconnect-code" type="text" placeholder="Disconnect code (e.g. M106)" value={applianceDisconnectCode} onChange={(e) => this.props.update({ type: 'applianceDisconnectCode', value: e.target.value})} disabled={isDisabled} />
-                        <input name="appliance-Disconnect-value" type="number" placeholder="Disconnect value (e.g. 0.00)" value={applianceDisconnectPrice} onChange={(e) => this.props.update({ type: 'applianceDisconnectPrice', value: e.target.value})} disabled={isDisabled} />
-                        <input name="appliance-Disconnect-descr" type="text" placeholder="Disconnect Description" value={applianceDisconnectDescription} onChange={(e) => this.props.update({ type: 'applianceDisconnectDescription', value: e.target.value})} disabled={isDisabled} />
+                        <input name="appliance-Disconnect-code" type="text" placeholder="Disconnect code (e.g. M106)" value={applianceDisconnectCode} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceDisconnectCode', value: e.target.value})} disabled={isDisabled} />
+                        <input name="appliance-Disconnect-value" type="number" placeholder="Disconnect value (e.g. 0.00)" value={applianceDisconnectPrice} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceDisconnectPrice', value: e.target.value})} disabled={isDisabled} />
+                        <input name="appliance-Disconnect-descr" type="text" placeholder="Disconnect Description" value={applianceDisconnectDescription} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceDisconnectDescription', value: e.target.value})} disabled={isDisabled} />
                     </div>
                 </div>
             </div>

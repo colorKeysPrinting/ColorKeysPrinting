@@ -20,7 +20,7 @@ class ProductsPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { isEditShowing: false, sortIndex: 0, product: '', category: '', activeKey: '0'};
+        this.state = { isEditShowing: false, sortIndex: 0, product: '', category: '', activeKey: '0', activeSubKey: '0'};
     }
 
     componentWillMount() {
@@ -50,7 +50,13 @@ class ProductsPage extends React.Component {
 
             _.each(nextProps.productCategories.toJS(), (category) => {
                 _.each(category.subcategories, (subCategory) => {
-                    this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory });
+                    if (subCategory.containedSubCategories) {
+                        _.each(subCategory.containedSubCategories, (subSubCategory) => {
+                            this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory, subSubCategory });
+                        });
+                    } else {
+                        this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory });
+                    }
                 });
             });
         }
@@ -69,59 +75,110 @@ class ProductsPage extends React.Component {
             tabContent = _.map(productCategories.toJS(), (category) => {
                 return _.map(category.subcategories, (subCategory, index) => {
                     const name = subCategory.name;
+                    let content;
 
-                    const data = _.map(products[category.name][name], (product) => {
-                        const cols = {};
+                    if (subCategory.containedSubCategories) {
+                        const subTabContent = _.map(subCategory.containedSubCategories, (subSubCategory, subIndex) => {
+                            const subName = subSubCategory.name;
 
-                        _.each(['id','name','featured','action'], (key) => {
-                            let value = product[key];
+                            const data = _.map(products[category.name][name][subName], (product) => {
+                                const cols = {};
 
-                            if (key === 'id') {
-                                value = { ...product, category: category.id, subCategory: subCategory.id };
+                                _.each(['id','name','featured','action'], (key) => {
+                                    let value = product[key];
 
-                            } else if (key === 'action') {
-                                const jwt = cookies.get('sibi-admin-jwt');
+                                    if (key === 'id') {
+                                        value = { ...product, category: category.id, subCategory: subCategory.id, subSubCategory: subSubCategory.id };
 
-                                value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: name, id: product.id }) } className="product-action">Unarchive</div>
-                                    : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}`, state: { product } }} className="product-action">Edit</Link>;
+                                    } else if (key === 'action') {
+                                        const jwt = cookies.get('sibi-admin-jwt');
 
-                            } else if (key === 'featured') {
-                                if (product.sortIndex <= 4) {
-                                    value = <div className="featured-column">featured {product.sortIndex + 1}</div>;
-                                }
-                            }
+                                        value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: name, subSubCategory: subName, id: product.id }) } className="product-action">Unarchive</div>
+                                            : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;
 
-                            cols[key] = value;
+                                    } else if (key === 'featured') {
+                                        if (product.sortIndex <= 4) {
+                                            value = <div className="featured-column">featured {product.sortIndex + 1}</div>;
+                                        }
+                                    }
+
+                                    cols[key] = value;
+                                });
+
+                                return cols;
+                            });
+
+                            return (
+                                <TabPane
+                                    tab={subName}
+                                    key={subIndex}
+                                >
+                                    <MyTable
+                                        className="products-table"
+                                        type="products"
+                                        tab={subName}
+                                        data={data}
+                                    />
+                                </TabPane>
+                            );
                         });
 
-                        return cols;
-                    });
+                        content = <Tabs
+                            tabBarPosition="top"
+                            activeKey={this.state.activeSubKey}
+                            onChange={(activeSubKey) => this.setState({ activeSubKey })}
+                            renderTabBar={()=><ScrollableInkTabBar />}
+                            renderTabContent={()=><TabContent style={{ overflow: 'none' }} />}
+                        >
+                            { subTabContent }
+                        </Tabs>;
+
+                    } else {
+                        const data = _.map(products[category.name][name], (product) => {
+                            const cols = {};
+
+                            _.each(['id','name','featured','action'], (key) => {
+                                let value = product[key];
+
+                                if (key === 'id') {
+                                    value = { ...product, category: category.id, subCategory: subCategory.id };
+
+                                } else if (key === 'action') {
+                                    const jwt = cookies.get('sibi-admin-jwt');
+
+                                    value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: name, id: product.id }) } className="product-action">Unarchive</div>
+                                        : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;
+
+                                } else if (key === 'featured') {
+                                    if (product.sortIndex <= 4) {
+                                        value = <div className="featured-column">featured {product.sortIndex + 1}</div>;
+                                    }
+                                }
+
+                                cols[key] = value;
+                            });
+
+                            return cols;
+                        });
+
+                        content = <MyTable
+                            className="products-table"
+                            type="products"
+                            tab={name}
+                            data={data}
+                        />;
+                    }
 
                     return (
                         <TabPane
                             tab={name}
                             key={index}
                         >
-                            <MyTable
-                                className="products-table"
-                                type="products"
-                                tab={name}
-                                data={data}
-                            />
+                            { content }
                         </TabPane>
                     );
                 });
             });
-
-
-            editProductSection = (this.state.isEditShowing) ? <div style={{ display: (this.state.isEditShowing) ? 'block' : 'none' }}>
-                <EditProduct
-                    sortIndex={this.state.sortIndex}
-                    product={this.state.product}
-                    category={this.state.category}
-                    close={this.showEditBox}
-                />
-            </div> : null;
 
             pageContent = <div>
                 <div className="table-card">
@@ -132,14 +189,21 @@ class ProductsPage extends React.Component {
                     <Tabs
                         tabBarPosition="top"
                         activeKey={this.state.activeKey}
-                        onChange={(activeKey) => {console.log('onChange - activeKey', activeKey); this.setState({ activeKey })}}
+                        onChange={(activeKey) => this.setState({ activeKey })}
                         renderTabBar={()=><ScrollableInkTabBar />}
                         renderTabContent={()=><TabContent style={{ overflow: 'none' }} />}
                     >
                         { tabContent }
                     </Tabs>
                 </div>
-                { editProductSection }
+                { (this.state.isEditShowing) ? <div style={{ display: (this.state.isEditShowing) ? 'block' : 'none' }}>
+                    <EditProduct
+                        sortIndex={this.state.sortIndex}
+                        product={this.state.product}
+                        category={this.state.category}
+                        close={this.showEditBox}
+                    />
+                </div> : null }
             </div>;
 
             this.props.triggerSpinner({ isOn: false });

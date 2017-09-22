@@ -41,7 +41,7 @@ export default (state = initialState, action) => {
             const maxAge = 24 * 60 * 60; // one day in seconds
             // const maxAge = 60; // one min in seconds
 
-            cookies.set('sibi-admin-jwt', { token: action.data.token, email: action.data.email, type: action.data.type }, { path: '/', maxAge });
+            cookies.set('sibi-admin-jwt', { token: action.data.token, email: action.data.email, type: action.data.type, trade: action.data.trade }, { path: '/', maxAge });
 
         } else {
             alert('Your account has been disabled!\nIf you find this to be an error please contact your fund');

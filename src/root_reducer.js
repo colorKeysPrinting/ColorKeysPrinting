@@ -6,6 +6,8 @@ import header               from 'ducks/header/reducer';
 import jwt                  from 'ducks/jwt/reducer';
 import orders               from 'ducks/orders/reducer';
 import products             from 'ducks/products/reducer';
+import product              from 'ducks/product/reducer';
+import part                 from 'ducks/part/reducer';
 import ui                   from 'ducks/ui/reducer';
 import users                from 'ducks/users/reducer';
 import assets               from 'ducks/assets/reducer';
@@ -17,6 +19,8 @@ const rootReducer = combineReducers({
     jwt,
     orders,
     products,
+    product,
+    part,
     ui,
     users,
     assets,
