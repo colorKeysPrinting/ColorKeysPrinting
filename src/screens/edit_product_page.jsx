@@ -72,6 +72,14 @@ class EditProductPage extends React.Component {
         this.props.clearProduct();
     }
 
+    changeActiveSection(activeSection) {
+        this.setState((prevState) => {
+            activeSection = (prevState.activeSection !== activeSection) ? activeSection : '';
+
+            return { activeSection };
+        });
+    }
+
     modifyExistingProduct({ token }) {
         let { product, products } = this.props;
 
@@ -82,7 +90,7 @@ class EditProductPage extends React.Component {
     }
 
     render() {
-        const { cookies, product, productCategories, activeUser, location, spinner, isProductVerified, isProductFound } = this.props;
+        const { cookies, history, location, spinner, product, productCategories, activeUser, isProductVerified, isProductFound } = this.props;
         let isDisabled = false, pageContent, subCategoryOptions;
         const jwt = cookies.get('sibi-admin-jwt');
 
@@ -237,7 +245,10 @@ class EditProductPage extends React.Component {
                                 </div>
                             </div>
                             <input className="btn blue fill" type="submit" value={(product.get('id')) ? 'Update' : 'Add'} />
-                            { (product.get('id') && !isDisabled) ? <div className="btn borderless red fill" onClick={() => this.props.archiveProduct({ id: product.get('id')})}>Archive Product</div> : null }
+                            { (product.get('id') && !isDisabled) ? <div className="btn borderless red fill" onClick={() => {
+                                this.props.archiveProduct({ token: jwt.token, id: product.get('id')});
+                                history.push(`/products`);
+                            }}>Archive Product</div> : null }
                         </div>
                     </div>
                 }
@@ -303,6 +314,9 @@ const select = (state) => ({
     product              : state.product.get('product'),
     productImage         : state.product.get('productImage'),
     color                : state.product.get('color'),
+    Question             : state.product.get('Question'),
+    Answer               : state.product.get('Answer'),
+    videoURL             : state.product.get('videoURL'),
     products             : state.products.get('products'),
     productCategories    : state.products.get('productCategories'),
     isProductVerified    : state.products.get('isProductVerified'),

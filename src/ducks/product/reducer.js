@@ -115,26 +115,32 @@ export default (state = initialState, action) => {
 
     case ActionTypes.ADD_VIDEO:
         videos = state.getIn(['product', 'videos']).toJS();
-        videos.push(action.videoURL);
-        state = state.updateIn(['product', 'videos'], value=>videos);
+        const videoURL = state.get('videoURL');
+        videos.push(videoURL);
+        state = state.updateIn(['product', 'videos'], value=>Immutable.fromJS(videos));
+        state = state.set('videoURL', '');
         break;
 
     case ActionTypes.REMOVE_VIDEO:
         videos = state.getIn(['product', 'videos']).toJS();
         videos = _.remove(videos, (element, i) => { return i !== action.index } );
-        state = state.updateIn(['product', 'videos'], value=>videos);
+        state = state.updateIn(['product', 'videos'], value=>Immutable.fromJS(videos));
         break;
 
     case ActionTypes.ADD_FAQ:
         faq = state.getIn(['product', 'faq']).toJS();
-        faq.push(action.videoURL);
-        state = state.updateIn(['product', 'faq'], value=>faq);
+        const Question = state.get('Question');
+        const Answer = state.get('Answer');
+        faq.push({ Question, Answer });
+        state = state.updateIn(['product', 'faq'], value=>Immutable.fromJS(faq));
+        state = state.set('Question', '');
+        state = state.set('Answer', '');
         break;
 
     case ActionTypes.REMOVE_FAQ:
         faq = state.getIn(['product', 'faq']).toJS();
         faq = _.remove(faq, (element, i) => { return i !== action.index } );
-        state = state.updateIn(['product', 'faq'], value=>faq);
+        state = state.updateIn(['product', 'faq'], value=>Immutable.fromJS(faq));
         break;
 
 
@@ -157,46 +163,12 @@ export default (state = initialState, action) => {
         state = state.set('products', Immutable.fromJS(products));
         break;
 
-    case ActionTypes.ARCHIVE_PRODUCT_SUCCESS:
-        console.log('archive call back');
-        if (action.config.headers.subSubCategory) {
-            products = state.getIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory, action.config.headers.subSubCategory]).toJS();
-            index = _.findIndex(products, ['id', action.config.headers.id]);
-            products[index].archived = action.data.archived;
-
-            state = state.updateIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory, action.config.headers.subSubCategory], value => Immutable.fromJS(products));
-        } else {
-            products = state.getIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory]).toJS();
-            index = _.findIndex(products, ['id', action.config.headers.id]);
-            products[index].archived = action.data.archived;
-
-            state = state.updateIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory], value => Immutable.fromJS(products));
-        }
-        break;
-
-    case ActionTypes.UNARCHIVE_PRODUCT_SUCCESS:
-        console.log('unarchive call back');
-        if (action.config.headers.subSubCategory) {
-            products = state.getIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory, action.config.headers.subSubCategory]).toJS();
-            index = _.findIndex(products, ['id', action.config.headers.id]);
-            products[index].archived = action.data.archived;
-
-            state = state.updateIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory, action.config.headers.subSubCategory], value => Immutable.fromJS(products));
-        } else {
-            products = state.getIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory]).toJS();
-            index = _.findIndex(products, ['id', action.config.headers.id]);
-            products[index].archived = action.data.archived;
-
-            state = state.updateIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory], value => Immutable.fromJS(products));
-        }
-        break;
-
     case ActionTypes.REMOVE_PART_SUCCESS:
         console.log('remove part success');
         const partId = (action.partId) ? action.partId : action.config.headers.partId;
         let applianceAssociatedParts = state.getIn(['product','applianceAssociatedParts']).toJS();
         applianceAssociatedParts = _.remove(product.applianceAssociatedParts, (part) => { return part.id !== partId });
-        state = state.updateIn(['product', 'applianceAssociatedParts'], value=>applianceAssociatedParts);
+        state = state.updateIn(['product', 'applianceAssociatedParts'], value=>Immutable.fromJS(applianceAssociatedParts));
         break;
 
     default:

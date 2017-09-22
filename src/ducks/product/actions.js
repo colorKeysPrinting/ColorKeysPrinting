@@ -23,8 +23,6 @@ export const ActionTypes = {
 
     GET_PRODUCT_BY_ID_SUCCESS : 'sibi_ge_admin/product/GET_PRODUCT_BY_ID_SUCCESS',
     CREATE_PRODUCT_PART_SUCCESS : 'sibi_ge_admin/product/CREATE_PRODUCT_PART_SUCCESS',
-    ARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/product/ARCHIVE_PRODUCT_SUCCESS',
-    UNARCHIVE_PRODUCT_SUCCESS : 'sibi_ge_admin/products/UNARCHIVE_PRODUCT_SUCCESS',
     REMOVE_PART_SUCCESS : 'sibi_ge_admin/products/REMOVE_PART_SUCCESS',
 }
 
@@ -182,50 +180,6 @@ export function createProductPart({ token, productId, partId }) {
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.CREATE_PRODUCT_PART_SUCCESS , ...payload });
-            })
-            .catch(error => {
-                throw(error);
-            });
-    }
-}
-
-export function archiveProduct({ token, category, subCategory, subSubCategory, id }) {
-    return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/products/${id}/archive`,
-            headers : {
-                'x-auth-token': token,
-                category,
-                subCategory,
-                subSubCategory,
-                id
-            }
-        })
-            .then(payload => {
-                dispatch({ type: ActionTypes.ARCHIVE_PRODUCT_SUCCESS , ...payload });
-            })
-            .catch(error => {
-                throw(error);
-            });
-    }
-}
-
-export function unarchiveProduct({ token, category, subCategory, subSubCategory, id }) {
-    return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/products/${id}/unarchive`,
-            headers : {
-                'x-auth-token': token,
-                category,
-                subCategory,
-                subSubCategory,
-                id
-            }
-        })
-            .then(payload => {
-                dispatch({ type: ActionTypes.UNARCHIVE_PRODUCT_SUCCESS , ...payload });
             })
             .catch(error => {
                 throw(error);

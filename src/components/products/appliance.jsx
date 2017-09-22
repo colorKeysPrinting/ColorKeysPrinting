@@ -34,7 +34,7 @@ export default class ApplianceProducts extends React.Component {
         applianceDisconnectPrice       : PropTypes.number,
         applianceAssociatedParts       : PropTypes.array.isRequired,
         update                         : PropTypes.func.isRequired,
-        updateImage                    : PropTypes.func.isRequired,
+        uploadImage                    : PropTypes.func.isRequired,
         addColorAndImage               : PropTypes.func.isRequired,
         removeColorAndImage            : PropTypes.func.isRequired
     };

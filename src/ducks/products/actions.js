@@ -15,7 +15,7 @@ export const ActionTypes = {
     GET_USER_PRODUCT_CATEGORIES_SUCCESS : 'sibi_ge_admin/products/GET_USER_PRODUCT_CATEGORIES_SUCCESS',
     GET_PRODUCTS_FOR_CATEGORY_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_FOR_CATEGORY_SUCCESS',
     GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS',
-    GET_PARTS_SUCCESS : 'sibi_ge_admin/products/GET_PARTS_SUCCESS'
+    GET_PARTS_SUCCESS : 'sibi_ge_admin/products/GET_PARTS_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -148,6 +148,42 @@ export function getParts({ token }) {
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PARTS_SUCCESS , ...payload });
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function archiveProduct({ token, id }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/products/${id}/archive`,
+            headers : {
+                'x-auth-token': token
+            }
+        })
+            .then(payload => {
+                dispatch(getProducts({token}));
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function unarchiveProduct({ token, id }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/products/${id}/unarchive`,
+            headers : {
+                'x-auth-token': token
+            }
+        })
+            .then(payload => {
+                dispatch(getProducts({token}));
             })
             .catch(error => {
                 throw(error);
