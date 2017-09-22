@@ -8,9 +8,8 @@ import Network          from 'libs/constants/network';
 // /////////////////////////////////////
 export const ActionTypes = {
     CHECK_MODEL_NUM : 'sibi_ge_admin/products/CHECK_MODEL_NUM',
-    PRODUCT_VERIFIED : 'sibi_ge_admin/products/PRODUCT_VERIFIED',
-    PART_VERIFIED : 'sibi_ge_admin/products/PART_VERIFIED',
-    RESET_VERIFIED : 'sibi_ge_admin/products/RESET_VERIFIED',
+    VERIFY_PRODUCT : 'sibi_ge_admin/products/VERIFY_PRODUCT',
+    RESET_FOUND : 'sibi_ge_admin/products/RESET_FOUND',
     GET_PRODUCTS_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_SUCCESS',
     GET_PRODUCT_CATEGORIES_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCT_CATEGORIES_SUCCESS',
     GET_USER_PRODUCT_CATEGORIES_SUCCESS : 'sibi_ge_admin/products/GET_USER_PRODUCT_CATEGORIES_SUCCESS',
@@ -30,21 +29,16 @@ export function checkModelNum({ key, modelNumber }) {
     };
 }
 
-export function productVerified() {
+export function verifyProduct({ verified }) {
     return {
-        type: ActionTypes.PRODUCT_VERIFIED
+        type: ActionTypes.VERIFY_PRODUCT,
+        verified
     };
 }
 
-export function partVerified() {
+export function resetFound() {
     return {
-        type: ActionTypes.PART_VERIFIED
-    };
-}
-
-export function resetVerified() {
-    return {
-        type: ActionTypes.RESET_VERIFIED
+        type: ActionTypes.RESET_FOUND
     };
 }
 // /////////////////////////////////////

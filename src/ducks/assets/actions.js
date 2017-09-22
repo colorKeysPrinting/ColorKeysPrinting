@@ -18,7 +18,7 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-const uploadImageS3 = ({ url, type, formData }) => {
+const uploadImageS3 = ({ url, type, key, formData }) => {
     return (dispatch) => {
         const options = {
             headers: {
@@ -28,7 +28,7 @@ const uploadImageS3 = ({ url, type, formData }) => {
 
         return axios.post(url, formData, options)
             .then(payload => {
-                dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_SUCCESS, ...payload });
+                dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_SUCCESS, ...payload, key });
             })
             .catch(error => {
                 alert('Image Failed to upload please click "Add" to try again\nor please try again later');
@@ -37,9 +37,9 @@ const uploadImageS3 = ({ url, type, formData }) => {
     }
 }
 
-export function uploadImage({ token, type, imageFile }) {
+export function uploadImage({ token, key, imageFile }) {
     return (dispatch) => {
-        const imageType = type.split('/');
+        const imageType = imageFile.type.split('/');
         const urlInfo = [{ type: imageType[0], fileType: imageType[1] }];
         return axios({
             method: Network.POST,
@@ -62,7 +62,7 @@ export function uploadImage({ token, type, imageFile }) {
 
                 const url = data.upload_url.replace(/https/, 'http');
 
-                dispatch(uploadImageS3({ url, type, formData }));
+                dispatch(uploadImageS3({ url, type: imageFile.type, key, formData }));
             })
             .catch(error => {
                 throw(error);

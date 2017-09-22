@@ -9,18 +9,17 @@ import { ActionTypes }          from './actions';
 //             REDUCER
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
-    imageUploadSuccess: ''
+    imageUploadURL: ''
 });
 
 export default (state = initialState, action) => {
 
     switch (action.type) {
     case ActionTypes.UPLOAD_IMAGES_S3_SUCCESS:
-        console.log('receiving imageUploadSuccess');
         const re = /<Location>(.*)<\/Location>/
-        const match = re.exec(action.data);
+        const imageURL = re.exec(action.data)[1];
 
-        state = state.set('imageUploadSuccess', Immutable.fromJS(match[1]));
+        state = state.set('imageUploadURL', Immutable.fromJS({ type: action.key, imageURL }));
         break;
 
     default:

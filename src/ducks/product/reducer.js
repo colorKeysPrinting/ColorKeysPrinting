@@ -10,19 +10,15 @@ import { ActionTypes }          from './actions';
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
     product: {},
-
-    productImage: {},
-    isProductFound: false,
-    modelNumberChanged: false,
-    showProductDialog: false,
+    productImage: '',
+    color: '',
     Question: '',
     Answer: '',
-    color: '',
     videoURL: '',
 });
 
 export default (state = initialState, action) => {
-    let products, product, parts, part, index, videos, faq;
+    let products, product, parts, part, index, videos, faq, applianceColorsInfo;
 
     switch (action.type) {
     case ActionTypes.CLEAR_PRODUCT:
@@ -100,20 +96,21 @@ export default (state = initialState, action) => {
         }
         break;
 
-    case ActionTypes.UPDATE_IMAGE:
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            // imageUrl - use to show the image on the button
-            // imageFile - use this to upload to server
-            state = state.set('productImage', { imageUrl: e.target.result, imageFile: action.imageFile });
-        }
-        reader.readAsDataURL(action.imageFile);
+    case ActionTypes.ADD_COLOR_AND_IMAGE:
+        const imageUrl = state.get('productImage');
+        const color = state.get('color');
+        applianceColorsInfo = state.getIn(['product','applianceColorsInfo']).toJS();
+        applianceColorsInfo.push({ color, imageUrl });
+
+        state = state.updateIn(['product', 'applianceColorsInfo'], value=>Immutable.fromJS(applianceColorsInfo));
+        state = state.set('productImage', '');
+        state = state.set('color', '');
         break;
 
     case ActionTypes.REMOVE_COLOR_AND_IMAGE:
-        let applianceColorsInfo = state.getIn(['product','applianceColorsInfo']).toJS();
-        applianceColorsInfo = _.remove(prevState.applianceColorsInfo, (element) => { return element.color !== action.color } );
-        state = state.updateIn(['product', 'applianceColorsInfo'], value=>applianceColorsInfo);
+        applianceColorsInfo = state.getIn(['product','applianceColorsInfo']).toJS();
+        applianceColorsInfo = _.remove(applianceColorsInfo, (element) => { return element.color !== action.color } );
+        state = state.updateIn(['product', 'applianceColorsInfo'], value=>Immutable.fromJS(applianceColorsInfo));
         break;
 
     case ActionTypes.ADD_VIDEO:
@@ -138,10 +135,6 @@ export default (state = initialState, action) => {
         faq = state.getIn(['product', 'faq']).toJS();
         faq = _.remove(faq, (element, i) => { return i !== action.index } );
         state = state.updateIn(['product', 'faq'], value=>faq);
-        break;
-
-    case ActionTypes.RESET_MODEL_NUMBER_CHANGE:
-        state = state.set('modelNumberChanged', false);
         break;
 
 

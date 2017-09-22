@@ -6,6 +6,7 @@ import assets                   from 'libs/assets';
 
 export default class ApplianceProducts extends React.Component {
     static propTypes = {
+        token                          : PropTypes.string.isRequired,
         isDisabled                     : PropTypes.bool.isRequired,
         image                          : PropTypes.string.isRequired,
         color                          : PropTypes.string.isRequired,
@@ -96,19 +97,19 @@ export default class ApplianceProducts extends React.Component {
                                 </div>
                             );
                         }) }
-                        {/* { (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
+                        { (!isDisabled) ? <div className="accordion-detail-row" style={{ display: 'inline-flex' }} >
                             <label className="btn blue" >
-                                { (image !== '') ? <img src={image.imageUrl} alt="uploaded-image" height="60" /> : 'Choose File' }
+                                { (image !== '') ? <img src={image} alt="uploaded-image" height="60" /> : 'Choose File' }
                                 <input
                                     type="file"
                                     accept=".png,.jpg,.jpeg,.svg"
-                                    onChange={(e) => {e.preventDefault(); this.props.updateImage({ key: 'product', imageFile: e.target.files[0] }); }}
+                                    onChange={(e) => {e.preventDefault(); this.props.uploadImage({ token: this.props.token, key: 'product', imageFile: e.target.files[0] }); }}
                                     style={{ display: 'none' }}
                                 />
                             </label>
-                            <input type="text" value={color} placeholder="Color name" onChange={(e) => this.props.update({ isProduct: true, key: 'color', value: e.target.value })} />
+                            <input type="text" value={color} placeholder="Color name" onChange={(e) => this.props.update({ key: 'color', value: e.target.value })} />
                             <div onClick={this.props.addColorAndImage} className="add-btn blue">Add</div>
-                        </div> : null } */}
+                        </div> : null }
                     </div>
                     <div className="accordion-detail">
                         { _.map(applianceAssociatedParts, (part, index) => {

@@ -8,9 +8,11 @@ import Network          from 'libs/constants/network';
 // /////////////////////////////////////
 export const ActionTypes = {
     CLEAR_PRODUCT : 'sibi_ge_admin/product/CLEAR_PRODUCT',
+    CREATE_NEW_PRODUCT : 'sibi_ge_admin/product/CREATE_NEW_PRODUCT',
     NEW_PRODUCT : 'sibi_ge_admin/product/NEW_PRODUCT',
     UPDATE : 'sibi_ge_admin/product/UPDATE',
     UPDATE_IMAGE : 'sibi_ge_admin/product/UPDATE_IMAGE',
+    ADD_COLOR_AND_IMAGE : 'sibi_ge_admin/product/ADD_COLOR_AND_IMAGE',
     REMOVE_COLOR_AND_IMAGE : 'sibi_ge_admin/product/REMOVE_COLOR_AND_IMAGE',
     ADD_VIDEO : 'sibi_ge_admin/product/ADD_VIDEO',
     REMOVE_VIDEO : 'sibi_ge_admin/product/REMOVE_VIDEO',
@@ -50,10 +52,9 @@ export function update({ isProduct, key, value }) {
     };
 }
 
-export function updateImage({ imageFile }) {
+export function addColorAndImage() {
     return {
-        type: ActionTypes.UPDATE_IMAGE,
-        imageFile
+        type: ActionTypes.ADD_COLOR_AND_IMAGE,
     };
 }
 
@@ -94,12 +95,6 @@ export function removeFaq({ index }) {
     return {
         type: ActionTypes.REMOVE_FAQ,
         index
-    };
-}
-
-export function resetModelNumberChange() {
-    return {
-        type: ActionTypes.RESET_MODEL_NUMBER_CHANGE
     };
 }
 
