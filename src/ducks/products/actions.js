@@ -62,6 +62,48 @@ export function getProducts({ token }) {
     }
 }
 
+export function updateProduct({ token, category, product }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.PATCH,
+            url     : `${Network.DOMAIN}/products/${product.id}`,
+            headers : {
+                'x-auth-token': token
+            },
+            data    : {
+                ...product
+            }
+        })
+            .then(payload => {
+                dispatch(getUserProductCategories({ token, category }));
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
+export function createProduct({ token, category, product }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.POST,
+            url     : `${Network.DOMAIN}/createProduct`,
+            headers : {
+                'x-auth-token': token
+            },
+            data    : {
+                ...product
+            }
+        })
+            .then(payload => {
+                dispatch(getUserProductCategories({ token, category }));
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
+
 export function getProductCategories() {
     return (dispatch) => {
         return axios({
@@ -155,7 +197,7 @@ export function getParts({ token }) {
     }
 }
 
-export function archiveProduct({ token, id }) {
+export function archiveProduct({ token, category, id }) {
     return (dispatch) => {
         return axios({
             method  : Network.POST,
@@ -165,7 +207,7 @@ export function archiveProduct({ token, id }) {
             }
         })
             .then(payload => {
-                dispatch(getProducts({token}));
+                dispatch(getUserProductCategories({ token, category }));
             })
             .catch(error => {
                 throw(error);
@@ -173,7 +215,7 @@ export function archiveProduct({ token, id }) {
     }
 }
 
-export function unarchiveProduct({ token, id }) {
+export function unarchiveProduct({ token, category, id }) {
     return (dispatch) => {
         return axios({
             method  : Network.POST,
@@ -183,7 +225,7 @@ export function unarchiveProduct({ token, id }) {
             }
         })
             .then(payload => {
-                dispatch(getProducts({token}));
+                dispatch(getUserProductCategories({ token, category }));
             })
             .catch(error => {
                 throw(error);

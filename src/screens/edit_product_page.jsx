@@ -90,7 +90,7 @@ class EditProductPage extends React.Component {
         this.props.resetFound();
     }
 
-    saveProduct({ token }) {
+    saveProduct({ token, category }) {
         const { history } = this.props;
         let product = this.props.product.toJS();
 
@@ -100,9 +100,9 @@ class EditProductPage extends React.Component {
             }
         });
 
-        // product['sortIndex'] = ((product.sortIndex - 1) <= 0) ? 0 : product.sortIndex - 1;
+        product['sortIndex'] = ((product.sortIndex - 1) <= 0) ? 0 : product.sortIndex - 1;
 
-        (product.id) ? this.props.updateProduct({ token, product }) : this.props.createProduct({ token, product });
+        (product.id) ? this.props.updateProduct({ token, category, product }) : this.props.createProduct({ token, category, product });
         history.push(`/products`);
     }
 
@@ -263,7 +263,7 @@ class EditProductPage extends React.Component {
                             </div>
                             <input className="btn blue fill" type="submit" value={(product.get('id')) ? 'Update' : 'Add'} />
                             { (product.get('id') && !isDisabled) ? <div className="btn borderless red fill" onClick={() => {
-                                this.props.archiveProduct({ token: jwt.token, id: product.get('id')});
+                                this.props.archiveProduct({ token: jwt.token, category: jwt.trade, id: product.get('id')});
                                 history.push(`/products`);
                             }}>Archive Product</div> : null }
                         </div>
@@ -315,7 +315,7 @@ class EditProductPage extends React.Component {
                         </div>
                     </form>
                     <hr/>
-                    <form onSubmit={(e) => {e.preventDefault(); this.saveProduct({ token: jwt.token });}} >
+                    <form onSubmit={(e) => {e.preventDefault(); this.saveProduct({ token: jwt.token, category: jwt.trade });}} >
                         { pageContent }
                     </form>
                 </div>

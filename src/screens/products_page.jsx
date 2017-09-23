@@ -45,11 +45,6 @@ class ProductsPage extends React.Component {
             history.push(path);
         }
 
-        if (!_.isEqual(nextProps.products, products)) {
-            const jwt = cookies.get('sibi-admin-jwt');
-            this.props.getUserProductCategories({ token: jwt.token, category: jwt.trade });
-        }
-
         if (!_.isEqual(productCategories, nextProps.productCategories)) {
             const jwt = cookies.get('sibi-admin-jwt');
 
@@ -98,7 +93,7 @@ class ProductsPage extends React.Component {
                                     } else if (key === 'action') {
                                         const jwt = cookies.get('sibi-admin-jwt');
 
-                                        value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, id: product.id }) } className="product-action">Unarchive</div>
+                                        value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: jwt.trade, id: product.id }) } className="product-action">Unarchive</div>
                                             : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;
 
                                     } else if (key === 'featured') {
@@ -227,7 +222,6 @@ class ProductsPage extends React.Component {
 const select = (state) => ({
     spinner                 : state.ui.get('spinner'),
     activeUser              : state.activeUser.get('activeUser'),
-    products                : state.products.get('products'),
     productsInCategory      : state.products.get('productsInCategory'),
     productCategories       : state.products.get('productCategories'),
     productSubCategories    : state.products.get('productSubCategories')

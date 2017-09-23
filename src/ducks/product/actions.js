@@ -117,52 +117,6 @@ export function getProductById({ token, id }) {
     }
 }
 
-export function updateProduct({ token, category, subCategory, product }) {
-    return (dispatch) => {
-        return axios({
-            method  : Network.PATCH,
-            url     : `${Network.DOMAIN}/products/${subCategory.id}`,
-            headers : {
-                'x-auth-token': token,
-                category,
-                subCategory: subCategory.name
-            },
-            data    : {
-                ...product
-            }
-        })
-            .then(payload => {
-                dispatch({ type: ActionTypes.UPDATE_PRODUCT_SUCCESS , ...payload });
-            })
-            .catch(error => {
-                throw(error);
-            });
-    }
-}
-
-export function createProduct({ token, category, subCategory, product }) {
-    return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/createProduct`,
-            headers : {
-                'x-auth-token': token,
-                category,
-                subCategory
-            },
-            data    : {
-                ...product
-            }
-        })
-            .then(payload => {
-                dispatch({ type: ActionTypes.CREATE_PRODUCT_SUCCESS , ...payload });
-            })
-            .catch(error => {
-                throw(error);
-            });
-    }
-}
-
 export function createProductPart({ token, productId, partId }) {
     return (dispatch) => {
         return axios({
