@@ -18,7 +18,7 @@ const initialState = Immutable.fromJS({
 });
 
 export default (state = initialState, action) => {
-    let products, product, parts, part, index, videos, faq, applianceColorsInfo;
+    let products, product, sortIndex, parts, part, index, videos, faq, applianceColorsInfo;
 
     switch (action.type) {
     case ActionTypes.CLEAR_PRODUCT:
@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
     case ActionTypes.NEW_PRODUCT:
         let modelNumber = state.getIn(['product', 'sibiModelNumber']);
         let category = state.getIn(['product','productCategoryId']);
-        let sortIndex = state.getIn(['product','sortIndex']);
+        sortIndex = state.getIn(['product','sortIndex']);
         product = {
             id                          : '',
             // ***************** the following are required for new products *****************
@@ -83,16 +83,12 @@ export default (state = initialState, action) => {
         };
 
         state = state.set('product', Immutable.fromJS(product));
-        state = state.set('modelNumberChanged', true);
         break;
 
     case ActionTypes.UPDATE:
         if (action.isProduct) {
             state = state.updateIn(['product', action.key], value=>action.value);
-            if (action.key === 'sibiModelNumber') {
-                state = state.set('modelNumberChanged', true);
-
-            } else if (action.key === 'productSubcategoryId') {
+            if (action.key === 'productSubcategoryId') {
                 // TODO: need to update the sortIndex
             }
         } else {
@@ -151,7 +147,8 @@ export default (state = initialState, action) => {
     case ActionTypes.GET_PRODUCT_BY_ID_SUCCESS:
         console.log('receiving product');
         state = state.set('product', Immutable.fromJS(action.data));
-        state = state.set('modelNumberChanged', false);
+        sortIndex = (action.data.sortIndex) ? action.data.sortIndex + 1 : 1;
+        state = state.updateIn(['product','sortIndex'], value=>sortIndex);
         break;
 
     case ActionTypes.CREATE_PRODUCT_PART_SUCCESS:
