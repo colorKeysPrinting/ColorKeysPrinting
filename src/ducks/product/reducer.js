@@ -29,6 +29,7 @@ export default (state = initialState, action) => {
     case ActionTypes.NEW_PRODUCT:
         let modelNumber = state.getIn(['product', 'sibiModelNumber']);
         let category = state.getIn(['product','productCategoryId']);
+        let sortIndex = state.getIn(['product','sortIndex']);
         product = {
             id                          : '',
             // ***************** the following are required for new products *****************
@@ -44,7 +45,7 @@ export default (state = initialState, action) => {
             overview                    : '',
             faq                         : [],
             videos                      : [],
-            sortIndex                   : 0,
+            sortIndex                   : sortIndex || 0,
 
             // ***************** product category section (no required) *****************
             // *****************
@@ -90,6 +91,9 @@ export default (state = initialState, action) => {
             state = state.updateIn(['product', action.key], value=>action.value);
             if (action.key === 'sibiModelNumber') {
                 state = state.set('modelNumberChanged', true);
+
+            } else if (action.key === 'productSubcategoryId') {
+                // TODO: need to update the sortIndex
             }
         } else {
             state = state.set(action.key, action.value);

@@ -46,11 +46,6 @@ export default (state = initialState, action) => {
         state = state.set('isProductFound', false );
         break;
 
-    case ActionTypes.GET_PRODUCT_BY_ID_SUCCESS:
-        console.log('receiving product');
-        state = state.set('product', Immutable.fromJS(action.data));
-        break;
-
     case ActionTypes.GET_PRODUCTS_SUCCESS:
         console.log('receiving products', action.data);
         state = state.set('products', Immutable.fromJS(action.data));

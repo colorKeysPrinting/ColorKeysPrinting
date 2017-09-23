@@ -27,6 +27,7 @@ class EditProductPage extends React.Component {
         }
 
         this.modifyExistingProduct = this.modifyExistingProduct.bind(this);
+        this.saveProduct = this.saveProduct.bind(this);
     }
 
     componentWillMount() {
@@ -87,6 +88,22 @@ class EditProductPage extends React.Component {
         this.props.getProductById({ token, id: product.id });
         this.props.verifyProduct({ verified: true });
         this.props.resetFound();
+    }
+
+    saveProduct({ token }) {
+        const { history } = this.props;
+        let product = this.props.product.toJS();
+
+        _.each(product, (value, key) => {
+            if(key === 'applianceAssociatedParts' || value === '' || typeof value === 'object' && _.size(value) === 0) {
+                delete product[key];
+            }
+        });
+
+        // product['sortIndex'] = ((product.sortIndex - 1) <= 0) ? 0 : product.sortIndex - 1;
+
+        (product.id) ? this.props.updateProduct({ token, product }) : this.props.createProduct({ token, product });
+        history.push(`/products`);
     }
 
     render() {
@@ -298,7 +315,7 @@ class EditProductPage extends React.Component {
                         </div>
                     </form>
                     <hr/>
-                    <form onSubmit={(e) => {e.preventDefault(); this.saveProduct();}} >
+                    <form onSubmit={(e) => {e.preventDefault(); this.saveProduct({ token: jwt.token });}} >
                         { pageContent }
                     </form>
                 </div>
