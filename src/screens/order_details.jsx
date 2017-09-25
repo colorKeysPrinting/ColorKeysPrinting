@@ -115,7 +115,7 @@ class OrderDetails extends React.Component {
                     });
                 });
 
-                const productsAndParts = (order.partsAndDestinations) ? productsAndDestinations.concat(order.partsAndDestinations) : productsAndDestinations;
+                const productsAndParts = productsAndDestinations.concat(myOrder.partsAndDestinations);
 
                 if (myOrder.occupied) {
                     const formatTenantPhone = formatPhoneNumbers(myOrder.tenantPhone);
