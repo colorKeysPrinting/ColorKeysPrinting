@@ -34,7 +34,10 @@ export default function ProductTable(props) {
             switch(key) {
             case 'productDescription':
                 if (row === 'product') {
-                    const valueStyled = <span className="product-header">{product.applianceDescription}</span>;
+                    const valueStyled = <div className="no-limit">
+                        <span className="product-header">{product.applianceDescription}</span>
+                        <div className="table-cell-details">{ `Model Number: ${(props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber}` }</div>
+                    </div>;
                     value = (!props.replacement) ? valueStyled : null;
 
                 } else if (row === 'outOfStock') {
@@ -43,7 +46,6 @@ export default function ProductTable(props) {
 
                     } else if (props.type === 'orderDetails') {
                         value = <div className="no-limit">
-                            <div className="table-cell-details">{ `Model Number: ${(props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber}` }</div>
                             <div className="table-cell-details">{ `Color: ${props.color}` }</div>
                             <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
                             <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
@@ -52,19 +54,22 @@ export default function ProductTable(props) {
                         </div>;
                     }
                 } else if (row === 'install') {
+                    let description;
                     if (props.installAppliance) {
-                        const bold = <div className="description"><span className="bold"> Install Description: </span> <span>{product.applianceInstallDescription}</span></div>
-                        const description = (!props.replacement) ? bold : null;
-                        value = (props.outOfStock !== props.productIndex) ? description : <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber();}}>
-                            <div className="input-container">
-                                <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
-                                <input name="model-num-replace" value={props.modelNumber} placeholder="JGB635DEKBB" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
-                            </div>
-                            <input className="btn blue" type="submit" value="Replace" />
-                        </form>;
-                    } else {
-                        value = null;
+                        description = (!props.replacement) ? <div className="description"><span className="bold"> Install Description: </span> <span>{product.applianceInstallDescription}</span></div> : null;
                     }
+                    value = (props.type === 'processOrder' && props.outOfStock === props.productIndex) ?
+                        (
+                            <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber({ productsAndParts: props.productsAndParts });}}>
+                                <div className="input-container">
+                                    <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
+                                    <input name="model-num-replace" value={props.modelNumber} placeholder="JGB635DEKBB" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
+                                </div>
+                                <input className="btn blue" type="submit" value="Replace" />
+                            </form>
+                        ) : (
+                            description
+                        );
 
                 } else if (row === 'remove') {
                     if (props.removeOldAppliance) {
