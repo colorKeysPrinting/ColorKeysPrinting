@@ -176,7 +176,7 @@ class ProcessOrderPage extends React.Component {
                     });
                 });
 
-                const productsAndParts = (order.partsAndDestinations) ? productsAndDestinations.concat(order.partsAndDestinations) : productsAndDestinations;
+                const productsAndParts = productsAndDestinations.concat(myOrder.partsAndDestinations);
 
                 // ***************** USER TABLE DATA *****************
                 const userCols = {};
