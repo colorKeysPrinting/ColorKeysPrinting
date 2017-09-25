@@ -5,9 +5,11 @@ import { withRouter }                                       from 'react-router';
 import { Link }                                             from 'react-router-dom';
 import moment                                               from 'moment';
 import DayPickerInput                                       from 'react-day-picker/DayPickerInput';
+import Loader                                               from 'react-loader';
 import assets                                               from 'libs/assets';
 
 import { getOrderById, processOrder, updateInstallDate, updateModelNumber }          from 'ducks/orders/actions';
+import { triggerSpinner }                                   from 'ducks/ui/actions';
 
 import MyTable                                              from 'components/my_table';
 import ProductTable                                         from 'components/product_table';
@@ -48,7 +50,11 @@ class ProcessOrderPage extends React.Component {
         const orderId = reOrder.exec(location.search)[1];
 
         if (orderId) {
+            this.props.triggerSpinner({ isOn: true });
             this.props.getOrderById({ id: orderId });
+        } else {
+            alert('No orderId provided routing back to orders');
+            this.props.history.push(`/login`);
         }
     }
 
@@ -57,18 +63,7 @@ class ProcessOrderPage extends React.Component {
             const order = nextProps.order.toJS();
 
             if (!order.processedAt) {
-                const productsAndDestinations = [];
-                _.each(order.productsAndDestinations, (product) => {
-                    productsAndDestinations.push(product);
-
-                    _.each(product.includedParts, (part) => {
-                        productsAndDestinations.push({...part, productOrderId: product.productOrderId});
-                    });
-                });
-
-                const productsAndParts = productsAndDestinations.concat(order.partsAndDestinations);
-
-                this.setState({ installDate: nextProps.order.toJS().installDate, productsAndParts });
+                this.setState({ installDate: nextProps.order.toJS().installDate });
             }
         }
     }
@@ -86,10 +81,10 @@ class ProcessOrderPage extends React.Component {
         this.props.updateInstallDate({ id: order.id, installDate });
     }
 
-    updateModelNumber() {
+    updateModelNumber({ productsAndParts }) {
         let data;
         const order = this.props.order.toJS();
-        const item = this.state.productsAndParts[this.state.outOfStock];
+        const item = productsAndParts[this.state.outOfStock];
 
         if (item.product) {
             // products
@@ -121,10 +116,11 @@ class ProcessOrderPage extends React.Component {
     }
 
     render() {
+        const { order, spinner } = this.props;
         let orderPageData;
 
-        if (this.props.order.size > 0) {
-            const order = this.props.order.toJS();
+        if (order.size > 0) {
+            const myOrder = order.toJS();
 
             //TABLE HEADERS
             const userHeaders = {
@@ -136,7 +132,7 @@ class ProcessOrderPage extends React.Component {
                 hotshotCode: ''
             };
 
-            const occupancyHeaders = (order.occupied) ? {
+            const occupancyHeaders = (myOrder.occupied) ? {
                 occupancy: 'Occupancy',
                 tenantName: 'Tenant Name',
                 phoneNumber: 'Phone Number',
@@ -152,37 +148,36 @@ class ProcessOrderPage extends React.Component {
                 email: 'Email'
             };
 
-            if (!order.processedAt) {
-                const user = order.createdByUser;
+            const productHeaders = {
+                productDescription: '',
+                code: 'Model # or Code #',
+                qty: 'Qty',
+                price: 'Cost'
+            };
 
-                userHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
-                userHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
+            if (!myOrder.processedAt) {
+                const user = myOrder.createdByUser;
+
+                userHeaders['hotshotInstallDate'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
+                userHeaders['hotshotCode'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
 
                 const orderProcessHeading = {
-                    accountNumber: (order.pmOffice) ? order.pmOffice.applianceGEAccountNumber : order.fund.applianceGEAccountNumber,
-                    fund: order.fund.name,
-                    address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`
+                    accountNumber: (myOrder.pmOffice) ? myOrder.pmOffice.applianceGEAccountNumber : myOrder.fund.applianceGEAccountNumber,
+                    fund: myOrder.fund.name,
+                    address: `${myOrder.fundProperty.addressLineOne} ${myOrder.fundProperty.addressLineTwo} ${myOrder.fundProperty.addressLineThree}, ${myOrder.fundProperty.city}, ${myOrder.fundProperty.state}, ${myOrder.fundProperty.zipcode}`
                 };
 
-                //PAGE HEADER
-                const detailsHeaderSection = <div className="page-header">
-                    <div className="order-info">
-                        <h2>GE Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
-                        <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
-                        <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
-                    </div>
-                    <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.processOrder();}}>
-                        <div className="input-container">
-                            <label htmlFor="processed-by">Processed By</label>
-                            <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Name" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
-                        </div>
-                        <div className="input-container">
-                            <label htmlFor="ge-order-number">GE Order Number</label>
-                            <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="Number" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
-                        </div>
-                        <input className="btn blue" type="submit" value="Process Order" />
-                    </form>
-                </div>
+                const productsAndDestinations = [];
+                _.each(myOrder.productsAndDestinations, (product) => {
+                    productsAndDestinations.push(product);
+
+                    _.each(product.includedParts, (part) => {
+                        productsAndDestinations.push({...part, productOrderId: product.productOrderId});
+                    });
+                });
+
+                // const productsAndParts = productsAndDestinations.concat(order.partsAndDestinations);
+                const productsAndParts = productsAndDestinations;
 
                 // ***************** USER TABLE DATA *****************
                 const userCols = {};
@@ -198,10 +193,10 @@ class ProcessOrderPage extends React.Component {
                         value = user.email;
 
                     } else if (key === 'hotshotDelivery') {
-                        value = (order.isApplianceHotShotDelivery) ? 'Yes' : 'No';
+                        value = (myOrder.isApplianceHotShotDelivery) ? 'Yes' : 'No';
 
                     } else if (key === 'hotshotInstallDate') {
-                        const formattedDay = moment(order.installDate).format('MM/DD/YYYY');
+                        const formattedDay = moment(myOrder.installDate).format('MM/DD/YYYY');
 
                         value = <div className="no-limit">
                             <DayPickerInput
@@ -211,11 +206,10 @@ class ProcessOrderPage extends React.Component {
                         </div>;
 
                     } else if (key === 'hotshotCode') {
-                        value = (order.isApplianceHotShotDelivery) ? <div>{ order.applianceHotShotCode }</div> : null;
+                        value = (myOrder.isApplianceHotShotDelivery) ? <div>{ myOrder.applianceHotShotCode }</div> : null;
                     }
                     userCols[key] = value;
                 });
-                const userData = { userCols };
 
                 // ***************** OCCUPANCY TABLE DATA *****************
                 const occupancyCols = {};
@@ -223,132 +217,138 @@ class ProcessOrderPage extends React.Component {
                     value = order[key]
 
                     if (key === 'occupancy') {
-                        value = (!order.occupied) ? 'Unoccupied' : 'Occupied';
+                        value = (!myOrder.occupied) ? 'Unoccupied' : 'Occupied';
                     }
 
-                    if (order.occupied) {
+                    if (myOrder.occupied) {
                         if (key === 'tenantName'){
-                            value = `${order.tenantFirstName} ${order.tenantLastName}`;
+                            value = `${myOrder.tenantFirstName} ${myOrder.tenantLastName}`;
 
                         } else if (key === 'phoneNumber') {
-                            value = order.tenantPhone;
+                            value = myOrder.tenantPhone;
 
                         } else if (key === 'email') {
-                            value = order.tenantEmail;
+                            value = myOrder.tenantEmail;
                         }
                     } else {
                         if ( key === 'lockBox') {
-                            value = `${order.lockBoxCode}`;
+                            value = `${myOrder.lockBoxCode}`;
                         }
                     }
 
                     occupancyCols[key] = value;
                 });
-                const occupancyData = {occupancyCols};
 
                 // ***************** OFFICE TABLE DATA *****************
                 const officeCols = {};
                 _.each(officeHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'pmOffice') {
-                        value = (order.fund.pmOffices[0]) ? order.fund.pmOffices[0].name : null;
+                        value = (myOrder.fund.pmOffices[0]) ? myOrder.fund.pmOffices[0].name : null;
 
                     } else if (key === 'phoneNumber'){
-                        value = (order.fund.pmOffices[0]) ? order.fund.pmOffices[0].phoneNumber : null;
+                        value = (myOrder.fund.pmOffices[0]) ? myOrder.fund.pmOffices[0].phoneNumber : null;
 
                     } else if (key === 'email') {
-                        value = (order.fund.pmOffices[0]) ? order.fund.pmOffices[0].email : null;
+                        value = (myOrder.fund.pmOffices[0]) ? myOrder.fund.pmOffices[0].email : null;
                     }
                     officeCols[key] = value;
                 });
-                const officeData = {officeCols};
 
                 // ***************** PRODUCTS TABLE DATA *****************
-                const productHeaders = {
-                    productDescription: '',
-                    code: 'Model # or Code #',
-                    qty: 'Qty',
-                    price: 'Cost'
-                };
-
-                const productData = _.map(this.state.productsAndParts, (orderDetail, productIndex) => {
-                    if (orderDetail.product) {
-                        const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
-                        return <ProductTable
-                            key={`product${productIndex}`}
-                            type="processOrder"
-                            productIndex={productIndex}
-                            productHeaders={productHeaders}
-                            product={orderDetail.product}
-                            replacement={replacement}
-                            image={orderDetail.selectedColorInfo.imageUrl}
-                            manufacturerModelNumber={orderDetail.selectedColorInfo.manufacturerModelNumber}
-                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
-                            installAppliance={orderDetail.installAppliance}
-                            removeOldAppliance={orderDetail.removeOldAppliance}
-                            price={orderDetail.ProductPrice.price}
-
-                            outOfStock={this.state.outOfStock}
-                            modelNumber={this.state.modelNumber}
-
-                            update={this.update}
-                            updateModelNumber={this.updateModelNumber}
-                            showOutOfStock={this.showOutOfStock}
-                        />;
-                    } else if (orderDetail.part) {
-                        const replacement = (orderDetail.replacementModelNumber) ? orderDetail.replacementModelNumber : false;
-                        return <PartTable
-                            key={`part${productIndex}`}
-                            type="processOrder"
-                            productIndex={productIndex}
-                            part={orderDetail.part}
-                            replacement={replacement}
-                            qty={(orderDetail.qty) ? orderDetail.qty : 1}
-                            price={orderDetail.PartPrice.price}
-
-                            outOfStock={this.state.outOfStock}
-                            modelNumber={this.state.modelNumber}
-
-                            update={this.update}
-                            updateModelNumber={this.updateModelNumber}
-                            showOutOfStock={this.showOutOfStock}
-                        />;
-                    }
-                });
-
-                const orderTotalSection = <div className="cost-section">
-                    <h5 className="cost-header">Order Summary </h5>
-                    <div className="cost-row">
-                        <h5>Subtotal: <span>${ order.totalCost }</span></h5>
-                        <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
-                        <h5>Total: <span>${ (parseFloat(order.totalCost) + parseFloat(order.salesTax)).toFixed(2) }</span></h5>
-                    </div>
-                </div>;
-
                 orderPageData = <div>
-                    { detailsHeaderSection }
+                    <div className="page-header">
+                        <div className="order-info">
+                            <h2>GE Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
+                            <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
+                            <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
+                        </div>
+                        <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.processOrder();}}>
+                            <div className="input-container">
+                                <label htmlFor="processed-by">Processed By</label>
+                                <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Name" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
+                            </div>
+                            <div className="input-container">
+                                <label htmlFor="ge-order-number">GE Order Number</label>
+                                <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="Number" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
+                            </div>
+                            <input className="btn blue" type="submit" value="Process Order" />
+                        </form>
+                    </div>
                     <MyTable
                         className="user-table"
                         type="userDetails"
                         headers={userHeaders}
-                        data={userData}
+                        data={{ userCols }}
                     />
                     <MyTable
                         className="occupancy-table"
                         type="occupancyDetails"
                         headers={occupancyHeaders}
-                        data={occupancyData}
+                        data={{occupancyCols}}
                     />
                     <MyTable
                         className="office-table"
                         type="officeDetails"
                         headers={officeHeaders}
-                        data={officeData}
+                        data={{officeCols}}
                     />
                     <div className="product-table-wrapper">
-                        { productData }
+                        { _.map(productsAndParts, (orderDetail, productIndex) => {
+                            if (orderDetail.product) {
+                                const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
+                                return <ProductTable
+                                    key={`product${productIndex}`}
+                                    type="processOrder"
+                                    productIndex={productIndex}
+                                    productHeaders={productHeaders}
+                                    product={orderDetail.product}
+                                    replacement={replacement}
+                                    image={orderDetail.selectedColorInfo.imageUrl}
+                                    manufacturerModelNumber={orderDetail.selectedColorInfo.manufacturerModelNumber}
+                                    qty={(orderDetail.qty) ? orderDetail.qty : 1}
+                                    installAppliance={orderDetail.installAppliance}
+                                    removeOldAppliance={orderDetail.removeOldAppliance}
+                                    price={orderDetail.ProductPrice.price}
+                                    productsAndParts={productsAndParts}
+
+                                    outOfStock={this.state.outOfStock}
+                                    modelNumber={this.state.modelNumber}
+
+                                    update={this.update}
+                                    updateModelNumber={this.updateModelNumber}
+                                    showOutOfStock={this.showOutOfStock}
+                                />;
+                            } else if (orderDetail.part) {
+                                const replacement = (orderDetail.replacementModelNumber) ? orderDetail.replacementModelNumber : false;
+                                return <PartTable
+                                    key={`part${productIndex}`}
+                                    type="processOrder"
+                                    productIndex={productIndex}
+                                    part={orderDetail.part}
+                                    replacement={replacement}
+                                    qty={(orderDetail.qty) ? orderDetail.qty : 1}
+                                    price={orderDetail.PartPrice.price}
+                                    productsAndParts={productsAndParts}
+
+                                    outOfStock={this.state.outOfStock}
+                                    modelNumber={this.state.modelNumber}
+
+                                    update={this.update}
+                                    updateModelNumber={this.updateModelNumber}
+                                    showOutOfStock={this.showOutOfStock}
+                                />;
+                            }
+                        })}
                     </div>
-                    { orderTotalSection }
+                    <div className="cost-section">
+                        <h5 className="cost-header">Order Summary </h5>
+                        <div className="cost-row">
+                            <h5>Subtotal: <span>${ myOrder.totalCost }</span></h5>
+                            <h5>Sales Tax: <span>${ myOrder.salesTax }</span></h5>
+                            <h5>Total: <span>${ (parseFloat(myOrder.totalCost) + parseFloat(myOrder.salesTax)).toFixed(2) }</span></h5>
+                        </div>
+                    </div>
                 </div>
             } else {
                 orderPageData = <div>
@@ -357,28 +357,34 @@ class ProcessOrderPage extends React.Component {
                     <h4>You can now close this tab.</h4>
                 </div>;
             }
+
+            this.props.triggerSpinner({ isOn: false });
         }
 
         return (
-            <div id="process-orders-page">
-                <div className="container">
-                    { orderPageData }
+            <Loader loaded={spinner} >
+                <div id="process-orders-page">
+                    <div className="container">
+                        { orderPageData }
+                    </div>
                 </div>
-            </div>
+            </Loader>
         );
     }
 }
 
 const select = (state) => ({
     order           : state.orders.get('order'),
-    processSuccess  : state.orders.get('processSuccess')
+    processSuccess  : state.orders.get('processSuccess'),
+    spinner         : state.ui.get('spinner')
 });
 
 const actions = {
     getOrderById,
     processOrder,
     updateInstallDate,
-    updateModelNumber
+    updateModelNumber,
+    triggerSpinner
 }
 
 export default connect(select, actions, null, { withRef: true })(withRouter(ProcessOrderPage));

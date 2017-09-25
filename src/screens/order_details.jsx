@@ -23,7 +23,7 @@ class OrderDetails extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { editOrder: false, orderProducts: {} };
+        this.state = { editOrder: false, productsAndParts: {} };
 
         this.editOrder = this.editOrder.bind(this);
         this.handleAction = this.handleAction.bind(this);
@@ -38,6 +38,7 @@ class OrderDetails extends React.Component {
             const orderId = reOrder.exec(location.search)[1];
 
             if (orderId) {
+                this.props.triggerSpinner({ isOn: true });
                 this.props.getOrderById({ id: orderId });
 
             } else {
@@ -49,10 +50,6 @@ class OrderDetails extends React.Component {
         }
 
         this.props.setActiveTab('orders');
-    }
-
-    componentDidUpdate() {
-        this.props.triggerSpinner({ isOn: false });
     }
 
     componentWillUnmount() {
@@ -72,7 +69,8 @@ class OrderDetails extends React.Component {
     }
 
     render() {
-        let pageData;
+        const { order, spinner } = this.props;
+        let pageData, tenantInfoTitle, tenantInfoDetails;;
 
         const productHeaders = {
             productDescription: '',
@@ -93,46 +91,47 @@ class OrderDetails extends React.Component {
             hotshotCode: '',
         };
 
-        if (this.props.order.size > 0) {
-            const order = this.props.order.toJS();
-            const user = order.orderUser;
+        if (order.size > 0) {
+            const myOrder = order.toJS();
+            const user = myOrder.orderUser;
 
-            orderHeaders['hotshotInstallDate'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
-            orderHeaders['hotshotCode'] = (order.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
+            orderHeaders['hotshotInstallDate'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
+            orderHeaders['hotshotCode'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
 
             if (!this.state.editOrder) {
-                const orderStatus = order.orderStatus;
+                const orderStatus = myOrder.orderStatus;
+
+                const orderPageHeading = {
+                    address: `${myOrder.fundProperty.addressLineOne} ${myOrder.fundProperty.addressLineTwo} ${myOrder.fundProperty.addressLineThree}, ${myOrder.fundProperty.city}, ${myOrder.fundProperty.state}, ${myOrder.fundProperty.zipcode}`,
+                    PM: myOrder.fund.pmOffices[0].name
+                };
 
                 const productsAndDestinations = [];
-                _.each(order.productsAndDestinations, (product) => {
+                _.each(myOrder.productsAndDestinations, (product) => {
                     productsAndDestinations.push(product);
 
                     _.each(product.includedParts, (part) => {
                         productsAndDestinations.push({...part, productOrderId: product.productOrderId});
                     });
                 });
-                const orderPageHeading = {
-                    address: `${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree}, ${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`,
-                    PM: order.fund.pmOffices[0].name
-                };
 
-                let tenantInfoTitle;
-                let tenantInfoDetails;
+                // const productsAndParts = productsAndDestinations.concat(order.partsAndDestinations);
+                const productsAndParts = productsAndDestinations;
 
-                if (order.occupied) {
-                    const formatTenantPhone = formatPhoneNumbers(order.tenantPhone);
+                if (myOrder.occupied) {
+                    const formatTenantPhone = formatPhoneNumbers(myOrder.tenantPhone);
                     tenantInfoTitle = <tr>
                         <td><div className="table-header">Tenant Info: </div></td>
                     </tr>;
 
                     tenantInfoDetails = <tr>
-                        <td><div>{`${order.tenantFirstName} ${order.tenantLastName}`} ∙ {formatTenantPhone} ∙ {order.tenantEmail}</div></td>
+                        <td><div>{`${myOrder.tenantFirstName} ${myOrder.tenantLastName}`} ∙ {formatTenantPhone} ∙ {myOrder.tenantEmail}</div></td>
                     </tr>;
 
                 } else {
                     const formatUserPhone = (user.phoneNumber) ? formatPhoneNumbers(user.phoneNumber) : '';
-                    const formatOfficePhone = (order.pmOffice) ? formatPhoneNumbers(order.pmOffice.phoneNumber) : '';
-                    const pmOfficeName = (order.pmOffice) ? order.pmOffice.name : orderPageHeading.PM;
+                    const formatOfficePhone = (myOrder.pmOffice) ? formatPhoneNumbers(myOrder.pmOffice.phoneNumber) : '';
+                    const pmOfficeName = (myOrder.pmOffice) ? myOrder.pmOffice.name : orderPageHeading.PM;
 
                     tenantInfoTitle = <tr>
                         <td><div className="table-header">Delivery Contact: </div></td>
@@ -151,37 +150,36 @@ class OrderDetails extends React.Component {
                     ];
                 }
 
-                const productData = productsAndDestinations.concat(order.partsAndDestinations);
                 const orderDetailsCols = {};
-                orderHeaders.lockBoxCode = (order.lockBoxCode) ? 'Lockbox Code' : 'Tenant';
+                orderHeaders.lockBoxCode = (myOrder.lockBoxCode) ? 'Lockbox Code' : 'Tenant';
                 _.each(orderHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'orderStatus') {
-                        value = order.orderStatus;
+                        value = myOrder.orderStatus;
 
                     } else if (key === 'geOrderNumber'){
-                        value = order.geOrderNumber;
+                        value = myOrder.geOrderNumber;
 
                     } else if (key === 'installTime') {
-                        value = (order.applianceDeliveryTime) ? order.applianceDeliveryTime : 'Not Specified';
+                        value = (myOrder.applianceDeliveryTime) ? myOrder.applianceDeliveryTime : 'Not Specified';
 
                     } else if (key === 'occupied') {
-                        value = (order.occupied === false) ? 'Unoccupied' : 'Occupied';
+                        value = (myOrder.occupied === false) ? 'Unoccupied' : 'Occupied';
 
                     } else if (key === 'lockBoxCode') {
-                        value = (order.lockBoxCode) ? order.lockBoxCode : `${order.tenantFirstName} ${order.tenantLastName}`;
+                        value = (myOrder.lockBoxCode) ? myOrder.lockBoxCode : `${myOrder.tenantFirstName} ${myOrder.tenantLastName}`;
 
                     } else if (key === 'createdBy') {
-                        value = `${order.orderUser.firstName} ${order.orderUser.lastName}`;
+                        value = `${myOrder.orderUser.firstName} ${myOrder.orderUser.lastName}`;
 
                     } else if (key === 'hotshotDelivery') {
-                        value = (order.isApplianceHotShotDelivery) ? 'Yes' : 'No';
+                        value = (myOrder.isApplianceHotShotDelivery) ? 'Yes' : 'No';
 
                     } else if (key === 'hotshotInstallDate') {
-                        value = moment(order.installDate).format('MM/DD/YYYY');
+                        value = moment(myOrder.installDate).format('MM/DD/YYYY');
 
                     } else if (key === 'hotshotCode') {
-                        value = (order.isApplianceHotShotDelivery) ? order.applianceHotShotCode : null;
+                        value = (myOrder.isApplianceHotShotDelivery) ? myOrder.applianceHotShotCode : null;
                     }
 
                     orderDetailsCols[key] = value;
@@ -190,12 +188,12 @@ class OrderDetails extends React.Component {
                 pageData = <div className="container">
                     <div className="details-header">
                         <div className="header-property pure-u-2-3">
-                            <h2 className="order-number">Order: { order.orderNumber }</h2>
+                            <h2 className="order-number">Order: { myOrder.orderNumber }</h2>
                             <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
                         </div>
                         { (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
-                            <div className="btn blue" onClick={() => this.editOrder({ orderId: order.id })}>Edit</div>
-                            <div className="btn blue" onClick={() => this.handleAction({ orderId: order.id })}>Approve</div>
+                            <div className="btn blue" onClick={() => this.editOrder({ orderId: myOrder.id })}>Edit</div>
+                            <div className="btn blue" onClick={() => this.handleAction({ orderId: myOrder.id })}>Approve</div>
                         </div> : null }
                     </div>
                     <MyTable
@@ -215,11 +213,11 @@ class OrderDetails extends React.Component {
                         </table>
                     </div>
                     <div className="product-table-wrapper">
-                        { _.map(productData, (orderDetail, productIndex) => {
+                        { _.map(productsAndParts, (orderDetail, productIndex) => {
                             if (orderDetail.product) {
                                 const address = <div className="no-limit">
-                                    <div>{`${order.fundProperty.addressLineOne} ${order.fundProperty.addressLineTwo} ${order.fundProperty.addressLineThree},`}</div>
-                                    <div>{`${order.fundProperty.city}, ${order.fundProperty.state}, ${order.fundProperty.zipcode}`}</div>
+                                    <div>{`${myOrder.fundProperty.addressLineOne} ${myOrder.fundProperty.addressLineTwo} ${myOrder.fundProperty.addressLineThree},`}</div>
+                                    <div>{`${myOrder.fundProperty.city}, ${myOrder.fundProperty.state}, ${myOrder.fundProperty.zipcode}`}</div>
                                 </div>;
 
                                 return <ProductTable
@@ -249,15 +247,15 @@ class OrderDetails extends React.Component {
                         }) }
                     </div>
                     <div>
-                        {(order.isApplianceHotShotDelivery) ? <div className="cost-section" >
-                            <h5 style={{right: '8%', position: 'absolute', margin: '-6px' }}>Hotshot Delivery: <span>${ order.applianceHotShotPrice }</span></h5>
+                        {(myOrder.isApplianceHotShotDelivery) ? <div className="cost-section" >
+                            <h5 style={{right: '8%', position: 'absolute', margin: '-6px' }}>Hotshot Delivery: <span>${ myOrder.applianceHotShotPrice }</span></h5>
                         </div> : null}
                         <div className="cost-section">
                             <h5 className="cost-header">Order Summary </h5>
                             <div className="cost-row">
-                                <h5>Subtotal: <span>${ order.subTotalCost }</span></h5>
-                                <h5>Sales Tax: <span>${ order.salesTax }</span></h5>
-                                <h5>Total: <span>${ order.totalCost }</span></h5>
+                                <h5>Subtotal: <span>${ myOrder.subTotalCost }</span></h5>
+                                <h5>Sales Tax: <span>${ myOrder.salesTax }</span></h5>
+                                <h5>Total: <span>${ myOrder.totalCost }</span></h5>
                             </div>
                         </div>
                     </div>
@@ -275,10 +273,12 @@ class OrderDetails extends React.Component {
                     />
                 </div>;
             }
+
+            this.props.triggerSpinner({ isOn: false });
         }
 
         return (
-            <Loader loaded={this.props.spinner} >
+            <Loader loaded={spinner} >
                 <div id="order-details-page">
                     { pageData }
                 </div>
