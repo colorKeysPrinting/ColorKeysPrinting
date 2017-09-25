@@ -131,7 +131,7 @@ export default class ApplianceProducts extends React.Component {
                 <div id="checkbox-is-ge-install">
                     <input
                         type="checkbox"
-                        onClick={() => this.showCheckboxSection({ key: 'isInstallShowing' })}
+                        onClick={() => this.showCheckboxSection({ type: 'isInstallShowing' })}
                         checked={this.state.isInstallShowing}
                         style={{ height: '15px', width: '30px' }} /> Option for GE to install
 
@@ -153,7 +153,7 @@ export default class ApplianceProducts extends React.Component {
                 <div id="checkbox-is-ge-remove">
                     <input
                         type="checkbox"
-                        onClick={() => this.showCheckboxSection({ key: 'isRemovalShowing' })}
+                        onClick={() => this.showCheckboxSection({ type: 'isRemovalShowing' })}
                         checked={this.state.isRemovalShowing}
                         style={{ height: '15px', width: '30px' }} />Option for GE to remove old appliance
                     <div style={{ display: (this.state.isRemovalShowing) ? 'inline-flex' : 'none' }} >
@@ -165,7 +165,7 @@ export default class ApplianceProducts extends React.Component {
                 <div id="checkbox-is-ge-disconnect">
                     <input
                         type="checkbox"
-                        onClick={() => this.showCheckboxSection({ key: 'isDisconnectShowing' })}
+                        onClick={() => this.showCheckboxSection({ type: 'isDisconnectShowing' })}
                         checked={this.state.isDisconnectShowing}
                         style={{ height: '15px', width: '30px' }} />Option for GE to remove old appliance
                     <div style={{ display: (this.state.isDisconnectShowing) ? 'inline-flex' : 'none' }} >
