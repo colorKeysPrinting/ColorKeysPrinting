@@ -9,9 +9,8 @@ import Loader                                               from 'react-loader';
 
 import assets                               from 'libs/assets';
 
-import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getOrderById, processOrder, updateInstallDate, updateModelNumber }          from 'ducks/orders/actions';
-import { triggerSpinner }                                   from 'ducks/ui/actions';
+import { triggerSpinner }                   from 'ducks/ui/actions';
 
 import MyTable                              from 'components/my_table';
 import ProductTable                         from 'components/product_table';
