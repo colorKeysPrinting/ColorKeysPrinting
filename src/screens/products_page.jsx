@@ -74,14 +74,14 @@ class ProductsPage extends React.Component {
 
             tabContent = _.map(productCategories.toJS(), (category) => {
                 return _.map(category.subcategories, (subCategory, index) => {
-                    const name = subCategory.name;
+                    const subName = subCategory.name;
                     let content;
 
                     if (subCategory.containedSubCategories) {
                         const subTabContent = _.map(subCategory.containedSubCategories, (subSubCategory, subIndex) => {
-                            const subName = subSubCategory.name;
+                            const subSubName = subSubCategory.name;
 
-                            const data = _.map(products[category.name][name][subName], (product) => {
+                            const data = _.map(products[category.name][subName][subSubName], (product) => {
                                 const cols = {};
 
                                 _.each(['id','name','featured','action'], (key) => {
@@ -110,13 +110,13 @@ class ProductsPage extends React.Component {
 
                             return (
                                 <TabPane
-                                    tab={subName}
+                                    tab={subSubName}
                                     key={subIndex}
                                 >
                                     <MyTable
                                         className="products-table"
                                         type="products"
-                                        tab={subName}
+                                        tab={subSubName}
                                         data={data}
                                     />
                                 </TabPane>
@@ -134,7 +134,7 @@ class ProductsPage extends React.Component {
                         </Tabs>;
 
                     } else {
-                        const data = _.map(products[category.name][name], (product) => {
+                        const data = _.map(products[category.name][subName], (product) => {
                             const cols = {};
 
                             _.each(['id','name','featured','action'], (key) => {
@@ -146,7 +146,7 @@ class ProductsPage extends React.Component {
                                 } else if (key === 'action') {
                                     const jwt = cookies.get('sibi-admin-jwt');
 
-                                    value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: name, id: product.id }) } className="product-action">Unarchive</div>
+                                    value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: subName, id: product.id }) } className="product-action">Unarchive</div>
                                         : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;
 
                                 } else if (key === 'featured') {
@@ -164,14 +164,14 @@ class ProductsPage extends React.Component {
                         content = <MyTable
                             className="products-table"
                             type="products"
-                            tab={name}
+                            tab={subName}
                             data={data}
                         />;
                     }
 
                     return (
                         <TabPane
-                            tab={name}
+                            tab={subName}
                             key={index}
                         >
                             { content }
