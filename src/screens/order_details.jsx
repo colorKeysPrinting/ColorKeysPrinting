@@ -247,7 +247,7 @@ class OrderDetails extends React.Component {
                     </div>
                     <div>
                         {(myOrder.isApplianceHotShotDelivery) ? <div className="cost-section" >
-                            <h5 style={{right: '8%', position: 'absolute', margin: '-6px' }}>Hotshot Delivery: <span>${ myOrder.applianceHotShotPrice }</span></h5>
+                            <h5 style={{right: '8%', position: 'absolute', margin: '-6px' }}>Hot Shot Delivery: <span>${ myOrder.applianceHotShotPrice }</span></h5>
                         </div> : null}
                         <div className="cost-section">
                             <h5 className="cost-header">Order Summary </h5>
