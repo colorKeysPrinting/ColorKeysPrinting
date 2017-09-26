@@ -9,21 +9,16 @@ import { getProducts, getParts }    from 'ducks/product/actions';
 // /////////////////////////////////////
 export const ActionTypes = {
     CLEAR_PRODUCT : 'sibi_ge_admin/product/CLEAR_PRODUCT',
-    CREATE_NEW_PRODUCT : 'sibi_ge_admin/product/CREATE_NEW_PRODUCT',
     NEW_PRODUCT : 'sibi_ge_admin/product/NEW_PRODUCT',
     UPDATE : 'sibi_ge_admin/product/UPDATE',
-    UPDATE_IMAGE : 'sibi_ge_admin/product/UPDATE_IMAGE',
     ADD_COLOR_AND_IMAGE : 'sibi_ge_admin/product/ADD_COLOR_AND_IMAGE',
     REMOVE_COLOR_AND_IMAGE : 'sibi_ge_admin/product/REMOVE_COLOR_AND_IMAGE',
+    REMOVE_PART_SUCCESS : 'sibi_ge_admin/product/REMOVE_PART_SUCCESS',
     ADD_VIDEO : 'sibi_ge_admin/product/ADD_VIDEO',
     REMOVE_VIDEO : 'sibi_ge_admin/product/REMOVE_VIDEO',
     ADD_FAQ : 'sibi_ge_admin/product/ADD_FAQ',
     REMOVE_FAQ : 'sibi_ge_admin/product/REMOVE_FAQ',
-
-    RESET_MODEL_NUMBER_CHANGE : 'sibi_ge_admin/product/RESET_MODEL_NUMBER_CHANGE',
-
     GET_PRODUCT_BY_ID_SUCCESS : 'sibi_ge_admin/product/GET_PRODUCT_BY_ID_SUCCESS',
-    REMOVE_PART_SUCCESS : 'sibi_ge_admin/products/REMOVE_PART_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -132,6 +127,7 @@ export function createProductPart({ token, productId, partId }) {
         })
             .then(payload => {
                 dispatch(getProductById({ token, id: productId }));
+                dispatch(getParts({ token }));
             })
             .catch(error => {
                 throw(error);
@@ -145,9 +141,7 @@ export function removePart({ token, productId, partId }) {
             method  : Network.DEL,
             url     : `${Network.DOMAIN}/productPart`,
             headers : {
-                'x-auth-token': token,
-                productId,
-                partId
+                'x-auth-token': token
             },
             data    : {
                 productId,
@@ -155,7 +149,7 @@ export function removePart({ token, productId, partId }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.REMOVE_PART_SUCCESS , ...payload });
+                dispatch(getProductById({ token, id: productId }));
             })
             .catch(error => {
                 throw(error);

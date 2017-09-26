@@ -110,6 +110,12 @@ export default (state = initialState, action) => {
         state = state.updateIn(['product', 'applianceColorsInfo'], value=>Immutable.fromJS(applianceColorsInfo));
         break;
 
+    case ActionTypes.REMOVE_PART_SUCCESS:
+        let applianceAssociatedParts = state.getIn(['product','applianceAssociatedParts']).toJS();
+        applianceAssociatedParts = _.remove(applianceAssociatedParts, (part) => { return part.id !== action.partId } );
+        state = state.updateIn(['product', 'applianceAssociatedParts'], value=>Immutable.fromJS(applianceAssociatedParts));
+        break;
+
     case ActionTypes.ADD_VIDEO:
         videos = state.getIn(['product', 'videos']).toJS();
         const videoURL = state.get('videoURL');
@@ -140,20 +146,11 @@ export default (state = initialState, action) => {
         state = state.updateIn(['product', 'faq'], value=>Immutable.fromJS(faq));
         break;
 
-
     case ActionTypes.GET_PRODUCT_BY_ID_SUCCESS:
         console.log('receiving product');
         state = state.set('product', Immutable.fromJS(action.data));
         sortIndex = (action.data.sortIndex) ? action.data.sortIndex + 1 : 1;
         state = state.updateIn(['product','sortIndex'], value=>sortIndex);
-        break;
-
-    case ActionTypes.REMOVE_PART_SUCCESS:
-        console.log('remove part success');
-        const partId = (action.partId) ? action.partId : action.config.headers.partId;
-        let applianceAssociatedParts = state.getIn(['product','applianceAssociatedParts']).toJS();
-        applianceAssociatedParts = _.remove(product.applianceAssociatedParts, (part) => { return part.id !== partId });
-        state = state.updateIn(['product', 'applianceAssociatedParts'], value=>Immutable.fromJS(applianceAssociatedParts));
         break;
 
     default:

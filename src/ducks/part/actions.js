@@ -2,7 +2,8 @@
 
 import axios                    from 'axios';
 import Network                  from 'libs/constants/network';
-import { createProductPart, getParts }    from 'ducks/product/actions';
+import { createProductPart, getProductById }    from 'ducks/product/actions';
+import { getParts }    from 'ducks/products/actions';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -13,7 +14,6 @@ export const ActionTypes = {
     UPDATE : 'sibi_ge_admin/part/UPDATE',
     GET_PART_BY_ID_SUCCESS : 'sibi_ge_admin/part/GET_PART_BY_ID_SUCCESS',
     CREATE_PART_SUCCESS : 'sibi_ge_admin/part/CREATE_PART_SUCCESS',
-    UPDATE_PART_SUCCESS : 'sibi_ge_admin/part/UPDATE_PART_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -48,7 +48,7 @@ export function getPartById({ token, id }) {
     return (dispatch) => {
         return axios({
             method  : Network.GET,
-            url     : `${Network.DOMAIN}/part/${id}`,
+            url     : `${Network.DOMAIN}/parts/${id}`,
             headers : {
                 'x-auth-token': token
             }
@@ -86,20 +86,21 @@ export function createPart({ token, part, productId }) {
     }
 }
 
-export function updatePart({ token, part }) {
+export function updatePart({ token, part, productId }) {
     return (dispatch) => {
         return axios({
             method  : Network.PATCH,
-            url     : `${Network.DOMAIN}/part/${part.id}`,
+            url     : `${Network.DOMAIN}/parts/${part.id}`,
             headers : {
                 'x-auth-token': token
             },
             data    : {
-                ...part.toJS()
+                ...part
             }
         })
             .then(payload => {
                 dispatch(getParts({ token }));
+                dispatch(getProductById({ token, id: productId }))
             })
             .catch(error => {
                 throw(error);

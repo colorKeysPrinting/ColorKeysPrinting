@@ -50,8 +50,8 @@ export default class EditPartOverlay extends React.Component {
     modifyExistingPart({ token }) {
         let { modelNumber, parts } = this.props;
 
-        part = _.find(parts.toJS(), ['modelNumber', modelNumber]);
-        this.props.getPartById({ token, id: product.id });
+        const part = _.find(parts.toJS(), ['modelNumber', modelNumber]);
+        this.props.getPartById({ token, id: part.id });
         this.props.verifyPart({ verified: true });
         this.props.resetFound();
     }
@@ -76,7 +76,7 @@ export default class EditPartOverlay extends React.Component {
             }
         });
 
-        (id) ? this.props.updatePart({ token, part }) : this.props.createPart({ token, part, productId });
+        (id) ? this.props.updatePart({ token, part, productId }) : this.props.createPart({ token, part, productId });
         this.props.close();
     }
 
@@ -100,12 +100,15 @@ export default class EditPartOverlay extends React.Component {
                     <input name="part-Code"        type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ isPart: true, key: 'code', value: e.target.value})} required />
                     <input name="part-gePrice"     type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ isPart: true, key: 'gePrice', value: e.target.value})} required />
                     <input name="part-sibiPrice"   type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ isPart: true, key: 'sibiPrice', value: e.target.value})} required />
-                    <input
-                        name="part-includedIn"
-                        type="checkbox"
-                        checked={includedInManufacturerInstall}
-                        onChange={(e, value) => this.props.update({ isPart: true, key: 'includedInManufacturerInstall', value: e.target.checked})}
-                        style={{ height: '15px', width: '30px' }} /> Included in Manufacturer install
+                    <label>
+                        <input
+                            name="part-includedIn"
+                            type="checkbox"
+                            checked={includedInManufacturerInstall}
+                            onChange={(e, value) => this.props.update({ isPart: true, key: 'includedInManufacturerInstall', value: e.target.checked})}
+                            style={{ height: '15px', width: '30px' }}/>
+                        Included in Manufacturer install
+                    </label>
 
                     <input className="btn blue fill" type="submit" value={(id) ? 'Update' : 'Add'} />
                 </div>
@@ -146,7 +149,10 @@ export default class EditPartOverlay extends React.Component {
                                 type="text"
                                 placeholder="Model #"
                                 value={modelNumber}
-                                onChange={(e) => this.props.update({ isPart: true, key: 'modelNumber', value: e.target.value })}
+                                onChange={(e) => {
+                                    this.props.verifyPart({ verified: false });
+                                    this.props.update({ isPart: true, key: 'modelNumber', value: e.target.value })
+                                }}
                                 required
                             />
                             { (!isPartVerified && !isDisabled) ? <input className="btn blue" type="submit" value="Add"/> : null }
