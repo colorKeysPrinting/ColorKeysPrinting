@@ -106,7 +106,12 @@ class EditProductPage extends React.Component {
     }
 
     showAddPart({ token, productCategoryId, partId }) {
-        (partId) ? this.props.getPartById({ token, partId }) : this.props.newPart({ productCategoryId });
+        if (partId) {
+            this.props.getPartById({ token, id: partId });
+            this.props.verifyPart({ verified: true });
+        } else {
+            this.props.newPart({ productCategoryId });
+        }
     }
 
     removePart({ token, partId }) {
