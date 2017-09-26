@@ -86,13 +86,10 @@ export default (state = initialState, action) => {
         break;
 
     case ActionTypes.UPDATE:
-        if (action.isProduct) {
-            state = state.updateIn(['product', action.key], value=>action.value);
-            if (action.key === 'productSubcategoryId') {
-                // TODO: need to update the sortIndex
-            }
-        } else {
-            state = state.set(action.key, action.value);
+        state = (action.isProduct) ? state.updateIn(['product', action.key], value=>action.value) : state.set(action.key, action.value);
+
+        if (action.key === 'productSubcategoryId') {
+            // TODO: need to update the sortIndex
         }
         break;
 
@@ -149,19 +146,6 @@ export default (state = initialState, action) => {
         state = state.set('product', Immutable.fromJS(action.data));
         sortIndex = (action.data.sortIndex) ? action.data.sortIndex + 1 : 1;
         state = state.updateIn(['product','sortIndex'], value=>sortIndex);
-        break;
-
-    case ActionTypes.CREATE_PRODUCT_PART_SUCCESS:
-        console.log('create product part success');
-        products = state.get('products').toJS();
-        parts = state.get('parts').toJS();
-        index = _.findIndex(products, ['id', action.config.headers.productId]);
-        part = _.find(parts, ['id', action.config.headers.partId]);
-        product = products[index];
-        product.applianceAssociatedParts.push(part);
-        products[index] = product;
-        state = state.set('product', Immutable.fromJS(product));
-        state = state.set('products', Immutable.fromJS(products));
         break;
 
     case ActionTypes.REMOVE_PART_SUCCESS:

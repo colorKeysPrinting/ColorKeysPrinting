@@ -9,6 +9,7 @@ import Network          from 'libs/constants/network';
 export const ActionTypes = {
     CHECK_MODEL_NUM : 'sibi_ge_admin/products/CHECK_MODEL_NUM',
     VERIFY_PRODUCT : 'sibi_ge_admin/products/VERIFY_PRODUCT',
+    VERIFY_PART : 'sibi_ge_admin/products/VERIFY_PART',
     RESET_FOUND : 'sibi_ge_admin/products/RESET_FOUND',
     GET_PRODUCTS_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCTS_SUCCESS',
     GET_PRODUCT_CATEGORIES_SUCCESS : 'sibi_ge_admin/products/GET_PRODUCT_CATEGORIES_SUCCESS',
@@ -32,6 +33,13 @@ export function checkModelNum({ key, modelNumber }) {
 export function verifyProduct({ verified }) {
     return {
         type: ActionTypes.VERIFY_PRODUCT,
+        verified
+    };
+}
+
+export function verifyPart({ verified }) {
+    return {
+        type: ActionTypes.VERIFY_PART,
         verified
     };
 }

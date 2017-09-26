@@ -17,6 +17,7 @@ const initialState = Immutable.fromJS({
     productCategoryId: '',
     isProductVerified: false,
     isProductFound: false,
+    isPartVerified: false,
     isPartFound: false
 });
 
@@ -32,9 +33,10 @@ export default (state = initialState, action) => {
             state = state.set('isProductVerified', true );
 
         } else if (action.key === 'part') {
-            const index = _.findIndex(state.get('parts').toJS(), ['modelNumber', action.modelNumber]);
-            const isFound = (index) ? true : false;
+            part = _.find(state.get('parts').toJS(), ['modelNumber', action.modelNumber]);
+            const isFound = (part) ? true : false;
             state = state.set('isPartFound', isFound);
+            state = state.set('isPartVerified', true );
         }
         break;
 
@@ -42,8 +44,13 @@ export default (state = initialState, action) => {
         state = state.set('isProductVerified', action.verified );
         break;
 
+    case ActionTypes.VERIFY_PART:
+        state = state.set('isPartVerified', action.verified );
+        break;
+
     case ActionTypes.RESET_FOUND:
         state = state.set('isProductFound', false );
+        state = state.set('isPartFound', false );
         break;
 
     case ActionTypes.GET_PRODUCTS_SUCCESS:

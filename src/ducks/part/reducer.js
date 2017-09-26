@@ -10,6 +10,7 @@ import { ActionTypes }          from './actions';
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
     part: {},
+    newParts: {},
 });
 
 export default (state = initialState, action) => {
@@ -23,40 +24,35 @@ export default (state = initialState, action) => {
 
     case ActionTypes.NEW_PART:
         part = {
-            productCategoryId : '',
+            productCategoryId : action.productCategoryId,
             id                : '',
             description       : '',
             code              : '',
             imageUrl          : '',
             modelNumber       : '',
             gePrice           : '',
-            sibiPrice         : ''
+            sibiPrice         : '',
+            includedInManufacturerInstall : false
+
         }
         state = state.set('part', Immutable.fromJS(part));
         break;
 
+    case ActionTypes.UPDATE:
+        state = (action.isPart) ? state.updateIn(['part', action.key], value=>action.value) : state.set(action.key, action.value);
+        break;
+
     case ActionTypes.GET_PART_BY_ID_SUCCESS:
         console.log('part reducer');
+        state = state.set('part', Immutable.fromJS(action.data));
         break;
 
     case ActionTypes.CREATE_PART_SUCCESS:
         console.log('create part success');
-        parts = state.get('parts').toJS();
-        part = { isNew: true, ...action.data };
-
-        parts.push(part);
-
-        state = state.set('part', Immutable.fromJS(part));
-        state = state.set('parts', Immutable.fromJS(parts));
+        const newParts = state.get('newParts');
+        newParts.push(action.partId);
+        state = state.set('newParts', newParts);
         break;
-
-    // case ActionTypes.UPDATE_PART_SUCCESS:
-    //     console.log('update part success');
-    //     product = state.get('product').toJS();
-    //     index = _.findIndex(product.applianceAssociatedParts, ['id', action.data.id]);
-    //     product.applianceAssociatedParts[index] = action.data;
-    //     state = state.set('product', Immutable.fromJS(product));
-    //     break;
 
     default:
         return state;

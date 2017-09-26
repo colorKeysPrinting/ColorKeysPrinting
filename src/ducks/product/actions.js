@@ -1,7 +1,8 @@
 'use strict';
 
-import axios            from 'axios';
-import Network          from 'libs/constants/network';
+import axios                    from 'axios';
+import Network                  from 'libs/constants/network';
+import { getProducts, getParts }    from 'ducks/product/actions';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -22,7 +23,6 @@ export const ActionTypes = {
     RESET_MODEL_NUMBER_CHANGE : 'sibi_ge_admin/product/RESET_MODEL_NUMBER_CHANGE',
 
     GET_PRODUCT_BY_ID_SUCCESS : 'sibi_ge_admin/product/GET_PRODUCT_BY_ID_SUCCESS',
-    CREATE_PRODUCT_PART_SUCCESS : 'sibi_ge_admin/product/CREATE_PRODUCT_PART_SUCCESS',
     REMOVE_PART_SUCCESS : 'sibi_ge_admin/products/REMOVE_PART_SUCCESS',
 }
 
@@ -123,9 +123,7 @@ export function createProductPart({ token, productId, partId }) {
             method  : Network.POST,
             url     : `${Network.DOMAIN}/createProductPart`,
             headers : {
-                'x-auth-token': token,
-                productId,
-                partId
+                'x-auth-token': token
             },
             data    : {
                 productId,
@@ -133,7 +131,7 @@ export function createProductPart({ token, productId, partId }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.CREATE_PRODUCT_PART_SUCCESS , ...payload });
+                dispatch(getProductById({ token, id: productId }));
             })
             .catch(error => {
                 throw(error);

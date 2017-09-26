@@ -18,6 +18,8 @@ import Appliance                from 'components/products/appliance';
 import Hvac                     from 'components/products/hvac';
 import Paint                    from 'components/products/paint';
 
+import EditPartOverlay          from 'components/edit_part_overlay';
+
 class EditProductPage extends React.Component {
     constructor(props) {
         super(props);
@@ -26,7 +28,10 @@ class EditProductPage extends React.Component {
             activeSection: ''
         }
 
+        this.close = this.close.bind(this);
         this.modifyExistingProduct = this.modifyExistingProduct.bind(this);
+        this.showAddPart = this.showAddPart.bind(this);
+        this.removePart = this.removePart.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
     }
 
@@ -65,7 +70,13 @@ class EditProductPage extends React.Component {
         if(!_.isEqual(nextProps.imageUploadURL, this.props.imageUploadURL)) {
             const type = nextProps.imageUploadURL.get('type');
             const image = nextProps.imageUploadURL.get('imageURL');
-            (type === 'product') ? this.props.update({ key: 'productImage', value: image }) : this.props.updatePartImage({ image });
+            (type === 'product') ? this.props.update({ key: 'productImage', value: image }) : this.props.updatePartLocal({ isPart: true, key: 'imageUrl', value: image });
+        }
+
+        if(!_.isEqual(nextProps.part, this.props.part)) {
+            if (nextProps.part.size > 0) {
+                this.setState({ activeSection: 'partOverlay' });
+            }
         }
     }
 
@@ -81,6 +92,10 @@ class EditProductPage extends React.Component {
         });
     }
 
+    close() {
+        this.setState({ activeSection: '' });
+    }
+
     modifyExistingProduct({ token }) {
         let { product, products } = this.props;
 
@@ -88,6 +103,15 @@ class EditProductPage extends React.Component {
         this.props.getProductById({ token, id: product.id });
         this.props.verifyProduct({ verified: true });
         this.props.resetFound();
+    }
+
+    showAddPart({ token, productCategoryId, partId }) {
+        (partId) ? this.props.getPartById({ token, partId }) : this.props.newPart({ productCategoryId });
+    }
+
+    removePart({ token, partId }) {
+        const { product } = this.props;
+        (product.get('id')) ? this.props.removePart({ token, productId: product.get('id'), partId }) : this.props.removePartLocal({ partId });
     }
 
     saveProduct({ token, category }) {
@@ -107,7 +131,22 @@ class EditProductPage extends React.Component {
     }
 
     render() {
-        const { cookies, history, location, spinner, product, productCategories, activeUser, isProductVerified, isProductFound } = this.props;
+        const {
+            cookies,
+            history,
+            location,
+            spinner,
+            activeUser,
+            product,
+            productCategories,
+            isProductVerified,
+            isProductFound,
+            part,
+            parts,
+            isPartVerified,
+            isPartFound
+        } = this.props;
+
         let isDisabled = false, pageContent, subCategoryOptions;
         const jwt = cookies.get('sibi-admin-jwt');
 
@@ -178,6 +217,7 @@ class EditProductPage extends React.Component {
                                     isDisabled={isDisabled}
                                     image={this.props.productImage}
                                     color={this.props.color}
+                                    productCategoryId={product.get('productCategoryId')}
                                     applianceManufacturerName={product.get('applianceManufacturerName')}
                                     applianceType={product.get('applianceType')}
                                     applianceSize={product.get('applianceSize')}
@@ -206,8 +246,8 @@ class EditProductPage extends React.Component {
                                     uploadImage={this.props.uploadImage}
                                     addColorAndImage={this.props.addColorAndImage}
                                     removeColorAndImage={this.props.removeColorAndImage}
-                                    removePart={this.removePart}
                                     showAddPart={this.showAddPart}
+                                    removePart={this.removePart}
                                 /> : null
                             }
                             {(category && category.name === 'HVAC') ?
@@ -318,6 +358,35 @@ class EditProductPage extends React.Component {
                     <form onSubmit={(e) => {e.preventDefault(); this.saveProduct({ token: jwt.token, category: jwt.trade });}} >
                         { pageContent }
                     </form>
+                    { (this.state.activeSection === 'partOverlay') ?
+                        (<EditPartOverlay
+                            token={jwt.token}
+                            isDisabled={isDisabled}
+                            productId={product.get('id')}
+                            productCategoryId={(part.get('productCategoryId')) ? part.get('productCategoryId') : product.get('productCategoryId')}
+                            id={part.get('id')}
+                            description={part.get('description')}
+                            code={part.get('code')}
+                            imageUrl={part.get('imageUrl')}
+                            modelNumber={part.get('modelNumber')}
+                            gePrice={parseFloat(part.get('gePrice'))}
+                            sibiPrice={parseFloat(part.get('sibiPrice'))}
+                            includedInManufacturerInstall={part.get('includedInManufacturerInstall')}
+                            isPartVerified={isPartVerified}
+                            isPartFound={isPartFound}
+                            parts={parts}
+                            update={this.props.updatePartLocal}
+                            uploadImage={this.props.uploadImage}
+                            checkModelNum={this.props.checkModelNum}
+                            clearPart={this.props.clearPart}
+                            createPart={this.props.createpart}
+                            getPartById={this.props.getPartById}
+                            verifyPart={this.props.verifyPart}
+                            resetFound={this.props.resetFound}
+                            close={this.close}
+                            createPart={this.props.createPart}
+                            updatePart={this.props.updatePart}
+                        />): null }
                 </div>
             </Loader>
         );
@@ -328,16 +397,21 @@ const select = (state) => ({
     spinner              : state.ui.get('spinner'),
     activeUser           : state.activeUser.get('activeUser'),
     imageUploadURL       : state.assets.get('imageUploadURL'),
+
     product              : state.product.get('product'),
     productImage         : state.product.get('productImage'),
     color                : state.product.get('color'),
     Question             : state.product.get('Question'),
     Answer               : state.product.get('Answer'),
     videoURL             : state.product.get('videoURL'),
+    part                 : state.part.get('part'),
     products             : state.products.get('products'),
+    parts                : state.products.get('parts'),
     productCategories    : state.products.get('productCategories'),
     isProductVerified    : state.products.get('isProductVerified'),
     isProductFound       : state.products.get('isProductFound'),
+    isPartVerified       : state.products.get('isPartVerified'),
+    isPartFound          : state.products.get('isPartFound'),
 });
 
 const actions = {

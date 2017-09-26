@@ -8,69 +8,137 @@ import Overlay                  from 'components/overlay';
 
 export default class EditPartOverlay extends React.Component {
     static propTypes = {
+        token               : PropTypes.string.isRequired,
+        isDisabled          : PropTypes.bool.isRequired,
+        productId           : PropTypes.string.isRequired,
+        productCategoryId   : PropTypes.string.isRequired,
         id                  : PropTypes.string.isRequired,
-        imageUrl            : PropTypes.string.isRequired,
         description         : PropTypes.string.isRequired,
         code                : PropTypes.string.isRequired,
+        imageUrl            : PropTypes.string.isRequired,
         modelNumber         : PropTypes.string.isRequired,
         gePrice             : PropTypes.number,
         sibiPrice           : PropTypes.number,
-        isPartModelNumFound : PropTypes.bool.isRequired,
-        showPartsDialog     : PropTypes.bool.isRequired,
+        includedInManufacturerInstall : PropTypes.bool.isRequired,
+        isPartVerified      : PropTypes.bool.isRequired,
+        isPartFound         : PropTypes.bool.isRequired,
+        parts               : PropTypes.object.isRequired,
         update              : PropTypes.func.isRequired,
-        updateImage         : PropTypes.func.isRequired,
-        savePart            : PropTypes.func.isRequired,
-        showAddPart         : PropTypes.func.isRequired,
+        uploadImage         : PropTypes.func.isRequired,
         checkModelNum       : PropTypes.func.isRequired,
-        createNewPart       : PropTypes.func.isRequired,
-        modifyExistingPart  : PropTypes.func.isRequired
+        clearPart           : PropTypes.func.isRequired,
+        getPartById         : PropTypes.func.isRequired,
+        verifyPart          : PropTypes.func.isRequired,
+        resetFound          : PropTypes.func.isRequired,
+        close               : PropTypes.func.isRequired,
+        createPart          : PropTypes.func.isRequired,
     };
 
+    constructor(props) {
+        super(props);
+
+        this.modifyExistingPart = this.modifyExistingPart.bind(this);
+        this.savePart = this.savePart.bind(this);
+    }
+
+    componentWillUnmount() {
+        this.props.clearPart();
+        this.props.verifyPart({ verified: false });
+        this.props.resetFound();
+    }
+
+    modifyExistingPart({ token }) {
+        let { modelNumber, parts } = this.props;
+
+        part = _.find(parts.toJS(), ['modelNumber', modelNumber]);
+        this.props.getPartById({ token, id: product.id });
+        this.props.verifyPart({ verified: true });
+        this.props.resetFound();
+    }
+
+    savePart({ token }) {
+        const { productId, productCategoryId, id, description, code, imageUrl, modelNumber, gePrice, sibiPrice, includedInManufacturerInstall } = this.props;
+        const part = {
+            productCategoryId,
+            id,
+            description,
+            code,
+            imageUrl,
+            modelNumber,
+            // gePrice,
+            // sibiPrice,
+            includedInManufacturerInstall
+        };
+
+        _.each(part, (value, key) => {
+            if(value === '' || typeof value === 'object' && _.size(value) === 0) {
+                delete part[key];
+            }
+        });
+
+        (id) ? this.props.updatePart({ token, part }) : this.props.createPart({ token, part, productId });
+        this.props.close();
+    }
+
     render() {
-        const { id, imageUrl, description, code, modelNumber, gePrice, sibiPrice, isPartModelNumFound, showPartsDialog } = this.props;
+        const { token, isDisabled, productCategoryId, id, description, code, imageUrl, modelNumber, gePrice, sibiPrice, includedInManufacturerInstall, isPartVerified, isPartFound } = this.props;
+        let pageContent;
 
-        const buttonText = (id) ? 'Update' : 'Add';
-        const modelNumAdd = (isPartModelNumFound) ? <input className="btn blue" type="submit" value="Add"/> : null;
-        const dialogBox = (showPartsDialog) ? <dialog open>
-            <form method="dialog">
-                Alert:
-                <p>A part with this Sibi Model Number already exists!</p>
-                Do you wish to:
-                <p> - Use the existing part</p>
-                <p> - continue creating a new part (this will completely replace the existing part)</p>
-                <p> - modify the existing part?</p>
-                <input className="btn blue" type="submit" value="Add" onClick={this.props.addPart} />
-                <input className="btn borderless red fill" type="submit" value="Create New" onClick={this.props.createNewPart} />
-                <input className="add-btn blue" type="submit" value="Modify Existing" onClick={this.props.modifyExistingPart} />
-            </form>
-        </dialog> : null;
+        if (!isPartFound) {
+            if (isPartVerified) {
+                pageContent = <div className="content">
+                    <label className="btn blue" >
+                        { (imageUrl !== '') ? <img src={imageUrl} alt="uploaded-image" height="60" /> : 'Choose Product Image' }
+                        <input
+                            type="file"
+                            accept=".png,.jpg,.jpeg,.svg"
+                            onChange={(e) => {e.preventDefault(); this.props.uploadImage({ key: 'part', imageFile: e.target.files[0] }); }}
+                            style={{ display: 'none' }}
+                        />
+                    </label>
+                    <input name="part-description" type="text"   placeholder="Name"       value={description} onChange={(e) => this.props.update({ isPart: true, key: 'description', value: e.target.value})} required />
+                    <input name="part-Code"        type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ isPart: true, key: 'code', value: e.target.value})} required />
+                    <input name="part-gePrice"     type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ isPart: true, key: 'gePrice', value: e.target.value})} required />
+                    <input name="part-sibiPrice"   type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ isPart: true, key: 'sibiPrice', value: e.target.value})} required />
+                    <input
+                        name="part-includedIn"
+                        type="checkbox"
+                        checked={includedInManufacturerInstall}
+                        onChange={(e, value) => this.props.update({ isPart: true, key: 'includedInManufacturerInstall', value: e.target.checked})}
+                        style={{ height: '15px', width: '30px' }} /> Included in Manufacturer install
 
-        const partDetails = (!isPartModelNumFound) ? <div className="content">
-            <label className="btn blue" >
-                { (imageUrl !== '') ? <img src={imageUrl} alt="uploaded-image" height="60" /> : 'Choose Product Image' }
-                <input
-                    type="file"
-                    accept=".png,.jpg,.jpeg,.svg"
-                    onChange={(e) => {e.preventDefault(); this.props.updateImage({ type: 'part', imageFile: e.target.files[0] }); }}
-                    style={{ display: 'none' }}
-                />
-            </label>
-            <input name="part-description" type="text"   placeholder="Name"       value={description} onChange={(e) => this.props.update({ type: 'partdescription', value: e.target.value})} required />
-            <input name="part-Code"        type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ type: 'partcode', value: e.target.value})} required />
-            <input name="part-gePrice"     type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ type: 'partgePrice', value: e.target.value})} required />
-            <input name="part-sibiPrice"   type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ type: 'partsibiPrice', value: e.target.value})} required />
+                    <input className="btn blue fill" type="submit" value={(id) ? 'Update' : 'Add'} />
+                </div>
+            }
 
-            <input className="btn blue fill" type="submit" value={buttonText} />
-        </div> : null;
+        } else {
+            pageContent = <dialog open>
+                <form method="dialog">
+                    Alert:
+                    <p>A part with this Sibi Model Number already exists!</p>
+                    Do you wish to:
+                    <p> - Use the existing part</p>
+                    <p> - continue creating a new part (this will completely replace the existing part)</p>
+                    <p> - modify the existing part?</p>
+                    <input className="btn blue" type="submit" value="Add" onClick={() => this.props.addPart({ modelNumber })} />
+                    <input className="btn borderless red fill" type="submit" value="Create New" onClick={() => {
+                        this.props.verifyPart({ verified: true });
+                        this.props.resetFound();
+                        this.props.newPart({ productCategoryId });
+                    }} />
+                    <input className="add-btn blue" type="submit" value="Modify Existing" onClick={() => this.modifyExistingPart({ token })} />
+                </form>
+            </dialog>
+        }
 
         return (
             <Overlay type="edit-part">
                 <div id="edit-part-modal" className="modal">
                     <div className="titleBar">
                         <div className="title">{(id) ? 'Edit': 'Add'} Part</div>
-                        <div onClick={this.props.showAddPart} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>
+                        <div onClick={this.props.close} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>
                     </div>
-                    <form onSubmit={(e) => {e.preventDefault(); this.props.checkModelNum({ type: 'part' });}} >
+                    <form onSubmit={(e) => {e.preventDefault(); this.props.checkModelNum({ key: 'part', modelNumber });}} >
                         <div className="content">
                             <input
                                 name="part-ModelNumber"
@@ -78,16 +146,15 @@ export default class EditPartOverlay extends React.Component {
                                 type="text"
                                 placeholder="Model #"
                                 value={modelNumber}
-                                onChange={(e) => this.props.update({ type: 'partmodelNumber', value: e.target.value })}
+                                onChange={(e) => this.props.update({ isPart: true, key: 'modelNumber', value: e.target.value })}
                                 required
                             />
-                            { modelNumAdd }
+                            { (!isPartVerified && !isDisabled) ? <input className="btn blue" type="submit" value="Add"/> : null }
                         </div>
                     </form>
-                    <form onSubmit={(e) =>{e.preventDefault(); this.props.savePart();}} >
-                        { partDetails }
+                    <form onSubmit={(e) =>{e.preventDefault(); this.savePart({ token });}} >
+                        { pageContent }
                     </form>
-                    { dialogBox }
                 </div>
             </Overlay>
         );

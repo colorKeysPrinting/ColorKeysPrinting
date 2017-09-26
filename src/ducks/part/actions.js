@@ -1,7 +1,8 @@
 'use strict';
 
-import axios            from 'axios';
-import Network          from 'libs/constants/network';
+import axios                    from 'axios';
+import Network                  from 'libs/constants/network';
+import { createProductPart, getParts }    from 'ducks/product/actions';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -9,9 +10,10 @@ import Network          from 'libs/constants/network';
 export const ActionTypes = {
     CLEAR_PART : 'sibi_ge_admin/part/CLEAR_PART',
     NEW_PART : 'sibi_ge_admin/part/NEW_PART',
+    UPDATE : 'sibi_ge_admin/part/UPDATE',
     GET_PART_BY_ID_SUCCESS : 'sibi_ge_admin/part/GET_PART_BY_ID_SUCCESS',
-    // UPDATE_PART_SUCCESS : 'sibi_ge_admin/part/UPDATE_PART_SUCCESS',
     CREATE_PART_SUCCESS : 'sibi_ge_admin/part/CREATE_PART_SUCCESS',
+    UPDATE_PART_SUCCESS : 'sibi_ge_admin/part/UPDATE_PART_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -23,9 +25,19 @@ export function clearPart() {
     };
 }
 
-export function newPart() {
+export function newPart({ productCategoryId }) {
     return {
-        type: ActionTypes.NEW_PART
+        type: ActionTypes.NEW_PART,
+        productCategoryId
+    };
+}
+
+export function updatePartLocal({ isPart, key, value }) {
+    return {
+        type: ActionTypes.UPDATE,
+        isPart,
+        key,
+        value
     };
 }
 
@@ -50,22 +62,23 @@ export function getPartById({ token, id }) {
     }
 }
 
-export function createPart({ token, category, subCategory, product }) {
+export function createPart({ token, part, productId }) {
     return (dispatch) => {
         return axios({
             method  : Network.POST,
             url     : `${Network.DOMAIN}/createPart`,
             headers : {
-                'x-auth-token': token,
-                category,
-                subCategory
+                'x-auth-token': token
             },
             data    : {
-                ...product
+                ...part
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.CREATE_PART_SUCCESS , ...payload });
+                (productId) ? dispatch(createProductPart({ token, productId, partId: payload.data.id })) : dispatch(getParts({ token }));
+                if (!productId) {
+                    dispatch({ type: ActionTypes.CREATE_PART_SUCCESS , partId: payload.data.id });
+                }
             })
             .catch(error => {
                 throw(error);
@@ -73,25 +86,23 @@ export function createPart({ token, category, subCategory, product }) {
     }
 }
 
-// export function updatePart({ token, category, subCategory, product }) {
-//     return (dispatch) => {
-//         return axios({
-//             method  : Network.PATCH,
-//             url     : `${Network.DOMAIN}/part/${subCategory.id}`,
-//             headers : {
-//                 'x-auth-token': token,
-//                 category,
-//                 subCategory: subCategory.name
-//             },
-//             data    : {
-//                 ...product
-//             }
-//         })
-//             .then(payload => {
-//                 dispatch({ type: ActionTypes.UPDATE_PART_SUCCESS , ...payload });
-//             })
-//             .catch(error => {
-//                 throw(error);
-//             });
-//     }
-// }
+export function updatePart({ token, part }) {
+    return (dispatch) => {
+        return axios({
+            method  : Network.PATCH,
+            url     : `${Network.DOMAIN}/part/${part.id}`,
+            headers : {
+                'x-auth-token': token
+            },
+            data    : {
+                ...part.toJS()
+            }
+        })
+            .then(payload => {
+                dispatch(getParts({ token }));
+            })
+            .catch(error => {
+                throw(error);
+            });
+    }
+}
