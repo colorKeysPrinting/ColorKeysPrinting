@@ -14,6 +14,7 @@ export default class ApplianceProducts extends React.Component {
         applianceManufacturerName      : PropTypes.string.isRequired,
         applianceType                  : PropTypes.string.isRequired,
         applianceSize                  : PropTypes.string.isRequired,
+        applianceCapacity              : PropTypes.string.isRequired,
         applianceDescription           : PropTypes.string.isRequired,
         applianceFuelType              : PropTypes.string.isRequired,
         applianceWidth                 : PropTypes.string.isRequired,
@@ -58,7 +59,7 @@ export default class ApplianceProducts extends React.Component {
 
     render() {
         const { token, isDisabled, image, color, productCategoryId, applianceColorsInfo, applianceAssociatedParts, applianceType,
-            applianceSize, applianceDescription, applianceFuelType, applianceWidth, applianceHeight, applianceManufacturerName,
+            applianceSize, applianceCapacity, applianceDescription, applianceFuelType, applianceWidth, applianceHeight, applianceManufacturerName,
             applianceDepth, applianceSpecSheetUrl, applianceInstallCode, applianceInstallPrice, applianceInstallDescription,
             applianceInstallCode2, applianceInstallPrice2, applianceInstallDescription2, applianceRemovalCode, applianceRemovalPrice,
             applianceRemovalDescription, applianceDisconnectCode, applianceDisconnectPrice, applianceDisconnectDescription } = this.props;
@@ -69,11 +70,13 @@ export default class ApplianceProducts extends React.Component {
             { label: 'Electric', value: 'Electric' }
         ]
 
+        // TODO: need to come up with a design for switching between size and capacity for the product
         return (
             <div id="appliance-product">
                 <input name="appliance-manuf-name" className="left-col" type="text" placeholder="Manufacturer Name (e.g. GE)" value={applianceManufacturerName} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceManufacturerName', value: e.target.value})} disabled={isDisabled} />
                 <input name="appliance-type" className="center-col" type="text" placeholder="Type" value={applianceType} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceType', value: e.target.value})} disabled={isDisabled} />
                 <input name="appliance-size" className="right-col" type="text" placeholder="Size" value={applianceSize} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceSize', value: e.target.value})} disabled={isDisabled} />
+                <input name="appliance-capacity" className="right-col" type="text" placeholder="Size" value={applianceCapacity} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceCapacity', value: e.target.value})} disabled={isDisabled} />
                 <input name="appliance-width" className="left-col" type="text" placeholder="Width"  value={applianceWidth} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceWidth', value: e.target.value})} disabled={isDisabled} />
                 <input name="appliance-height" className="center-col" type="text" placeholder="Height" value={applianceHeight} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceHeight', value: e.target.value})}disabled={isDisabled} />
                 <input name="appliance-depth" className="right-col" type="text" placeholder="Depth"  value={applianceDepth} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceDepth', value: e.target.value})} disabled={isDisabled} />

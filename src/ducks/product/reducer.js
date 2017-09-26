@@ -52,6 +52,7 @@ export default (state = initialState, action) => {
             applianceManufacturerName   : '',
             applianceType               : '',
             applianceSize               : '',
+            applianceCapacity           : '',
             applianceDescription        : '',
             applianceFuelType           : '',
             applianceWidth              : '',
