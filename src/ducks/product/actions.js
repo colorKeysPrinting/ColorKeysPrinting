@@ -2,7 +2,7 @@
 
 import axios                    from 'axios';
 import Network                  from 'libs/constants/network';
-import { getProducts, getParts }    from 'ducks/product/actions';
+import { getProducts }          from 'ducks/product/actions';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -127,7 +127,6 @@ export function createProductPart({ token, productId, partId }) {
         })
             .then(payload => {
                 dispatch(getProductById({ token, id: productId }));
-                dispatch(getParts({ token }));
             })
             .catch(error => {
                 throw(error);

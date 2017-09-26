@@ -17,19 +17,20 @@ export default (state = initialState, action) => {
     let product, part, index;
 
     switch (action.type) {
-    case ActionTypes.CLEAR_PRODUCT:
-        console.log('clearing product');
+    case ActionTypes.CLEAR_PART:
+        console.log('clearing part');
         state = state.set('part', {});
         break;
 
     case ActionTypes.NEW_PART:
+        const modelNumber = state.getIn(['part','modelNumber']);
         part = {
             productCategoryId : action.productCategoryId,
             id                : '',
             description       : '',
             code              : '',
             imageUrl          : '',
-            modelNumber       : '',
+            modelNumber       : (modelNumber) ? modelNumber : '',
             gePrice           : '',
             sibiPrice         : '',
             includedInManufacturerInstall : false

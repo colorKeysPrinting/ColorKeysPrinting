@@ -389,8 +389,10 @@ class EditProductPage extends React.Component {
                             verifyPart={this.props.verifyPart}
                             resetFound={this.props.resetFound}
                             close={this.close}
+                            newPart={this.props.newPart}
                             createPart={this.props.createPart}
                             updatePart={this.props.updatePart}
+                            createProductPart={this.props.createProductPart}
                         />): null }
                 </div>
             </Loader>
