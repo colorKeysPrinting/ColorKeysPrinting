@@ -1,29 +1,22 @@
 import React                                from 'react';
 import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
+import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
 import { Link }                             from 'react-router-dom';
 import moment                               from 'moment';
 import DayPickerInput                       from 'react-day-picker/DayPickerInput';
-import Loader                                               from 'react-loader';
+import Loader                               from 'react-loader';
 
 import assets                               from 'libs/assets';
 
 import { getOrderById, processOrder, updateInstallDate, updateModelNumber }          from 'ducks/orders/actions';
 import { triggerSpinner }                   from 'ducks/ui/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
 import ProductTable                         from 'components/product_table';
 import PartTable                            from 'components/part_table';
-
-// ************************************************************************************
-//                              TO LOAD THE PAGE
-//
-//    http://localhost:3000/process_order?orderId=beb36893-494f-4a09-ae7b-f4955ff5e641
-//
-// ************************************************************************************
-
-// ####################################################### TODO: NEED TO FIGURED OUT ORDER UPDATING WITH/WITHOUT AUTH ############################
 
 class ProcessOrderPage extends React.Component {
     constructor(props) {
@@ -33,30 +26,33 @@ class ProcessOrderPage extends React.Component {
             orderNumber: '',
             processedBy: '',
             modelNumber: '',
-            outOfStock: '',
-            productsAndParts: []
+            outOfStock: ''
         };
 
         this.update = this.update.bind(this);
         this.updateInstallDate = this.updateInstallDate.bind(this);
         this.updateModelNumber = this.updateModelNumber.bind(this);
         this.showOutOfStock = this.showOutOfStock.bind(this);
-        this.processOrder = this.processOrder.bind(this);
     }
 
     componentWillMount() {
-        const { location } = this.props;
+        const { history, location, cookies } = this.props;
         const reOrder = /orderId=(.*)/;
+        const jwt = cookies.get('sibi-admin-jwt');
 
-        const orderId = reOrder.exec(location.search)[1];
+        const orderId = reOrder.exec(location.search);
 
-        if (orderId) {
-            this.props.triggerSpinner({ isOn: true });
-            this.props.getOrderById({ id: orderId });
-        } else {
-            alert('No orderId provided routing back to orders');
-            this.props.history.push(`/login`);
+        if (jwt) {
+            if (orderId[1]) {
+                this.props.triggerSpinner({ isOn: true });
+                this.props.getOrderById({ id: orderId[1] });
+            } else {
+                alert('No orderId provided routing back to orders');
+                (location.prevPath) ? history.goBack() : history.push(`/login`);
+            }
         }
+
+        this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
@@ -83,22 +79,23 @@ class ProcessOrderPage extends React.Component {
     }
 
     updateModelNumber({ productsAndParts }) {
+        const { outOfStock, modelNumber } = this.state;
         let data;
         const order = this.props.order.toJS();
-        const item = productsAndParts[this.state.outOfStock];
+        const item = productsAndParts[outOfStock];
 
         if (item.product) {
             // products
-            data = { productOrderId: item.productOrderId, modelNumber: this.state.modelNumber };
+            data = { productOrderId: item.productOrderId, modelNumber };
 
         } else if (item.part) {
             if(!item.productOrderId) {
                 // standalone parts
-                data = { partOrderId: item.partOrderId, modelNumber: this.state.modelNumber };
+                data = { partOrderId: item.partOrderId, modelNumber };
 
             } else {
                 // included parts
-                data = { productOrderId: item.productOrderId, partId: item.partId, modelNumber: this.state.modelNumber };
+                data = { productOrderId: item.productOrderId, partId: item.partId, modelNumber };
             }
         }
 
@@ -108,12 +105,6 @@ class ProcessOrderPage extends React.Component {
 
     showOutOfStock({ productIndex }) {
         this.setState({ outOfStock: productIndex });
-    }
-
-    processOrder() {
-        const order = this.props.order.toJS();
-
-        this.props.processOrder({ id: order.id, processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });
     }
 
     render() {
@@ -263,7 +254,7 @@ class ProcessOrderPage extends React.Component {
                             <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
                             <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
                         </div>
-                        <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.processOrder();}}>
+                        <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.props.processOrder({ id: order.get('id'), processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });}}>
                             <div className="input-container">
                                 <label htmlFor="processed-by">Processed By</label>
                                 <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Name" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
@@ -386,7 +377,8 @@ const actions = {
     processOrder,
     updateInstallDate,
     updateModelNumber,
-    triggerSpinner
+    triggerSpinner,
+    setActiveTab,
 }
 
-export default connect(select, actions, null, { withRef: true })(withRouter(ProcessOrderPage));
+export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(ProcessOrderPage)));

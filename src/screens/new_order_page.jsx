@@ -14,10 +14,6 @@ class NewOrderPage extends React.Component {
         const { cookies, activeUser } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (!jwt) {
-            this.props.history.push(`/login`);
-        }
-
         this.props.setActiveTab('newOrder');
     }
 

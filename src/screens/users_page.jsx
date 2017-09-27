@@ -44,8 +44,6 @@ class UsersPage extends React.Component {
             this.props.triggerSpinner({ isOn: true });
             this.props.getUsers({ token: jwt.token, type: jwt.type });
 
-        } else {
-            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('users');

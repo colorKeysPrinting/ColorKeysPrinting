@@ -31,7 +31,11 @@ export default function PartTable(props) {
             case 'partDescription':
                 if (row === 'part') {
                     const valueStyled = <span className="product-header">{part.description}</span>;
-                    value = (!props.replacement) ? valueStyled : null;
+                    if (props.type === 'processOrder') {
+                        value = (!props.replacement) ? <span className="product-header">{part.description}</span> : null;
+                    } else {
+                        value = valueStyled;
+                    }
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
@@ -39,7 +43,7 @@ export default function PartTable(props) {
 
                     } else if (props.type === 'orderDetails') {
                         value = <div className="no-limit">
-                            <div className="table-cell-details">{ `Part Code ${part.code}` }</div>
+                            <div className="table-cell-details">{ `Part Code ${(!props.replacement) ? part.code : props.replacement}` }</div>
                         </div>;
                     }
 
@@ -55,7 +59,7 @@ export default function PartTable(props) {
                 break;
 
             case 'code':
-                const code = (!props.replacement) ? part.code : props.replacement
+                const code = (!props.replacement) ? part.code : props.replacement;
                 value = (row === 'part' && props.type === 'processOrder') ? `#${ code }` : null;
 
                 value = (props.outOfStock !== props.productIndex) ? value : null;
@@ -70,7 +74,7 @@ export default function PartTable(props) {
                 break;
 
             case 'price':
-                value = (row === 'part') ? ('$' + props.price) : null;
+                value = (row === 'part') ? (`$${props.price}`) : null;
 
                 value = (props.outOfStock !== props.productIndex && !props.replacement) ? value : null;
                 break;

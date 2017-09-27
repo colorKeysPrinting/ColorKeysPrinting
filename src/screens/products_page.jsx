@@ -30,8 +30,6 @@ class ProductsPage extends React.Component {
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
             this.props.getUserProductCategories({ token: jwt.token, category: jwt.trade }); // need to update this to account for the activeUser trade
-        } else {
-            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('products');

@@ -17,8 +17,6 @@ class DashboardPage extends React.Component {
 
         if (jwt) {
             console.log('TODO: get dashboard data');
-        } else {
-            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('dashboard');
