@@ -15,6 +15,58 @@ const initialState = Immutable.fromJS({
     Question: '',
     Answer: '',
     videoURL: '',
+    defaultProduct: {
+        id                          : '',
+        // ***************** the following are required for new products *****************
+        name                        : '',
+        sibiModelNumber             : '',
+        productCategoryId           : '',
+        productSubcategoryId        : '',
+        sku                         : '',
+
+        // ***************** the following are optional *****************
+        serialNumber                : '',
+        shortDescription            : '',
+        overview                    : '',
+        faq                         : [],
+        videos                      : [],
+        sortIndex                   : 0,
+
+        // ***************** product category section (no required) *****************
+        // *****************
+        applianceManufacturerName   : '',
+        applianceType               : '',
+        applianceSize               : '',
+        applianceCapacity           : '',
+        applianceDescription        : '',
+        applianceFuelType           : '',
+        applianceWidth              : '',
+        applianceHeight             : '',
+        applianceDepth              : '',
+        applianceInstallDescription : '',
+        applianceInstallPrice       : '',
+        applianceInstallCode        : '',
+        applianceColorsInfo         : [],
+        applianceSpecSheetUrl       : '',
+        applianceRemovalDescription : '',
+        applianceRemovalCode        : '',
+        applianceRemovalPrice       : '',
+        applianceAssociatedParts    : [],
+        // *****************
+        hvacSeerRating              : '',
+        hvacEfficiencyRating        : '',
+        hvacVoltageRating           : '',
+        hvacTonnage                 : '',
+        hvacBtuAmount               : '',
+        // *****************
+        paintCategory               : '',
+        paintType                   : '',
+        paintQuantitySize           : '',
+        paintFinish                 : '',
+        paintQuality                : '',
+        paintColorNumber            : '',
+        paintColorName              : ''
+    }
 });
 
 export default (state = initialState, action) => {
@@ -23,66 +75,15 @@ export default (state = initialState, action) => {
     switch (action.type) {
     case ActionTypes.CLEAR_PRODUCT:
         console.log('clearing product');
-        state = state.set('product', {});
+        state = state.set('product', state.get('defaultProduct'));
         break;
 
     case ActionTypes.NEW_PRODUCT:
-        let modelNumber = state.getIn(['product', 'sibiModelNumber']);
-        let category = state.getIn(['product','productCategoryId']);
-        sortIndex = state.getIn(['product','sortIndex']);
-        product = {
-            id                          : '',
-            // ***************** the following are required for new products *****************
-            name                        : '',
-            sibiModelNumber             : (modelNumber) ? modelNumber : '',
-            productCategoryId           : (category) ? category : '',
-            productSubcategoryId        : '',
-            sku                         : '',
-
-            // ***************** the following are optional *****************
-            serialNumber                : '',
-            shortDescription            : '',
-            overview                    : '',
-            faq                         : [],
-            videos                      : [],
-            sortIndex                   : sortIndex || 0,
-
-            // ***************** product category section (no required) *****************
-            // *****************
-            applianceManufacturerName   : '',
-            applianceType               : '',
-            applianceSize               : '',
-            applianceCapacity           : '',
-            applianceDescription        : '',
-            applianceFuelType           : '',
-            applianceWidth              : '',
-            applianceHeight             : '',
-            applianceDepth              : '',
-            applianceInstallDescription : '',
-            applianceInstallPrice       : '',
-            applianceInstallCode        : '',
-            applianceColorsInfo         : [],
-            applianceSpecSheetUrl       : '',
-            applianceRemovalDescription : '',
-            applianceRemovalCode        : '',
-            applianceRemovalPrice       : '',
-            applianceAssociatedParts    : [],
-            // *****************
-            hvacSeerRating              : '',
-            hvacEfficiencyRating        : '',
-            hvacVoltageRating           : '',
-            hvacTonnage                 : '',
-            hvacBtuAmount               : '',
-            // *****************
-            paintCategory               : '',
-            paintType                   : '',
-            paintQuantitySize           : '',
-            paintFinish                 : '',
-            paintQuality                : '',
-            paintColorNumber            : '',
-            paintColorName              : ''
-        };
-
+        const defaultProduct = state.get('defaultProduct').toJS();
+        product = state.get('product').toJS();
+        _.each(defaultProduct, (value, key) => {
+            product[key] = (product[key]) ? product[key] : value;
+        });
         state = state.set('product', Immutable.fromJS(product));
         break;
 
@@ -92,6 +93,13 @@ export default (state = initialState, action) => {
             const sortIndex = action.categorySizes.get(subCategory.label) + 1;
             state = state.updateIn(['product', action.key], value=>subCategory.value);
             state = state.updateIn(['product', 'sortIndex'], value=>sortIndex);
+
+        } else if (action.key === 'applianceAssociatedParts') {
+            // NOTE: this should only get here on a new product
+            let applianceAssociatedParts = state.getIn(['product', action.key]).toJS();
+            applianceAssociatedParts.push(action.value);
+            state = state.updateIn(['product', action.key], value=>Immutable.fromJS(applianceAssociatedParts));
+
         } else {
             state = (action.isProduct) ? state.updateIn(['product', action.key], value=>action.value) : state.set(action.key, action.value);
         }
@@ -152,9 +160,13 @@ export default (state = initialState, action) => {
 
     case ActionTypes.GET_PRODUCT_BY_ID_SUCCESS:
         console.log('receiving product');
-        state = state.set('product', Immutable.fromJS(action.data));
+        product = state.get('product').toJS();
+        _.each(product, (value, key) => {
+            product[key] = (action.data[key]) ? action.data[key] : value;
+        });
         sortIndex = (action.data.sortIndex) ? action.data.sortIndex + 1 : 1;
-        state = state.updateIn(['product','sortIndex'], value=>sortIndex);
+        product['sortIndex'] = sortIndex;
+        state = state.set('product', Immutable.fromJS(product));
         break;
 
     default:

@@ -2,7 +2,7 @@
 
 import axios                    from 'axios';
 import Network                  from 'libs/constants/network';
-import { createProductPart, getProductById }    from 'ducks/product/actions';
+import { createProductPart, getProductById, update }    from 'ducks/product/actions';
 import { getParts }    from 'ducks/products/actions';
 
 // /////////////////////////////////////
@@ -12,8 +12,7 @@ export const ActionTypes = {
     CLEAR_PART : 'sibi_ge_admin/part/CLEAR_PART',
     NEW_PART : 'sibi_ge_admin/part/NEW_PART',
     UPDATE : 'sibi_ge_admin/part/UPDATE',
-    GET_PART_BY_ID_SUCCESS : 'sibi_ge_admin/part/GET_PART_BY_ID_SUCCESS',
-    CREATE_PART_SUCCESS : 'sibi_ge_admin/part/CREATE_PART_SUCCESS',
+    GET_PART_BY_ID_SUCCESS : 'sibi_ge_admin/part/GET_PART_BY_ID_SUCCESS'
 }
 
 // /////////////////////////////////////
@@ -77,7 +76,7 @@ export function createPart({ token, part, productId }) {
             .then(payload => {
                 (productId) ? dispatch(createProductPart({ token, productId, partId: payload.data.id })) : dispatch(getParts({ token }));
                 if (!productId) {
-                    dispatch({ type: ActionTypes.CREATE_PART_SUCCESS , partId: payload.data.id });
+                    dispatch(update({ isProduct: true, key: 'applianceAssociatedParts', value: payload.data }));
                 }
             })
             .catch(error => {

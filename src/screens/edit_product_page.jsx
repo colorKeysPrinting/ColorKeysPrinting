@@ -31,6 +31,7 @@ class EditProductPage extends React.Component {
         this.close = this.close.bind(this);
         this.modifyExistingProduct = this.modifyExistingProduct.bind(this);
         this.showAddPart = this.showAddPart.bind(this);
+        this.addPart = this.addPart.bind(this);
         this.removePart = this.removePart.bind(this);
         this.saveProduct = this.saveProduct.bind(this);
     }
@@ -129,6 +130,15 @@ class EditProductPage extends React.Component {
         } else {
             this.props.newPart({ productCategoryId });
         }
+    }
+
+    addPart({ token, modelNumber }) {
+        let { product, parts } = this.props;
+
+        const part = _.find(parts.toJS(), ['modelNumber', modelNumber]);
+        (product.get('id'))
+            ? this.props.createProductPart({ token, productId: product.get('id'), partId: part.id }) // TODO: may need to have a check here to check to see if the part is already added to the product. If so, need to increment the quantity
+            : this.props.update({ isProduct: true, key: 'applianceAssociatedParts', value: part });
     }
 
     removePart({ token, partId }) {
@@ -410,7 +420,7 @@ class EditProductPage extends React.Component {
                             newPart={this.props.newPart}
                             createPart={this.props.createPart}
                             updatePart={this.props.updatePart}
-                            createProductPart={this.props.createProductPart}
+                            addPart={this.addPart}
                         />): null }
                 </div>
             </Loader>

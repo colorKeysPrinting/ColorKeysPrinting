@@ -34,14 +34,13 @@ export default class EditPartOverlay extends React.Component {
         newPart             : PropTypes.func.isRequired,
         createPart          : PropTypes.func.isRequired,
         updatePart          : PropTypes.func.isRequired,
-        createProductPart   : PropTypes.func.isRequired,
+        addPart             : PropTypes.func.isRequired,
     };
 
     constructor(props) {
         super(props);
 
         this.modifyExistingPart = this.modifyExistingPart.bind(this);
-        this.addPart = this.addPart.bind(this);
         this.savePart = this.savePart.bind(this);
     }
 
@@ -58,13 +57,6 @@ export default class EditPartOverlay extends React.Component {
         this.props.getPartById({ token, id: part.id });
         this.props.verifyPart({ verified: true });
         this.props.resetFound();
-    }
-
-    addPart() {
-        let { token, productId, modelNumber, parts } = this.props;
-
-        const part = _.find(parts.toJS(), ['modelNumber', modelNumber]);
-        this.props.createProductPart({ token, productId, partId: part.id }); // TODO: may need to have a check here to check to see if the part is already added to the product. If so, need to increment the quantity
     }
 
     savePart({ token }) {
@@ -135,7 +127,7 @@ export default class EditPartOverlay extends React.Component {
                     <p> - Use the existing part</p>
                     <p> - continue creating a new part (this will completely replace the existing part)</p>
                     <p> - modify the existing part?</p>
-                    <input className="btn blue" type="submit" value="Add" onClick={() => this.addPart({ modelNumber })} />
+                    <input className="btn blue" type="submit" value="Add" onClick={() => this.props.addPart({ token, modelNumber })} />
                     <input className="btn borderless red fill" type="submit" value="Create New" onClick={() => {
                         this.props.verifyPart({ verified: true });
                         this.props.resetFound();

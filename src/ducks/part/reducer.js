@@ -9,8 +9,7 @@ import { ActionTypes }          from './actions';
 //             REDUCER
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
-    part: {},
-    newParts: {},
+    part: {}
 });
 
 export default (state = initialState, action) => {
@@ -46,13 +45,6 @@ export default (state = initialState, action) => {
     case ActionTypes.GET_PART_BY_ID_SUCCESS:
         console.log('part reducer');
         state = state.set('part', Immutable.fromJS(action.data));
-        break;
-
-    case ActionTypes.CREATE_PART_SUCCESS:
-        console.log('create part success');
-        const newParts = state.get('newParts');
-        newParts.push(action.partId);
-        state = state.set('newParts', newParts);
         break;
 
     default:
