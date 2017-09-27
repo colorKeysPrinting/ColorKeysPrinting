@@ -156,6 +156,7 @@ class EditProductPage extends React.Component {
             }
         });
 
+        // TODO: need to add a case to create productParts on a new product
         product['sortIndex'] = ((product.sortIndex - 1) <= 0) ? 0 : product.sortIndex - 1;
 
         (product.id) ? this.props.updateProduct({ token, category, product }) : this.props.createProduct({ token, category, product });
