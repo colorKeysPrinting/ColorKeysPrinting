@@ -87,10 +87,13 @@ export default (state = initialState, action) => {
         break;
 
     case ActionTypes.UPDATE:
-        state = (action.isProduct) ? state.updateIn(['product', action.key], value=>action.value) : state.set(action.key, action.value);
-
         if (action.key === 'productSubcategoryId') {
-            // TODO: need to update the sortIndex
+            const subCategory = action.value;
+            const sortIndex = action.categorySizes.get(subCategory.label) + 1;
+            state = state.updateIn(['product', action.key], value=>subCategory.value);
+            state = state.updateIn(['product', 'sortIndex'], value=>sortIndex);
+        } else {
+            state = (action.isProduct) ? state.updateIn(['product', action.key], value=>action.value) : state.set(action.key, action.value);
         }
         break;
 

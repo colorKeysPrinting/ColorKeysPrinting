@@ -36,10 +36,11 @@ export function newProduct() {
     };
 }
 
-export function update({ isProduct, key, value }) {
+export function update({ isProduct, categorySizes, key, value }) {
     return {
         type: ActionTypes.UPDATE,
         isProduct,
+        categorySizes,
         key,
         value
     };

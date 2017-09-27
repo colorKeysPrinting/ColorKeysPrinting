@@ -11,6 +11,7 @@ import { ActionTypes }          from './actions';
 const initialState = Immutable.fromJS({
     products: {},
     parts: {},
+    categorySizes: {},
     productsInCategory: {},
     productCategories: [],
     productSubCategories: [],
@@ -22,18 +23,17 @@ const initialState = Immutable.fromJS({
 });
 
 export default (state = initialState, action) => {
-    let products, product, parts, part, index, category;
 
     switch (action.type) {
     case ActionTypes.CHECK_MODEL_NUM:
         if (action.key === 'product') {
-            product = _.find(state.get('products').toJS(), ['sibiModelNumber', action.modelNumber]);
+            const product = _.find(state.get('products').toJS(), ['sibiModelNumber', action.modelNumber]);
             const isFound = (product) ? true : false;
             state = state.set('isProductFound', isFound );
             state = state.set('isProductVerified', true );
 
         } else if (action.key === 'part') {
-            part = _.find(state.get('parts').toJS(), ['modelNumber', action.modelNumber]);
+            const part = _.find(state.get('parts').toJS(), ['modelNumber', action.modelNumber]);
             const isFound = (part) ? true : false;
             state = state.set('isPartFound', isFound);
             state = state.set('isPartVerified', true );
@@ -78,9 +78,12 @@ export default (state = initialState, action) => {
 
     case ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS:
         console.log('receiving products for sub category', action.data);
+        const size = _.size(action.data);
         if (action.config.headers.subSubCategory) {
+            state = state.setIn(['categorySizes', action.config.headers.subSubCategory], size);
             state = state.setIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory, action.config.headers.subSubCategory], Immutable.fromJS(action.data));
         } else {
+            state = state.setIn(['categorySizes', action.config.headers.subCategory], size);
             state = state.setIn(['productsInCategory', action.config.headers.category, action.config.headers.subCategory], Immutable.fromJS(action.data));
         }
         break;

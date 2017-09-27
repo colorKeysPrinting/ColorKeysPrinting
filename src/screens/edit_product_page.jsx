@@ -67,16 +67,33 @@ class EditProductPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        if(!_.isEqual(nextProps.imageUploadURL, this.props.imageUploadURL)) {
-            const type = nextProps.imageUploadURL.get('type');
-            const image = nextProps.imageUploadURL.get('imageURL');
+        const { imageUploadURL, part, productCategories } = nextProps;
+        if(!_.isEqual(imageUploadURL, this.props.imageUploadURL)) {
+            const type = imageUploadURL.get('type');
+            const image = imageUploadURL.get('imageURL');
             (type === 'product') ? this.props.update({ key: 'productImage', value: image }) : this.props.updatePartLocal({ isPart: true, key: 'imageUrl', value: image });
         }
 
-        if(!_.isEqual(nextProps.part, this.props.part)) {
-            if (nextProps.part.size > 0) {
+        if(!_.isEqual(part, this.props.part)) {
+            if (part.size > 0) {
                 this.setState({ activeSection: 'partOverlay' });
             }
+        }
+
+        if (!_.isEqual(productCategories, this.props.productCategories)) {
+            const jwt = this.props.cookies.get('sibi-admin-jwt');
+
+            _.each(productCategories.toJS(), (category) => {
+                _.each(category.subcategories, (subCategory) => {
+                    if (subCategory.containedSubCategories) {
+                        _.each(subCategory.containedSubCategories, (subSubCategory) => {
+                            this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory, subSubCategory });
+                        });
+                    } else {
+                        this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory });
+                    }
+                });
+            });
         }
     }
 
@@ -144,6 +161,7 @@ class EditProductPage extends React.Component {
             activeUser,
             product,
             productCategories,
+            categorySizes,
             isProductVerified,
             isProductFound,
             part,
@@ -209,7 +227,7 @@ class EditProductPage extends React.Component {
                                 className="center-col"
                                 value={product.get('productSubcategoryId')}
                                 options={subCategoryOptions}
-                                onChange={(selected) => (!isDisabled) ? this.props.update({ isProduct: true, key: 'productSubcategoryId', value: (selected) ? selected.value : null }) : console.log(`you don't have permission to change!`)}
+                                onChange={(selected) => (!isDisabled) ? this.props.update({ isProduct: true, categorySizes, key: 'productSubcategoryId', value: (selected) ? selected : null }) : console.log(`you don't have permission to change!`)}
                                 required
                             />
                             <input name="product-name" className="right-col" type="text" placeholder="Product name" value={product.get('name')} onChange={(e) => this.props.update({ isProduct: true, key: 'name', value: e.target.value})} required disabled={isDisabled} />
@@ -247,7 +265,6 @@ class EditProductPage extends React.Component {
                                     applianceDisconnectCode={product.get('applianceDisconnectCode')}
                                     applianceDisconnectPrice={parseFloat(product.get('applianceDisconnectPrice'))}
                                     applianceAssociatedParts={product.get('applianceAssociatedParts').toJS()}
-
                                     update={this.props.update}
                                     uploadImage={this.props.uploadImage}
                                     addColorAndImage={this.props.addColorAndImage}
@@ -405,7 +422,6 @@ const select = (state) => ({
     spinner              : state.ui.get('spinner'),
     activeUser           : state.activeUser.get('activeUser'),
     imageUploadURL       : state.assets.get('imageUploadURL'),
-
     product              : state.product.get('product'),
     productImage         : state.product.get('productImage'),
     color                : state.product.get('color'),
@@ -416,6 +432,7 @@ const select = (state) => ({
     products             : state.products.get('products'),
     parts                : state.products.get('parts'),
     productCategories    : state.products.get('productCategories'),
+    categorySizes        : state.products.get('categorySizes'),
     isProductVerified    : state.products.get('isProductVerified'),
     isProductFound       : state.products.get('isProductFound'),
     isPartVerified       : state.products.get('isPartVerified'),
