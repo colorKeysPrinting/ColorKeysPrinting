@@ -17,15 +17,6 @@ import MyTable                              from 'components/my_table';
 import ProductTable                         from 'components/product_table';
 import PartTable                            from 'components/part_table';
 
-// ************************************************************************************
-//                              TO LOAD THE PAGE
-//
-//    http://localhost:3000/process_order?orderId=beb36893-494f-4a09-ae7b-f4955ff5e641
-//
-// ************************************************************************************
-
-// ####################################################### TODO: NEED TO FIGURED OUT ORDER UPDATING WITH/WITHOUT AUTH ############################
-
 class ProcessOrderPage extends React.Component {
     constructor(props) {
         super(props);
@@ -34,15 +25,13 @@ class ProcessOrderPage extends React.Component {
             orderNumber: '',
             processedBy: '',
             modelNumber: '',
-            outOfStock: '',
-            productsAndParts: []
+            outOfStock: ''
         };
 
         this.update = this.update.bind(this);
         this.updateInstallDate = this.updateInstallDate.bind(this);
         this.updateModelNumber = this.updateModelNumber.bind(this);
         this.showOutOfStock = this.showOutOfStock.bind(this);
-        this.processOrder = this.processOrder.bind(this);
     }
 
     componentWillMount() {
@@ -89,22 +78,23 @@ class ProcessOrderPage extends React.Component {
     }
 
     updateModelNumber({ productsAndParts }) {
+        const { outOfStock, modelNumber } = this.state;
         let data;
         const order = this.props.order.toJS();
-        const item = productsAndParts[this.state.outOfStock];
+        const item = productsAndParts[outOfStock];
 
         if (item.product) {
             // products
-            data = { productOrderId: item.productOrderId, modelNumber: this.state.modelNumber };
+            data = { productOrderId: item.productOrderId, modelNumber };
 
         } else if (item.part) {
             if(!item.productOrderId) {
                 // standalone parts
-                data = { partOrderId: item.partOrderId, modelNumber: this.state.modelNumber };
+                data = { partOrderId: item.partOrderId, modelNumber };
 
             } else {
                 // included parts
-                data = { productOrderId: item.productOrderId, partId: item.partId, modelNumber: this.state.modelNumber };
+                data = { productOrderId: item.productOrderId, partId: item.partId, modelNumber };
             }
         }
 
@@ -114,12 +104,6 @@ class ProcessOrderPage extends React.Component {
 
     showOutOfStock({ productIndex }) {
         this.setState({ outOfStock: productIndex });
-    }
-
-    processOrder() {
-        const order = this.props.order.toJS();
-
-        this.props.processOrder({ id: order.id, processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });
     }
 
     render() {
@@ -269,7 +253,7 @@ class ProcessOrderPage extends React.Component {
                             <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
                             <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
                         </div>
-                        <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.processOrder();}}>
+                        <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.props.processOrder({ id: order.get('id'), processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });}}>
                             <div className="input-container">
                                 <label htmlFor="processed-by">Processed By</label>
                                 <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Name" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
