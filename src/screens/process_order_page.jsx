@@ -22,7 +22,7 @@ import PartTable                                            from 'components/par
 //
 // ************************************************************************************
 
-// TODO: need to get the date picker to render it's calendar modal when you click on the input box (lines: 192 - 198)
+// ####################################################### TODO: NEED TO FIGURED OUT ORDER UPDATING WITH/WITHOUT AUTH ############################
 
 class ProcessOrderPage extends React.Component {
     constructor(props) {
