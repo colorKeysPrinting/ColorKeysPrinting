@@ -212,6 +212,7 @@ class OrderDetails extends React.Component {
                     <div className="product-table-wrapper">
                         { _.map(productsAndParts, (orderDetail, productIndex) => {
                             if (orderDetail.product) {
+                                const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
                                 const address = <div className="no-limit">
                                     <div>{`${myOrder.fundProperty.addressLineOne} ${myOrder.fundProperty.addressLineTwo} ${myOrder.fundProperty.addressLineThree},`}</div>
                                     <div>{`${myOrder.fundProperty.city}, ${myOrder.fundProperty.state}, ${myOrder.fundProperty.zipcode}`}</div>
@@ -223,7 +224,9 @@ class OrderDetails extends React.Component {
                                     productIndex={productIndex}
                                     productHeaders={productHeaders}
                                     product={orderDetail.product}
+                                    replacement={replacement}
                                     image={orderDetail.selectedColorInfo.imageUrl}
+                                    manufacturerModelNumber={orderDetail.selectedColorInfo.manufacturerModelNumber}
                                     color={orderDetail.selectedColorInfo.color}
                                     qty={(orderDetail.qty) ? orderDetail.qty : 1}
                                     installAppliance={orderDetail.installAppliance}
@@ -232,11 +235,13 @@ class OrderDetails extends React.Component {
                                     price={orderDetail.ProductPrice.price}
                                 />;
                             } else if (orderDetail.part) {
+                                const replacement = (orderDetail.replacementModelNumber) ? orderDetail.replacementModelNumber : false;
                                 return <PartTable
                                     key={`part${productIndex}`}
                                     type="orderDetails"
                                     productIndex={productIndex}
                                     part={orderDetail.part}
+                                    replacement={replacement}
                                     qty={(orderDetail.qty) ? orderDetail.qty : 1}
                                     price={orderDetail.PartPrice.price}
                                 />;

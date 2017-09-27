@@ -23,25 +23,31 @@ export default function ProductTable(props) {
             switch(key) {
             case 'productDescription':
                 if (row === 'product') {
+                    const modelNumber = (!props.replacement) ? (props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber : props.replacement;
                     const valueStyled = <div className="no-limit">
                         <span className="product-header">{product.applianceDescription}</span>
-                        <div className="table-cell-details">{ `Model Number: ${(props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber}` }</div>
+                        <div className="table-cell-details">{ `Model Number: ${modelNumber}` }</div>
                     </div>;
-                    value = (!props.replacement) ? valueStyled : null;
+
+                    if (props.type === 'processOrder') {
+                        value = (!props.replacement) ? valueStyled : null;
+                    } else {
+                        value = valueStyled;
+                    }
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
                         value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless cancel-button" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
 
                     } else if (props.type === 'orderDetails') {
-                        value = <div className="no-limit">
+                        value = (!props.replacement) ? <div className="no-limit">
                             <div className="table-cell-details">{ `Color: ${props.color}` }</div>
                             <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
                             <div className="table-cell-details">{ (product.applianceSize) ? `Size: ${product.applianceSize}` : `Volume: ${product.applianceCapacity}` }</div>
                             <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
                             <div className="table-cell-details">{ `Height: ${product.applianceHeight}` }</div>
                             <div className="table-cell-details">{ `Depth: ${product.applianceDepth}` }</div>
-                        </div>;
+                        </div> : null;
                     }
                 } else if (row === 'install') {
                     let description;
