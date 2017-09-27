@@ -41,7 +41,7 @@ export default class MyTable extends React.Component {
             const col = _.map(item, (col, id) => {
                 if (id !== 'id') {
                     if (id === 'action') {
-                        return (col === 'approve' || this.props.type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
+                        return (col === 'process' || col === 'approve' || this.props.type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ type: col, item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
 
                     } else {
                         if (id === 'totalCost') {
@@ -58,7 +58,7 @@ export default class MyTable extends React.Component {
                         } else if (col === 'Shipped') {
                             const lowercase = col.toLowerCase();
                             return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
-                        
+
                         } else if (id === 'phoneNumber') {
                             const phoneFormat = formatPhoneNumbers(col);
                             return <td title={phoneFormat} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ phoneFormat }</td>;

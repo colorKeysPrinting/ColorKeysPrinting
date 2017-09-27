@@ -45,8 +45,6 @@ class OrderDetails extends React.Component {
                 alert('No orderId provided routing back to orders');
                 this.props.history.push(`/orders`);
             }
-        } else {
-            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('orders');

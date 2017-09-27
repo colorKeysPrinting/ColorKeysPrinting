@@ -30,8 +30,6 @@ class ProductsPage extends React.Component {
 
         if (jwt) {
             this.props.getProductCategories({ token: jwt.token });
-        } else {
-            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('products');

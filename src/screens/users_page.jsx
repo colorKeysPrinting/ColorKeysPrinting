@@ -41,8 +41,6 @@ class UsersPage extends React.Component {
         if (jwt) {
             this.props.getUsers({ token: jwt.token, type: jwt.type });
 
-        } else {
-            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('users');

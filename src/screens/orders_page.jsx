@@ -32,15 +32,13 @@ class OrdersPage extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies, activeUser } = this.props;
+        const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
             this.props.getFundProperties({ token: jwt.token });
             this.props.getUsers({ token: jwt.token, type: jwt.type });
             this.props.getOrders({ token: jwt.token, type: jwt.type });
-        } else {
-            this.props.history.push(`/login`);
         }
 
         this.props.setActiveTab('orders');
@@ -66,12 +64,17 @@ class OrdersPage extends React.Component {
         });
     }
 
-    handleAction({ item }) {
+    handleAction({ type, item }) {
         console.log('user action:', item.id);
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const { cookies, history, location } = this.props;
 
-        this.props.approveOrder({ token: jwt.token, id: item.id });
+        if (type === 'approve') {
+            const jwt = cookies.get('sibi-admin-jwt');
+            this.props.approveOrder({ token: jwt.token, id: item.id });
+
+        } else if (type === 'process') {
+            history.push({ pathname: `/process_order`, prevPath: location.pathname, search: `orderId=${item.id}` });
+        }
     }
 
     handleItem({ item }) {
@@ -149,6 +152,7 @@ class OrdersPage extends React.Component {
 
                     } else if (key === 'action') {
                         value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
+                        value = (item['orderStatus'] === 'Approved') ? 'process' : value;
                     }
 
                     cols[key] = value;

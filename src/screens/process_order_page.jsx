@@ -1,19 +1,21 @@
-import React                                                from 'react';
-import _                                                    from 'lodash';
-import { connect }                                          from 'react-redux';
-import { withRouter }                                       from 'react-router';
-import { Link }                                             from 'react-router-dom';
-import moment                                               from 'moment';
-import DayPickerInput                                       from 'react-day-picker/DayPickerInput';
-import Loader                                               from 'react-loader';
-import assets                                               from 'libs/assets';
+import React                                from 'react';
+import _                                    from 'lodash';
+import { connect }                          from 'react-redux';
+import { withCookies }                      from 'react-cookie';
+import { withRouter }                       from 'react-router';
+import { Link }                             from 'react-router-dom';
+import moment                               from 'moment';
+import DayPickerInput                       from 'react-day-picker/DayPickerInput';
+import Loader                               from 'react-loader';
+import assets                               from 'libs/assets';
 
 import { getOrderById, processOrder, updateInstallDate, updateModelNumber }          from 'ducks/orders/actions';
-import { triggerSpinner }                                   from 'ducks/ui/actions';
+import { triggerSpinner }                   from 'ducks/ui/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
 
-import MyTable                                              from 'components/my_table';
-import ProductTable                                         from 'components/product_table';
-import PartTable                                            from 'components/part_table';
+import MyTable                              from 'components/my_table';
+import ProductTable                         from 'components/product_table';
+import PartTable                            from 'components/part_table';
 
 // ************************************************************************************
 //                              TO LOAD THE PAGE
@@ -44,18 +46,23 @@ class ProcessOrderPage extends React.Component {
     }
 
     componentWillMount() {
-        const { location } = this.props;
+        const { history, location, cookies } = this.props;
         const reOrder = /orderId=(.*)/;
+        const jwt = cookies.get('sibi-admin-jwt');
 
-        const orderId = reOrder.exec(location.search)[1];
+        const orderId = reOrder.exec(location.search);
 
-        if (orderId) {
-            this.props.triggerSpinner({ isOn: true });
-            this.props.getOrderById({ id: orderId });
-        } else {
-            alert('No orderId provided routing back to orders');
-            this.props.history.push(`/login`);
+        if (jwt) {
+            if (orderId[1]) {
+                this.props.triggerSpinner({ isOn: true });
+                this.props.getOrderById({ id: orderId[1] });
+            } else {
+                alert('No orderId provided routing back to orders');
+                (location.prevPath) ? history.goBack() : history.push(`/login`);
+            }
         }
+
+        this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
@@ -383,7 +390,8 @@ const actions = {
     processOrder,
     updateInstallDate,
     updateModelNumber,
-    triggerSpinner
+    triggerSpinner,
+    setActiveTab,
 }
 
-export default connect(select, actions, null, { withRef: true })(withRouter(ProcessOrderPage));
+export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(ProcessOrderPage)));
