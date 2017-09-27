@@ -4,16 +4,6 @@ import _                                                    from 'lodash';
 import assets                                               from 'libs/assets';
 import MyTable                                              from 'components/my_table';
 
-// productIndex
-// part
-// qty
-// price
-// outOfStock
-// modelNumber
-// update
-// updateModelNumber
-// showOutOfStock
-
 export default function PartTable(props) {
     const part = props.part;
 

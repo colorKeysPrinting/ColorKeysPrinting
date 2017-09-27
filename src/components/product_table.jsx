@@ -4,17 +4,6 @@ import _                                                    from 'lodash';
 import assets                                               from 'libs/assets';
 import MyTable                                              from 'components/my_table';
 
-// productIndex
-// product
-// image
-// qty
-// price
-// outOfStock
-// modelNumber
-// update
-// updateModelNumber
-// showOutOfStock
-
 export default function ProductTable(props) {
     const product = props.product;
     const imageData = (!props.replacement) ? [[<img src={props.image} alt="productImg" height="100" width="auto" />]] : null;
@@ -48,6 +37,7 @@ export default function ProductTable(props) {
                         value = <div className="no-limit">
                             <div className="table-cell-details">{ `Color: ${props.color}` }</div>
                             <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
+                            <div className="table-cell-details">{ (product.applianceSize) ? `Size: ${product.applianceSize}` : `Volume: ${product.applianceCapacity}` }</div>
                             <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
                             <div className="table-cell-details">{ `Height: ${product.applianceHeight}` }</div>
                             <div className="table-cell-details">{ `Depth: ${product.applianceDepth}` }</div>
