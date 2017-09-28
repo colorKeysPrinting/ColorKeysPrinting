@@ -70,7 +70,7 @@ const initialState = Immutable.fromJS({
 });
 
 export default (state = initialState, action) => {
-    let products, product, sortIndex, parts, part, index, videos, faq, applianceColorsInfo;
+    let products, product, sortIndex, parts, part, index, videos, faq, applianceColorsInfo, defaultProduct;
 
     switch (action.type) {
     case ActionTypes.CLEAR_PRODUCT:
@@ -79,7 +79,7 @@ export default (state = initialState, action) => {
         break;
 
     case ActionTypes.NEW_PRODUCT:
-        const defaultProduct = state.get('defaultProduct').toJS();
+        defaultProduct = state.get('defaultProduct').toJS();
         product = state.get('product').toJS();
         _.each(defaultProduct, (value, key) => {
             product[key] = (product[key]) ? product[key] : value;
@@ -160,8 +160,9 @@ export default (state = initialState, action) => {
 
     case ActionTypes.GET_PRODUCT_BY_ID_SUCCESS:
         console.log('receiving product');
+        defaultProduct = state.get('defaultProduct').toJS();
         product = state.get('product').toJS();
-        _.each(product, (value, key) => {
+        _.each(defaultProduct, (value, key) => {
             product[key] = (action.data[key]) ? action.data[key] : value;
         });
         sortIndex = (action.data.sortIndex) ? action.data.sortIndex + 1 : 1;

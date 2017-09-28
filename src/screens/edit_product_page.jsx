@@ -360,7 +360,10 @@ class EditProductPage extends React.Component {
                     </form>
                 </dialog>
             }
-            this.props.triggerSpinner({ isOn: false });
+            setTimeout(
+                () => this.props.triggerSpinner({ isOn: false }),
+                500
+            )
         }
 
         return (
