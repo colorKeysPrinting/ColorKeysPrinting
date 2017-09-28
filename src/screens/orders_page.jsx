@@ -154,7 +154,7 @@ class OrdersPage extends React.Component {
 
                     } else if (key === 'action') {
                         value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
-                        value = (item['orderStatus'] === 'Approved') ? 'process' : value;
+                        // value = (item['orderStatus'] === 'Approved') ? 'process' : value;
                     }
 
                     cols[key] = value;

@@ -30,12 +30,7 @@ export default function PartTable(props) {
             switch(key) {
             case 'partDescription':
                 if (row === 'part') {
-                    const valueStyled = <span className="product-header">{part.description}</span>;
-                    if (props.type === 'processOrder') {
-                        value = (!props.replacement) ? <span className="product-header">{part.description}</span> : null;
-                    } else {
-                        value = valueStyled;
-                    }
+                    value = <span className="product-header">{(!props.replacement) ? part.description : `Replaced with part #: ${props.replacement}`}</span>;
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
@@ -43,7 +38,7 @@ export default function PartTable(props) {
 
                     } else if (props.type === 'orderDetails') {
                         value = <div className="no-limit">
-                            <div className="table-cell-details">{ `Part Code ${(!props.replacement) ? part.code : props.replacement}` }</div>
+                            <div className="table-cell-details">{ `${(props.replacement) ? 'Original' : ''} Part Code ${part.code}` }</div>
                         </div>;
                     }
 
@@ -59,15 +54,14 @@ export default function PartTable(props) {
                 break;
 
             case 'code':
-                const code = (!props.replacement) ? part.code : props.replacement;
-                value = (row === 'part' && props.type === 'processOrder') ? `#${ code }` : null;
-
-                value = (props.outOfStock !== props.productIndex) ? value : null;
+                value = (props.outOfStock !== props.productIndex) ? (
+                    (row === 'part' && props.type === 'processOrder') ? `#${ (!props.replacement) ? part.code : props.replacement }` : null
+                ) : null;
                 break;
 
             case 'qty':
                 if (props.type === 'processOrder') {
-                    value = (row === 'part' && props.outOfStock !== props.productIndex && !props.replacement) ? props.qty : null;
+                    value = (row === 'part' && props.outOfStock !== props.productIndex) ? props.qty : null;
                 } else if (props.type === 'orderDetails') {
                     value = (row === 'part') ? props.qty : null;
                 }
@@ -77,7 +71,7 @@ export default function PartTable(props) {
                 value = (row === 'part') ? (`$${props.price}`) : null;
 
                 if (props.type === 'processOrder') {
-                    value = (props.outOfStock !== props.productIndex && !props.replacement) ? value : null;
+                    value = (props.outOfStock !== props.productIndex) ? value : null;
                 }
 
                 break;
