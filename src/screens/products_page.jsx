@@ -82,7 +82,8 @@ class ProductsPage extends React.Component {
         const { cookies, products, productCategories, productSubCategories, productsInCategory, activeUser } = this.props;
         let tabs, tabContent, pageContent, editProductSection;
 
-        if (productCategories.size > 0 &&
+        if (activeUser.size > 0 &&
+            productCategories.size > 0 &&
             productSubCategories.size > 0 &&
             productsInCategory.size > 0) {
 
