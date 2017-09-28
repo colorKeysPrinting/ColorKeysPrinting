@@ -150,17 +150,18 @@ class EditProductPage extends React.Component {
         const { history } = this.props;
         let product = this.props.product.toJS();
 
+        const applianceAssociatedParts = product.applianceAssociatedParts;
+
         _.each(product, (value, key) => {
             if(key === 'applianceAssociatedParts' || value === '' || typeof value === 'object' && _.size(value) === 0) {
                 delete product[key];
             }
         });
 
-        // TODO: need to add a case to create productParts on a new product
         product['sortIndex'] = ((product.sortIndex - 1) <= 0) ? 0 : product.sortIndex - 1;
 
-        (product.id) ? this.props.updateProduct({ token, category, product }) : this.props.createProduct({ token, category, product });
-        history.push(`/products`);
+        (product.id) ? this.props.updateProduct({ token, category, product }) : this.props.createProduct({ token, category, product, applianceAssociatedParts });
+        history.goBack();
     }
 
     render() {
@@ -194,8 +195,9 @@ class EditProductPage extends React.Component {
                 { label: 'Select Category', value: '', disabled: true },
                 ...(_.map(productCategories.toJS(), (category) => {
                     if (category.name === activeUser.get('trade')) { // TODO: need to update this to account for all category types, if user has multiple trades.
-                        return { label: category.name, value: category.id };
+
                     }
+                    return { label: category.name, value: category.id };
                 }))
             ];
 
@@ -338,7 +340,7 @@ class EditProductPage extends React.Component {
                             <input className="btn blue fill" type="submit" value={(product.get('id')) ? 'Update' : 'Add'} />
                             { (product.get('id') && !isDisabled) ? <div className="btn borderless red fill" onClick={() => {
                                 this.props.archiveProduct({ token: jwt.token, category: jwt.trade, id: product.get('id')});
-                                history.push(`/products`);
+                                history.goBack();
                             }}>Archive Product</div> : null }
                         </div>
                     </div>

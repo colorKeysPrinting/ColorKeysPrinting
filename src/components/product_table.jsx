@@ -6,17 +6,8 @@ import MyTable                                              from 'components/my_
 
 export default function ProductTable(props) {
     const product = props.product;
-    const imageData = (!props.replacement) ? [[<img src={props.image} alt="productImg" height="100" width="auto" />]] : null;
 
-    const productImageTable = <MyTable
-        type="productDetailsImage"
-        headers={(props.productIndex === 0) ? {productImage: 'Product'} : null}
-        data={imageData}
-    />;
-
-    const productDetailRows = ['product', 'outOfStock', 'install', 'remove', 'disconnect'];
-
-    const productDetails = _.map(productDetailRows, (row) => {
+    const productDetails = _.map(['product', 'outOfStock', 'install', 'remove', 'disconnect'], (row) => {
         let cols = {};
         _.each(props.productHeaders, (header, key) => {
             let value;
@@ -153,12 +144,6 @@ export default function ProductTable(props) {
         return cols;
     });
 
-    const productDetailsTable = <MyTable
-        type="productDetails"
-        headers={(props.productIndex === 0) ? props.productHeaders : null}
-        data={productDetails}
-    />;
-
     return <table className="product-table">
         <colgroup>
             <col span="1" className="product-image-colspan" />
@@ -166,8 +151,20 @@ export default function ProductTable(props) {
         </colgroup>
         <tbody>
             <tr className="product-table-container-row">
-                <td className="product-image-table">{ productImageTable }</td>
-                <td className="product-details-table">{ productDetailsTable }</td>
+                <td className="product-image-table">
+                    <MyTable
+                        type="productDetailsImage"
+                        headers={(props.productIndex === 0) ? {productImage: 'Product'} : null}
+                        data={(!props.replacement) ? [[<img src={props.image} alt="productImg" height="100" width="auto" />]] : null}
+                    />
+                </td>
+                <td className="product-details-table">
+                    <MyTable
+                        type="productDetails"
+                        headers={(props.productIndex === 0) ? props.productHeaders : null}
+                        data={productDetails}
+                    />
+                </td>
             </tr>
         </tbody>
     </table>;

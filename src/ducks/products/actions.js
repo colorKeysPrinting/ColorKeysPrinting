@@ -2,6 +2,7 @@
 
 import axios            from 'axios';
 import Network          from 'libs/constants/network';
+import { createProductPart } from 'ducks/product/actions';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -91,7 +92,7 @@ export function updateProduct({ token, category, product }) {
     }
 }
 
-export function createProduct({ token, category, product }) {
+export function createProduct({ token, category, product, applianceAssociatedParts }) {
     // TODO: need to add a case to create productParts on a new product
     return (dispatch) => {
         return axios({
@@ -105,6 +106,12 @@ export function createProduct({ token, category, product }) {
             }
         })
             .then(payload => {
+                if (_.size(applianceAssociatedParts) > 0) {
+                    _.each(applianceAssociatedParts, part => {
+                        dispatch(createProductPart({token, productId: payload.data.id, partId: part.id}));
+                    })
+                }
+
                 dispatch(getUserProductCategories({ token, category }));
             })
             .catch(error => {

@@ -20,11 +20,12 @@ class ProductsPage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { isEditShowing: false, sortIndex: 0, product: '', category: '', activeKey: '0', activeSubKey: '0'};
+        this.state = { activeKey: '0', activeSubKey: '0'};
+        this.updateTabs = this.updateTabs.bind(this);
     }
 
     componentWillMount() {
-        const { cookies, activeUser } = this.props;
+        const { cookies, activeUser, locaction } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (jwt) {
@@ -32,11 +33,20 @@ class ProductsPage extends React.Component {
             this.props.getUserProductCategories({ token: jwt.token, category: jwt.trade }); // need to update this to account for the activeUser trade
         }
 
+        if (location.search) {
+            let activeKey = /tab=(\d{1})/.exec(location.search);
+            let activeSubKey = /subTab=(\d{1})/.exec(location.search);
+
+            activeKey = (activeKey) ? activeKey[1] : '0';
+            activeSubKey = (activeSubKey) ? activeSubKey[1] : '0';
+            this.setState({ activeKey, activeSubKey });
+        }
+
         this.props.setActiveTab('products');
     }
 
     componentWillUpdate(nextProps) {
-        const { cookies, activeUser, history, products, productCategories } = this.props;
+        const { cookies, history, activeUser, productCategories } = this.props;
 
         if (!_.isEqual(nextProps.activeUser, activeUser)) {
             const path = (nextProps.activeUser.size > 0) ? `/products` : `/login`;
@@ -58,6 +68,14 @@ class ProductsPage extends React.Component {
                 });
             });
         }
+    }
+
+    updateTabs({ activeKey, activeSubKey }) {
+        const { history } = this.props;
+        (activeKey) ? this.setState({ activeKey }) : null;
+        (activeSubKey) ? this.setState({ activeSubKey }) : null;
+
+        history.push({pathname: `/products`, search: `${(activeKey)? `tab=${activeKey}` : ''}${(activeSubKey) ? `,subTab=${activeSubKey}` : ''}`})
     }
 
     render() {
@@ -124,7 +142,7 @@ class ProductsPage extends React.Component {
                         content = <Tabs
                             tabBarPosition="top"
                             activeKey={this.state.activeSubKey}
-                            onChange={(activeSubKey) => this.setState({ activeSubKey })}
+                            onChange={(activeSubKey) => this.updateTabs({ activeKey: this.state.activeKey, activeSubKey })}
                             renderTabBar={()=><ScrollableInkTabBar />}
                             renderTabContent={()=><TabContent style={{ overflow: 'none' }} />}
                         >
@@ -187,21 +205,13 @@ class ProductsPage extends React.Component {
                     <Tabs
                         tabBarPosition="top"
                         activeKey={this.state.activeKey}
-                        onChange={(activeKey) => this.setState({ activeKey })}
+                        onChange={(activeKey) => this.updateTabs({ activeKey })}
                         renderTabBar={()=><ScrollableInkTabBar />}
                         renderTabContent={()=><TabContent style={{ overflow: 'none' }} />}
                     >
                         { tabContent }
                     </Tabs>
                 </div>
-                { (this.state.isEditShowing) ? <div style={{ display: (this.state.isEditShowing) ? 'block' : 'none' }}>
-                    <EditProduct
-                        sortIndex={this.state.sortIndex}
-                        product={this.state.product}
-                        category={this.state.category}
-                        close={this.showEditBox}
-                    />
-                </div> : null }
             </div>;
 
             this.props.triggerSpinner({ isOn: false });
