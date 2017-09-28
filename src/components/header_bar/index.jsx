@@ -50,7 +50,7 @@ class HeaderBar extends React.Component {
             if (!_.isEqual(nextProps.activeUser, activeUser)) {
                 if (nextProps.activeUser.size > 0) {
                     const search = (location.search) ? location.search : null;
-                    (location.prevPath === '/login') ? history.push(`/orders`) : (location.pathname === '/login') ? history.goBack() : null;
+                    (location.prevPath === '/login' || location.pathname === '/') ? history.push(`/orders`) : (location.pathname === '/login') ? history.goBack() : null;
 
                     this.props.getCurrentUser({ token: jwt.token});
                     this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });

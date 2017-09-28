@@ -1,6 +1,6 @@
 // if you use jsx, you have to import React
 import React                               from 'react';
-import { BrowserRouter as Router, Route }  from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route }  from 'react-router-dom';
 
 import HeaderBar                           from 'components/header_bar';
 import Home                                from 'screens/home';
@@ -16,23 +16,24 @@ import ProcessOrderPage                    from 'screens/process_order_page';
 import LoginOverlay                        from 'screens/overlays/login';
 import FileUploaderOverlay                 from 'screens/overlays/file_uploader';
 
-import NotFound                            from 'components/common/not_found';
+import NotFound                            from 'screens/not_found';
 
 export default (
     <Router>
         <div>
             <HeaderBar />
-            {/* <Route path="/" component={Home} /> */}
-            <Route path="/orders" component={OrdersPage} />
-            <Route path="/users" component={UsersPage} />
-            <Route path="/products" component={ProductsPage} />
-            <Route path="/dashboard" component={DashboardPage} />
-            <Route path="/order_details" component={OrderDetails} />
-            <Route path="/new_order" component={NewOrderPage} />
-
-            <Route path="/login" component={LoginOverlay} />
-            <Route path="/file_uploader" component={FileUploaderOverlay} />
-            <Route path="/process_order" component={ProcessOrderPage} />
+            <Switch>
+                <Route exact path="/orders" component={OrdersPage} />
+                <Route exact path="/users" component={UsersPage} />
+                <Route exact path="/products" component={ProductsPage} />
+                <Route exact path="/dashboard" component={DashboardPage} />
+                <Route exact path="/order_details" component={OrderDetails} />
+                <Route exact path="/new_order" component={NewOrderPage} />
+                <Route exact path="/login" component={LoginOverlay} />
+                <Route exact path="/file_uploader" component={FileUploaderOverlay} />
+                <Route exact path="/process_order" component={ProcessOrderPage} />
+                <Route component={NotFound} />
+            </Switch>
         </div>
     </Router>
 )
