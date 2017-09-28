@@ -90,9 +90,9 @@ export default class EditPartOverlay extends React.Component {
 
         if (!isPartFound) {
             if (isPartVerified) {
-                pageContent = <div className="content">
-                    <label className="btn blue" >
-                        { (imageUrl !== '') ? <img src={imageUrl} alt="uploaded-image" height="60" /> : 'Choose Product Image' }
+                pageContent = <div className="part-details">
+                    <label className="btn blue left-col" >
+                        { (imageUrl !== '') ? <img src={imageUrl} alt="uploaded-image" height="60" /> : 'Choose Part Image' }
                         <input
                             type="file"
                             accept=".png,.jpg,.jpeg,.svg"
@@ -100,11 +100,12 @@ export default class EditPartOverlay extends React.Component {
                             style={{ display: 'none' }}
                         />
                     </label>
-                    <input name="part-description" type="text"   placeholder="Name"       value={description} onChange={(e) => this.props.update({ isPart: true, key: 'description', value: e.target.value})} required />
-                    <input name="part-Code"        type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ isPart: true, key: 'code', value: e.target.value})} required />
-                    <input name="part-gePrice"     type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ isPart: true, key: 'gePrice', value: e.target.value})} required />
-                    <input name="part-sibiPrice"   type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ isPart: true, key: 'sibiPrice', value: e.target.value})} required />
-                    <label>
+                    <input name="part-description" className="right-col" type="text"   placeholder="Name"       value={description} onChange={(e) => this.props.update({ isPart: true, key: 'description', value: e.target.value})} required />
+                    <input name="part-Code"        className="left-col"  type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ isPart: true, key: 'code', value: e.target.value})} required />
+                    <input name="part-gePrice"     className="right-col" type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ isPart: true, key: 'gePrice', value: e.target.value})} required />
+                    <input name="part-sibiPrice"   className="left-col"  type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ isPart: true, key: 'sibiPrice', value: e.target.value})} required />
+                    <br/>
+                    <label className="right-col">
                         <input
                             name="part-includedIn"
                             type="checkbox"
@@ -146,7 +147,7 @@ export default class EditPartOverlay extends React.Component {
                         <div onClick={this.props.close} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>
                     </div>
                     <form onSubmit={(e) => {e.preventDefault(); this.props.checkModelNum({ key: 'part', modelNumber });}} >
-                        <div className="content">
+                        <div className="model-number-section">
                             <input
                                 name="part-ModelNumber"
                                 className="search-input"
