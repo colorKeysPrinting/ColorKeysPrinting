@@ -30,7 +30,6 @@ export default (
                 <Route exact path="/order_details" component={OrderDetails} />
                 <Route exact path="/new_order" component={NewOrderPage} />
                 <Route exact path="/login" component={LoginOverlay} />
-                <Route exact path="/file_uploader" component={FileUploaderOverlay} />
                 <Route exact path="/process_order" component={ProcessOrderPage} />
                 <Route component={NotFound} />
             </Switch>

@@ -28,13 +28,15 @@ class HeaderBar extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies, history } = this.props;
+        const { cookies, history, location } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt) {
-            this.props.getCurrentUser({ token: jwt.token});
-        } else {
-            history.push({ pathname: `/login`, prevPath: location.pathname });
+        if (location.pathname !== '/process_order') {
+            if (jwt) {
+                this.props.getCurrentUser({ token: jwt.token});
+            } else {
+                history.push({ pathname: `/login`, prevPath: location.pathname });
+            }
         }
     }
 
@@ -46,22 +48,24 @@ class HeaderBar extends React.Component {
             this.props.logout();
         }
 
-        if (jwt) {
-            if (!_.isEqual(nextProps.activeUser, activeUser)) {
-                if (nextProps.activeUser.size > 0) {
-                    const search = (location.search) ? location.search : null;
-                    (location.prevPath === '/login' || location.pathname === '/') ? history.push(`/orders`) : (location.pathname === '/login') ? history.goBack() : null;
+        if (location.pathname !== '/process_order') {
+            if (jwt) {
+                if (!_.isEqual(nextProps.activeUser, activeUser)) {
+                    if (nextProps.activeUser.size > 0) {
+                        const search = (location.search) ? location.search : null;
+                        (location.prevPath === '/login' || location.pathname === '/') ? history.push(`/orders`) : (location.pathname === '/login') ? history.goBack() : null;
 
-                    this.props.getCurrentUser({ token: jwt.token});
-                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
-                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
-                } else {
-                    cookies.remove('sibi-admin-jwt');
-                    history.push({ pathname: `/login`, prevPath: location.pathname });
+                        this.props.getCurrentUser({ token: jwt.token});
+                        this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                        this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                    } else {
+                        cookies.remove('sibi-admin-jwt');
+                        history.push({ pathname: `/login`, prevPath: location.pathname });
+                    }
                 }
+            } else {
+                history.push({ pathname: `/login`, prevPath: location.pathname });
             }
-        } else {
-            history.push({ pathname: `/login`, prevPath: location.pathname });
         }
     }
 
@@ -78,9 +82,11 @@ class HeaderBar extends React.Component {
     }
 
     render() {
+        const { cookies, activeUser, location, isLogout, activeTab, orders, users } = this.props;
         let headerContent, loginSection, pendingOrders = 0, pendingUsers = 0;
-        const { cookies, activeUser, isLogout, activeTab, orders, users } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
+
+        const isProcessOrder = (location.pathname !== '/process_order') ? false : true;
 
         if (jwt &&
             orders.size > 0 &&
@@ -99,7 +105,7 @@ class HeaderBar extends React.Component {
             <div id="header-bar">
                 <img src={assets('./images/sibi-logo.png')} id="logo"/>
                 <span className="logo-text">GE APP ADMIN</span>
-                { (jwt) ? <div>
+                { (jwt && !isProcessOrder) ? <div>
                     <Tabs
                         type={activeUser.get('type')}
                         activeTab={activeTab}
@@ -114,7 +120,7 @@ class HeaderBar extends React.Component {
                     </Overlay> : null }
                 </div> : null }
                 <div className="login-section">
-                    { (jwt) ? <div onClick={this.showProfile}>
+                    { (jwt && !isProcessOrder) ? <div onClick={this.showProfile}>
                         <img className="settings-icon" src={(activeUser.get('profilePic')) ? assets(activeUser.get('profilePic')) : assets('./images/icon-settings.svg')} alt="settingsButtons" width="40px" height="40px" />
                     </div> : null }
                 </div>
