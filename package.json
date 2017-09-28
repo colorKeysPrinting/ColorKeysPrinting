@@ -6,10 +6,11 @@
   "license": "MIT",
   "homepage": "https://bitbucket.org/HQ-Team/sibi_ge_admin",
   "scripts": {
+    "build": "webpack -p --config ./webpack/webpack.prod.js",
+    "build_dev_uat": "webpack --config ./webpack/webpack.uat.js",
+    "build_qa": "webpack --config ./webpack/webpack.qa.js",
+    "build_dev": "webpack --config ./webpack/webpack.dev.js",
     "hot": "webpack-dev-server --hot --config ./webpack/webpack.dev.js",
-    "build": "rm -rf build/production && webpack -p --config ./webpack/webpack.prod.js",
-    "build_dev": "rm -rf build/development && webpack --config ./webpack/webpack.dev.js",
-    "build_dev_uat": "rm -rf build/development && webpack --config ./webpack/webpack.uat.js",
     "nuke": "rm -rf node_modules"
   },
   "repository": {
@@ -54,6 +55,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-runtime": "^6.25.0",
+    "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.1",
     "eslint": "^4.4.1",
