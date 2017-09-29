@@ -52,10 +52,10 @@ export function addColorAndImage() {
     };
 }
 
-export function removeColorAndImage({ color }) {
+export function removeColorAndImage({ manufacturerModelNumber }) {
     return {
         type: ActionTypes.REMOVE_COLOR_AND_IMAGE,
-        color
+        manufacturerModelNumber
     };
 }
 

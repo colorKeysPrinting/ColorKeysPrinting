@@ -253,6 +253,7 @@ class EditProductPage extends React.Component {
                                     isDisabled={isDisabled}
                                     image={this.props.productImage}
                                     color={this.props.color}
+                                    manufacturerModelNumber={this.props.manufacturerModelNumber}
                                     productCategoryId={product.get('productCategoryId')}
                                     applianceManufacturerName={product.get('applianceManufacturerName')}
                                     applianceType={product.get('applianceType')}
@@ -435,24 +436,25 @@ class EditProductPage extends React.Component {
 }
 
 const select = (state) => ({
-    spinner              : state.ui.get('spinner'),
-    activeUser           : state.activeUser.get('activeUser'),
-    imageUploadURL       : state.assets.get('imageUploadURL'),
-    product              : state.product.get('product'),
-    productImage         : state.product.get('productImage'),
-    color                : state.product.get('color'),
-    Question             : state.product.get('Question'),
-    Answer               : state.product.get('Answer'),
-    videoURL             : state.product.get('videoURL'),
-    part                 : state.part.get('part'),
-    products             : state.products.get('products'),
-    parts                : state.products.get('parts'),
-    productCategories    : state.products.get('productCategories'),
-    categorySizes        : state.products.get('categorySizes'),
-    isProductVerified    : state.products.get('isProductVerified'),
-    isProductFound       : state.products.get('isProductFound'),
-    isPartVerified       : state.products.get('isPartVerified'),
-    isPartFound          : state.products.get('isPartFound'),
+    spinner                 : state.ui.get('spinner'),
+    activeUser              : state.activeUser.get('activeUser'),
+    imageUploadURL          : state.assets.get('imageUploadURL'),
+    product                 : state.product.get('product'),
+    productImage            : state.product.get('productImage'),
+    color                   : state.product.get('color'),
+    manufacturerModelNumber : state.product.get('manufacturerModelNumber'),
+    Question                : state.product.get('Question'),
+    Answer                  : state.product.get('Answer'),
+    videoURL                : state.product.get('videoURL'),
+    part                    : state.part.get('part'),
+    products                : state.products.get('products'),
+    parts                   : state.products.get('parts'),
+    productCategories       : state.products.get('productCategories'),
+    categorySizes           : state.products.get('categorySizes'),
+    isProductVerified       : state.products.get('isProductVerified'),
+    isProductFound          : state.products.get('isProductFound'),
+    isPartVerified          : state.products.get('isPartVerified'),
+    isPartFound             : state.products.get('isPartFound'),
 });
 
 const actions = {

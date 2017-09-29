@@ -12,6 +12,7 @@ const initialState = Immutable.fromJS({
     product: {},
     productImage: '',
     color: '',
+    manufacturerModelNumber: '',
     Question: '',
     Answer: '',
     videoURL: '',
@@ -108,17 +109,19 @@ export default (state = initialState, action) => {
     case ActionTypes.ADD_COLOR_AND_IMAGE:
         const imageUrl = state.get('productImage');
         const color = state.get('color');
+        const manufacturerModelNumber = state.get('manufacturerModelNumber');
         applianceColorsInfo = state.getIn(['product','applianceColorsInfo']).toJS();
-        applianceColorsInfo.push({ color, imageUrl });
+        applianceColorsInfo.push({ color, imageUrl, manufacturerModelNumber });
 
         state = state.updateIn(['product', 'applianceColorsInfo'], value=>Immutable.fromJS(applianceColorsInfo));
         state = state.set('productImage', '');
         state = state.set('color', '');
+        state = state.set('manufacturerModelNumber', '');
         break;
 
     case ActionTypes.REMOVE_COLOR_AND_IMAGE:
         applianceColorsInfo = state.getIn(['product','applianceColorsInfo']).toJS();
-        applianceColorsInfo = _.remove(applianceColorsInfo, (element) => { return element.color !== action.color } );
+        applianceColorsInfo = _.remove(applianceColorsInfo, (element) => { return element.manufacturerModelNumber !== action.manufacturerModelNumber });
         state = state.updateIn(['product', 'applianceColorsInfo'], value=>Immutable.fromJS(applianceColorsInfo));
         break;
 

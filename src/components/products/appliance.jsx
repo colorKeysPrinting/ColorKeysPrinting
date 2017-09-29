@@ -58,7 +58,7 @@ export default class ApplianceProducts extends React.Component {
     }
 
     render() {
-        const { token, isDisabled, image, color, productCategoryId, applianceColorsInfo, applianceAssociatedParts, applianceType,
+        const { token, isDisabled, image, color, manufacturerModelNumber, productCategoryId, applianceColorsInfo, applianceAssociatedParts, applianceType,
             applianceSize, applianceCapacity, applianceDescription, applianceFuelType, applianceWidth, applianceHeight, applianceManufacturerName,
             applianceDepth, applianceSpecSheetUrl, applianceInstallCode, applianceInstallPrice, applianceInstallDescription,
             applianceInstallCode2, applianceInstallPrice2, applianceInstallDescription2, applianceRemovalCode, applianceRemovalPrice,
@@ -98,7 +98,8 @@ export default class ApplianceProducts extends React.Component {
                                 <div key={`colorImages${index}`} className="accordion-detail-row" style={{ display: 'inline-flex', width: '100%' }} >
                                     <img src={image.imageUrl} alt="picture" width="auto" height="60" />
                                     <input type="text" value={image.color} disabled />
-                                    {(!isDisabled) ? <div className="add-btn" onClick={()=> this.props.removeColorAndImage({ color: image.color }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
+                                    <input type="text" value={image.manufacturerModelNumber} disabled />
+                                    {(!isDisabled) ? <div className="add-btn" onClick={()=> this.props.removeColorAndImage({ manufacturerModelNumber: image.manufacturerModelNumber }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
                                 </div>
                             );
                         }) }
@@ -113,6 +114,7 @@ export default class ApplianceProducts extends React.Component {
                                 />
                             </label>
                             <input type="text" value={color} placeholder="Color name" onChange={(e) => this.props.update({ key: 'color', value: e.target.value })} />
+                            <input type="text" value={manufacturerModelNumber} placeholder="Model #" onChange={(e) => this.props.update({ key: 'manufacturerModelNumber', value: e.target.value })} />
                             <div onClick={this.props.addColorAndImage} className="add-btn blue">Add</div>
                         </div> : null }
                     </div>
