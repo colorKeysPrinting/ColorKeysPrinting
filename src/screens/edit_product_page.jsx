@@ -257,7 +257,6 @@ class EditProductPage extends React.Component {
                                     productCategoryId={product.get('productCategoryId')}
                                     applianceManufacturerName={product.get('applianceManufacturerName')}
                                     applianceType={product.get('applianceType')}
-                                    applianceSize={product.get('applianceSize')}
                                     applianceCapacity={product.get('applianceCapacity')}
                                     applianceDescription={product.get('applianceDescription')}
                                     applianceFuelType={product.get('applianceFuelType')}

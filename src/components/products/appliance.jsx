@@ -13,7 +13,6 @@ export default class ApplianceProducts extends React.Component {
         productCategoryId              : PropTypes.string.isRequired,
         applianceManufacturerName      : PropTypes.string.isRequired,
         applianceType                  : PropTypes.string.isRequired,
-        applianceSize                  : PropTypes.string.isRequired,
         applianceCapacity              : PropTypes.string.isRequired,
         applianceDescription           : PropTypes.string.isRequired,
         applianceFuelType              : PropTypes.string.isRequired,
@@ -75,8 +74,7 @@ export default class ApplianceProducts extends React.Component {
             <div id="appliance-product">
                 <input name="appliance-manuf-name" className="left-col" type="text" placeholder="Manufacturer Name (e.g. GE)" value={applianceManufacturerName} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceManufacturerName', value: e.target.value})} disabled={isDisabled} />
                 <input name="appliance-type" className="center-col" type="text" placeholder="Type" value={applianceType} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceType', value: e.target.value})} disabled={isDisabled} />
-                <input name="appliance-size" className="right-col" type="text" placeholder="Size" value={applianceSize} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceSize', value: e.target.value})} disabled={isDisabled} />
-                <input name="appliance-capacity" className="right-col" type="text" placeholder="Size" value={applianceCapacity} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceCapacity', value: e.target.value})} disabled={isDisabled} />
+                <input name="appliance-capacity" className="right-col" type="text" placeholder="Capacity" value={applianceCapacity} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceCapacity', value: e.target.value})} disabled={isDisabled} />
                 <input name="appliance-width" className="left-col" type="text" placeholder="Width"  value={applianceWidth} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceWidth', value: e.target.value})} disabled={isDisabled} />
                 <input name="appliance-height" className="center-col" type="text" placeholder="Height" value={applianceHeight} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceHeight', value: e.target.value})}disabled={isDisabled} />
                 <input name="appliance-depth" className="right-col" type="text" placeholder="Depth"  value={applianceDepth} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceDepth', value: e.target.value})} disabled={isDisabled} />
@@ -109,7 +107,7 @@ export default class ApplianceProducts extends React.Component {
                                 <input
                                     type="file"
                                     accept=".png,.jpg,.jpeg,.svg"
-                                    onChange={(e) => {e.preventDefault(); this.props.uploadImage({ token, key: 'product', imageFile: e.target.files[0] }); }}
+                                    onChange={(e) => this.props.uploadImage({ token, key: 'product', imageFile: e.target.files[0] }) }
                                     style={{ display: 'none' }}
                                 />
                             </label>
