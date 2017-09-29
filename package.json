@@ -4,7 +4,12 @@
   "description": "SIBI GE ADMIN",
   "author": "BuiltByHQ",
   "license": "MIT",
-  "homepage": "https://bitbucket.org/HQ-Team/sibi_ge_admin",
+  "private": true,
+  "homepage": "https://bitbucket.org/sibipro/sibi_ge_admin",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/sibipro/sibi_ge_admin"
+  },
   "scripts": {
     "build": "webpack -p --config ./webpack/webpack.prod.js",
     "build_dev_uat": "webpack --config ./webpack/webpack.uat.js",
@@ -13,13 +18,6 @@
     "hot": "webpack-dev-server --hot --config ./webpack/webpack.dev.js",
     "nuke": "rm -rf node_modules"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://bitbucket.org/HQ-Team/sibi_ge_admin"
-  },
-  "keywords": [
-    "react"
-  ],
   "dependencies": {
     "axios": "^0.16.2",
     "dateformat": "^2.0.0",

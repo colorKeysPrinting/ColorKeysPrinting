@@ -22,7 +22,6 @@ module.exports = WebpackConfig = (app) => {
             ]
         },
         plugins: [
-            new CleanWebpackPlugin(['build'], {root: path.resolve(__dirname, '../')}),
             new webpack.DefinePlugin({
                 'process.env'   : Object.assign({}, {
                     NODE_ENV    : `"${app.env}"`,
@@ -30,6 +29,7 @@ module.exports = WebpackConfig = (app) => {
                     ORDER_URL   : `"${app.ORDER_URL}"`
                 })
             }),
+            new CleanWebpackPlugin(['build'], {root: path.resolve(__dirname, '../')}),
             new ExtractTextPlugin((app.env === 'development') ? `${app.APP_NAME}.css` : `${app.APP_NAME}_[hash].css`),
             new HtmlWebpackPlugin({
                 title: `"${app.APP_NAME}"`,
@@ -45,8 +45,8 @@ module.exports = WebpackConfig = (app) => {
             rules: [
                 { test: /\.(js|jsx)$/,                      use: ['babel-loader','eslint-loader'], exclude: /node_modules/ },
                 { test: /\.scss$/,                          use: ExtractTextPlugin.extract('css-loader!postcss-loader!sass-loader') },
-                { test: /\.*\.(pdf|gif|png|jpg|jpeg|svg)$/, loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, `../build/${app.env}/images`) }},
-                { test: /\.*\.(eot|woff2|woff|ttf)$/,       loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, `../build/${app.env}/fonts`) }}
+                { test: /\.*\.(pdf|gif|png|jpg|jpeg|svg)$/, loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, `../build/images`) }},
+                { test: /\.*\.(eot|woff2|woff|ttf)$/,       loader: 'file-loader', options: { name: '[name]_[hash].[ext]', useRelativePath: true, outputPath: path.resolve(__dirname, `../build/fonts`) }}
             ]
         },
         devtool: 'source-map',
