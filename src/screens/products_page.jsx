@@ -115,7 +115,7 @@ class ProductsPage extends React.Component {
 
                                     } else if (key === 'featured') {
                                         if (product.sortIndex <= 4) {
-                                            value = <div className="featured-column">featured {product.sortIndex + 1}</div>;
+                                            value = <div className="featured-column">Featured {product.sortIndex + 1}</div>;
                                         }
                                     }
 
