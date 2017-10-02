@@ -82,9 +82,13 @@ export default (state = initialState, action) => {
     case ActionTypes.NEW_PRODUCT:
         defaultProduct = state.get('defaultProduct').toJS();
         product = state.get('product').toJS();
+        const modelNumber = product.sibiModelNumber;
+
         _.each(defaultProduct, (value, key) => {
-            product[key] = (product[key]) ? product[key] : value;
+            product[key] = value;
         });
+
+        product['sibiModelNumber'] = modelNumber;
         state = state.set('product', Immutable.fromJS(product));
         break;
 

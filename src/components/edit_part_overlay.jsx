@@ -120,22 +120,20 @@ export default class EditPartOverlay extends React.Component {
             }
 
         } else {
-            pageContent = <dialog open>
-                <div>
-                    Alert:
-                    <p>A part with this Sibi Model Number already exists!</p>
-                    Do you wish to:
-                    <p> - Use the existing part</p>
-                    <p> - continue creating a new part (this will completely replace the existing part)</p>
-                    <p> - modify the existing part?</p>
-                    <div className="btn blue" onClick={() => this.props.addPart({ token, modelNumber })} >Add</div>
-                    <div className="btn borderless red fill" onClick={() => {
-                        this.props.verifyPart({ verified: true });
-                        this.props.resetFound();
-                        this.props.newPart({ productCategoryId });
-                    }} >Create New</div>
-                    <div className="add-btn blue" onClick={() => this.modifyExistingPart({ token })} >Modify Existing</div>
-                </div>
+            pageContent = <dialog open className="alert-box">
+                Alert:
+                <p>A part with this Sibi Model Number already exists!</p>
+                Do you wish to:
+                <p> - Use the existing part</p>
+                <p> - continue creating a new part (this will completely replace the existing part)</p>
+                <p> - modify the existing part?</p>
+                <div className="btn blue" onClick={() => this.props.addPart({ token, modelNumber })} >Add</div>
+                <div className="btn borderless red fill" onClick={() => {
+                    this.props.verifyPart({ verified: true });
+                    this.props.resetFound();
+                    this.props.newPart({ productCategoryId });
+                }} >Create New</div>
+                <div className="add-btn blue" onClick={() => this.modifyExistingPart({ token })} >Modify Existing</div>
             </dialog>
         }
 

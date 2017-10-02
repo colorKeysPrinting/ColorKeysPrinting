@@ -25,8 +25,7 @@ class OrdersPage extends React.Component {
         this.state = {
             alert: null,
             searchTerm: '',
-            sortby: { column: '', isAsc: false },
-            showDialog: false
+            sortby: { column: '', isAsc: false }
         };
 
         this.update = this.update.bind(this);
@@ -75,11 +74,9 @@ class OrdersPage extends React.Component {
 
         if (type === 'approve') {
             dialog = <dialog open className="alert-box">
-                <div>
-                    <p>Are you sure you want to approve this user?</p>
-                    <div className="btn borderless" type="submit" value="Cancel" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
-                    <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveOrder({ token, id: item.id }) } >Approve</div>
-                </div>
+                <p>Are you sure you want to approve this user?</p>
+                <div className="btn borderless" type="submit" value="Cancel" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
+                <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveOrder({ token, id: item.id }) } >Approve</div>
             </dialog>
 
         } else if (type === 'process') {
@@ -240,21 +237,6 @@ class OrdersPage extends React.Component {
                             handleItem={this.handleItem}
                         />
                     </div>
-                    {(this.state.showDialog) ? <dialog open>
-                        <form method="dialog">
-                            Alert:
-                            <p>A product with this Sibi Model Number already exists!</p>
-                            Do you wish to:
-                            <p> - continue creating a new product (this will completely replace the existing product)</p>
-                            <p> - modify the existing product?</p>
-                            <input className="btn borderless red fill" type="submit" value="Create New" onClick={() => {
-                                this.props.verifyProduct({ verified: true });
-                                this.props.resetFound();
-                                this.props.newProduct();
-                            }} />
-                            <input className="btn blue" type="submit" value="Modify Existing" onClick={() => this.modifyExistingProduct({ token: jwt.token })} />
-                        </form>
-                    </dialog>: null}
                 </div>
                 { this.state.alert }
             </Loader>
