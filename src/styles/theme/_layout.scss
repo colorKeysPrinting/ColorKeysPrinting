@@ -16,6 +16,12 @@ body {
     display: inline-block;
 }
 
+.alert-box {
+    position: absolute;
+    top: 40%;
+    margin: auto;
+}
+
 .react-tabs {
     &__tab-list {
         margin: 0;

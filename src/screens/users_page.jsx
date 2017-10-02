@@ -15,25 +15,22 @@ import { getUsers, approveUser, autoApproveUserOrders }            from 'ducks/u
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
+import Overlay                              from 'components/overlay';
 
 class UsersPage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            alert: null,
             searchTerm: '',
             sortby: {column: 'status', isAsc: 'desc' }
         };
 
         this.update = this.update.bind(this);
         this.handleAction = this.handleAction.bind(this);
-        this.handleAutoApprove = this.handleAutoApprove.bind(this);
         this.orderBy = this.orderBy.bind(this);
-    }
-
-    focus() {
-        // Explicitly focus the text input using the raw DOM API
-        this.textInput.focus();
+        this.focus = this.focus.bind(this);
     }
 
     componentWillMount() {
@@ -60,20 +57,21 @@ class UsersPage extends React.Component {
         this.setState({ [type]: value });
     }
 
-    handleAction({ item }) {
-        console.log('user action:', item.id);
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+    handleAction({ token, type, item }) {
+        let dialog;
+        if (type === 'approve') {
+            dialog = <dialog open className="alert-box">
+                <p>Are you sure you want to approve this user?</p>
+                <div className="btn borderless" onClick={()=> this.setState({ alert: null }) }>Cancel</div>
+                <div className="btn blue" onClick={()=> this.props.approveUser({ token, id: item.id }) }>Approve</div>
+            </dialog>
+        }
 
-        this.props.approveUser({ token: jwt.token, id: item.id });
-    }
-
-    handleAutoApprove({ user, autoApprovedOrders }) {
-        console.log('auto approve');
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
-
-        this.props.autoApproveUserOrders({ token: jwt.token, user, autoApprovedOrders });
+        this.setState({
+            alert: <Overlay type="alert" closeOverlay={()=>{this.setState({ alert: null }) }}>
+                { dialog }
+            </Overlay>
+        });
     }
 
     orderBy({ column }) {
@@ -85,7 +83,14 @@ class UsersPage extends React.Component {
         });
     }
 
+    focus() {
+        // Explicitly focus the text input using the raw DOM API
+        this.textInput.focus();
+    }
+
     render() {
+        const { cookies, users, spinner } = this.props;
+        const jwt = cookies.get('sibi-admin-jwt');
         let data = [];
 
         const headers = {
@@ -102,11 +107,9 @@ class UsersPage extends React.Component {
 
         const KEYS_TO_FILTERS = ['name','office','email','phoneNumber','createdAt','autoApprovedOrders','status'];
 
-        if (this.props.users.size > 0 ) {
+        if (users.size > 0 ) {
 
-            const users = this.props.users.toJS();
-
-            data = _.map(users, (user) => {
+            data = _.map(users.toJS(), (user) => {
                 const cols = {};
 
                 _.each(headers, (value, key) => {
@@ -140,7 +143,7 @@ class UsersPage extends React.Component {
                             user={user}
                             value={autoApprovedOrders}
                             options={options}
-                            onChange={({ user, value }) => this.handleAutoApprove({ user, autoApprovedOrders: value })}
+                            onChange={({ user, value }) => this.props.autoApproveUserOrders({ token: jwt.token, user, autoApprovedOrders:  value })}
                         />;
 
                     } else if (key === 'status') {
@@ -157,16 +160,7 @@ class UsersPage extends React.Component {
             });
 
             _.each(headers, (header, key) => {
-                let value;
-
-                if (key === 'id' || key === 'action') {
-                    value = header;
-
-                } else {
-                    value = <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
-                }
-
-                headers[key] = value;
+                headers[key] =  (key === 'id' || key === 'action') ? header : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
             });
 
             // this initially sets the "Pending" users before everything
@@ -208,7 +202,7 @@ class UsersPage extends React.Component {
         }
 
         return (
-            <Loader loaded={this.props.spinner} >
+            <Loader loaded={spinner} >
                 <div id="users-page" className="container">
                     <div className="table-card">
                         <div className="card-header">
@@ -219,6 +213,7 @@ class UsersPage extends React.Component {
                             </div>
                         </div>
                         <MyTable
+                            token={jwt.token}
                             type="users"
                             headers={headers}
                             data={data}
@@ -227,6 +222,7 @@ class UsersPage extends React.Component {
                         />
                     </div>
                 </div>
+                { this.state.alert }
             </Loader>
         );
     }

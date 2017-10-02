@@ -16,14 +16,17 @@ import { getUsers, getFundProperties }      from 'ducks/users/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
+import Overlay                              from 'components/overlay';
 
 class OrdersPage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            alert: null,
             searchTerm: '',
-            sortby: { column: '', isAsc: false }
+            sortby: { column: '', isAsc: false },
+            showDialog: false
         };
 
         this.update = this.update.bind(this);
@@ -66,17 +69,26 @@ class OrdersPage extends React.Component {
         });
     }
 
-    handleAction({ type, item }) {
-        console.log('user action:', item.id);
-        const { cookies, history, location } = this.props;
+    handleAction({ token,  type, item }) {
+        const { history, location } = this.props;
+        let dialog;
 
         if (type === 'approve') {
-            const jwt = cookies.get('sibi-admin-jwt');
-            this.props.approveOrder({ token: jwt.token, id: item.id });
+            dialog = <dialog open className="alert-box">
+                <p>Are you sure you want to approve this order?</p>
+                <div className="btn borderless" onClick={()=> this.setState({ alert: null }) }>Cancel</div>
+                <div className="btn blue" onClick={()=> this.props.approveOrder({ token, id: item.id }) }>Approve</div>
+            </dialog>
 
         } else if (type === 'process') {
             history.push({ pathname: `/process_order`, prevPath: location.pathname, search: `orderId=${item.id}` });
         }
+
+        this.setState({
+            alert: <Overlay type="alert" closeOverlay={()=>{this.setState({ alert: null }) }}>
+                { dialog }
+            </Overlay>
+        });
     }
 
     handleItem({ item }) {
@@ -216,6 +228,7 @@ class OrdersPage extends React.Component {
                             </div>
                         </div>
                         <MyTable
+                            token={jwt.token}
                             type="orders"
                             dataClassName="table-row-clickable"
                             headers={headers}
@@ -225,7 +238,23 @@ class OrdersPage extends React.Component {
                             handleItem={this.handleItem}
                         />
                     </div>
+                    {(this.state.showDialog) ? <dialog open>
+                        <form method="dialog">
+                            Alert:
+                            <p>A product with this Sibi Model Number already exists!</p>
+                            Do you wish to:
+                            <p> - continue creating a new product (this will completely replace the existing product)</p>
+                            <p> - modify the existing product?</p>
+                            <input className="btn borderless red fill" type="submit" value="Create New" onClick={() => {
+                                this.props.verifyProduct({ verified: true });
+                                this.props.resetFound();
+                                this.props.newProduct();
+                            }} />
+                            <input className="btn blue" type="submit" value="Modify Existing" onClick={() => this.modifyExistingProduct({ token: jwt.token })} />
+                        </form>
+                    </dialog>: null}
                 </div>
+                { this.state.alert }
             </Loader>
         );
     }

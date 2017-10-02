@@ -63,7 +63,7 @@ class EditProductPage extends React.Component {
         } else {
             this.props.history.push(`/login`);
         }
-
+        this.setState({ timeout: setTimeout(() => this.props.triggerSpinner({ isOn: false }), 500 ) });
         this.props.setActiveTab('products');
     }
 
@@ -100,6 +100,7 @@ class EditProductPage extends React.Component {
 
     componentWillUnmount() {
         this.props.clearProduct();
+        clearTimeout(this.state.timeout);
     }
 
     changeActiveSection(activeSection) {
@@ -362,10 +363,6 @@ class EditProductPage extends React.Component {
                     </form>
                 </dialog>
             }
-            setTimeout(
-                () => this.props.triggerSpinner({ isOn: false }),
-                500
-            )
         }
 
         return (
