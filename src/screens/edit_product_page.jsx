@@ -227,7 +227,7 @@ class EditProductPage extends React.Component {
 
             if (!isProductFound) {
                 if (isProductVerified) {
-                    pageContent = <div>
+                    pageContent = <form onSubmit={(e) => {e.preventDefault(); this.saveProduct({ token: jwt.token, category: jwt.trade });}} >
                         <div className="product-details" >
                             <Select
                                 name="product-category"
@@ -344,7 +344,7 @@ class EditProductPage extends React.Component {
                                 history.goBack();
                             }}>Archive Product</div> : null }
                         </div>
-                    </div>
+                    </form>
                 }
             } else {
                 pageContent = <div className="alert-box">
@@ -389,9 +389,7 @@ class EditProductPage extends React.Component {
                         </div>
                     </form>
                     <hr/>
-                    <form onSubmit={(e) => {e.preventDefault(); this.saveProduct({ token: jwt.token, category: jwt.trade });}} >
-                        { pageContent }
-                    </form>
+                    { pageContent }
                     { (this.state.activeSection === 'partOverlay') ?
                         (<EditPartOverlay
                             token={jwt.token}

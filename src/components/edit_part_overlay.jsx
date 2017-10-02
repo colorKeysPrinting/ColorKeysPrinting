@@ -90,33 +90,35 @@ export default class EditPartOverlay extends React.Component {
 
         if (!isPartFound) {
             if (isPartVerified) {
-                pageContent = <div className="part-details">
-                    <label className="btn blue left-col" >
-                        { (imageUrl !== '') ? <img src={imageUrl} alt="uploaded-image" height="60" /> : 'Choose Part Image' }
-                        <input
-                            type="file"
-                            accept=".png,.jpg,.jpeg,.svg"
-                            onChange={(e) => {e.preventDefault(); this.props.uploadImage({ key: 'part', imageFile: e.target.files[0] }); }}
-                            style={{ display: 'none' }}
-                        />
-                    </label>
-                    <input name="part-description" className="right-col" type="text"   placeholder="Name"       value={description} onChange={(e) => this.props.update({ isPart: true, key: 'description', value: e.target.value})} required />
-                    <input name="part-Code"        className="left-col"  type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ isPart: true, key: 'code', value: e.target.value})} required />
-                    <input name="part-gePrice"     className="right-col" type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ isPart: true, key: 'gePrice', value: e.target.value})} required />
-                    <input name="part-sibiPrice"   className="left-col"  type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ isPart: true, key: 'sibiPrice', value: e.target.value})} required />
-                    <br/>
-                    <label className="right-col">
-                        <input
-                            name="part-includedIn"
-                            type="checkbox"
-                            checked={includedInManufacturerInstall}
-                            onChange={(e, value) => this.props.update({ isPart: true, key: 'includedInManufacturerInstall', value: e.target.checked})}
-                            style={{ height: '15px', width: '30px' }}/>
-                        Included in Manufacturer install
-                    </label>
+                pageContent = <form onSubmit={(e) =>{e.preventDefault(); this.savePart({ token });}} >
+                    <div className="part-details">
+                        <label className="btn blue left-col" >
+                            { (imageUrl !== '') ? <img src={imageUrl} alt="uploaded-image" height="60" /> : 'Choose Part Image' }
+                            <input
+                                type="file"
+                                accept=".png,.jpg,.jpeg,.svg"
+                                onChange={(e) => {e.preventDefault(); this.props.uploadImage({ key: 'part', imageFile: e.target.files[0] }); }}
+                                style={{ display: 'none' }}
+                            />
+                        </label>
+                        <input name="part-description" className="right-col" type="text"   placeholder="Name"       value={description} onChange={(e) => this.props.update({ isPart: true, key: 'description', value: e.target.value})} required />
+                        <input name="part-Code"        className="left-col"  type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ isPart: true, key: 'code', value: e.target.value})} required />
+                        <input name="part-gePrice"     className="right-col" type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ isPart: true, key: 'gePrice', value: e.target.value})} required />
+                        <input name="part-sibiPrice"   className="left-col"  type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ isPart: true, key: 'sibiPrice', value: e.target.value})} required />
+                        <br/>
+                        <label className="right-col">
+                            <input
+                                name="part-includedIn"
+                                type="checkbox"
+                                checked={includedInManufacturerInstall}
+                                onChange={(e, value) => this.props.update({ isPart: true, key: 'includedInManufacturerInstall', value: e.target.checked})}
+                                style={{ height: '15px', width: '30px' }}/>
+                            Included in Manufacturer install
+                        </label>
 
-                    <input className="btn blue fill" type="submit" value={(id) ? 'Update' : 'Add'} />
-                </div>
+                        <input className="btn blue fill" type="submit" value={(id) ? 'Update' : 'Add'} />
+                    </div>
+                </form>
             }
 
         } else {
@@ -161,9 +163,7 @@ export default class EditPartOverlay extends React.Component {
                             { (!isPartVerified && !isDisabled) ? <input className="btn blue" type="submit" value="Add"/> : null }
                         </div>
                     </form>
-                    <form onSubmit={(e) =>{e.preventDefault(); this.savePart({ token });}} >
-                        { pageContent }
-                    </form>
+                    { pageContent }
                 </div>
             </Overlay>
         );
