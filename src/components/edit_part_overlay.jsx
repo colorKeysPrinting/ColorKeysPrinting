@@ -120,7 +120,7 @@ export default class EditPartOverlay extends React.Component {
             }
 
         } else {
-            pageContent = <dialog open className="alert-box">
+            pageContent = <div className="alert-box">
                 Alert:
                 <p>A part with this Sibi Model Number already exists!</p>
                 Do you wish to:
@@ -134,7 +134,7 @@ export default class EditPartOverlay extends React.Component {
                     this.props.newPart({ productCategoryId });
                 }} >Create New</div>
                 <div className="add-btn blue" onClick={() => this.modifyExistingPart({ token })} >Modify Existing</div>
-            </dialog>
+            </div>
         }
 
         return (

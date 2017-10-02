@@ -347,7 +347,7 @@ class EditProductPage extends React.Component {
                     </div>
                 }
             } else {
-                pageContent = <dialog open className="alert-box">
+                pageContent = <div className="alert-box">
                     Alert:
                     <p>A product with this Sibi Model Number already exists!</p>
                     Do you wish to:
@@ -359,7 +359,7 @@ class EditProductPage extends React.Component {
                         this.props.newProduct();
                     }}>Create New</div>
                     <div className="btn blue" onClick={() => this.modifyExistingProduct({ token: jwt.token })}>Modify Existing</div>
-                </dialog>
+                </div>
             }
         }
 
