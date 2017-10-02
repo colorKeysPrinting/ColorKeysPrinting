@@ -348,19 +348,19 @@ class EditProductPage extends React.Component {
                 }
             } else {
                 pageContent = <dialog open>
-                    <form method="dialog">
+                    <div>
                         Alert:
                         <p>A product with this Sibi Model Number already exists!</p>
                         Do you wish to:
                         <p> - continue creating a new product (this will completely replace the existing product)</p>
                         <p> - modify the existing product?</p>
-                        <input className="btn borderless red fill" type="submit" value="Create New" onClick={() => {
+                        <div className="btn borderless red fill" onClick={() => {
                             this.props.verifyProduct({ verified: true });
                             this.props.resetFound();
                             this.props.newProduct();
-                        }} />
-                        <input className="btn blue" type="submit" value="Modify Existing" onClick={() => this.modifyExistingProduct({ token: jwt.token })} />
-                    </form>
+                        }}>Create New</div>
+                        <div className="btn blue" onClick={() => this.modifyExistingProduct({ token: jwt.token })}>Modify Existing</div>
+                    </div>
                 </dialog>
             }
         }

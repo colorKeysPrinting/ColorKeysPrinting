@@ -121,21 +121,21 @@ export default class EditPartOverlay extends React.Component {
 
         } else {
             pageContent = <dialog open>
-                <form method="dialog">
+                <div>
                     Alert:
                     <p>A part with this Sibi Model Number already exists!</p>
                     Do you wish to:
                     <p> - Use the existing part</p>
                     <p> - continue creating a new part (this will completely replace the existing part)</p>
                     <p> - modify the existing part?</p>
-                    <input className="btn blue" type="submit" value="Add" onClick={() => this.props.addPart({ token, modelNumber })} />
-                    <input className="btn borderless red fill" type="submit" value="Create New" onClick={() => {
+                    <div className="btn blue" onClick={() => this.props.addPart({ token, modelNumber })} >Add</div>
+                    <div className="btn borderless red fill" onClick={() => {
                         this.props.verifyPart({ verified: true });
                         this.props.resetFound();
                         this.props.newPart({ productCategoryId });
-                    }} />
-                    <input className="add-btn blue" type="submit" value="Modify Existing" onClick={() => this.modifyExistingPart({ token })} />
-                </form>
+                    }} >Create New</div>
+                    <div className="add-btn blue" onClick={() => this.modifyExistingPart({ token })} >Modify Existing</div>
+                </div>
             </dialog>
         }
 
