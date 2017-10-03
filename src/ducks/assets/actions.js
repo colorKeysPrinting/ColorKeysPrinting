@@ -60,7 +60,7 @@ export function uploadImage({ token, key, imageFile }) {
                 });
                 formData.append('file', imageFile);
 
-                const url = data.upload_url.replace(/https/, 'http');
+                // const url = data.upload_url.replace(/https/, 'http');
 
                 dispatch(uploadImageS3({ url, type: imageFile.type, key, formData }));
             })
