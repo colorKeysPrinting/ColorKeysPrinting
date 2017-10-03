@@ -82,7 +82,7 @@ export default function PartTable(props) {
                 <td className="product-image-table">
                     <MyTable
                         type="partDetailsImage"
-                        data={(!props.replacement) ? [[<img src={part.imageUrl} alt="productImg" height="100" width="auto" />]] : null}
+                        data={(!props.replacement) ? [[<img src={part.imageUrl} alt="" height="100" width="auto" />]] : null}
                     />
                 </td>
                 <td className="product-details-table">

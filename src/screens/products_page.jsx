@@ -134,7 +134,7 @@ class ProductsPage extends React.Component {
                                         className="products-table"
                                         type="products"
                                         tab={subSubName}
-                                        data={data}
+                                        data={(_.size(data) > 0) ? data : {}}
                                     />
                                 </TabPane>
                             );

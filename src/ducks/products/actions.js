@@ -93,7 +93,6 @@ export function updateProduct({ token, category, product }) {
 }
 
 export function createProduct({ token, category, product, applianceAssociatedParts }) {
-    // TODO: need to add a case to create productParts on a new product
     return (dispatch) => {
         return axios({
             method  : Network.POST,
