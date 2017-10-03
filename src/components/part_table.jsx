@@ -43,7 +43,7 @@ export default function PartTable(props) {
                     }
 
                 } else if (row === 'install') {
-                    value = (props.outOfStock === props.productIndex) ? <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber({ productsAndParts: props.productsAndParts });}}>
+                    value = (props.outOfStock === props.productIndex) ? <form className="replace-form" onSubmit={(e) => {e.preventDefault(); props.updateModelNumber({ productsAndParts: props.productsAndParts });}}>
                         <div className="input-container">
                             <label htmlFor="model-num-replace" >Enter Model # to replace part</label>
                             <input name="model-num-replace" value={props.modelNumber} placeholder="GTE18GT" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />

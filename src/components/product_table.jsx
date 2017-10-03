@@ -36,7 +36,7 @@ export default function ProductTable(props) {
                 } else if (row === 'install') {
                     value = (props.type === 'processOrder' && props.outOfStock === props.productIndex) ?
                         (
-                            <form onSubmit={(e) => {e.preventDefault(); props.updateModelNumber({ productsAndParts: props.productsAndParts });}}>
+                            <form className="replace-form" onSubmit={(e) => {e.preventDefault(); props.updateModelNumber({ productsAndParts: props.productsAndParts });}}>
                                 <div className="input-container">
                                     <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
                                     <input name="model-num-replace" value={props.modelNumber} placeholder="JGB635DEKBB" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
