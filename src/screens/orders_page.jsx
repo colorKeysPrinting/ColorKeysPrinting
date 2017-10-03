@@ -155,7 +155,7 @@ class OrdersPage extends React.Component {
                         value = item[key];
 
                     } else if (key === 'createdAt') {
-                        value = moment(new Date(value)).format('MMM DD, YYYY');
+                        value = moment(new Date(value)).format('MMM DD, YYYY HH:MM');
 
                     } else if (key === 'totalCost') {
                         value = parseFloat(item[key]);
@@ -198,6 +198,10 @@ class OrdersPage extends React.Component {
             }
 
             if (this.state.sortby.column === '') {
+                data = _.partition(data, ['orderStatus', 'Processed']);
+                data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
+                data = data[0].concat(data[1]);
+
                 data = _.partition(data, ['orderStatus', 'Pending']);
                 data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
                 data = data[0].concat(data[1]);
