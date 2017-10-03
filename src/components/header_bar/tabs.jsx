@@ -20,30 +20,63 @@ export default class Tabs extends React.Component {
 
         switch (this.props.type) {
         case 'superAdmin':
-            activeTabs = (<div className="header-tabs">
-                { tabs['dashboard'] }
-                { tabs['orders'] }
-                { tabs['users'] }
-                { tabs['products'] }
-                { tabs['newOrder'] }
-            </div>);
+            activeTabs = [
+                tabs['dashboard'],
+                tabs['orders'],
+                tabs['users'],
+                tabs['products'],
+                tabs['newOrder'],
+            ];
             break;
 
-        case 'fundAdmin':
-            activeTabs = (<div className="header-tabs">
-                { tabs['orders'] }
-                { tabs['users'] },
-                { tabs['newOrder'] }
-            </div>);
+        case 'fundSuperAdmin':
+            activeTabs = [
+                tabs['orders'],
+                tabs['users'],
+                tabs['newOrder'],
+            ];
             break;
 
+        case 'fundOrdersAdmin':
+            activeTabs = [
+                tabs['orders'],
+                tabs['users'],
+                tabs['newOrder'],
+            ];
+            break;
+
+        case 'manufacturerSuperAdmin':
+            activeTabs = [
+                tabs['orders'],
+                tabs['users'] ,
+                tabs['newOrder'],
+            ];
+            break;
+
+        case 'manufacturerOrdersAdmin':
+            activeTabs = [
+                tabs['orders'],
+                tabs['users'] ,
+                tabs['newOrder'],
+            ];
+            break;
+
+        case 'manufacturerOrderProcessor':
+            activeTabs = [
+                tabs['orders'],
+                tabs['users'] ,
+                tabs['newOrder'],
+            ];
+            break;
         default:
-            activeTabs = <div></div>
+            activeTabs = null;
         }
 
         return (
             <div className="links">
-                { activeTabs }
+                <div className="header-tabs">
+                    { activeTabs }
+                </div>
             </div>
         );
     }

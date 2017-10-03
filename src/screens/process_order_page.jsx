@@ -42,15 +42,15 @@ class ProcessOrderPage extends React.Component {
 
         const orderId = reOrder.exec(location.search);
 
-        // if (jwt) { // TODO: need to add this back in when we add auth back to this page
-        if (orderId[1]) {
-            this.props.triggerSpinner({ isOn: true });
-            this.props.getOrderById({ id: orderId[1] });
-        } else {
-            alert('No orderId provided routing back to orders');
-            (location.prevPath) ? history.goBack() : history.push(`/login`);
+        if (jwt) {
+            if (orderId[1]) {
+                this.props.triggerSpinner({ isOn: true });
+                this.props.getOrderById({ id: orderId[1] });
+            } else {
+                alert('No orderId provided routing back to orders');
+                (location.prevPath) ? history.goBack() : history.push(`/login`);
+            }
         }
-        // }
 
         this.props.setActiveTab('orders');
     }

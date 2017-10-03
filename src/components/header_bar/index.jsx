@@ -31,12 +31,10 @@ class HeaderBar extends React.Component {
         const { cookies, history, location } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
 
-        if (location.pathname !== '/process_order') {
-            if (jwt) {
-                this.props.getCurrentUser({ token: jwt.token});
-            } else {
-                history.push({ pathname: `/login`, prevPath: location.pathname });
-            }
+        if (jwt) {
+            this.props.getCurrentUser({ token: jwt.token});
+        } else {
+            history.push({ pathname: `/login`, prevPath: location.pathname });
         }
     }
 
@@ -48,24 +46,22 @@ class HeaderBar extends React.Component {
             this.props.logout();
         }
 
-        if (location.pathname !== '/process_order') {
-            if (jwt) {
-                if (!_.isEqual(nextProps.activeUser, activeUser)) {
-                    if (nextProps.activeUser.size > 0) {
-                        const search = (location.search) ? location.search : null;
-                        (location.prevPath === '/login' || location.pathname === '/') ? history.push(`/orders`) : (location.pathname === '/login') ? history.goBack() : null;
+        if (jwt) {
+            if (!_.isEqual(nextProps.activeUser, activeUser)) {
+                if (nextProps.activeUser.size > 0) {
+                    const search = (location.search) ? location.search : null;
+                    (location.prevPath === '/login' || location.pathname === '/') ? history.push(`/orders`) : (location.pathname === '/login') ? history.goBack() : null;
 
-                        this.props.getCurrentUser({ token: jwt.token});
-                        this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
-                        this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
-                    } else {
-                        cookies.remove('sibi-admin-jwt');
-                        history.push({ pathname: `/login`, prevPath: location.pathname });
-                    }
+                    this.props.getCurrentUser({ token: jwt.token});
+                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                } else {
+                    cookies.remove('sibi-admin-jwt');
+                    history.push({ pathname: `/login`, prevPath: location.pathname });
                 }
-            } else {
-                history.push({ pathname: `/login`, prevPath: location.pathname });
             }
+        } else {
+            history.push({ pathname: `/login`, prevPath: location.pathname });
         }
     }
 
@@ -105,7 +101,7 @@ class HeaderBar extends React.Component {
             <div id="header-bar">
                 <img src={assets('./images/sibi-logo.png')} id="logo"/>
                 <span className="logo-text">GE APP ADMIN</span>
-                { (jwt && !isProcessOrder) ? <div>
+                { (jwt) ? <div>
                     <Tabs
                         type={activeUser.get('type')}
                         activeTab={activeTab}
@@ -120,7 +116,7 @@ class HeaderBar extends React.Component {
                     </Overlay> : null }
                 </div> : null }
                 <div className="login-section">
-                    { (jwt && !isProcessOrder) ? <div onClick={this.showProfile}>
+                    { (jwt) ? <div onClick={this.showProfile}>
                         <img className="settings-icon" src={(activeUser.get('profilePic')) ? assets(activeUser.get('profilePic')) : assets('./images/icon-settings.svg')} alt="settingsButtons" width="40px" height="40px" />
                     </div> : null }
                 </div>
