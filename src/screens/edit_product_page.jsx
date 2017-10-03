@@ -136,6 +136,8 @@ class EditProductPage extends React.Component {
     addPart({ token, modelNumber }) {
         let { product, parts } = this.props;
 
+        this.setState({ activeSection : '' });
+
         const part = _.find(parts.toJS(), ['modelNumber', modelNumber]);
         (product.get('id'))
             ? this.props.createProductPart({ token, productId: product.get('id'), partId: part.id }) // TODO: may need to have a check here to check to see if the part is already added to the product. If so, need to increment the quantity
