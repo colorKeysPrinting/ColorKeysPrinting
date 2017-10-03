@@ -62,7 +62,7 @@ export function uploadImage({ token, key, imageFile }) {
 
                 // const url = data.upload_url.replace(/https/, 'http');
 
-                dispatch(uploadImageS3({ url, type: imageFile.type, key, formData }));
+                dispatch(uploadImageS3({ url: data.upload_url, type: imageFile.type, key, formData }));
             })
             .catch(error => {
                 throw(error);
