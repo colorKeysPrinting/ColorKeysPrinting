@@ -183,7 +183,7 @@ class EditProductPage extends React.Component {
             isPartFound
         } = this.props;
 
-        let isDisabled = false, pageContent, subCategoryOptions;
+        let isDisabled = false, pageContent, subCategoryOptions, dialog;
         const jwt = cookies.get('sibi-admin-jwt');
 
         if (activeUser.size > 0 &&
@@ -346,20 +346,6 @@ class EditProductPage extends React.Component {
                         </div>
                     </form>
                 }
-            } else {
-                pageContent = <div className="alert-box">
-                    Alert:
-                    <p>A product with this Sibi Model Number already exists!</p>
-                    Do you wish to:
-                    <p> - continue creating a new product (this will completely replace the existing product)</p>
-                    <p> - modify the existing product?</p>
-                    <div className="btn borderless red fill" onClick={() => {
-                        this.props.verifyProduct({ verified: true });
-                        this.props.resetFound();
-                        this.props.newProduct();
-                    }}>Create New</div>
-                    <div className="btn blue" onClick={() => this.modifyExistingProduct({ token: jwt.token })}>Modify Existing</div>
-                </div>
             }
         }
 
@@ -422,6 +408,19 @@ class EditProductPage extends React.Component {
                             addPart={this.addPart}
                         />): null }
                 </div>
+                { (isProductFound) ? <div className="alert-box">
+                    Alert:
+                    <p>A product with this Sibi Model Number already exists!</p>
+                    Do you wish to:
+                    <p> - continue creating a new product (this will completely replace the existing product)</p>
+                    <p> - modify the existing product?</p>
+                    <div className="btn borderless red fill" onClick={() => {
+                        this.props.verifyProduct({ verified: true });
+                        this.props.resetFound();
+                        this.props.newProduct();
+                    }}>Create New</div>
+                    <div className="btn blue" onClick={() => this.modifyExistingProduct({ token: jwt.token })}>Modify Existing</div>
+                </div> : null }
             </Loader>
         );
     }

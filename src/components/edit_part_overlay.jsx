@@ -86,58 +86,6 @@ export default class EditPartOverlay extends React.Component {
 
     render() {
         const { token, isDisabled, productCategoryId, id, description, code, imageUrl, modelNumber, gePrice, sibiPrice, includedInManufacturerInstall, isPartVerified, isPartFound } = this.props;
-        let pageContent;
-
-        if (!isPartFound) {
-            if (isPartVerified) {
-                pageContent = <form onSubmit={(e) =>{e.preventDefault(); this.savePart({ token });}} >
-                    <div className="part-details">
-                        <label className="btn blue left-col" >
-                            { (imageUrl !== '') ? <img src={imageUrl} alt="uploaded-image" height="60" /> : 'Choose Part Image' }
-                            <input
-                                type="file"
-                                accept=".png,.jpg,.jpeg,.svg"
-                                onChange={(e) => {e.preventDefault(); this.props.uploadImage({ key: 'part', imageFile: e.target.files[0] }); }}
-                                style={{ display: 'none' }}
-                            />
-                        </label>
-                        <input name="part-description" className="right-col" type="text"   placeholder="Name"       value={description} onChange={(e) => this.props.update({ isPart: true, key: 'description', value: e.target.value})} required />
-                        <input name="part-Code"        className="left-col"  type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ isPart: true, key: 'code', value: e.target.value})} required />
-                        <input name="part-gePrice"     className="right-col" type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ isPart: true, key: 'gePrice', value: e.target.value})} required />
-                        <input name="part-sibiPrice"   className="left-col"  type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ isPart: true, key: 'sibiPrice', value: e.target.value})} required />
-                        <br/>
-                        <label className="right-col">
-                            <input
-                                name="part-includedIn"
-                                type="checkbox"
-                                checked={includedInManufacturerInstall}
-                                onChange={(e, value) => this.props.update({ isPart: true, key: 'includedInManufacturerInstall', value: e.target.checked})}
-                                style={{ height: '15px', width: '30px' }}/>
-                            Included in Manufacturer install
-                        </label>
-
-                        <input className="btn blue fill" type="submit" value={(id) ? 'Update' : 'Add'} />
-                    </div>
-                </form>
-            }
-
-        } else {
-            pageContent = <div className="alert-box">
-                Alert:
-                <p>A part with this Sibi Model Number already exists!</p>
-                Do you wish to:
-                <p> - Use the existing part</p>
-                <p> - continue creating a new part (this will completely replace the existing part)</p>
-                <p> - modify the existing part?</p>
-                <div className="btn blue" onClick={() => this.props.addPart({ token, modelNumber })} >Add</div>
-                <div className="btn borderless red fill" onClick={() => {
-                    this.props.verifyPart({ verified: true });
-                    this.props.resetFound();
-                    this.props.newPart({ productCategoryId });
-                }} >Create New</div>
-                <div className="add-btn blue" onClick={() => this.modifyExistingPart({ token })} >Modify Existing</div>
-            </div>
-        }
 
         return (
             <Overlay type="edit-part">
@@ -163,8 +111,53 @@ export default class EditPartOverlay extends React.Component {
                             { (!isPartVerified && !isDisabled) ? <input className="btn blue" type="submit" value="Add"/> : null }
                         </div>
                     </form>
-                    { pageContent }
+                    { (!isPartFound) ? (isPartVerified) ? (
+                        <form onSubmit={(e) =>{e.preventDefault(); this.savePart({ token });}} >
+                            <div className="part-details">
+                                <label className="btn blue left-col" >
+                                    { (imageUrl !== '') ? <img src={imageUrl} alt="uploaded-image" height="60" /> : 'Choose Part Image' }
+                                    <input
+                                        type="file"
+                                        accept=".png,.jpg,.jpeg,.svg"
+                                        onChange={(e) => {e.preventDefault(); this.props.uploadImage({ key: 'part', imageFile: e.target.files[0] }); }}
+                                        style={{ display: 'none' }}
+                                    />
+                                </label>
+                                <input name="part-description" className="right-col" type="text"   placeholder="Name"       value={description} onChange={(e) => this.props.update({ isPart: true, key: 'description', value: e.target.value})} required />
+                                <input name="part-Code"        className="left-col"  type="text"   placeholder="Code"       value={code}        onChange={(e) => this.props.update({ isPart: true, key: 'code', value: e.target.value})} required />
+                                <input name="part-gePrice"     className="right-col" type="number" placeholder="GE Price"   value={gePrice}     onChange={(e) => this.props.update({ isPart: true, key: 'gePrice', value: e.target.value})} required />
+                                <input name="part-sibiPrice"   className="left-col"  type="number" placeholder="SIBI Price" value={sibiPrice}   onChange={(e) => this.props.update({ isPart: true, key: 'sibiPrice', value: e.target.value})} required />
+                                <br/>
+                                <label className="right-col">
+                                    <input
+                                        name="part-includedIn"
+                                        type="checkbox"
+                                        checked={includedInManufacturerInstall}
+                                        onChange={(e, value) => this.props.update({ isPart: true, key: 'includedInManufacturerInstall', value: e.target.checked})}
+                                        style={{ height: '15px', width: '30px' }}/>
+                                    Included in Manufacturer install
+                                </label>
+
+                                <input className="btn blue fill" type="submit" value={(id) ? 'Update' : 'Add'} />
+                            </div>
+                        </form>) : null : null }
                 </div>
+                { (isPartFound) ? (
+                    <div className="alert-box">
+                        Alert:
+                        <p>A part with this Sibi Model Number already exists!</p>
+                        Do you wish to:
+                        <p> - Use the existing part</p>
+                        <p> - continue creating a new part (this will completely replace the existing part)</p>
+                        <p> - modify the existing part?</p>
+                        <div className="btn blue" onClick={() => this.props.addPart({ token, modelNumber })} >Add</div>
+                        <div className="btn borderless red fill" onClick={() => {
+                            this.props.verifyPart({ verified: true });
+                            this.props.resetFound();
+                            this.props.newPart({ productCategoryId });
+                        }} >Create New</div>
+                        <div className="add-btn blue" onClick={() => this.modifyExistingPart({ token })} >Modify Existing</div>
+                    </div>) : null }
             </Overlay>
         );
     }
