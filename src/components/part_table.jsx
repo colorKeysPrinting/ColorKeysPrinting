@@ -7,13 +7,6 @@ import MyTable                                              from 'components/my_
 export default function PartTable(props) {
     const part = props.part;
 
-    const imageData = (!props.replacement) ? [[<img src={part.imageUrl} alt="productImg" height="100" width="auto" />]] : null;
-
-    const partImageTable = <MyTable
-        type="partDetailsImage"
-        data={imageData}
-    />;
-
     const partDetailHeaders = {
         partDescription: '',
         code: '',
@@ -30,16 +23,14 @@ export default function PartTable(props) {
             switch(key) {
             case 'partDescription':
                 if (row === 'part') {
-                    value = <span className="product-header">{(!props.replacement) ? part.description : `Replaced with part #: ${props.replacement}`}</span>;
+                    value = <div className="no-limit">
+                        <span className="product-header">{(!props.replacement) ? part.description : `Replaced with part #: ${props.replacement}`}</span>
+                        <div className="table-cell-details" style={{ minWidth: '100px' }}>{ `${(props.replacement) ? 'Original' : ''} Part Code ${part.code}` }</div>
+                    </div>;
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
                         value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
-
-                    } else if (props.type === 'orderDetails') {
-                        value = <div className="no-limit">
-                            <div className="table-cell-details">{ `${(props.replacement) ? 'Original' : ''} Part Code ${part.code}` }</div>
-                        </div>;
                     }
 
                 } else if (row === 'install') {
@@ -81,11 +72,6 @@ export default function PartTable(props) {
         return cols;
     });
 
-    const partDetailsTable = <MyTable
-        type="partDetails"
-        data={partDetails}
-    />;
-
     return <table className="part-table">
         <colgroup>
             <col span="1" className="product-image-colspan" />
@@ -93,8 +79,18 @@ export default function PartTable(props) {
         </colgroup>
         <tbody>
             <tr className="product-table-container-row" >
-                <td className="product-image-table">{ partImageTable }</td>
-                <td className="product-details-table">{ partDetailsTable }</td>
+                <td className="product-image-table">
+                    <MyTable
+                        type="partDetailsImage"
+                        data={(!props.replacement) ? [[<img src={part.imageUrl} alt="productImg" height="100" width="auto" />]] : null}
+                    />
+                </td>
+                <td className="product-details-table">
+                    <MyTable
+                        type="partDetails"
+                        data={partDetails}
+                    />
+                </td>
             </tr>
         </tbody>
     </table>;
