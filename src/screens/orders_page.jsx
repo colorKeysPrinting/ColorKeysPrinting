@@ -74,7 +74,7 @@ class OrdersPage extends React.Component {
 
         if (type === 'approve') {
             dialog = <div className="alert-box">
-                <p>Are you sure you want to approve this Order?</p>
+                <p>Are you sure you want to approve this order?</p>
                 <div className="btn borderless" type="submit" value="Cancel" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
                 <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveOrder({ token, id: item.id }) } >Approve</div>
             </div>
