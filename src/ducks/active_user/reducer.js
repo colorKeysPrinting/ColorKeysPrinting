@@ -38,7 +38,7 @@ export default (state = initialState, action) => {
             state = state.set('activeUser', Immutable.fromJS(action.data));
             const maxAge = 24 * 60 * 60;
 
-            cookies.set('sibi-admin-jwt', { token: state.getIn(['activeUser','token']), email: state.getIn(['activeUser','email']), type: state.getIn(['activeUser','type']), trade: state.getIn('trade') }, { path: '/', maxAge });
+            cookies.set('sibi-admin-jwt', { token: state.getIn(['activeUser','token']), email: state.getIn(['activeUser','email']), type: state.getIn(['activeUser','type']), trade: state.getIn(['activeUser','trade']) }, { path: '/', maxAge });
 
         } else {
             alert('Your account has been disabled!\nIf you find this to be an error please contact your fund');
