@@ -237,6 +237,7 @@ class EditProductPage extends React.Component {
                                 value={product.get('productCategoryId')}
                                 options={categoryOptions}
                                 onChange={(selected) => (!isDisabled) ? this.props.update({ isProduct: true, key: 'productCategoryId', value: (selected) ? selected.value : null }) : console.log(`you don't have permission to change!`)}
+                                required
                             />
                             <Select
                                 name="product-sub-category"

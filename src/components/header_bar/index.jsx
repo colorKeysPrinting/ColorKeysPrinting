@@ -79,7 +79,7 @@ class HeaderBar extends React.Component {
 
     render() {
         const { cookies, activeUser, location, isLogout, activeTab, orders, users } = this.props;
-        let headerContent, loginSection, pendingOrders = 0, pendingUsers = 0;
+        let pendingOrders = 0, pendingUsers = 0;
         const jwt = cookies.get('sibi-admin-jwt');
 
         const isProcessOrder = (location.pathname !== '/process_order') ? false : true;
