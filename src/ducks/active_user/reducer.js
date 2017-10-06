@@ -34,14 +34,11 @@ export default (state = initialState, action) => {
         break;
 
     case ActionTypes.LOGIN_SUCCESS:
-        console.log('login: ', action.data);
-
         if (!action.data.disabled) {
-            state = state.set('activeUser', Immutable.fromJS({ ...action.data }));
-            const maxAge = 24 * 60 * 60; // one day in seconds
-            // const maxAge = 60; // one min in seconds
+            state = state.set('activeUser', Immutable.fromJS(action.data));
+            const maxAge = 24 * 60 * 60;
 
-            cookies.set('sibi-admin-jwt', { token: action.data.token, email: action.data.email, type: action.data.type, trade: action.data.trade }, { path: '/', maxAge });
+            cookies.set('sibi-admin-jwt', { token: state.getIn(['activeUser','token']), email: state.getIn(['activeUser','email']), type: state.getIn(['activeUser','permissions','type']), trade: state.getIn('trade') }, { path: '/', maxAge });
 
         } else {
             alert('Your account has been disabled!\nIf you find this to be an error please contact your fund');
@@ -69,7 +66,13 @@ export default (state = initialState, action) => {
         break;
 
     case ActionTypes.GET_CURRENT_USER_SUCCESS:
-        state = state.set('activeUser', Immutable.fromJS({ ...action.data }));
+        if (!action.data.disabled) {
+            state = state.set('activeUser', Immutable.fromJS(action.data));
+
+        } else {
+            alert('Your account has been disabled!\nIf you find this to be an error please contact your fund');
+            state = state.set('loginError', true);
+        }
         break;
 
     default:

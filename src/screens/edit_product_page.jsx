@@ -2,10 +2,10 @@ import React                    from 'react';
 import { connect }              from 'react-redux';
 import { withRouter }           from 'react-router';
 import { withCookies }          from 'react-cookie';
-import _                        from 'lodash';
-import assets                   from 'libs/assets';
 import Select                   from 'react-select';
 import Loader                   from 'react-loader';
+import _                        from 'lodash';
+import assets                   from 'libs/assets';
 
 import { triggerSpinner }       from 'ducks/ui/actions';
 import * as productsActions     from 'ducks/products/actions';

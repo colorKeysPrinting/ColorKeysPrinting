@@ -97,7 +97,7 @@ class OrdersPage extends React.Component {
     }
 
     render() {
-        let data = [];
+        let data = {};
 
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');

@@ -4,14 +4,16 @@ import { connect }              from 'react-redux';
 import { withRouter }           from 'react-router';
 import { withCookies }          from 'react-cookie';
 import { Link }                 from 'react-router-dom';
+import Tabs, { TabPane }        from 'rc-tabs';
+import TabContent               from 'rc-tabs/lib/TabContent';
+import ScrollableInkTabBar      from 'rc-tabs/lib/ScrollableInkTabBar';
 import assets                   from 'libs/assets';
 
-import { logout }               from 'ducks/active_user/actions';
-import { getCurrentUser }       from 'ducks/active_user/actions';
+import { setActiveTab }         from 'ducks/header/actions';
+import { logout, getCurrentUser }               from 'ducks/active_user/actions';
 import { getUsers }             from 'ducks/users/actions';
 import { getOrders }            from 'ducks/orders/actions';
 
-import Tabs                     from './tabs';
 import Overlay                  from 'components/overlay';
 
 class HeaderBar extends React.Component {
@@ -25,6 +27,7 @@ class HeaderBar extends React.Component {
         };
         this.showProfile = this.showProfile.bind(this);
         this.logout = this.logout.bind(this);
+        this.tabActions = this.tabActions.bind(this);
     }
 
     componentWillMount() {
@@ -52,7 +55,6 @@ class HeaderBar extends React.Component {
                     const search = (location.search) ? location.search : null;
                     (location.prevPath === '/login' || location.pathname === '/') ? history.push(`/orders`) : (location.pathname === '/login') ? history.goBack() : null;
 
-                    this.props.getCurrentUser({ token: jwt.token});
                     this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
                     this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
                 } else {
@@ -77,12 +79,29 @@ class HeaderBar extends React.Component {
         this.props.logout();
     }
 
+    tabActions({ activeTab }) {
+        const { history } = this.props;
+
+        history.push(`/${activeTab}`);
+        this.props.setActiveTab(activeTab);
+    }
+
     render() {
         const { cookies, activeUser, location, isLogout, activeTab, orders, users } = this.props;
         let pendingOrders = 0, pendingUsers = 0;
         const jwt = cookies.get('sibi-admin-jwt');
 
         const isProcessOrder = (location.pathname !== '/process_order') ? false : true;
+
+        const availableTabs = {
+            // dashboard: 'Dashboard',
+            orders: 'Orders',
+            // products: 'Products',
+            users: 'Users',
+            new_order: 'New Order',
+        }
+
+        _.each(activeUser.get('permissions'))
 
         if (jwt &&
             orders.size > 0 &&
@@ -102,12 +121,26 @@ class HeaderBar extends React.Component {
                 <img src={assets('./images/sibi-logo.png')} id="logo"/>
                 <span className="logo-text">GE APP ADMIN</span>
                 { (jwt) ? <div>
-                    <Tabs
-                        type={activeUser.get('type')}
-                        activeTab={activeTab}
-                        pendingOrders={pendingOrders}
-                        pendingUsers={pendingUsers}
-                    />
+                    <div id="header-tabs">
+                        <Tabs
+                            tabBarPosition="top"
+                            activeKey={activeTab}
+                            onChange={(activeTab) => this.tabActions({ activeTab })}
+                            renderTabBar={()=><ScrollableInkTabBar />}
+                            renderTabContent={()=><TabContent />}
+                        >
+                            { _.map(availableTabs, (name, key) => {
+                                if (key === 'orders' || key === 'users') {
+                                    name = (key === 'orders')
+                                        ? <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Orders {(pendingOrders !== 0) ? <div id="order-badge" className="pending-badges" >{ pendingOrders }</div> : ''}</div>
+                                        : <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Users {(pendingUsers !== 0) ? <div id="user-badge" className="pending-badges" >{ pendingUsers }</div> : ''}</div>;
+                                } else {
+                                    name = <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>{ name }</div>
+                                }
+                                return <TabPane tab={name} key={key}></TabPane>
+                            })}
+                        </Tabs>
+                    </div>
                     { (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
                         <div id="profile-container">
                             <div className="arrow-up"></div>
@@ -134,6 +167,7 @@ const select = (state) => ({
 });
 
 const actions = {
+    setActiveTab,
     logout,
     getCurrentUser,
     getUsers,

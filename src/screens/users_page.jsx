@@ -91,7 +91,7 @@ class UsersPage extends React.Component {
     render() {
         const { cookies, users, spinner } = this.props;
         const jwt = cookies.get('sibi-admin-jwt');
-        let data = [];
+        let data = {};
 
         const headers = {
             id: '',
