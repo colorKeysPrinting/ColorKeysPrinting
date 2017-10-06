@@ -101,8 +101,6 @@ class HeaderBar extends React.Component {
             new_order: 'New Order',
         }
 
-        _.each(activeUser.get('permissions'))
-
         if (jwt &&
             orders.size > 0 &&
             users.size > 0) {
