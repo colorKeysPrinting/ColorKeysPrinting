@@ -40,7 +40,6 @@ class UsersPage extends React.Component {
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
             this.props.getUsers({ token: jwt.token, type: jwt.type });
-
         }
 
         this.props.setActiveTab('users');
@@ -128,7 +127,7 @@ class UsersPage extends React.Component {
                         value = user['email'];
 
                     } else if (key === 'createdAt') {
-                        value = moment(new Date(value)).format('MMM DD, YYYY');
+                        value = moment(new Date(value)).format('MMM DD, YYYY, HH:MM');
 
                     } else if (key === 'autoApprovedOrders') {
                         const autoApprovedOrders = (user.autoApprovedOrders) ? true : false;
@@ -139,6 +138,7 @@ class UsersPage extends React.Component {
                         ];
 
                         value = <Select
+                            className="select-box"
                             name="auto-approved-orders-select"
                             user={user}
                             value={autoApprovedOrders}
@@ -189,6 +189,7 @@ class UsersPage extends React.Component {
 
                     const autoApprovedOrders = (item.autoApprovedOrders === 'Yes') ? true : false;
                     item.autoApprovedOrders = <Select
+                        className="select-box"
                         name="auto-approved-orders-select"
                         value={autoApprovedOrders}
                         options={options}
@@ -212,14 +213,14 @@ class UsersPage extends React.Component {
                                 <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} ref={(input) => { this.textInput = input; }} />
                             </div>
                         </div>
-                        <MyTable
+                        {(jwt) ? <MyTable
                             token={jwt.token}
                             type="users"
                             headers={headers}
                             data={data}
                             sortby={this.state.sortby}
                             handleAction={this.handleAction}
-                        />
+                        /> : null}
                     </div>
                 </div>
                 { this.state.alert }
