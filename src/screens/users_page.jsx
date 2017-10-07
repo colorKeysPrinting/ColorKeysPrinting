@@ -127,7 +127,7 @@ class UsersPage extends React.Component {
                         value = user['email'];
 
                     } else if (key === 'createdAt') {
-                        value = moment(new Date(value)).format('MMM DD, YYYY');
+                        value = moment(new Date(value)).format('MMM DD, YYYY, HH:MM');
 
                     } else if (key === 'autoApprovedOrders') {
                         const autoApprovedOrders = (user.autoApprovedOrders) ? true : false;
@@ -138,6 +138,7 @@ class UsersPage extends React.Component {
                         ];
 
                         value = <Select
+                            className="select-box"
                             name="auto-approved-orders-select"
                             user={user}
                             value={autoApprovedOrders}
@@ -188,6 +189,7 @@ class UsersPage extends React.Component {
 
                     const autoApprovedOrders = (item.autoApprovedOrders === 'Yes') ? true : false;
                     item.autoApprovedOrders = <Select
+                        className="select-box"
                         name="auto-approved-orders-select"
                         value={autoApprovedOrders}
                         options={options}
