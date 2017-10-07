@@ -51,7 +51,7 @@ export default class Select extends React.Component {
 
         const selectedOption = _.find(this.props.options, (option) => { return option.value === this.props.value });
         const arrowImg = (this.state.isActive) ? assets('./images/icons-arrow-up.png') : assets('./images/icons-arrow-down.png');
-
+        // TODO: need to figure out the onBlur issue for FF browser
         return (
             <div className={className} tabIndex="0" onBlur={() => this.setState({ options: '', isActive: false }) } >
                 <div className="input" onClick={() => this.showOptions({ options })}>
