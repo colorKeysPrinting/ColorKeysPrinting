@@ -124,7 +124,7 @@ class HeaderBar extends React.Component {
                             tabBarPosition="top"
                             activeKey={activeTab}
                             onChange={(activeTab) => this.tabActions({ activeTab })}
-                            renderTabBar={()=><ScrollableInkTabBar />}
+                            renderTabBar={()=><ScrollableInkTabBar onTabClick={(activeTab) => this.tabActions({ activeTab }) } />}
                             renderTabContent={()=><TabContent />}
                         >
                             { _.map(availableTabs, (name, key) => {
