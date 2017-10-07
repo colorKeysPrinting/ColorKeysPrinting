@@ -37,7 +37,7 @@ class HeaderBar extends React.Component {
         if (jwt) {
             this.props.getCurrentUser({ token: jwt.token});
         } else {
-            history.push({ pathname: `/login`, prevPath: location.pathname });
+            history.push({ pathname: `/login`, prevPath: location.pathname, prevSearch: location.search });
         }
     }
 
@@ -52,18 +52,21 @@ class HeaderBar extends React.Component {
         if (jwt) {
             if (!_.isEqual(nextProps.activeUser, activeUser)) {
                 if (nextProps.activeUser.size > 0) {
-                    const search = (location.search) ? location.search : null;
-                    (location.prevPath === '/login' || location.pathname === '/') ? history.push(`/orders`) : (location.pathname === '/login') ? history.goBack() : null;
+                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.get('type') });
+                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.get('type') });
 
-                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.toJS().type });
-                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.toJS().type });
+                    if (location.prevPath) {
+                        history.push({ pathname: location.prevPath, search: (location.prevSearch) ? location.prevSearch : null})
+                    } else if (location.pathname === '/login' || location.pathname === '/') {
+                        history.push(`/orders`);
+                    }
                 } else {
                     cookies.remove('sibi-admin-jwt');
-                    history.push({ pathname: `/login`, prevPath: location.pathname });
+                    history.push({ pathname: `/login`});
                 }
             }
         } else {
-            history.push({ pathname: `/login`, prevPath: location.pathname });
+            history.push({ pathname: `/login`, prevPath: location.pathname, prevSearch: location.search });
         }
     }
 

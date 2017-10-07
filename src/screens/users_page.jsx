@@ -40,7 +40,6 @@ class UsersPage extends React.Component {
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
             this.props.getUsers({ token: jwt.token, type: jwt.type });
-
         }
 
         this.props.setActiveTab('users');
@@ -212,14 +211,14 @@ class UsersPage extends React.Component {
                                 <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} ref={(input) => { this.textInput = input; }} />
                             </div>
                         </div>
-                        <MyTable
+                        {(jwt) ? <MyTable
                             token={jwt.token}
                             type="users"
                             headers={headers}
                             data={data}
                             sortby={this.state.sortby}
                             handleAction={this.handleAction}
-                        />
+                        /> : null}
                     </div>
                 </div>
                 { this.state.alert }
