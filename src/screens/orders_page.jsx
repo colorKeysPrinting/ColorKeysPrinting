@@ -62,9 +62,8 @@ class OrdersPage extends React.Component {
     orderBy({ column }) {
         this.setState((prevState) => {
             const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc === 'asc') ? 'desc' : 'asc';
-            const sortby = { column, isAsc };
 
-            return { sortby };
+            return { sortby: { column, isAsc } };
         });
     }
 
@@ -75,8 +74,8 @@ class OrdersPage extends React.Component {
         if (type === 'approve') {
             dialog = <div className="alert-box">
                 <p>Are you sure you want to approve this order?</p>
-                <div className="btn borderless" type="submit" value="Cancel" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
-                <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveOrder({ token, id: item.id }) } >Approve</div>
+                <div className="btn borderless" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
+                <div className="btn blue" onClick={()=> this.props.approveOrder({ token, id: item.id }) } >Approve</div>
             </div>
 
         } else if (type === 'process') {
@@ -97,10 +96,11 @@ class OrdersPage extends React.Component {
     }
 
     render() {
-        let data = {};
-
-        const { cookies } = this.props;
+        const { cookies, spinner, orders, users, fundProperties, zeroOrders } = this.props;
+        const { searchTerm, sortby, alert } = this.state;
         const jwt = cookies.get('sibi-admin-jwt');
+        let pageContent;
+
         const headers = {
             id: '',
             office: 'PM Office',
@@ -117,18 +117,14 @@ class OrdersPage extends React.Component {
 
         const KEYS_TO_FILTERS = ['propertyId','address','occupied','userId','geOrderNumber','createdAt','totalCost','orderStatus'];
 
-        if (this.props.orders.size > 0 &&
-            this.props.users.size > 0 &&
-            this.props.fundProperties.size > 0) {
+        if (orders.size > 0 &&
+            users.size > 0 &&
+            fundProperties.size > 0) {
 
-            const orders = this.props.orders.toJS();
-            const users = this.props.users.toJS();
-            const fundProperties = this.props.fundProperties.toJS();
-
-            data = _.map(orders, (item) => {
+            let data = _.map(orders.toJS(), (item) => {
                 const cols = {};
-                const user = _.find(users, ['id', item['userId']]);
-                const fundProperty = _.find(fundProperties, ['id', item['fundPropertyId']]);
+                const user = _.find(users.toJS(), ['id', item['userId']]);
+                const fundProperty = _.find(fundProperties.toJS(), ['id', item['fundPropertyId']]);
 
                 _.each(headers, (value, key) => {
                     value = item[key];
@@ -188,16 +184,16 @@ class OrdersPage extends React.Component {
             });
 
             // this initially sets the "Pending" orders before everything and "Approved" orders at the end
-            if(this.state.searchTerm !== '') {
+            if(searchTerm !== '') {
                 data = _.map(data, (item) => {
                     item.totalCost = `${item.totalCost}`;
                     return item;
                 });
 
-                data = filter(this.state.searchTerm, KEYS_TO_FILTERS, data);
+                data = filter(searchTerm, KEYS_TO_FILTERS, data);
             }
 
-            if (this.state.sortby.column === '') {
+            if (sortby.column === '') {
                 data = _.partition(data, ['orderStatus', 'Processed']);
                 data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
                 data = data[0].concat(data[1]);
@@ -211,38 +207,46 @@ class OrdersPage extends React.Component {
                 data = data[1].concat(data[0]);
 
             } else {
-                data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+                data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
             }
+
+            pageContent = <div className="table-card">
+                <div className="card-header">
+                    <h2>Orders</h2>
+                    <div className="search-wrapper">
+                        <img src={assets('./images/icon-search.svg')} className="search-icon"/>
+                        <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} />
+                    </div>
+                </div>
+                <MyTable
+                    token={jwt.token}
+                    type="orders"
+                    dataClassName="table-row-clickable"
+                    headers={headers}
+                    data={data}
+                    sortby={(sortby.column !== '') ? sortby : { column: 'orderStatus', isAsc: 'asc' }}
+                    handleAction={this.handleAction}
+                    handleItem={this.handleItem}
+                />
+            </div>;
+
+            this.props.triggerSpinner({ isOn: false });
+
+        } else if (zeroOrders) {
+            pageContent = <div>
+                <h1>Order Status</h1>
+                <p>There are currently no orders to display</p>
+            </div>;
 
             this.props.triggerSpinner({ isOn: false });
         }
 
-        const sortBy = (this.state.sortby.column !== '') ? this.state.sortby : { column: 'orderStatus', isAsc: 'asc' };
-
         return (
-            <Loader loaded={this.props.spinner} >
+            <Loader loaded={spinner} >
                 <div id="orders-page" className="container">
-                    <div className="table-card">
-                        <div className="card-header">
-                            <h2>Orders</h2>
-                            <div className="search-wrapper">
-                                <img src={assets('./images/icon-search.svg')} className="search-icon"/>
-                                <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} />
-                            </div>
-                        </div>
-                        <MyTable
-                            token={jwt.token}
-                            type="orders"
-                            dataClassName="table-row-clickable"
-                            headers={headers}
-                            data={data}
-                            sortby={sortBy}
-                            handleAction={this.handleAction}
-                            handleItem={this.handleItem}
-                        />
-                    </div>
+                    { pageContent }
                 </div>
-                { this.state.alert }
+                { alert }
             </Loader>
         );
     }
@@ -252,6 +256,7 @@ const select = (state) => ({
     spinner         : state.ui.get('spinner'),
     activeUser      : state.activeUser.get('activeUser'),
     orders          : state.orders.get('orders'),
+    zeroOrders      : state.orders.get('zeroOrders'),
     users           : state.users.get('users'),
     fundProperties  : state.users.get('fundProperties'),
 });
