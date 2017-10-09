@@ -35,7 +35,7 @@ class UsersPage extends React.Component {
 
     componentWillMount() {
         const { cookies, activeUser } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
@@ -90,7 +90,7 @@ class UsersPage extends React.Component {
     render() {
         const { cookies, users, spinner, zeroUsers } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
         let pageContent;
 
         const headers = {

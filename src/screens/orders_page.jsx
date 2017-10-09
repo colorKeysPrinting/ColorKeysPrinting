@@ -36,7 +36,7 @@ class OrdersPage extends React.Component {
 
     componentWillMount() {
         const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
@@ -98,7 +98,7 @@ class OrdersPage extends React.Component {
     render() {
         const { cookies, spinner, activeUser, orders, users, fundProperties, zeroOrders } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
         let pageContent;
 
         const headers = {

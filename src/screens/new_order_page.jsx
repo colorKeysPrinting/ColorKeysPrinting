@@ -12,7 +12,7 @@ class NewOrderPage extends React.Component {
 
     componentWillMount() {
         const { cookies, activeUser } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         this.props.setActiveTab('new_order');
     }
@@ -27,7 +27,7 @@ class NewOrderPage extends React.Component {
     render() {
         let iFrame;
         const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
         const height = (window.innerHeight - 69);
         const width = window.innerWidth;
 

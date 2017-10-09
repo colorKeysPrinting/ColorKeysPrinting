@@ -31,7 +31,7 @@ class OrderDetails extends React.Component {
 
     componentWillMount() {
         const { cookies, location } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             const reOrder = /orderId=(.*)/;
@@ -61,7 +61,7 @@ class OrderDetails extends React.Component {
     handleAction({ orderId }) {
         console.log('user action:', orderId);
         const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         this.props.approveOrder({ token: jwt.token, id: orderId });
     }

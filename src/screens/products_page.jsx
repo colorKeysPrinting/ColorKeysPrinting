@@ -26,7 +26,7 @@ class ProductsPage extends React.Component {
 
     componentWillMount() {
         const { cookies, activeUser, locaction } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
@@ -54,7 +54,7 @@ class ProductsPage extends React.Component {
         }
 
         if (!_.isEqual(productCategories, nextProps.productCategories)) {
-            const jwt = cookies.get('sibi-admin-jwt');
+            const jwt = cookies.get('sibi-ge-admin');
 
             _.each(nextProps.productCategories.toJS(), (category) => {
                 _.each(category.subcategories, (subCategory) => {
@@ -108,7 +108,7 @@ class ProductsPage extends React.Component {
                                         value = { ...product, category: category.id, subCategory: subCategory.id, subSubCategory: subSubCategory.id };
 
                                     } else if (key === 'action') {
-                                        const jwt = cookies.get('sibi-admin-jwt');
+                                        const jwt = cookies.get('sibi-ge-admin');
 
                                         value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: jwt.trade, id: product.id }) } className="product-action">Unarchive</div>
                                             : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;
@@ -161,7 +161,7 @@ class ProductsPage extends React.Component {
                                     value = { ...product, category: category.id, subCategory: subCategory.id };
 
                                 } else if (key === 'action') {
-                                    const jwt = cookies.get('sibi-admin-jwt');
+                                    const jwt = cookies.get('sibi-ge-admin');
 
                                     value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: subName, id: product.id }) } className="product-action">Unarchive</div>
                                         : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;

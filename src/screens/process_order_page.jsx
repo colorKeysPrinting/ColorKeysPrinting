@@ -38,7 +38,7 @@ class ProcessOrderPage extends React.Component {
     componentWillMount() {
         const { history, location, cookies } = this.props;
         const reOrder = /orderId=(.*)/;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         const orderId = reOrder.exec(location.search);
 

@@ -32,7 +32,7 @@ class HeaderBar extends React.Component {
 
     componentWillMount() {
         const { cookies, history, location } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             this.props.getCurrentUser({ token: jwt.token});
@@ -43,7 +43,7 @@ class HeaderBar extends React.Component {
 
     componentWillUpdate(nextProps) {
         const { cookies, history, location, activeUser, isLogout } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (!_.isEqual(nextProps.isLogout, isLogout)) {
             this.props.logout();
@@ -61,7 +61,7 @@ class HeaderBar extends React.Component {
                         history.push(`/orders`);
                     }
                 } else {
-                    cookies.remove('sibi-admin-jwt');
+                    cookies.remove('sibi-ge-admin');
                     history.push({ pathname: `/login`});
                 }
             }
@@ -91,7 +91,7 @@ class HeaderBar extends React.Component {
 
     render() {
         const { cookies, activeUser, location, isLogout, activeTab, orders, users } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
         let pendingOrders = 0, pendingUsers = 0, activeTabs = { activeTabs: '', orders: '', users: '', products: '', new_order: '' };
 
         const isProcessOrder = (location.pathname !== '/process_order') ? false : true;

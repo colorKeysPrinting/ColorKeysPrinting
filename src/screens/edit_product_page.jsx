@@ -38,7 +38,7 @@ class EditProductPage extends React.Component {
 
     componentWillMount() {
         const { cookies, productCategories } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
@@ -82,7 +82,7 @@ class EditProductPage extends React.Component {
         }
 
         if (!_.isEqual(productCategories, this.props.productCategories)) {
-            const jwt = this.props.cookies.get('sibi-admin-jwt');
+            const jwt = this.props.cookies.get('sibi-ge-admin');
 
             _.each(productCategories.toJS(), (category) => {
                 _.each(category.subcategories, (subCategory) => {
@@ -186,7 +186,7 @@ class EditProductPage extends React.Component {
         } = this.props;
 
         let isDisabled = false, pageContent, subCategoryOptions, dialog;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (activeUser.size > 0 &&
             productCategories.size > 0 &&
