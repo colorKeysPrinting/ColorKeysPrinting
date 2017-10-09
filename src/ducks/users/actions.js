@@ -36,6 +36,7 @@ export function getUsers({ token, type }) {
                 dispatch({ type: ActionTypes.GET_USERS_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Users \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -54,6 +55,7 @@ export function approveUser({ token, id }) {
                 dispatch({ type: ActionTypes.APPROVE_USER_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Approve User \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -76,6 +78,7 @@ export function autoApproveUserOrders( { token, user, autoApprovedOrders }) {
                 dispatch({ type: ActionTypes.AUTO_APPROVE_USER_ORDERS, ...payload});
             })
             .catch(error => {
+                alert(`Unable to Update User \nError: ${error.message}`);
                 throw(error);
             })
     }
@@ -94,6 +97,7 @@ export function disableUser({ token, id }) {
                 dispatch({ type: ActionTypes.DISABLE_USER_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Disable User \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -112,6 +116,7 @@ export function getFunds({ token, emailDomain }) {
                 dispatch({ type: ActionTypes.GET_FUNDS_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Funds \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -130,6 +135,7 @@ export function getFundProperties({ token }) {
                 dispatch({ type: ActionTypes.GET_FUND_PROPERTIES_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Fund's Locations \nError: ${error.message}`);
                 throw(error);
             });
     }

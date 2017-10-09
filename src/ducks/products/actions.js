@@ -66,6 +66,7 @@ export function getProducts({ token }) {
                 dispatch({ type: ActionTypes.GET_PRODUCTS_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Products \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -87,6 +88,7 @@ export function updateProduct({ token, category, product }) {
                 dispatch(getUserProductCategories({ token, category }));
             })
             .catch(error => {
+                alert(`Unable to Update Product \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -114,6 +116,7 @@ export function createProduct({ token, category, product, applianceAssociatedPar
                 dispatch(getUserProductCategories({ token, category }));
             })
             .catch(error => {
+                alert(`Unable to Create Product \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -129,6 +132,7 @@ export function getProductCategories() {
                 dispatch({ type: ActionTypes.GET_PRODUCT_CATEGORIES_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Product Categories \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -148,6 +152,7 @@ export function getUserProductCategories({ token, category }) {
                 dispatch({ type: ActionTypes.GET_USER_PRODUCT_CATEGORIES_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Product Categories \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -167,6 +172,7 @@ export function getProductsForCategory({ token, categoryId, category }) {
                 dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_CATEGORY_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Products for Category ${category} \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -189,6 +195,7 @@ export function getProductsForSubCategory({ token, category, subCategory, subSub
                 dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Products for Category ${category} \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -207,6 +214,7 @@ export function getParts({ token }) {
                 dispatch({ type: ActionTypes.GET_PARTS_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Parts \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -225,6 +233,7 @@ export function archiveProduct({ token, category, id }) {
                 dispatch(getUserProductCategories({ token, category }));
             })
             .catch(error => {
+                alert(`Unable to Archive Product \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -243,6 +252,7 @@ export function unarchiveProduct({ token, category, id }) {
                 dispatch(getUserProductCategories({ token, category }));
             })
             .catch(error => {
+                alert(`Unable to Unarchive Product \nError: ${error.message}`);
                 throw(error);
             });
     }
