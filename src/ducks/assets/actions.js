@@ -31,7 +31,7 @@ const uploadImageS3 = ({ url, type, key, formData }) => {
                 dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_SUCCESS, ...payload, key });
             })
             .catch(error => {
-                alert('Image Failed to upload please click "Add" to try again\nor please try again later');
+                alert('Image Failed to upload please click "Add" to try again\nor please try again later \nError: ${error.message}');
                 throw(error);
             });
     }
@@ -65,6 +65,7 @@ export function uploadImage({ token, key, imageFile }) {
                 dispatch(uploadImageS3({ url: data.upload_url, type: imageFile.type, key, formData }));
             })
             .catch(error => {
+                alert(`Unable to Upload Image \nError: ${error.message}`);
                 throw(error);
             });
     }

@@ -48,6 +48,7 @@ export function getOrderById({ id }) {
                 dispatch({ type: ActionTypes.GET_ORDER_BY_ID_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Order ${id} \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -67,6 +68,7 @@ export function getOrders({ token, type }) {
                 dispatch({ type: ActionTypes.GET_ORDERS_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Load Orders \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -86,6 +88,7 @@ export function approveOrder({ token, id }) {
                 dispatch({ type: ActionTypes.APPROVE_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Approve Order \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -107,6 +110,7 @@ export function updateOrder({ token, order }) {
                 dispatch({ type: ActionTypes.UPDATE_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Update Order \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -125,6 +129,7 @@ export function updateInstallDate ({ id, installDate }) {
                 dispatch({ type: ActionTypes.UPDATE_INSTALL_DATE_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Update Install Date \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -143,6 +148,7 @@ export function updateModelNumber ({ id, data }) {
                 dispatch({ type: ActionTypes.UPDATE_MODEL_NUMBER_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Update Model # \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -161,6 +167,7 @@ export function createOrder() {
                 dispatch({ type: ActionTypes.CREATE_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Create Order \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -180,6 +187,7 @@ export function processOrder({ id, processedByName, geOrderNumber }) {
                 dispatch({ type: ActionTypes.PROCESS_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Process Order \nError: ${error.message}`);
                 throw(error);
             });
     }
@@ -198,6 +206,7 @@ export function removeOrder(token, id) {
                 dispatch({ type: ActionTypes.REMOVE_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
+                alert(`Unable to Remove Order \nError: ${error.message}`);
                 throw(error);
             });
     }
