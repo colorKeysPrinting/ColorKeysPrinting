@@ -96,7 +96,7 @@ class OrdersPage extends React.Component {
     }
 
     render() {
-        const { cookies, spinner, orders, users, fundProperties, zeroOrders } = this.props;
+        const { cookies, spinner, activeUser, orders, users, fundProperties, zeroOrders } = this.props;
         const { searchTerm, sortby, alert } = this.state;
         const jwt = cookies.get('sibi-admin-jwt');
         let pageContent;
@@ -160,8 +160,13 @@ class OrdersPage extends React.Component {
                         value = item[key];
 
                     } else if (key === 'action') {
-                        value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
-                        // value = (item['orderStatus'] === 'Approved') ? 'process' : value;
+                        const permissions = activeUser.get('permissions').toJS();
+                        if (permissions.approveAllOrders || permissions.approveFundOrders) {
+                            value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
+
+                        } else if (permissions.processManufacturerOrders) {
+                            value = (item['orderStatus'] === 'Approved') ? 'process' : value;
+                        }
                     }
 
                     cols[key] = value;
