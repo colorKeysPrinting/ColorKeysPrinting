@@ -88,9 +88,10 @@ class UsersPage extends React.Component {
     }
 
     render() {
-        const { cookies, users, spinner } = this.props;
+        const { cookies, users, spinner, zeroUsers } = this.props;
+        const { searchTerm, sortby, alert } = this.state;
         const jwt = cookies.get('sibi-admin-jwt');
-        let data = {};
+        let pageContent;
 
         const headers = {
             id: '',
@@ -108,7 +109,7 @@ class UsersPage extends React.Component {
 
         if (users.size > 0 ) {
 
-            data = _.map(users.toJS(), (user) => {
+            let data = _.map(users.toJS(), (user) => {
                 const cols = {};
 
                 _.each(headers, (value, key) => {
@@ -164,12 +165,12 @@ class UsersPage extends React.Component {
             });
 
             // this initially sets the "Pending" users before everything
-            if(this.state.searchTerm !== '') {
-                data = filter(this.state.searchTerm, KEYS_TO_FILTERS, data);
+            if(searchTerm !== '') {
+                data = filter(searchTerm, KEYS_TO_FILTERS, data);
             }
 
-            if(this.state.sortby.column !== 'autoApprovedOrders') {
-                data = _.orderBy(data, [this.state.sortby.column, 'createdAt'], [this.state.sortby.isAsc, 'desc']);
+            if(sortby.column !== 'autoApprovedOrders') {
+                data = _.orderBy(data, [sortby.column, 'createdAt'], [sortby.isAsc, 'desc']);
             } else {
                 // convert to sort
                 data = _.map(data, (item) => {
@@ -178,7 +179,7 @@ class UsersPage extends React.Component {
                 });
 
                 // sort
-                data = _.orderBy(data, [this.state.sortby.column], [this.state.sortby.isAsc]);
+                data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
 
                 // convert back
                 data = _.map(data, (item) => {
@@ -199,31 +200,41 @@ class UsersPage extends React.Component {
                 });
             }
 
+            pageContent = <div className="table-card">
+                <div className="card-header">
+                    <h2>Users</h2>
+                    <div className="search-wrapper">
+                        <img src={assets('./images/icon-search.svg')} className="search-icon" onClick={this.focus} />
+                        <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} ref={(input) => { this.textInput = input; }} />
+                    </div>
+                </div>
+                <MyTable
+                    token={jwt.token}
+                    type="users"
+                    headers={headers}
+                    data={data}
+                    sortby={sortby}
+                    handleAction={this.handleAction}
+                />
+            </div>;
+
+            this.props.triggerSpinner({ isOn: false });
+
+        } else if (zeroUsers) {
+            pageContent = <div>
+                <h1>User Status</h1>
+                <p>There are currently no users to display</p>
+            </div>;
+
             this.props.triggerSpinner({ isOn: false });
         }
 
         return (
             <Loader loaded={spinner} >
                 <div id="users-page" className="container">
-                    <div className="table-card">
-                        <div className="card-header">
-                            <h2>Users</h2>
-                            <div className="search-wrapper">
-                                <img src={assets('./images/icon-search.svg')} className="search-icon" onClick={this.focus} />
-                                <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} ref={(input) => { this.textInput = input; }} />
-                            </div>
-                        </div>
-                        {(jwt) ? <MyTable
-                            token={jwt.token}
-                            type="users"
-                            headers={headers}
-                            data={data}
-                            sortby={this.state.sortby}
-                            handleAction={this.handleAction}
-                        /> : null}
-                    </div>
+                    { pageContent }
                 </div>
-                { this.state.alert }
+                { alert }
             </Loader>
         );
     }
@@ -232,7 +243,8 @@ class UsersPage extends React.Component {
 const select = (state) => ({
     spinner         : state.ui.get('spinner'),
     activeUser      : state.activeUser.get('activeUser'),
-    users           : state.users.get('users')
+    users           : state.users.get('users'),
+    zeroUsers       : state.users.get('zeroUsers')
 });
 
 const action = {

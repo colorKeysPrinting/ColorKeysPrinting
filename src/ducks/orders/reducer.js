@@ -11,7 +11,8 @@ import { ActionTypes }          from './actions';
 const initialState = Immutable.fromJS({
     order: '',
     processSuccess: false,
-    orders: []
+    orders: [],
+    zeroOrders: false
 });
 
 export default (state = initialState, action) => {
@@ -32,6 +33,7 @@ export default (state = initialState, action) => {
     case ActionTypes.GET_ORDERS_SUCCESS:
         console.log('receiving orders', action.data);
         state = state.set('orders', Immutable.fromJS(action.data));
+        state = state.set('zeroOrders', (_.size(action.data) <= 0) ? true : false );
         break;
 
     case ActionTypes.APPROVE_ORDER_SUCCESS:

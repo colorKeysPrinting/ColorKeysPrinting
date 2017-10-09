@@ -10,7 +10,8 @@ import { ActionTypes }          from './actions';
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
     users: [],
-    fundProperties: []
+    fundProperties: [],
+    zeroUsers: false
 });
 
 export default (state = initialState, action) => {
@@ -20,6 +21,7 @@ export default (state = initialState, action) => {
     case ActionTypes.GET_USERS_SUCCESS:
         console.log('receiving users');
         state = state.set('users', Immutable.fromJS(action.data));
+        state = state.set('zeroUsers', (_.size(action.data) <= 0) ? true : false );
         break;
 
     case ActionTypes.APPROVE_USER_SUCCESS:
