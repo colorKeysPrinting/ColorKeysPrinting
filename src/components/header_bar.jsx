@@ -178,11 +178,11 @@ class HeaderBar extends React.Component {
 }
 
 const select = (state) => ({
-    isLogout        : state.jwt.get('isLogout'),
-    activeUser      : state.activeUser.get('activeUser'),
-    activeTab       : state.header.get('activeTab'),
-    orders          : state.orders.get('orders'),
-    users           : state.users.get('users')
+    isLogout   : state.jwt.get('isLogout'),
+    activeUser : state.activeUser.get('activeUser'),
+    activeTab  : state.header.get('activeTab'),
+    orders     : state.orders.get('orders'),
+    users      : state.users.get('users')
 });
 
 const actions = {

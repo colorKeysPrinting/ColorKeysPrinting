@@ -258,12 +258,12 @@ class OrdersPage extends React.Component {
 }
 
 const select = (state) => ({
-    spinner         : state.ui.get('spinner'),
-    activeUser      : state.activeUser.get('activeUser'),
-    orders          : state.orders.get('orders'),
-    zeroOrders      : state.orders.get('zeroOrders'),
-    users           : state.users.get('users'),
-    fundProperties  : state.users.get('fundProperties'),
+    spinner        : state.ui.get('spinner'),
+    activeUser     : state.activeUser.get('activeUser'),
+    orders         : state.orders.get('orders'),
+    zeroOrders     : state.orders.get('zeroOrders'),
+    users          : state.users.get('users'),
+    fundProperties : state.users.get('fundProperties'),
 });
 
 const actions = {

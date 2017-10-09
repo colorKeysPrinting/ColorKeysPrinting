@@ -108,6 +108,7 @@ class UsersPage extends React.Component {
         const KEYS_TO_FILTERS = ['name','office','email','phoneNumber','createdAt','autoApprovedOrders','status'];
 
         if (users.size > 0 ) {
+            const permissions = activeUser.get('permissions').toJS();
 
             let data = _.map(users.toJS(), (user) => {
                 const cols = {};
@@ -145,13 +146,16 @@ class UsersPage extends React.Component {
                             value={autoApprovedOrders}
                             options={options}
                             onChange={({ user, value }) => this.props.autoApproveUserOrders({ token: jwt.token, user, autoApprovedOrders:  value })}
+                            disabled={(permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers) ? false : true}
                         />;
 
                     } else if (key === 'status') {
                         value = (user['type'] === 'pending') ? 'Pending' : 'Approved';
 
                     } else if (key === 'action') {
-                        value = (user['type'] === 'pending') ? 'approve' : '';
+                        if ((permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers || permissions.manageSubordinateUsers)) {
+                            value = (user['type'] === 'pending') ? 'approve' : '';
+                        }
                     }
 
                     cols[key] = value;
@@ -195,6 +199,7 @@ class UsersPage extends React.Component {
                         value={autoApprovedOrders}
                         options={options}
                         onChange={(value) => this.handleAutoApprove({ user: item.id, autoApprovedOrders: value })}
+                        disabled={(permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers) ? false : true}
                     />;
                     return item;
                 });
@@ -241,10 +246,10 @@ class UsersPage extends React.Component {
 }
 
 const select = (state) => ({
-    spinner         : state.ui.get('spinner'),
-    activeUser      : state.activeUser.get('activeUser'),
-    users           : state.users.get('users'),
-    zeroUsers       : state.users.get('zeroUsers')
+    spinner    : state.ui.get('spinner'),
+    activeUser : state.activeUser.get('activeUser'),
+    users      : state.users.get('users'),
+    zeroUsers  : state.users.get('zeroUsers')
 });
 
 const action = {
