@@ -55,7 +55,7 @@ export function login({ email, password }) {
                 dispatch({ type: ActionTypes.LOGIN_SUCCESS, ...payload });
             })
             .catch(error => {
-                dispatch({ type: ActionTypes.LOGIN_ERROR });
+                dispatch({ type: ActionTypes.LOGIN_ERROR, error });
             });
     }
 }

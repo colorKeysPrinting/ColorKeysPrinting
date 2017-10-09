@@ -91,31 +91,47 @@ class HeaderBar extends React.Component {
 
     render() {
         const { cookies, activeUser, location, isLogout, activeTab, orders, users } = this.props;
-        let pendingOrders = 0, pendingUsers = 0;
         const jwt = cookies.get('sibi-admin-jwt');
+        let pendingOrders = 0, pendingUsers = 0, activeTabs = { activeTabs: '', orders: '', users: '', products: '', new_order: '' };
 
         const isProcessOrder = (location.pathname !== '/process_order') ? false : true;
 
-        const availableTabs = {
-            // dashboard: 'Dashboard',
-            orders: 'Orders',
-            // products: 'Products',
-            users: 'Users',
-            new_order: 'New Order',
-        }
+        if (jwt) {
+            _.each(activeUser.get('permissions').toJS(), (value, key) => {
+                if (key === '') {
+                    activeTabs['dashboard'] = 'Dashboard';
+                }
 
-        if (jwt &&
-            orders.size > 0 &&
-            users.size > 0) {
+                if (key === 'viewAllOrders' || key === 'viewAllApprovedAndProcessedOrders' || key === 'viewFundOrders') {
+                    activeTabs['orders'] = 'Orders';
+                }
 
-            _.each(orders.toJS(), (order) => {
-                pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
+                if (key === 'manageAllUsers' || key === 'manageAllFundUsers' || key === 'manageAllManufacturerUsers' || key === 'manageSubordinateUsers') {
+                    activeTabs['users'] = 'Users';
+                }
+
+                if (key === 'viewAllProducts' || key === 'manageAllProducts' || key === 'manageFundPreferredProducts' || key === 'manageFundProducts') {
+                    // activeTabs['products'] = 'Products';
+                }
+
+                if (key === 'createOrder') {
+                    activeTabs['new_order'] =  'New Order';
+                }
             });
 
-            _.each(users.toJS(), (user) => {
-                pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
-            });
+            if (orders.size > 0 &&
+                users.size > 0) {
+
+                _.each(orders.toJS(), (order) => {
+                    pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
+                });
+
+                _.each(users.toJS(), (user) => {
+                    pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
+                });
+            }
         }
+
 
         return (
             <div id="header-bar">
@@ -130,16 +146,18 @@ class HeaderBar extends React.Component {
                             renderTabBar={()=><ScrollableInkTabBar onTabClick={(activeTab) => this.tabActions({ activeTab }) } />}
                             renderTabContent={()=><TabContent />}
                         >
-                            { _.map(availableTabs, (name, key) => {
-                                if (key === 'orders' || key === 'users') {
-                                    name = (key === 'orders')
-                                        ? <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Orders {(pendingOrders !== 0) ? <div id="order-badge" className="pending-badges" >{ pendingOrders }</div> : ''}</div>
-                                        : <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Users {(pendingUsers !== 0) ? <div id="user-badge" className="pending-badges" >{ pendingUsers }</div> : ''}</div>;
-                                } else {
-                                    name = <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>{ name }</div>
+                            { _.map(activeTabs, (name, key) => {
+                                if (name !== '') {
+                                    if (key === 'orders' || key === 'users') {
+                                        name = (key === 'orders')
+                                            ? <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Orders {(pendingOrders !== 0) ? <div id="order-badge" className="pending-badges" >{ pendingOrders }</div> : ''}</div>
+                                            : <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Users {(pendingUsers !== 0) ? <div id="user-badge" className="pending-badges" >{ pendingUsers }</div> : ''}</div>;
+                                    } else {
+                                        name = <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>{ name }</div>
+                                    }
+                                    return <TabPane tab={name} key={key}></TabPane>
                                 }
-                                return <TabPane tab={name} key={key}></TabPane>
-                            })}
+                            }) }
                         </Tabs>
                     </div>
                     { (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>

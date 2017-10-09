@@ -48,7 +48,7 @@ export default (state = initialState, action) => {
 
     case ActionTypes.LOGIN_ERROR:
         console.log('login error');
-        alert('Could not find a Username and Password combination matching the provided');
+        alert(action.error);
         state = state.set('loginError', true);
         break;
 
