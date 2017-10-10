@@ -31,7 +31,7 @@ const uploadImageS3 = ({ url, type, key, formData }) => {
                 dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_SUCCESS, ...payload, key });
             })
             .catch(error => {
-                alert('Image Failed to upload please click "Add" to try again\nor please try again later \nError: ${error.message}');
+                alert(`Image Failed to upload please click "Add" to try again\nor please try again later \nError: ${error.message}`);
                 throw(error);
             });
     }
