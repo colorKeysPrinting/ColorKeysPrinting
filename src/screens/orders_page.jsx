@@ -90,9 +90,17 @@ class OrdersPage extends React.Component {
     }
 
     handleItem({ item }) {
-        console.log('item pressed', item);
-        this.props.triggerSpinner({ isOn: true });
-        this.props.history.push({ pathname: `/order_details`, search: `orderId=${item.id}` });
+        const { history, activeUser } = this.props;
+        const permissions = activeUser.get('permissions').toJS();
+        let pathname = `/order_details`;
+
+        if (permissions.viewAllApprovedAndProcessedOrders || permissions.processManufacturerOrders) {
+            if ((item['orderStatus'] === 'Approved')) {
+                pathname = `/process_order`;
+            }
+        }
+
+        history.push({ pathname, search: `orderId=${item.id}` });
     }
 
     render() {

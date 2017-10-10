@@ -30,7 +30,9 @@ export default function PartTable(props) {
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
-                        value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                        if (props.permissions.updateAllOrders || props.permissions.updateFundOrders) {
+                            value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                        }
                     }
 
                 } else if (row === 'install') {

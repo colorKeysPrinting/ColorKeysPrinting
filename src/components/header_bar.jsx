@@ -92,11 +92,11 @@ class HeaderBar extends React.Component {
     render() {
         const { cookies, activeUser, location, isLogout, activeTab, orders, users } = this.props;
         const jwt = cookies.get('sibi-ge-admin');
-        let pendingOrders = 0, pendingUsers = 0, activeTabs = { activeTabs: '', orders: '', users: '', products: '', new_order: '' };
+        let pendingOrders = 0, pendingUsers = 0, activeTabs = { dashboard: '', orders: '', users: '', products: '', new_order: '' };
 
         const isProcessOrder = (location.pathname !== '/process_order') ? false : true;
 
-        if (jwt) {
+        if (jwt && activeUser.size > 0) {
             _.each(activeUser.get('permissions').toJS(), (value, key) => {
                 if (key === '') {
                     activeTabs['dashboard'] = 'Dashboard';

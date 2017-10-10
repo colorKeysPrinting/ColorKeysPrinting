@@ -88,7 +88,7 @@ class UsersPage extends React.Component {
     }
 
     render() {
-        const { cookies, users, spinner, zeroUsers } = this.props;
+        const { cookies, activeUser, users, spinner, zeroUsers } = this.props;
         const { searchTerm, sortby, alert } = this.state;
         const jwt = cookies.get('sibi-ge-admin');
         let pageContent;
