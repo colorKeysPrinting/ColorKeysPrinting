@@ -67,7 +67,7 @@ class OrderDetails extends React.Component {
     }
 
     render() {
-        const { order, spinner } = this.props;
+        const { order, spinner, activeUser } = this.props;
         let pageData, tenantInfoTitle, tenantInfoDetails;;
 
         const productHeaders = {
@@ -92,6 +92,7 @@ class OrderDetails extends React.Component {
         if (order.size > 0) {
             const myOrder = order.toJS();
             const user = myOrder.orderUser;
+            const permissions = activeUser.get('permissions').toJS();
 
             orderHeaders['hotshotInstallDate'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
             orderHeaders['hotshotCode'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
@@ -186,11 +187,15 @@ class OrderDetails extends React.Component {
                     <div className="details-header">
                         <div className="header-property pure-u-2-3">
                             <h2 className="order-number">Order: { myOrder.orderNumber }</h2>
-                            <div className="property-manager">{orderPageHeading.address} ● PM Office: {orderPageHeading.PM}</div>
+                            <div className="property-manager">{ orderPageHeading.address } ● PM Office: { orderPageHeading.PM }</div>
                         </div>
                         { (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
-                            <div className="btn blue" onClick={() => this.editOrder({ orderId: myOrder.id })}>Edit</div>
-                            <div className="btn blue" onClick={() => this.handleAction({ orderId: myOrder.id })}>Approve</div>
+                            { (permissions.updateAllOrders || permissions.updateFundOrders || permissions.updateFundOrdersPriorToApproval)
+                                ? <div className="btn blue" onClick={() => this.editOrder({ orderId: myOrder.id })}>Edit</div>
+                                : null }
+                            { (permissions.viewAllApprovedAndProcessedOrders || permissions.approveAllOrders || permissions.approveFundOrders)
+                                ? <div className="btn blue" onClick={() => this.handleAction({ orderId: myOrder.id })}>Approve</div>
+                                : null }
                         </div> : null }
                     </div>
                     <MyTable
@@ -290,8 +295,9 @@ class OrderDetails extends React.Component {
 }
 
 const select = (state) => ({
-    order           : state.orders.get('order'),
-    spinner         : state.ui.get('spinner')
+    spinner    : state.ui.get('spinner'),
+    order      : state.orders.get('order'),
+    activeUser : state.activeUser.get('activeUser'),
 });
 
 const actions = {
