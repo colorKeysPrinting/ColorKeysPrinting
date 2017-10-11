@@ -55,7 +55,7 @@ class HeaderBar extends React.Component {
                     this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.get('type') });
                     this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.get('type') });
 
-                    if (location.prevPath) {
+                    if (location.prevPath && location.prevPath !== '/login') {
                         history.push({ pathname: location.prevPath, search: (location.prevSearch) ? location.prevSearch : null})
                     } else if (location.pathname === '/login' || location.pathname === '/') {
                         history.push(`/orders`);
