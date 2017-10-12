@@ -123,7 +123,7 @@ class UsersPage extends React.Component {
                         value = `${user['firstName']} ${user['lastName']}`;
 
                     } else if (key === 'office') {
-                        value = user.fundLocation.city
+                        value = (user.fundLocation) ? user.fundLocation.city : '';
 
                     } else if (key === 'email') {
                         value = user['email'];

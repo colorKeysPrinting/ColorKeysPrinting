@@ -150,10 +150,10 @@ class HeaderBar extends React.Component {
                                 if (name !== '') {
                                     if (key === 'orders' || key === 'users') {
                                         name = (key === 'orders')
-                                            ? <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Orders {(pendingOrders !== 0) ? <div id="order-badge" className="pending-badges" >{ pendingOrders }</div> : ''}</div>
-                                            : <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Users {(pendingUsers !== 0) ? <div id="user-badge" className="pending-badges" >{ pendingUsers }</div> : ''}</div>;
+                                            ? <div className={`header-tab ${(activeTab === key) ? 'active' : ''}`}>Orders {(pendingOrders !== 0) ? <div id="order-badge" className="pending-badges" >{ pendingOrders }</div> : ''}</div>
+                                            : <div className={`header-tab ${(activeTab === key) ? 'active' : ''}`}>Users {(pendingUsers !== 0) ? <div id="user-badge" className="pending-badges" >{ pendingUsers }</div> : ''}</div>;
                                     } else {
-                                        name = <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>{ name }</div>
+                                        name = <div className={`header-tab ${(activeTab === key) ? 'active' : ''}`}>{ name }</div>
                                     }
                                     return <TabPane tab={name} key={key}></TabPane>
                                 }

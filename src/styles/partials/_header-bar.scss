@@ -10,6 +10,109 @@
     @media (max-width: 1011px) {
         position: absolute;
     }
+    .settings-icon {
+        cursor: pointer;
+    }
+
+    #header-tabs {
+        text-align: center;
+        margin-left: 195px;
+        margin-right: 60px;
+        .header-tab {
+            color:  $off-text;
+            &.active {
+                color: white;
+            }
+        }
+        .header-tab:hover {
+            color: $blue;
+        }
+        .rc-tabs-tab {
+            color:  $off-text;
+            height: 69px;
+            padding: 28px 20px;
+            font-size: 16px;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .rc-tabs-tab:hover {
+            color: $blue;
+        }
+        .rc-tabs-tab-active {
+            color: white;
+        }
+        .rc-tabs {
+            height: 69px;
+            overflow: hidden;
+        }
+        .rc-tabs-top {
+            border-bottom: 0px solid $header-background;
+        }
+        .rc-tabs-ink-bar {
+            height: 5px;
+            background-color: $blue;
+        }
+        .rc-tabs-content {
+            display: none;
+        }
+
+        #order-badge {
+            margin-left: 50px;
+        }
+
+        #user-badge {
+            margin-left: 35px;
+        }
+
+        .pending-badges {
+            width: 15px;
+            height: 15px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: $white;
+            line-height: 17px;
+            text-align: center;
+            background: $light-blue;
+            top: 14px;
+            position: absolute;
+            padding-left: 1px;
+        }
+    }
+    .login-section {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        img {
+            margin: 19px;
+            border-radius: 50%;
+            height: 30px;
+            width: 30px;
+        }
+        .btn {
+            margin: 12px;
+        }
+    }
+    .profile-section {
+        display: inline-flex;
+
+        .profile-pic {
+            border-radius: 40px;
+            margin: 20px 10px;
+            cursor: pointer;
+        }
+        .search {
+            margin: 28px 10px;
+            cursor: pointer;
+        }
+        .truck {
+            margin: 28px 10px;
+            cursor: pointer;
+        }
+    }
+    .sibi-logo {
+        width: 273px;
+        cursor: pointer;
+    }
 }
 
 #logo {
@@ -27,108 +130,4 @@
     top: 29px;
     left: 100px;
     letter-spacing: 1px;
-}
-
-.settings-icon {
-    cursor: pointer;
-}
-
-#header-tabs {
-    text-align: center;
-    margin-left: 195px;
-    margin-right: 60px;
-    .header-tab {
-        color:  $off-text;
-    }
-    .header-tab:hover {
-        color: $blue;
-    }
-    .header-tab-active {
-        color: white;
-    }
-    .rc-tabs-tab {
-        color:  $off-text;
-        height: 69px;
-        padding: 28px 20px;
-        font-size: 16px;
-        font-weight: 400;
-        font-style: normal;
-    }
-    .rc-tabs-tab:hover {
-        color: $blue;
-    }
-    .rc-tabs-tab-active {
-        color: white;
-    }
-    .rc-tabs {
-        height: 69px;
-        overflow: hidden;
-    }
-    .rc-tabs-top {
-        border-bottom: 0px solid $header-background;
-    }
-    .rc-tabs-ink-bar {
-        height: 5px;
-        background-color: $blue;
-    }
-    .rc-tabs-content {
-        display: none;
-    }
-
-    #order-badge {
-        margin-left: 50px;
-    }
-
-    #user-badge {
-        margin-left: 35px;
-    }
-
-    .pending-badges {
-        width: 15px;
-        height: 15px;
-        border-radius: 10px;
-        font-size: 10px;
-        color: $white;
-        line-height: 17px;
-        text-align: center;
-        background: $light-blue;
-        top: 14px;
-        position: absolute;
-        padding-left: 1px;
-    }
-}
-.login-section {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    img {
-        margin: 19px;
-        border-radius: 50%;
-        height: 30px;
-        width: 30px;
-    }
-    .btn {
-        margin: 12px;
-    }
-}
-.profile-section {
-    display: inline-flex;
-
-    .profile-pic {
-        border-radius: 40px;
-        margin: 20px 10px;
-        cursor: pointer;
-    }
-    .search {
-        margin: 28px 10px;
-        cursor: pointer;
-    }
-    .truck {
-        margin: 28px 10px;
-        cursor: pointer;
-    }
-}
-.sibi-logo {
-    width: 273px;
-    cursor: pointer;
 }
