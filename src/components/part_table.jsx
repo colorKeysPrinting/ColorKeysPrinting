@@ -48,7 +48,7 @@ export default function PartTable(props) {
 
             case 'code':
                 value = (props.outOfStock !== props.productIndex) ? (
-                    (row === 'part' && props.type === 'processOrder') ? `#${ (!props.replacement) ? part.code : props.replacement }` : null
+                    (row === 'part' && props.type === 'processOrder') ? `#${ (!props.replacement) ? part.modelNumber : props.replacement }` : null
                 ) : null;
                 break;
 
