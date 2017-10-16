@@ -55,14 +55,21 @@ export function getOrders({ type }) {
         const endPointTypes = {};
         switch(type) {
         case 'superAdmin':
-        case 'manufacturerSuperAdmin':
             type = 'ordersForSuperAdmin';
             break;
-        case '':
+        case 'fundSuperAdmin':
+        case 'fundOrdersAdmin':
             type = 'ordersForFund';
             break;
+        case 'manufacturerSuperAdmin':
+        case 'manufacturerOrdersAdmin':
+            type = 'ordersForManufacturerAdmin';
+            break;
+        case 'manufacturerOrderProcessor':
+            type = 'ordersForManufacturer';
+            break;
         default:
-            type = 'ordersForFund';
+            type = 'ordersForUser';
         }
         return Api({ url : `/${type}` })
             .then(payload => {

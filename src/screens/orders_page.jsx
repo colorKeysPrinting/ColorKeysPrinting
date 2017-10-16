@@ -140,7 +140,7 @@ class OrdersPage extends React.Component {
                         value = item.id;
 
                     } else if (key === 'office') {
-                        value = user.fundLocation.city;
+                        value = (user && user.fundLocation) ? user.fundLocation.city : '';
 
                     } else if (key ==='propertyId') {
                         value = fundProperty.propertyUnitId;
@@ -152,7 +152,7 @@ class OrdersPage extends React.Component {
                         value = (item[key]) ? 'Occupied' : 'Vacant';
 
                     } else if (key === 'userId') {
-                        value = `${user['firstName']} ${user['lastName']}`;
+                        value = (user) ? `${user['firstName']} ${user['lastName']}` : '';
 
                     } else if (key === 'geOrderNumber') {
                         value = item[key];
