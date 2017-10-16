@@ -49,7 +49,7 @@ export function getPartById({ id }) {
                 dispatch({ type: ActionTypes.GET_PART_BY_ID_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Part ${id} \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -71,7 +71,7 @@ export function createPart({ part, productId }) {
                 }
             })
             .catch(error => {
-                alert(`Unable to Create Part \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -91,7 +91,7 @@ export function updatePart({ part, productId }) {
                 dispatch(getProductById({ id: productId }))
             })
             .catch(error => {
-                alert(`Unable to Update Part \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

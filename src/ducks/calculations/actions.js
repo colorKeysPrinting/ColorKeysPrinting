@@ -35,7 +35,7 @@ export function getSalesTax({ zipcode }) {
                 dispatch({ type: ActionTypes.GET_SALES_TAX_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Sales Tax \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

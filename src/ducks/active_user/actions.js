@@ -72,7 +72,7 @@ export function forgotPassword({ email }) {
                 dispatch({ type: ActionTypes.FORGOT_PASSWORD_SUCCESS, ...payload });
             })
             .catch(error => {
-                alert(`Unable to Send Email \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -92,7 +92,7 @@ export function passwordReset({ password }) {
                 dispatch({ type: ActionTypes.PASSWORD_RESET_SUCCESS, ...payload });
             })
             .catch(error => {
-                alert(`Unable to Reset Password \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -105,7 +105,7 @@ export function getCurrentUser() {
                 dispatch({ type: ActionTypes.GET_CURRENT_USER_SUCCESS, ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Current User \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

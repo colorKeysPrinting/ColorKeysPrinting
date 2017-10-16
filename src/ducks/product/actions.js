@@ -101,7 +101,7 @@ export function getProductById({ id }) {
                 dispatch({ type: ActionTypes.GET_PRODUCT_BY_ID_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Product ${id} \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -121,7 +121,7 @@ export function createProductPart({ productId, partId }) {
                 dispatch(getProductById({ id: productId }));
             })
             .catch(error => {
-                alert(`Unable to Associate Part with Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -141,7 +141,7 @@ export function removePart({ productId, partId }) {
                 dispatch(getProductById({ id: productId }));
             })
             .catch(error => {
-                alert(`Unable to Remove Part \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

@@ -59,7 +59,7 @@ export function getProducts() {
                 dispatch({ type: ActionTypes.GET_PRODUCTS_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Products \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -78,7 +78,7 @@ export function updateProduct({ category, product }) {
                 dispatch(getUserProductCategories({ category }));
             })
             .catch(error => {
-                alert(`Unable to Update Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -103,7 +103,7 @@ export function createProduct({ category, product, applianceAssociatedParts }) {
                 dispatch(getUserProductCategories({ category }));
             })
             .catch(error => {
-                alert(`Unable to Create Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -116,7 +116,7 @@ export function getProductCategories() {
                 dispatch({ type: ActionTypes.GET_PRODUCT_CATEGORIES_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Product Categories \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -134,7 +134,7 @@ export function getUserProductCategories({ category }) {
                 dispatch({ type: ActionTypes.GET_USER_PRODUCT_CATEGORIES_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Product Categories \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -152,7 +152,7 @@ export function getProductsForCategory({ categoryId, category }) {
                 dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_CATEGORY_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Products for Category ${category} \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -173,7 +173,7 @@ export function getProductsForSubCategory({ category, subCategory, subSubCategor
                 dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Products for Category ${category} \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -186,7 +186,7 @@ export function getParts() {
                 dispatch({ type: ActionTypes.GET_PARTS_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Parts \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -202,7 +202,7 @@ export function archiveProduct({ category, id }) {
                 dispatch(getUserProductCategories({ category }));
             })
             .catch(error => {
-                alert(`Unable to Archive Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -218,7 +218,7 @@ export function unarchiveProduct({ category, id }) {
                 dispatch(getUserProductCategories({ category }));
             })
             .catch(error => {
-                alert(`Unable to Unarchive Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
