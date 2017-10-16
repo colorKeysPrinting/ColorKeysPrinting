@@ -101,8 +101,8 @@ class OrderDetails extends React.Component {
                 const orderStatus = myOrder.orderStatus;
 
                 const orderPageHeading = {
-                    address: `${myOrder.fundProperty.addressLineOne} ${myOrder.fundProperty.addressLineTwo} ${myOrder.fundProperty.addressLineThree}, ${myOrder.fundProperty.city}, ${myOrder.fundProperty.state}, ${myOrder.fundProperty.zipcode}`,
-                    PM: myOrder.fund.pmOffices[0].name
+                    address: `${myOrder.pmOffice.addressLineOne} ${myOrder.pmOffice.addressLineTwo} ${myOrder.pmOffice.addressLineThree}, ${myOrder.pmOffice.city}, ${myOrder.pmOffice.state}, ${myOrder.pmOffice.zipcode}`,
+                    PM: myOrder.pmOffice.name
                 };
 
                 const productsAndDestinations = [];

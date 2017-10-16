@@ -130,7 +130,6 @@ class OrdersPage extends React.Component {
 
             let data = _.map(orders.toJS(), (item) => {
                 const cols = {};
-                const user = _.find(users.toJS(), ['id', item['userId']]);
                 const fundProperty = _.find(fundProperties.toJS(), ['id', item['fundPropertyId']]);
 
                 _.each(headers, (value, key) => {
@@ -140,7 +139,7 @@ class OrdersPage extends React.Component {
                         value = item.id;
 
                     } else if (key === 'office') {
-                        value = (user && user.fundLocation) ? user.fundLocation.city : '';
+                        value = item.pmOffice.name;
 
                     } else if (key ==='propertyId') {
                         value = fundProperty.propertyUnitId;
@@ -152,7 +151,7 @@ class OrdersPage extends React.Component {
                         value = (item[key]) ? 'Occupied' : 'Vacant';
 
                     } else if (key === 'userId') {
-                        value = (user) ? `${user['firstName']} ${user['lastName']}` : '';
+                        value = `${item.user.firstName} ${item.user.lastName}`;
 
                     } else if (key === 'geOrderNumber') {
                         value = item[key];

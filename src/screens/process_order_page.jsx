@@ -111,8 +111,6 @@ class ProcessOrderPage extends React.Component {
         const { order, spinner, activeUser } = this.props;
         let orderPageData;
 
-        const permissions = activeUser.get('permissions').toJS();
-
         if (order.size > 0) {
             const myOrder = order.toJS();
 
@@ -150,6 +148,7 @@ class ProcessOrderPage extends React.Component {
             };
 
             if (!myOrder.processedAt) {
+                const permissions = activeUser.get('permissions').toJS();
                 const user = myOrder.createdByUser;
 
                 userHeaders['hotshotInstallDate'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
@@ -242,13 +241,13 @@ class ProcessOrderPage extends React.Component {
                 _.each(officeHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'pmOffice') {
-                        value = (myOrder.fund.pmOffices[0]) ? myOrder.fund.pmOffices[0].name : null;
+                        value = (myOrder.pmOffice) ? myOrder.pmOffice.name : null;
 
                     } else if (key === 'phoneNumber'){
-                        value = (myOrder.fund.pmOffices[0]) ? myOrder.fund.pmOffices[0].phoneNumber : null;
+                        value = (myOrder.pmOffice) ? myOrder.pmOffice.phoneNumber : null;
 
                     } else if (key === 'email') {
-                        value = (myOrder.fund.pmOffices[0]) ? myOrder.fund.pmOffices[0].email : null;
+                        value = (myOrder.pmOffice) ? myOrder.pmOffice.email : null;
                     }
                     officeCols[key] = value;
                 });
