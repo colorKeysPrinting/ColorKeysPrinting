@@ -63,7 +63,7 @@ class OrderDetails extends React.Component {
         const { cookies } = this.props;
         const jwt = cookies.get('sibi-ge-admin');
 
-        this.props.approveOrder({ token: jwt.token, id: orderId });
+        this.props.approveOrder({ id: orderId });
     }
 
     render() {

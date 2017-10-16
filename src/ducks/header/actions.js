@@ -1,7 +1,6 @@
 'use strict';
 
-import axios            from 'axios';
-import Network          from 'libs/constants/network';
+import Api                      from 'libs/network';
 
 // /////////////////////////////////////
 //             ACTION TYPES

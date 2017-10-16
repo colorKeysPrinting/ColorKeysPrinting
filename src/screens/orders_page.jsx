@@ -40,9 +40,9 @@ class OrdersPage extends React.Component {
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
-            this.props.getFundProperties({ token: jwt.token });
-            this.props.getUsers({ token: jwt.token, type: jwt.type });
-            this.props.getOrders({ token: jwt.token, type: jwt.type });
+            this.props.getFundProperties();
+            this.props.getUsers({ type: jwt.type });
+            this.props.getOrders({ type: jwt.type });
         }
 
         this.props.setActiveTab('orders');
@@ -106,7 +106,6 @@ class OrdersPage extends React.Component {
     render() {
         const { cookies, spinner, activeUser, orders, users, fundProperties, zeroOrders } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        const jwt = cookies.get('sibi-ge-admin');
         let pageContent;
 
         const headers = {
@@ -232,7 +231,6 @@ class OrdersPage extends React.Component {
                     </div>
                 </div>
                 <MyTable
-                    token={jwt.token}
                     type="orders"
                     dataClassName="table-row-clickable"
                     headers={headers}

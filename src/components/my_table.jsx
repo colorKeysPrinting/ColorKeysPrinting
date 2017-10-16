@@ -7,7 +7,6 @@ import { formatPhoneNumbers }   from 'libs/reformat';
 
 export default class MyTable extends React.Component {
     static propTypes = {
-        token           : PropTypes.string,
         type            : PropTypes.string.isRequired,
         className       : PropTypes.string,
         dataClassName   : PropTypes.string,
@@ -29,7 +28,7 @@ export default class MyTable extends React.Component {
     }
 
     render() {
-        const { token, headers, sortby, data, type, className, dataClassName } = this.props;
+        const { headers, sortby, data, type, className, dataClassName } = this.props;
 
         return (
             <div className={ (className) ? className : '' }>
@@ -59,7 +58,7 @@ export default class MyTable extends React.Component {
                             const col = _.map(item, (col, id) => {
                                 if (id !== 'id') {
                                     if (id === 'action') {
-                                        return (col === 'process' || col === 'approve' || type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ token, type: col, item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
+                                        return (col === 'process' || col === 'approve' || type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ type: col, item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
 
                                     } else {
                                         if (id === 'totalCost') {

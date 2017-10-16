@@ -1,7 +1,6 @@
 'use strict';
 
-import axios            from 'axios';
-import Network          from 'libs/constants/network';
+import Api                      from 'libs/network';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -43,10 +42,10 @@ export function resetSentEmail() {
 // /////////////////////////////////////
 export function login({ email, password }) {
     return (dispatch) => {
-        return axios({
-            method: Network.POST,
-            url: `${Network.DOMAIN}/adminsignin`,
-            data: {
+        return Api({
+            method  : 'post',
+            url     : `/adminsignin`,
+            data    : {
                 email,
                 password
             }
@@ -62,10 +61,10 @@ export function login({ email, password }) {
 
 export function forgotPassword({ email }) {
     return (dispatch) => {
-        return axios({
-            method: Network.POST,
-            url: `${Network.DOMAIN}/forgot`,
-            data: {
+        return Api({
+            method  : 'post',
+            url     : `/forgot`,
+            data    : {
                 email
             }
         })
@@ -79,12 +78,12 @@ export function forgotPassword({ email }) {
     }
 }
 
-export function passwordReset({ token, password }) {
+export function passwordReset({ password }) {
     return (dispatch) => {
-        return axios({
-            method: Network.POST,
-            url: `${Network.DOMAIN}/reset`,
-            data: {
+        return Api({
+            method  : 'post',
+            url     : `/reset`,
+            data    : {
                 token,
                 password
             }
@@ -99,15 +98,9 @@ export function passwordReset({ token, password }) {
     }
 }
 
-export function getCurrentUser({ token }) {
+export function getCurrentUser() {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/user`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        return Api({ url : `/user` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_CURRENT_USER_SUCCESS, ...payload });
             })

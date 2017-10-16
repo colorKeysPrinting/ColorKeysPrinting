@@ -32,10 +32,9 @@ class HeaderBar extends React.Component {
 
     componentWillMount() {
         const { cookies, history, location } = this.props;
-        const jwt = cookies.get('sibi-ge-admin');
 
-        if (jwt) {
-            this.props.getCurrentUser({ token: jwt.token});
+        if (cookies.get('sibi-ge-admin')) {
+            this.props.getCurrentUser();
         } else {
             history.push({ pathname: `/login`, prevPath: location.pathname, prevSearch: location.search });
         }
@@ -43,17 +42,16 @@ class HeaderBar extends React.Component {
 
     componentWillUpdate(nextProps) {
         const { cookies, history, location, activeUser, isLogout } = this.props;
-        const jwt = cookies.get('sibi-ge-admin');
 
         if (!_.isEqual(nextProps.isLogout, isLogout)) {
             this.props.logout();
         }
 
-        if (jwt) {
+        if (cookies.get('sibi-ge-admin')) {
             if (!_.isEqual(nextProps.activeUser, activeUser)) {
                 if (nextProps.activeUser.size > 0) {
-                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.get('type') });
-                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.get('type') });
+                    this.props.getUsers({ type: nextProps.activeUser.get('type') });
+                    this.props.getOrders({ type: nextProps.activeUser.get('type') });
 
                     if (location.prevPath && location.prevPath !== '/login') {
                         history.push({ pathname: location.prevPath, search: (location.prevSearch) ? location.prevSearch : null})

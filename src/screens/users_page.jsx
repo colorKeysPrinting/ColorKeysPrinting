@@ -39,7 +39,7 @@ class UsersPage extends React.Component {
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
-            this.props.getUsers({ token: jwt.token, type: jwt.type });
+            this.props.getUsers({ type: jwt.type });
         }
 
         this.props.setActiveTab('users');
@@ -90,7 +90,6 @@ class UsersPage extends React.Component {
     render() {
         const { cookies, activeUser, users, spinner, zeroUsers } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        const jwt = cookies.get('sibi-ge-admin');
         let pageContent;
 
         const headers = {
@@ -145,7 +144,7 @@ class UsersPage extends React.Component {
                             user={user}
                             value={autoApprovedOrders}
                             options={options}
-                            onChange={({ user, value }) => this.props.autoApproveUserOrders({ token: jwt.token, user, autoApprovedOrders:  value })}
+                            onChange={({ user, value }) => this.props.autoApproveUserOrders({ user, autoApprovedOrders:  value })}
                             disabled={(permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers) ? false : true}
                         />;
 
@@ -214,7 +213,6 @@ class UsersPage extends React.Component {
                     </div>
                 </div>
                 <MyTable
-                    token={jwt.token}
                     type="users"
                     headers={headers}
                     data={data}

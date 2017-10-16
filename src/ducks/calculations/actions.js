@@ -1,7 +1,6 @@
 'use strict';
 
-import axios            from 'axios';
-import Network          from 'libs/constants/network';
+import Api                      from 'libs/network';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -26,9 +25,8 @@ export function calclateOrderCost({ order }) {
 // /////////////////////////////////////
 export function getSalesTax({ zipcode }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/salesTaxForOrder`,
+        return Api({
+            url     : `/salesTaxForOrder`,
             data    : {
                 zipcode
             }
