@@ -155,7 +155,7 @@ class ProcessOrderPage extends React.Component {
                 userHeaders['hotshotCode'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
 
                 const orderProcessHeading = {
-                    accountNumber: (myOrder.pmOffice) ? myOrder.pmOffice.applianceGEAccountNumber : myOrder.fund.applianceGEAccountNumber,
+                    accountNumber: (myOrder.pmOffice.applianceGEAccountNumber) ? myOrder.pmOffice.applianceGEAccountNumber : myOrder.fund.applianceGEAccountNumber,
                     fund: myOrder.fund.name,
                     address: `${myOrder.fundProperty.addressLineOne} ${myOrder.fundProperty.addressLineTwo} ${myOrder.fundProperty.addressLineThree}, ${myOrder.fundProperty.city}, ${myOrder.fundProperty.state}, ${myOrder.fundProperty.zipcode}`
                 };
