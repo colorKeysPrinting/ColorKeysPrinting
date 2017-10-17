@@ -95,24 +95,26 @@ class HeaderBar extends React.Component {
         const isProcessOrder = (location.pathname !== '/process_order') ? false : true;
 
         if (jwt && activeUser.size > 0) {
-            _.each(activeUser.get('permissions').toJS(), (value, key) => {
-                if (key === '') {
+            const permissions = activeUser.get('permissions').toJS();
+
+            _.each(activeTabs, (value, key) => {
+                if (key === 'dashboard' && permissions['']) {
                     activeTabs['dashboard'] = 'Dashboard';
                 }
 
-                if (key === 'viewAllOrders' || key === 'viewAllApprovedAndProcessedOrders' || key === 'viewFundOrders') {
+                if (key === 'orders' && (permissions['viewAllOrders'] || permissions['viewAllApprovedAndProcessedOrders'] || permissions['viewFundOrders'])) {
                     activeTabs['orders'] = 'Orders';
                 }
 
-                if (key === 'manageAllUsers' || key === 'manageAllFundUsers' || key === 'manageAllManufacturerUsers' || key === 'manageSubordinateUsers') {
+                if (key === 'users' && (permissions['manageAllUsers'] || permissions['manageAllFundUsers'] || permissions['manageAllManufacturerUsers'] || permissions['manageSubordinateUsers'])) {
                     activeTabs['users'] = 'Users';
                 }
 
-                if (key === 'viewAllProducts' || key === 'manageAllProducts' || key === 'manageFundPreferredProducts' || key === 'manageFundProducts') {
+                if (key === 'products' && (permissions['viewAllProducts'] || permissions['manageAllProducts'] || permissions['manageFundPreferredProducts'] || permissions['manageFundProducts'])) {
                     // activeTabs['products'] = 'Products';
                 }
 
-                if (key === 'createOrder') {
+                if (key === 'new_order' && permissions['createOrder']) {
                     activeTabs['new_order'] =  'New Order';
                 }
             });
