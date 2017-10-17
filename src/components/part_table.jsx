@@ -90,6 +90,7 @@ export default function PartTable(props) {
                 <td className="product-details-table">
                     <MyTable
                         type="partDetails"
+                        dataClassName={(props.productIndex !== 0) ? "table-row part-row" : null }
                         data={partDetails}
                     />
                 </td>

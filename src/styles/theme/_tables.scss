@@ -53,6 +53,11 @@ table tr:last-child td:last-child {
     .table-row-clickable {
         cursor: pointer;
     }
+    .table-row {
+        &.product-row, &.part-row {
+            display: flex;
+        }
+    }
     tr {
         border: none !important;
         text-align: left;

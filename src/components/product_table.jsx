@@ -139,6 +139,7 @@ export default function ProductTable(props) {
                 <td className="product-details-table">
                     <MyTable
                         type="productDetails"
+                        dataClassName={(props.productIndex !== 0) ? "table-row product-row" : null }
                         headers={(props.productIndex === 0) ? props.productHeaders : null}
                         data={productDetails}
                     />
