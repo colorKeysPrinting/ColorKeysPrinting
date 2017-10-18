@@ -1,9 +1,8 @@
 'use strict';
 
 import axios                    from 'axios';
-import Network                  from 'libs/constants/network';
 import { createProductPart, getProductById, update }    from 'ducks/product/actions';
-import { getParts }    from 'ducks/products/actions';
+import { getParts }             from 'ducks/products/actions';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -43,68 +42,56 @@ export function updatePartLocal({ isPart, key, value }) {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getPartById({ token, id }) {
+export function getPartById({ id }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/parts/${id}`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        return Api({ url : `/parts/${id}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PART_BY_ID_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Part ${id} \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function createPart({ token, part, productId }) {
+export function createPart({ part, productId }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/createPart`,
-            headers : {
-                'x-auth-token': token
-            },
+        return Api({
+            method  : 'post',
+            url     : `/createPart`,
             data    : {
                 ...part
             }
         })
             .then(payload => {
-                (productId) ? dispatch(createProductPart({ token, productId, partId: payload.data.id })) : dispatch(getParts({ token }));
+                (productId) ? dispatch(createProductPart({ productId, partId: payload.data.id })) : dispatch(getParts());
                 if (!productId) {
                     dispatch(update({ isProduct: true, key: 'applianceAssociatedParts', value: payload.data }));
                 }
             })
             .catch(error => {
-                alert(`Unable to Create Part \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function updatePart({ token, part, productId }) {
+export function updatePart({ part, productId }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.PATCH,
-            url     : `${Network.DOMAIN}/parts/${part.id}`,
-            headers : {
-                'x-auth-token': token
-            },
+        return Api({
+            method  : 'patch',
+            url     : `/parts/${part.id}`,
             data    : {
                 ...part
             }
         })
             .then(payload => {
-                dispatch(getParts({ token }));
-                dispatch(getProductById({ token, id: productId }))
+                dispatch(getParts());
+                dispatch(getProductById({ id: productId }))
             })
             .catch(error => {
-                alert(`Unable to Update Part \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

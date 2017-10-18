@@ -1,7 +1,6 @@
 'use strict';
 
-import axios            from 'axios';
-import Network          from 'libs/constants/network';
+import Api                      from 'libs/network';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -40,47 +39,55 @@ const configureOrderProduct = ({ order }) => {
 // /////////////////////////////////////
 export function getOrderById({ id }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/order/${id}`,
-        })
+        return Api({ url : `/order/${id}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_ORDER_BY_ID_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Order ${id} \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function getOrders({ token, type }) {
+export function getOrders({ type }) {
     return (dispatch) => {
-        type = (type === 'superAdmin') ? 'ordersForSuperAdmin' : 'ordersForFund';
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/${type}`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        const endPointTypes = {};
+        switch(type) {
+        case 'superAdmin':
+            type = 'ordersForSuperAdmin';
+            break;
+        case 'fundSuperAdmin':
+        case 'fundOrdersAdmin':
+            type = 'ordersForFund';
+            break;
+        case 'manufacturerSuperAdmin':
+        case 'manufacturerOrdersAdmin':
+            type = 'ordersForManufacturerAdmin';
+            break;
+        case 'manufacturerOrderProcessor':
+            type = 'ordersForManufacturer';
+            break;
+        default:
+            type = 'ordersForUser';
+        }
+        return Api({ url : `/${type}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_ORDERS_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Orders \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function approveOrder({ token, id }) {
+export function approveOrder({ id }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/order/${id}/approve`,
+        return Api({
+            method  : 'post',
+            url     : `/order/${id}/approve`,
             headers : {
-                'x-auth-token': token,
                 orderId: id
             }
         })
@@ -88,21 +95,18 @@ export function approveOrder({ token, id }) {
                 dispatch({ type: ActionTypes.APPROVE_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Approve Order \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function updateOrder({ token, order }) {
+export function updateOrder({ order }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.PATCH,
-            url     : `${Network.DOMAIN}/order/${id}`,
-            headers : {
-                'x-auth-token': token
-            },
-            data: {
+        return Api({
+            method  : 'patch',
+            url     : `/order/${id}`,
+            data    : {
                 ...order
             }
         })
@@ -110,7 +114,7 @@ export function updateOrder({ token, order }) {
                 dispatch({ type: ActionTypes.UPDATE_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Update Order \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -118,10 +122,10 @@ export function updateOrder({ token, order }) {
 
 export function updateInstallDate ({ id, installDate }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.PATCH,
-            url     : `${Network.DOMAIN}/order/${id}/updateInstallDate`,
-            data: {
+        return Api({
+            method  : 'patch',
+            url     : `/order/${id}/updateInstallDate`,
+            data    : {
                 installDate
             }
         })
@@ -129,7 +133,7 @@ export function updateInstallDate ({ id, installDate }) {
                 dispatch({ type: ActionTypes.UPDATE_INSTALL_DATE_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Update Install Date \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -137,10 +141,10 @@ export function updateInstallDate ({ id, installDate }) {
 
 export function updateModelNumber ({ id, data }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/order/${id}/addReplacementModel`,
-            data: {
+        return Api({
+            method  : 'post',
+            url     : `/order/${id}/addReplacementModel`,
+            data    : {
                 ...data
             }
         })
@@ -148,7 +152,7 @@ export function updateModelNumber ({ id, data }) {
                 dispatch({ type: ActionTypes.UPDATE_MODEL_NUMBER_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Update Model # \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -156,18 +160,15 @@ export function updateModelNumber ({ id, data }) {
 
 export function createOrder() {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/createOrder`,
-            headers : {
-                'x-auth-token': token
-            }
+        return Api({
+            method  : 'post',
+            url     : `/createOrder`,
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.CREATE_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Create Order \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -175,9 +176,9 @@ export function createOrder() {
 
 export function processOrder({ id, processedByName, geOrderNumber }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/order/${id}/process`,
+        return Api({
+            method  : 'post',
+            url     : `/order/${id}/process`,
             data    : {
                 processedByName,
                 geOrderNumber
@@ -187,26 +188,23 @@ export function processOrder({ id, processedByName, geOrderNumber }) {
                 dispatch({ type: ActionTypes.PROCESS_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Process Order \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function removeOrder(token, id) {
+export function removeOrder(id) {
     return (dispatch) => {
-        return axios({
-            method  : Network.DEL,
-            url     : `${Network.DOMAIN}/order/${id}`,
-            headers : {
-                'x-auth-token': token
-            }
+        return Api({
+            method  : 'delete',
+            url     : `/order/${id}`
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.REMOVE_ORDER_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Remove Order \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

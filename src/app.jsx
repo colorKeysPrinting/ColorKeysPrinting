@@ -37,7 +37,7 @@ class Root extends React.PureComponent {
 const store = configureStore();
 
 let cookie = new Cookies();
-cookie = cookie.get('sibi-admin-jwt');
+cookie = cookie.get('sibi-ge-admin');
 
 if (cookie) { // Setup JWT refresh
     jwt({ dispatch: store.dispatch, token: cookie.token });

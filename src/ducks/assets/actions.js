@@ -1,14 +1,13 @@
 'use strict';
 
-import axios            from 'axios';
-import Network          from 'libs/constants/network';
+import Api                      from 'libs/network';
 
 // /////////////////////////////////////
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
-    UPLOAD_IMAGES_S3_SUCCESS: 'sibi_ge_admin/ui/UPLOAD_IMAGES_S3_SUCCESS',
-    UPLOAD_IMAGES_S3_FAILED: 'sibi_ge_admin/ui/UPLOAD_IMAGES_S3_FAILED'
+    UPLOAD_IMAGES_S3_SUCCESS: 'sibi_fe/ui/UPLOAD_IMAGES_S3_SUCCESS',
+    UPLOAD_IMAGES_S3_FAILED: 'sibi_fe/ui/UPLOAD_IMAGES_S3_FAILED'
 }
 
 // /////////////////////////////////////
@@ -31,22 +30,19 @@ const uploadImageS3 = ({ url, type, key, formData }) => {
                 dispatch({ type: ActionTypes.UPLOAD_IMAGES_S3_SUCCESS, ...payload, key });
             })
             .catch(error => {
-                alert('Image Failed to upload please click "Add" to try again\nor please try again later \nError: ${error.message}');
+                alert(`Image Failed to upload please click "Add" to try again\nor please try again later \nError: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function uploadImage({ token, key, imageFile }) {
+export function uploadImage({ key, imageFile }) {
     return (dispatch) => {
         const imageType = imageFile.type.split('/');
         const urlInfo = [{ type: imageType[0], fileType: imageType[1] }];
-        return axios({
-            method: Network.POST,
-            url: `${Network.DOMAIN}/getPresignedUrl`,
-            headers : {
-                'x-auth-token': token
-            },
+        return Api({
+            method: 'post',
+            url: '/getPresignedUrl',
             data: {
                 urlInfo
             }
@@ -65,7 +61,7 @@ export function uploadImage({ token, key, imageFile }) {
                 dispatch(uploadImageS3({ url: data.upload_url, type: imageFile.type, key, formData }));
             })
             .catch(error => {
-                alert(`Unable to Upload Image \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

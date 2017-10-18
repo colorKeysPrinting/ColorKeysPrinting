@@ -36,13 +36,13 @@ class OrdersPage extends React.Component {
 
     componentWillMount() {
         const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
-            this.props.getFundProperties({ token: jwt.token });
-            this.props.getUsers({ token: jwt.token, type: jwt.type });
-            this.props.getOrders({ token: jwt.token, type: jwt.type });
+            this.props.getFundProperties();
+            this.props.getUsers({ type: jwt.type });
+            this.props.getOrders({ type: jwt.type });
         }
 
         this.props.setActiveTab('orders');
@@ -90,15 +90,22 @@ class OrdersPage extends React.Component {
     }
 
     handleItem({ item }) {
-        console.log('item pressed', item);
-        this.props.triggerSpinner({ isOn: true });
-        this.props.history.push({ pathname: `/order_details`, search: `orderId=${item.id}` });
+        const { history, activeUser } = this.props;
+        const permissions = activeUser.get('permissions').toJS();
+        let pathname = `/order_details`;
+
+        if (permissions.viewAllApprovedAndProcessedOrders || permissions.processManufacturerOrders) {
+            if ((item['orderStatus'] === 'Approved')) {
+                pathname = `/process_order`;
+            }
+        }
+
+        history.push({ pathname, search: `orderId=${item.id}` });
     }
 
     render() {
-        const { cookies, spinner, orders, users, fundProperties, zeroOrders } = this.props;
+        const { cookies, spinner, activeUser, orders, users, fundProperties, zeroOrders } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        const jwt = cookies.get('sibi-admin-jwt');
         let pageContent;
 
         const headers = {
@@ -123,7 +130,6 @@ class OrdersPage extends React.Component {
 
             let data = _.map(orders.toJS(), (item) => {
                 const cols = {};
-                const user = _.find(users.toJS(), ['id', item['userId']]);
                 const fundProperty = _.find(fundProperties.toJS(), ['id', item['fundPropertyId']]);
 
                 _.each(headers, (value, key) => {
@@ -133,7 +139,7 @@ class OrdersPage extends React.Component {
                         value = item.id;
 
                     } else if (key === 'office') {
-                        value = user.fundLocation.city;
+                        value = item.pmOffice.name;
 
                     } else if (key ==='propertyId') {
                         value = fundProperty.propertyUnitId;
@@ -145,7 +151,7 @@ class OrdersPage extends React.Component {
                         value = (item[key]) ? 'Occupied' : 'Vacant';
 
                     } else if (key === 'userId') {
-                        value = `${user['firstName']} ${user['lastName']}`;
+                        value = `${item.user.firstName} ${item.user.lastName}`;
 
                     } else if (key === 'geOrderNumber') {
                         value = item[key];
@@ -160,8 +166,13 @@ class OrdersPage extends React.Component {
                         value = item[key];
 
                     } else if (key === 'action') {
-                        value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
-                        // value = (item['orderStatus'] === 'Approved') ? 'process' : value;
+                        const permissions = activeUser.get('permissions').toJS();
+                        if (permissions.approveAllOrders || permissions.approveFundOrders) {
+                            value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
+
+                        } else if (permissions.processManufacturerOrders) {
+                            value = (item['orderStatus'] === 'Approved') ? 'process' : value;
+                        }
                     }
 
                     cols[key] = value;
@@ -194,17 +205,29 @@ class OrdersPage extends React.Component {
             }
 
             if (sortby.column === '') {
-                data = _.partition(data, ['orderStatus', 'Processed']);
-                data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
-                data = data[0].concat(data[1]);
+                const re = /manufacturer/;
+                if (re.exec(activeUser.get('type'))) {
+                    data = _.partition(data, ['orderStatus', 'Approved']);
+                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
+                    data = data[0].concat(data[1]);
 
-                data = _.partition(data, ['orderStatus', 'Pending']);
-                data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
-                data = data[0].concat(data[1]);
+                    data = _.partition(data, ['orderStatus', 'Pending']);
+                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
+                    data = data[1].concat(data[0]);
 
-                data = _.partition(data, ['orderStatus', 'Approved']);
-                data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
-                data = data[1].concat(data[0]);
+                } else {
+                    data = _.partition(data, ['orderStatus', 'Processed']);
+                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
+                    data = data[0].concat(data[1]);
+
+                    data = _.partition(data, ['orderStatus', 'Pending']);
+                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
+                    data = data[0].concat(data[1]);
+
+                    data = _.partition(data, ['orderStatus', 'Approved']);
+                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
+                    data = data[1].concat(data[0]);
+                }
 
             } else {
                 data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
@@ -219,7 +242,6 @@ class OrdersPage extends React.Component {
                     </div>
                 </div>
                 <MyTable
-                    token={jwt.token}
                     type="orders"
                     dataClassName="table-row-clickable"
                     headers={headers}
@@ -253,12 +275,12 @@ class OrdersPage extends React.Component {
 }
 
 const select = (state) => ({
-    spinner         : state.ui.get('spinner'),
-    activeUser      : state.activeUser.get('activeUser'),
-    orders          : state.orders.get('orders'),
-    zeroOrders      : state.orders.get('zeroOrders'),
-    users           : state.users.get('users'),
-    fundProperties  : state.users.get('fundProperties'),
+    spinner        : state.ui.get('spinner'),
+    activeUser     : state.activeUser.get('activeUser'),
+    orders         : state.orders.get('orders'),
+    zeroOrders     : state.orders.get('zeroOrders'),
+    users          : state.users.get('users'),
+    fundProperties : state.users.get('fundProperties'),
 });
 
 const actions = {

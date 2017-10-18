@@ -38,18 +38,18 @@ class EditProductPage extends React.Component {
 
     componentWillMount() {
         const { cookies, productCategories } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
-            this.props.getProducts({ token: jwt.token });
-            this.props.getParts({ token: jwt.token });
+            this.props.getProducts();
+            this.props.getParts();
 
             const reProduct = /productId=(.*)/;
             const match = reProduct.exec(location.search);
 
             if (match) {
-                this.props.getProductById({ token: jwt.token, id: match[1] });
+                this.props.getProductById({ id: match[1] });
                 this.props.verifyProduct({ verified: true });
             } else {
                 this.props.verifyProduct({ verified: false });
@@ -58,7 +58,7 @@ class EditProductPage extends React.Component {
             }
 
             if (productCategories.size <= 0) {
-                this.props.getUserProductCategories({ token: jwt.token, category: jwt.trade });
+                this.props.getUserProductCategories({ category: jwt.trade });
             }
         } else {
             this.props.history.push(`/login`);
@@ -82,16 +82,15 @@ class EditProductPage extends React.Component {
         }
 
         if (!_.isEqual(productCategories, this.props.productCategories)) {
-            const jwt = this.props.cookies.get('sibi-admin-jwt');
 
             _.each(productCategories.toJS(), (category) => {
                 _.each(category.subcategories, (subCategory) => {
                     if (subCategory.containedSubCategories) {
                         _.each(subCategory.containedSubCategories, (subSubCategory) => {
-                            this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory, subSubCategory });
+                            this.props.getProductsForSubCategory({ category: category.name, subCategory, subSubCategory });
                         });
                     } else {
-                        this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory });
+                        this.props.getProductsForSubCategory({ category: category.name, subCategory });
                     }
                 });
             });
@@ -186,7 +185,7 @@ class EditProductPage extends React.Component {
         } = this.props;
 
         let isDisabled = false, pageContent, subCategoryOptions, dialog;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (activeUser.size > 0 &&
             productCategories.size > 0 &&
@@ -229,7 +228,7 @@ class EditProductPage extends React.Component {
 
             if (!isProductFound) {
                 if (isProductVerified) {
-                    pageContent = <form onSubmit={(e) => {e.preventDefault(); this.saveProduct({ token: jwt.token, category: jwt.trade });}} >
+                    pageContent = <form onSubmit={(e) => {e.preventDefault(); this.saveProduct({ category: jwt.trade });}} >
                         <div className="product-details" >
                             <Select
                                 name="product-category"
@@ -253,7 +252,6 @@ class EditProductPage extends React.Component {
                             <input name="product-serial-num" className="right-col" type="text" placeholder="Serial #" value={product.get('serialNumber')} onChange={(e) => this.props.update({ isProduct: true, key: 'serialNumber', value: e.target.value})} disabled={isDisabled} />
                             {(category && category.name === 'APPLIANCES') ?
                                 <Appliance
-                                    token={jwt.token}
                                     isDisabled={isDisabled}
                                     image={this.props.productImage}
                                     color={this.props.color}
@@ -343,7 +341,7 @@ class EditProductPage extends React.Component {
                             </div>
                             <input className="btn blue fill" type="submit" value={(product.get('id')) ? 'Update' : 'Add'} />
                             { (product.get('id') && !isDisabled) ? <div className="btn borderless red fill" onClick={() => {
-                                this.props.archiveProduct({ token: jwt.token, category: jwt.trade, id: product.get('id')});
+                                this.props.archiveProduct({ category: jwt.trade, id: product.get('id')});
                                 history.goBack();
                             }}>Archive Product</div> : null }
                         </div>
@@ -381,7 +379,6 @@ class EditProductPage extends React.Component {
                     { pageContent }
                     { (this.state.activeSection === 'partOverlay') ?
                         (<EditPartOverlay
-                            token={jwt.token}
                             isDisabled={isDisabled}
                             productId={product.get('id')}
                             productCategoryId={(part.get('productCategoryId')) ? part.get('productCategoryId') : product.get('productCategoryId')}
@@ -422,7 +419,7 @@ class EditProductPage extends React.Component {
                         this.props.resetFound();
                         this.props.newProduct();
                     }}>Create New</div>
-                    <div className="btn blue" onClick={() => this.modifyExistingProduct({ token: jwt.token })}>Modify Existing</div>
+                    <div className="btn blue" onClick={() => this.modifyExistingProduct()}>Modify Existing</div>
                 </div> : null }
             </Loader>
         );

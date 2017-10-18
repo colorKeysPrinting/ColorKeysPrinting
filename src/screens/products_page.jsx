@@ -26,11 +26,10 @@ class ProductsPage extends React.Component {
 
     componentWillMount() {
         const { cookies, activeUser, locaction } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt) {
+        if (cookies.get('sibi-ge-admin')) {
             this.props.triggerSpinner({ isOn: true });
-            this.props.getUserProductCategories({ token: jwt.token, category: jwt.trade }); // need to update this to account for the activeUser trade
+            this.props.getUserProductCategories({ category: jwt.trade }); // need to update this to account for the activeUser trade
         }
 
         if (location.search) {
@@ -46,7 +45,7 @@ class ProductsPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        const { cookies, history, activeUser, productCategories } = this.props;
+        const { history, activeUser, productCategories } = this.props;
 
         if (!_.isEqual(nextProps.activeUser, activeUser)) {
             const path = (nextProps.activeUser.size > 0) ? `/products` : `/login`;
@@ -54,16 +53,15 @@ class ProductsPage extends React.Component {
         }
 
         if (!_.isEqual(productCategories, nextProps.productCategories)) {
-            const jwt = cookies.get('sibi-admin-jwt');
 
             _.each(nextProps.productCategories.toJS(), (category) => {
                 _.each(category.subcategories, (subCategory) => {
                     if (subCategory.containedSubCategories) {
                         _.each(subCategory.containedSubCategories, (subSubCategory) => {
-                            this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory, subSubCategory });
+                            this.props.getProductsForSubCategory({ category: category.name, subCategory, subSubCategory });
                         });
                     } else {
-                        this.props.getProductsForSubCategory({ token: jwt.token, category: category.name, subCategory });
+                        this.props.getProductsForSubCategory({ category: category.name, subCategory });
                     }
                 });
             });
@@ -108,9 +106,9 @@ class ProductsPage extends React.Component {
                                         value = { ...product, category: category.id, subCategory: subCategory.id, subSubCategory: subSubCategory.id };
 
                                     } else if (key === 'action') {
-                                        const jwt = cookies.get('sibi-admin-jwt');
+                                        const jwt = cookies.get('sibi-ge-admin');
 
-                                        value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: jwt.trade, id: product.id }) } className="product-action">Unarchive</div>
+                                        value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ category: jwt.trade, id: product.id }) } className="product-action">Unarchive</div>
                                             : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;
 
                                     } else if (key === 'featured') {
@@ -161,9 +159,8 @@ class ProductsPage extends React.Component {
                                     value = { ...product, category: category.id, subCategory: subCategory.id };
 
                                 } else if (key === 'action') {
-                                    const jwt = cookies.get('sibi-admin-jwt');
 
-                                    value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ token: jwt.token, category: category.name, subCategory: subName, id: product.id }) } className="product-action">Unarchive</div>
+                                    value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ category: category.name, subCategory: subName, id: product.id }) } className="product-action">Unarchive</div>
                                         : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;
 
                                 } else if (key === 'featured') {

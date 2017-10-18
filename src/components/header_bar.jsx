@@ -32,10 +32,9 @@ class HeaderBar extends React.Component {
 
     componentWillMount() {
         const { cookies, history, location } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
 
-        if (jwt) {
-            this.props.getCurrentUser({ token: jwt.token});
+        if (cookies.get('sibi-ge-admin')) {
+            this.props.getCurrentUser();
         } else {
             history.push({ pathname: `/login`, prevPath: location.pathname, prevSearch: location.search });
         }
@@ -43,25 +42,24 @@ class HeaderBar extends React.Component {
 
     componentWillUpdate(nextProps) {
         const { cookies, history, location, activeUser, isLogout } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
 
         if (!_.isEqual(nextProps.isLogout, isLogout)) {
             this.props.logout();
         }
 
-        if (jwt) {
+        if (cookies.get('sibi-ge-admin')) {
             if (!_.isEqual(nextProps.activeUser, activeUser)) {
                 if (nextProps.activeUser.size > 0) {
-                    this.props.getUsers({ token: jwt.token, type: nextProps.activeUser.get('type') });
-                    this.props.getOrders({ token: jwt.token, type: nextProps.activeUser.get('type') });
+                    this.props.getUsers({ type: nextProps.activeUser.get('type') });
+                    this.props.getOrders({ type: nextProps.activeUser.get('type') });
 
-                    if (location.prevPath) {
+                    if (location.prevPath && location.prevPath !== '/login') {
                         history.push({ pathname: location.prevPath, search: (location.prevSearch) ? location.prevSearch : null})
                     } else if (location.pathname === '/login' || location.pathname === '/') {
                         history.push(`/orders`);
                     }
                 } else {
-                    cookies.remove('sibi-admin-jwt');
+                    cookies.remove('sibi-ge-admin');
                     history.push({ pathname: `/login`});
                 }
             }
@@ -91,31 +89,49 @@ class HeaderBar extends React.Component {
 
     render() {
         const { cookies, activeUser, location, isLogout, activeTab, orders, users } = this.props;
-        let pendingOrders = 0, pendingUsers = 0;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
+        let pendingOrders = 0, pendingUsers = 0, activeTabs = { dashboard: '', orders: '', users: '', products: '', new_order: '' };
 
         const isProcessOrder = (location.pathname !== '/process_order') ? false : true;
 
-        const availableTabs = {
-            // dashboard: 'Dashboard',
-            orders: 'Orders',
-            // products: 'Products',
-            users: 'Users',
-            new_order: 'New Order',
-        }
+        if (jwt && activeUser.size > 0) {
+            const permissions = activeUser.get('permissions').toJS();
 
-        if (jwt &&
-            orders.size > 0 &&
-            users.size > 0) {
+            _.each(activeTabs, (value, key) => {
+                if (key === 'dashboard' && permissions['']) {
+                    activeTabs['dashboard'] = 'Dashboard';
+                }
 
-            _.each(orders.toJS(), (order) => {
-                pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
+                if (key === 'orders' && (permissions['viewAllOrders'] || permissions['viewAllApprovedAndProcessedOrders'] || permissions['viewFundOrders'])) {
+                    activeTabs['orders'] = 'Orders';
+                }
+
+                if (key === 'users' && (permissions['manageAllUsers'] || permissions['manageAllFundUsers'] || permissions['manageAllManufacturerUsers'] || permissions['manageSubordinateUsers'])) {
+                    activeTabs['users'] = 'Users';
+                }
+
+                if (key === 'products' && (permissions['viewAllProducts'] || permissions['manageAllProducts'] || permissions['manageFundPreferredProducts'] || permissions['manageFundProducts'])) {
+                    // activeTabs['products'] = 'Products';
+                }
+
+                if (key === 'new_order' && permissions['createOrder']) {
+                    activeTabs['new_order'] =  'New Order';
+                }
             });
 
-            _.each(users.toJS(), (user) => {
-                pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
-            });
+            if (orders.size > 0 &&
+                users.size > 0) {
+
+                _.each(orders.toJS(), (order) => {
+                    pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
+                });
+
+                _.each(users.toJS(), (user) => {
+                    pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
+                });
+            }
         }
+
 
         return (
             <div id="header-bar">
@@ -130,16 +146,18 @@ class HeaderBar extends React.Component {
                             renderTabBar={()=><ScrollableInkTabBar onTabClick={(activeTab) => this.tabActions({ activeTab }) } />}
                             renderTabContent={()=><TabContent />}
                         >
-                            { _.map(availableTabs, (name, key) => {
-                                if (key === 'orders' || key === 'users') {
-                                    name = (key === 'orders')
-                                        ? <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Orders {(pendingOrders !== 0) ? <div id="order-badge" className="pending-badges" >{ pendingOrders }</div> : ''}</div>
-                                        : <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>Users {(pendingUsers !== 0) ? <div id="user-badge" className="pending-badges" >{ pendingUsers }</div> : ''}</div>;
-                                } else {
-                                    name = <div className={`header-tab ${(activeTab === key) ? 'header-tab-active' : ''}`}>{ name }</div>
+                            { _.map(activeTabs, (name, key) => {
+                                if (name !== '') {
+                                    if (key === 'orders' || key === 'users') {
+                                        name = (key === 'orders')
+                                            ? <div className={`header-tab ${(activeTab === key) ? 'active' : ''}`}>Orders {(pendingOrders !== 0) ? <div id="order-badge" className="pending-badges" >{ pendingOrders }</div> : ''}</div>
+                                            : <div className={`header-tab ${(activeTab === key) ? 'active' : ''}`}>Users {(pendingUsers !== 0) ? <div id="user-badge" className="pending-badges" >{ pendingUsers }</div> : ''}</div>;
+                                    } else {
+                                        name = <div className={`header-tab ${(activeTab === key) ? 'active' : ''}`}>{ name }</div>
+                                    }
+                                    return <TabPane tab={name} key={key}></TabPane>
                                 }
-                                return <TabPane tab={name} key={key}></TabPane>
-                            })}
+                            }) }
                         </Tabs>
                     </div>
                     { (this.state.isOpen) ? <Overlay type="profile" closeOverlay={this.showProfile}>
@@ -160,11 +178,11 @@ class HeaderBar extends React.Component {
 }
 
 const select = (state) => ({
-    isLogout        : state.jwt.get('isLogout'),
-    activeUser      : state.activeUser.get('activeUser'),
-    activeTab       : state.header.get('activeTab'),
-    orders          : state.orders.get('orders'),
-    users           : state.users.get('users')
+    isLogout   : state.jwt.get('isLogout'),
+    activeUser : state.activeUser.get('activeUser'),
+    activeTab  : state.header.get('activeTab'),
+    orders     : state.orders.get('orders'),
+    users      : state.users.get('users')
 });
 
 const actions = {

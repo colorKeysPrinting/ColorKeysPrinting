@@ -1,7 +1,6 @@
 'use strict';
 
-import axios            from 'axios';
-import Network          from 'libs/constants/network';
+import Api                      from 'libs/network';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -22,54 +21,42 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getUsers({ token, type }) {
+export function getUsers({ type }) {
     return (dispatch) => {
         type = (type === 'superAdmin') ? 'usersForSuperAdmin' : 'usersForFund';
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/${type}`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        return Api({ url : `/${type}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_USERS_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Users \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function approveUser({ token, id }) {
+export function approveUser({ id }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/users/${id}/approve`,
-            headers : {
-                'x-auth-token': token
-            }
+        return Api({
+            method  : 'post',
+            url     : `/users/${id}/approve`
         })
             .then(payload => {
                 dispatch({ type: ActionTypes.APPROVE_USER_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Approve User \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function autoApproveUserOrders( { token, user, autoApprovedOrders }) {
+export function autoApproveUserOrders( { user, autoApprovedOrders }) {
     return (dispatch) => {
         autoApprovedOrders = (autoApprovedOrders) ? 'autoApproveOrders' : 'removeAutoApproveOrders' ;
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/users/${user.id}/${autoApprovedOrders}` ,
-            headers : {
-                'x-auth-token': token
-            },
+        return Api({
+            method  : 'post',
+            url     : `/users/${user.id}/${autoApprovedOrders}`,
             data: {
                 ...user
             }
@@ -78,64 +65,46 @@ export function autoApproveUserOrders( { token, user, autoApprovedOrders }) {
                 dispatch({ type: ActionTypes.AUTO_APPROVE_USER_ORDERS, ...payload});
             })
             .catch(error => {
-                alert(`Unable to Update User \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             })
     }
 }
 
-export function disableUser({ token, id }) {
+export function disableUser({ id }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/users/${id}/disable`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        return Api({ url : `/users/${id}/disable` })
             .then(payload => {
                 dispatch({ type: ActionTypes.DISABLE_USER_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Disable User \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function getFunds({ token, emailDomain }) {
+export function getFunds({ emailDomain }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/funds?fundEmailDomain=${emailDomain}`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        return Api({ url : `/funds?fundEmailDomain=${emailDomain}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_FUNDS_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Funds \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function getFundProperties({ token }) {
+export function getFundProperties() {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/fundsProperties`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        return Api({ url : `/fundsProperties` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_FUND_PROPERTIES_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Fund's Locations \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

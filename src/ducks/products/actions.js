@@ -1,8 +1,7 @@
 'use strict';
 
-import axios            from 'axios';
-import Network          from 'libs/constants/network';
-import { createProductPart } from 'ducks/product/actions';
+import Api                      from 'libs/network';
+import { createProductPart }    from 'ducks/product/actions';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -53,55 +52,43 @@ export function resetFound() {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getProducts({ token }) {
+export function getProducts() {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/products`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        return Api({ url : `/products` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PRODUCTS_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Products \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function updateProduct({ token, category, product }) {
+export function updateProduct({ category, product }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.PATCH,
-            url     : `${Network.DOMAIN}/products/${product.id}`,
-            headers : {
-                'x-auth-token': token
-            },
+        return Api({
+            method  : 'patch',
+            url     : `/products/${product.id}`,
             data    : {
                 ...product
             }
         })
             .then(payload => {
-                dispatch(getUserProductCategories({ token, category }));
+                dispatch(getUserProductCategories({ category }));
             })
             .catch(error => {
-                alert(`Unable to Update Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function createProduct({ token, category, product, applianceAssociatedParts }) {
+export function createProduct({ category, product, applianceAssociatedParts }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/createProduct`,
-            headers : {
-                'x-auth-token': token
-            },
+        return Api({
+            method  : 'post',
+            url     : `/createProduct`,
             data    : {
                 ...product
             }
@@ -109,14 +96,14 @@ export function createProduct({ token, category, product, applianceAssociatedPar
             .then(payload => {
                 if (_.size(applianceAssociatedParts) > 0) {
                     _.each(applianceAssociatedParts, part => {
-                        dispatch(createProductPart({token, productId: payload.data.id, partId: part.id}));
+                        dispatch(createProductPart({productId: payload.data.id, partId: part.id}));
                     })
                 }
 
-                dispatch(getUserProductCategories({ token, category }));
+                dispatch(getUserProductCategories({ category }));
             })
             .catch(error => {
-                alert(`Unable to Create Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
@@ -124,27 +111,22 @@ export function createProduct({ token, category, product, applianceAssociatedPar
 
 export function getProductCategories() {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/productCategories`
-        })
+        return Api({ url : `/productCategories` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PRODUCT_CATEGORIES_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Product Categories \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function getUserProductCategories({ token, category }) {
+export function getUserProductCategories({ category }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/productCategoriesForUser`,
+        return Api({
+            url     : `/productCategoriesForUser`,
             headers : {
-                'x-auth-token': token,
                 category
             }
         })
@@ -152,19 +134,17 @@ export function getUserProductCategories({ token, category }) {
                 dispatch({ type: ActionTypes.GET_USER_PRODUCT_CATEGORIES_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Product Categories \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function getProductsForCategory({ token, categoryId, category }) {
+export function getProductsForCategory({ categoryId, category }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/productsForCategory?categoryId=${categoryId}`,
+        return Api({
+            url     : `/productsForCategory?categoryId=${categoryId}`,
             headers : {
-                'x-auth-token': token,
                 category
             }
         })
@@ -172,20 +152,18 @@ export function getProductsForCategory({ token, categoryId, category }) {
                 dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_CATEGORY_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Products for Category ${category} \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function getProductsForSubCategory({ token, category, subCategory, subSubCategory }) {
+export function getProductsForSubCategory({ category, subCategory, subSubCategory }) {
     return (dispatch) => {
         const id = (subSubCategory) ? subSubCategory.id : subCategory.id;
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/productsForSubcategory?subcategoryId=${id}`,
+        return Api({
+            url     : `/productsForSubcategory?subcategoryId=${id}`,
             headers : {
-                'x-auth-token': token,
                 category,
                 subCategory: subCategory.name,
                 subSubCategory: (subSubCategory) ? subSubCategory.name : null
@@ -195,64 +173,52 @@ export function getProductsForSubCategory({ token, category, subCategory, subSub
                 dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Products for Category ${category} \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function getParts({ token }) {
+export function getParts() {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/parts`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        return Api({ url : `/parts` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PARTS_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Parts \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function archiveProduct({ token, category, id }) {
+export function archiveProduct({ category, id }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/products/${id}/archive`,
-            headers : {
-                'x-auth-token': token
-            }
+        return Api({
+            method  : 'post',
+            url     : `/products/${id}/archive`
         })
             .then(payload => {
-                dispatch(getUserProductCategories({ token, category }));
+                dispatch(getUserProductCategories({ category }));
             })
             .catch(error => {
-                alert(`Unable to Archive Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function unarchiveProduct({ token, category, id }) {
+export function unarchiveProduct({ category, id }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/products/${id}/unarchive`,
-            headers : {
-                'x-auth-token': token
-            }
+        return Api({
+            method  : 'post',
+            url     : `/products/${id}/unarchive`
         })
             .then(payload => {
-                dispatch(getUserProductCategories({ token, category }));
+                dispatch(getUserProductCategories({ category }));
             })
             .catch(error => {
-                alert(`Unable to Unarchive Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

@@ -1,7 +1,6 @@
 'use strict';
 
 import axios                    from 'axios';
-import Network                  from 'libs/constants/network';
 import { getProducts }          from 'ducks/product/actions';
 
 // /////////////////////////////////////
@@ -95,66 +94,54 @@ export function removeFaq({ index }) {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
-export function getProductById({ token, id }) {
+export function getProductById({ id }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.GET,
-            url     : `${Network.DOMAIN}/products/${id}`,
-            headers : {
-                'x-auth-token': token
-            }
-        })
+        return Api({ url : `/products/${id}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PRODUCT_BY_ID_SUCCESS , ...payload });
             })
             .catch(error => {
-                alert(`Unable to Load Product ${id} \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function createProductPart({ token, productId, partId }) {
+export function createProductPart({ productId, partId }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.POST,
-            url     : `${Network.DOMAIN}/createProductPart`,
-            headers : {
-                'x-auth-token': token
-            },
+        return Api({
+            method  : 'post',
+            url     : `/createProductPart`,
             data    : {
                 productId,
                 partId
             }
         })
             .then(payload => {
-                dispatch(getProductById({ token, id: productId }));
+                dispatch(getProductById({ id: productId }));
             })
             .catch(error => {
-                alert(`Unable to Associate Part with Product \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }
 }
 
-export function removePart({ token, productId, partId }) {
+export function removePart({ productId, partId }) {
     return (dispatch) => {
-        return axios({
-            method  : Network.DEL,
-            url     : `${Network.DOMAIN}/productPart`,
-            headers : {
-                'x-auth-token': token
-            },
+        return Api({
+            method  : 'delete',
+            url     : `/productPart`,
             data    : {
                 productId,
                 partId
             }
         })
             .then(payload => {
-                dispatch(getProductById({ token, id: productId }));
+                dispatch(getProductById({ id: productId }));
             })
             .catch(error => {
-                alert(`Unable to Remove Part \nError: ${error.message}`);
+                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
                 throw(error);
             });
     }

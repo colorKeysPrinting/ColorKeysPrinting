@@ -35,11 +35,11 @@ class UsersPage extends React.Component {
 
     componentWillMount() {
         const { cookies, activeUser } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             this.props.triggerSpinner({ isOn: true });
-            this.props.getUsers({ token: jwt.token, type: jwt.type });
+            this.props.getUsers({ type: jwt.type });
         }
 
         this.props.setActiveTab('users');
@@ -88,9 +88,8 @@ class UsersPage extends React.Component {
     }
 
     render() {
-        const { cookies, users, spinner, zeroUsers } = this.props;
+        const { cookies, activeUser, users, spinner, zeroUsers } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        const jwt = cookies.get('sibi-admin-jwt');
         let pageContent;
 
         const headers = {
@@ -108,6 +107,7 @@ class UsersPage extends React.Component {
         const KEYS_TO_FILTERS = ['name','office','email','phoneNumber','createdAt','autoApprovedOrders','status'];
 
         if (users.size > 0 ) {
+            const permissions = activeUser.get('permissions').toJS();
 
             let data = _.map(users.toJS(), (user) => {
                 const cols = {};
@@ -122,7 +122,7 @@ class UsersPage extends React.Component {
                         value = `${user['firstName']} ${user['lastName']}`;
 
                     } else if (key === 'office') {
-                        value = user.fundLocation.city
+                        value = (user.fundLocation) ? user.fundLocation.city : '';
 
                     } else if (key === 'email') {
                         value = user['email'];
@@ -144,14 +144,17 @@ class UsersPage extends React.Component {
                             user={user}
                             value={autoApprovedOrders}
                             options={options}
-                            onChange={({ user, value }) => this.props.autoApproveUserOrders({ token: jwt.token, user, autoApprovedOrders:  value })}
+                            onChange={({ user, value }) => this.props.autoApproveUserOrders({ user, autoApprovedOrders:  value })}
+                            disabled={(permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers) ? false : true}
                         />;
 
                     } else if (key === 'status') {
                         value = (user['type'] === 'pending') ? 'Pending' : 'Approved';
 
                     } else if (key === 'action') {
-                        value = (user['type'] === 'pending') ? 'approve' : '';
+                        if ((permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers || permissions.manageSubordinateUsers)) {
+                            value = (user['type'] === 'pending') ? 'approve' : '';
+                        }
                     }
 
                     cols[key] = value;
@@ -195,6 +198,7 @@ class UsersPage extends React.Component {
                         value={autoApprovedOrders}
                         options={options}
                         onChange={(value) => this.handleAutoApprove({ user: item.id, autoApprovedOrders: value })}
+                        disabled={(permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers) ? false : true}
                     />;
                     return item;
                 });
@@ -209,7 +213,6 @@ class UsersPage extends React.Component {
                     </div>
                 </div>
                 <MyTable
-                    token={jwt.token}
                     type="users"
                     headers={headers}
                     data={data}
@@ -241,10 +244,10 @@ class UsersPage extends React.Component {
 }
 
 const select = (state) => ({
-    spinner         : state.ui.get('spinner'),
-    activeUser      : state.activeUser.get('activeUser'),
-    users           : state.users.get('users'),
-    zeroUsers       : state.users.get('zeroUsers')
+    spinner    : state.ui.get('spinner'),
+    activeUser : state.activeUser.get('activeUser'),
+    users      : state.users.get('users'),
+    zeroUsers  : state.users.get('zeroUsers')
 });
 
 const action = {

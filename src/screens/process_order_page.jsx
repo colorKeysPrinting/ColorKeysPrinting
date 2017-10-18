@@ -38,7 +38,7 @@ class ProcessOrderPage extends React.Component {
     componentWillMount() {
         const { history, location, cookies } = this.props;
         const reOrder = /orderId=(.*)/;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         const orderId = reOrder.exec(location.search);
 
@@ -108,7 +108,7 @@ class ProcessOrderPage extends React.Component {
     }
 
     render() {
-        const { order, spinner } = this.props;
+        const { order, spinner, activeUser } = this.props;
         let orderPageData;
 
         if (order.size > 0) {
@@ -148,13 +148,14 @@ class ProcessOrderPage extends React.Component {
             };
 
             if (!myOrder.processedAt) {
+                const permissions = activeUser.get('permissions').toJS();
                 const user = myOrder.createdByUser;
 
                 userHeaders['hotshotInstallDate'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
                 userHeaders['hotshotCode'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
 
                 const orderProcessHeading = {
-                    accountNumber: (myOrder.pmOffice) ? myOrder.pmOffice.applianceGEAccountNumber : myOrder.fund.applianceGEAccountNumber,
+                    accountNumber: (myOrder.pmOffice.applianceGEAccountNumber) ? myOrder.pmOffice.applianceGEAccountNumber : myOrder.fund.applianceGEAccountNumber,
                     fund: myOrder.fund.name,
                     address: `${myOrder.fundProperty.addressLineOne} ${myOrder.fundProperty.addressLineTwo} ${myOrder.fundProperty.addressLineThree}, ${myOrder.fundProperty.city}, ${myOrder.fundProperty.state}, ${myOrder.fundProperty.zipcode}`
                 };
@@ -188,13 +189,18 @@ class ProcessOrderPage extends React.Component {
 
                     } else if (key === 'hotshotInstallDate') {
                         const formattedDay = moment(myOrder.installDate).format('MM/DD/YYYY');
-
-                        value = <div className="no-limit">
-                            <DayPickerInput
-                                value={formattedDay}
-                                onDayChange={(day) => this.updateInstallDate({ day })}
-                            />
-                        </div>;
+                        if (permissions.updateAllOrders || permissions.updateFundOrders) {
+                            value = <div className="no-limit">
+                                <DayPickerInput
+                                    value={formattedDay}
+                                    onDayChange={(day) => this.updateInstallDate({ day })}
+                                />
+                            </div>;
+                        } else {
+                            value = <div className="no-limit">
+                                <input type="text" value={formattedDay} disabled />
+                            </div>;
+                        }
 
                     } else if (key === 'hotshotCode') {
                         value = (myOrder.isApplianceHotShotDelivery) ? <div>{ myOrder.applianceHotShotCode }</div> : null;
@@ -235,13 +241,13 @@ class ProcessOrderPage extends React.Component {
                 _.each(officeHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'pmOffice') {
-                        value = (myOrder.fund.pmOffices[0]) ? myOrder.fund.pmOffices[0].name : null;
+                        value = (myOrder.pmOffice) ? myOrder.pmOffice.name : null;
 
                     } else if (key === 'phoneNumber'){
-                        value = (myOrder.fund.pmOffices[0]) ? myOrder.fund.pmOffices[0].phoneNumber : null;
+                        value = (myOrder.pmOffice) ? myOrder.pmOffice.phoneNumber : null;
 
                     } else if (key === 'email') {
-                        value = (myOrder.fund.pmOffices[0]) ? myOrder.fund.pmOffices[0].email : null;
+                        value = (myOrder.pmOffice) ? myOrder.pmOffice.email : null;
                     }
                     officeCols[key] = value;
                 });
@@ -254,17 +260,20 @@ class ProcessOrderPage extends React.Component {
                             <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
                             <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
                         </div>
-                        <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.props.processOrder({ id: order.get('id'), processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });}}>
-                            <div className="input-container">
-                                <label htmlFor="processed-by">Processed By</label>
-                                <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Name" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
-                            </div>
-                            <div className="input-container">
-                                <label htmlFor="ge-order-number">GE Order Number</label>
-                                <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="Number" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
-                            </div>
-                            <input className="btn blue" type="submit" value="Process Order" />
-                        </form>
+                        {(permissions.viewAllApprovedAndProcessedOrders || permissions.processManufacturerOrders)
+                            ? <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.props.processOrder({ id: order.get('id'), processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });}}>
+                                <div className="input-container">
+                                    <label htmlFor="processed-by">Processed By</label>
+                                    <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Name" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />
+                                </div>
+                                <div className="input-container">
+                                    <label htmlFor="ge-order-number">GE Order Number</label>
+                                    <input name="ge-order-number" type="text" value={this.state.orderNumber} placeholder="Number" onChange={(e) => this.update({ type: 'orderNumber', value: e.target.value })} required />
+                                </div>
+                                <input className="btn blue" type="submit" value="Process Order" />
+                            </form>
+                            : null
+                        }
                     </div>
                     <MyTable
                         className="user-table"
@@ -276,13 +285,13 @@ class ProcessOrderPage extends React.Component {
                         className="occupancy-table"
                         type="occupancyDetails"
                         headers={occupancyHeaders}
-                        data={{occupancyCols}}
+                        data={{ occupancyCols }}
                     />
                     <MyTable
                         className="office-table"
                         type="officeDetails"
                         headers={officeHeaders}
-                        data={{officeCols}}
+                        data={{ officeCols }}
                     />
                     <div className="product-table-wrapper">
                         { _.map(productsAndParts, (orderDetail, productIndex) => {
@@ -291,6 +300,7 @@ class ProcessOrderPage extends React.Component {
                                 return <ProductTable
                                     key={`product${productIndex}`}
                                     type="processOrder"
+                                    permissions={permissions}
                                     productIndex={productIndex}
                                     productHeaders={productHeaders}
                                     product={orderDetail.product}
@@ -315,6 +325,7 @@ class ProcessOrderPage extends React.Component {
                                 return <PartTable
                                     key={`part${productIndex}`}
                                     type="processOrder"
+                                    permissions={permissions}
                                     productIndex={productIndex}
                                     part={orderDetail.part}
                                     replacement={replacement}
@@ -365,10 +376,10 @@ class ProcessOrderPage extends React.Component {
 }
 
 const select = (state) => ({
-    spinner         : state.ui.get('spinner'),
-    order           : state.orders.get('order'),
-    processSuccess  : state.orders.get('processSuccess'),
-    spinner         : state.ui.get('spinner')
+    spinner        : state.ui.get('spinner'),
+    activeUser     : state.activeUser.get('activeUser'),
+    order          : state.orders.get('order'),
+    processSuccess : state.orders.get('processSuccess'),
 });
 
 const actions = {

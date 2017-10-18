@@ -30,7 +30,9 @@ export default function PartTable(props) {
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
-                        value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                        if (props.permissions.updateAllOrders || props.permissions.updateFundOrders) {
+                            value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
+                        }
                     }
 
                 } else if (row === 'install') {
@@ -46,7 +48,7 @@ export default function PartTable(props) {
 
             case 'code':
                 value = (props.outOfStock !== props.productIndex) ? (
-                    (row === 'part' && props.type === 'processOrder') ? `#${ (!props.replacement) ? part.code : props.replacement }` : null
+                    (row === 'part' && props.type === 'processOrder') ? `#${ (!props.replacement) ? part.modelNumber : props.replacement }` : null
                 ) : null;
                 break;
 
@@ -88,6 +90,7 @@ export default function PartTable(props) {
                 <td className="product-details-table">
                     <MyTable
                         type="partDetails"
+                        dataClassName={(props.productIndex !== 0) ? "table-row part-row" : null }
                         data={partDetails}
                     />
                 </td>

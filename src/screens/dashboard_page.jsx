@@ -13,7 +13,7 @@ class DashboardPage extends React.Component {
 
     componentWillMount() {
         const { cookies } = this.props;
-        const jwt = cookies.get('sibi-admin-jwt');
+        const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
             console.log('TODO: get dashboard data');

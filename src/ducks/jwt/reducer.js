@@ -8,13 +8,13 @@ import { ActionTypes }          from './actions';
 // /////////////////////////////////////
 //             REDUCER
 // /////////////////////////////////////
-const initialState = Immutable.fromJS({ 
+const initialState = Immutable.fromJS({
     isLogout: false
 });
 
 export default (state = initialState, action) => {
     const cookies = new Cookies();
-    const jwt = cookies.get('sibi-admin-jwt');
+    const jwt = cookies.get('sibi-ge-admin');
 
     switch (action.type) {
     case ActionTypes.REFRESH_JWT:
