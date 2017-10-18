@@ -91,7 +91,7 @@ class OrderDetails extends React.Component {
 
         if (order.size > 0) {
             const myOrder = order.toJS();
-            const user = myOrder.orderUser;
+            const user = myOrder.createdByUser;
             const permissions = activeUser.get('permissions').toJS();
 
             orderHeaders['hotshotInstallDate'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
