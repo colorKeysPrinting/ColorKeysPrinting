@@ -47,8 +47,7 @@ export default (state = initialState, action) => {
         break;
 
     case ActionTypes.LOGIN_ERROR:
-        console.log('login error');
-        alert(action.error);
+        alert(`The email and password you entered did not match our records.  Please double-check and try again.\n[Error: ${action.error.response.data.statusCode} - ${action.error.response.data.message}]`);
         state = state.set('loginError', true);
         break;
 
