@@ -67,7 +67,7 @@ class OrdersPage extends React.Component {
         });
     }
 
-    handleAction({ token,  type, item }) {
+    handleAction({ type, item }) {
         const { history, location } = this.props;
         let dialog;
 
@@ -75,7 +75,7 @@ class OrdersPage extends React.Component {
             dialog = <div className="alert-box">
                 <p>Are you sure you want to approve this order?</p>
                 <div className="btn borderless" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
-                <div className="btn blue" onClick={()=> this.props.approveOrder({ token, id: item.id }) } >Approve</div>
+                <div className="btn blue" onClick={()=> this.props.approveOrder({ id: item.id }) } >Approve</div>
             </div>
 
         } else if (type === 'process') {

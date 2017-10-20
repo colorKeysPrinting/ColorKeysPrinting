@@ -57,7 +57,7 @@ export default class ApplianceProducts extends React.Component {
     }
 
     render() {
-        const { token, isDisabled, image, color, manufacturerModelNumber, productCategoryId, applianceColorsInfo, applianceAssociatedParts, applianceType,
+        const { isDisabled, image, color, manufacturerModelNumber, productCategoryId, applianceColorsInfo, applianceAssociatedParts, applianceType,
             applianceSize, applianceCapacity, applianceDescription, applianceFuelType, applianceWidth, applianceHeight, applianceManufacturerName,
             applianceDepth, applianceSpecSheetUrl, applianceInstallCode, applianceInstallPrice, applianceInstallDescription,
             applianceInstallCode2, applianceInstallPrice2, applianceInstallDescription2, applianceRemovalCode, applianceRemovalPrice,
@@ -106,7 +106,7 @@ export default class ApplianceProducts extends React.Component {
                                 <input
                                     type="file"
                                     accept=".png,.jpg,.jpeg,.svg"
-                                    onChange={(e) => this.props.uploadImage({ token, key: 'product', imageFile: e.target.files[0] }) }
+                                    onChange={(e) => this.props.uploadImage({ key: 'product', imageFile: e.target.files[0] }) }
                                     style={{ display: 'none' }}
                                 />
                             </label>
@@ -122,8 +122,8 @@ export default class ApplianceProducts extends React.Component {
                                     <img src={(part.imageUrl) ? part.imageUrl : null } alt="part image" height="50"/>
                                     <input type="text" value={part.description} disabled />
                                     <input type="text" value={part.code} disabled />
-                                    {(!isDisabled) ? <div className="add-btn blue" onClick={()=> this.props.showAddPart({ token, productCategoryId, partId: part.id }) } >Edit</div> : null}
-                                    {(!isDisabled) ? <div className="add-btn" onClick={()=> this.props.removePart({ token, partId: part.id }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
+                                    {(!isDisabled) ? <div className="add-btn blue" onClick={()=> this.props.showAddPart({ productCategoryId, partId: part.id }) } >Edit</div> : null}
+                                    {(!isDisabled) ? <div className="add-btn" onClick={()=> this.props.removePart({ partId: part.id }) } ><img src={assets('./images/icon-x-big.svg')} /></div> : null}
                                 </div>
                             );
                         }) }

@@ -118,37 +118,37 @@ class EditProductPage extends React.Component {
         let { product, products } = this.props;
 
         product = _.find(products.toJS(), ['sibiModelNumber', product.get('sibiModelNumber')]);
-        this.props.getProductById({ token, id: product.id });
+        this.props.getProductById({ id: product.id });
         this.props.verifyProduct({ verified: true });
         this.props.resetFound();
     }
 
-    showAddPart({ token, productCategoryId, partId }) {
+    showAddPart({ productCategoryId, partId }) {
         if (partId) {
-            this.props.getPartById({ token, id: partId });
+            this.props.getPartById({ id: partId });
             this.props.verifyPart({ verified: true });
         } else {
             this.props.newPart({ productCategoryId });
         }
     }
 
-    addPart({ token, modelNumber }) {
+    addPart({ modelNumber }) {
         let { product, parts } = this.props;
 
         this.setState({ activeSection : '' });
 
         const part = _.find(parts.toJS(), ['modelNumber', modelNumber]);
         (product.get('id'))
-            ? this.props.createProductPart({ token, productId: product.get('id'), partId: part.id }) // TODO: may need to have a check here to check to see if the part is already added to the product. If so, need to increment the quantity
+            ? this.props.createProductPart({ productId: product.get('id'), partId: part.id }) // TODO: may need to have a check here to check to see if the part is already added to the product. If so, need to increment the quantity
             : this.props.update({ isProduct: true, key: 'applianceAssociatedParts', value: part });
     }
 
-    removePart({ token, partId }) {
+    removePart({ partId }) {
         const { product } = this.props;
-        (product.get('id')) ? this.props.removePart({ token, productId: product.get('id'), partId }) : this.props.removePartLocal({ partId });
+        (product.get('id')) ? this.props.removePart({ productId: product.get('id'), partId }) : this.props.removePartLocal({ partId });
     }
 
-    saveProduct({ token, category }) {
+    saveProduct({ category }) {
         const { history } = this.props;
         let product = this.props.product.toJS();
 
@@ -162,7 +162,7 @@ class EditProductPage extends React.Component {
 
         product['sortIndex'] = ((product.sortIndex - 1) <= 0) ? 0 : product.sortIndex - 1;
 
-        (product.id) ? this.props.updateProduct({ token, category, product }) : this.props.createProduct({ token, category, product, applianceAssociatedParts });
+        (product.id) ? this.props.updateProduct({ category, product }) : this.props.createProduct({ category, product, applianceAssociatedParts });
         history.goBack();
     }
 
