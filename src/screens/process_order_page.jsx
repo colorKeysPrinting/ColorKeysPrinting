@@ -142,7 +142,7 @@ class ProcessOrderPage extends React.Component {
 
             const productHeaders = {
                 productDescription: '',
-                code: 'Model # or Code #',
+                code: 'Install Code',
                 qty: 'Qty',
                 price: 'Cost'
             };
