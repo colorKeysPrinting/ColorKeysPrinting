@@ -29,7 +29,6 @@ class OrdersPage extends React.Component {
             sortby: { column: '', isAsc: false }
         };
 
-        this.update = this.update.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleItem = this.handleItem.bind(this);
         this.orderBy = this.orderBy.bind(this);
@@ -53,10 +52,6 @@ class OrdersPage extends React.Component {
             const path = (nextProps.activeUser.size > 0) ? `/orders` : `/login`;
             this.props.history.push(path);
         }
-    }
-
-    update({ type, value }) {
-        this.setState({ [type]: value });
     }
 
     orderBy({ column }) {
@@ -238,7 +233,7 @@ class OrdersPage extends React.Component {
                     <h2>Orders</h2>
                     <div className="search-wrapper">
                         <img src={assets('./images/icon-search.svg')} className="search-icon"/>
-                        <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} />
+                        <SearchInput className="search-input" onChange={(value) => this.setState({ searchTerm: value })} />
                     </div>
                 </div>
                 <MyTable

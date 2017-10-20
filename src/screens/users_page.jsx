@@ -27,7 +27,6 @@ class UsersPage extends React.Component {
             sortby: {column: 'status', isAsc: 'desc' }
         };
 
-        this.update = this.update.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.orderBy = this.orderBy.bind(this);
         this.focus = this.focus.bind(this);
@@ -49,10 +48,6 @@ class UsersPage extends React.Component {
             const path = (nextProps.activeUser.size > 0) ? `/users` : `/login`;
             this.props.history.push(path);
         }
-    }
-
-    update({ type, value }) {
-        this.setState({ [type]: value });
     }
 
     handleAction({ type, item }) {
@@ -208,7 +203,7 @@ class UsersPage extends React.Component {
                     <h2>Users</h2>
                     <div className="search-wrapper">
                         <img src={assets('./images/icon-search.svg')} className="search-icon" onClick={this.focus} />
-                        <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} ref={(input) => { this.textInput = input; }} />
+                        <SearchInput className="search-input" onChange={(value) => this.setState({ searchTerm: value })} ref={(input) => { this.textInput = input; }} />
                     </div>
                 </div>
                 <MyTable
