@@ -43,17 +43,14 @@ export function getOrderById({ id }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_ORDER_BY_ID_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
-export function getOrders({ type }) {
-    return (dispatch) => {
+export function getOrders() {
+    return (dispatch, getState) => {
         const endPointTypes = {};
-        switch(type) {
+        let type;
+        switch(getState().activeUser.getIn(['activeUser','type'])) {
         case 'superAdmin':
             type = 'ordersForSuperAdmin';
             break;
@@ -75,10 +72,6 @@ export function getOrders({ type }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_ORDERS_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -94,10 +87,6 @@ export function approveOrder({ id }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.APPROVE_ORDER_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -113,10 +102,6 @@ export function updateOrder({ order }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.UPDATE_ORDER_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -132,10 +117,6 @@ export function updateInstallDate ({ id, installDate }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.UPDATE_INSTALL_DATE_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -151,10 +132,6 @@ export function updateModelNumber ({ id, data }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.UPDATE_MODEL_NUMBER_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -167,10 +144,6 @@ export function createOrder() {
             .then(payload => {
                 dispatch({ type: ActionTypes.CREATE_ORDER_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -187,10 +160,6 @@ export function processOrder({ id, processedByName, geOrderNumber }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.PROCESS_ORDER_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -203,9 +172,5 @@ export function removeOrder(id) {
             .then(payload => {
                 dispatch({ type: ActionTypes.REMOVE_ORDER_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }

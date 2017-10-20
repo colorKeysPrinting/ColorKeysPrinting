@@ -34,9 +34,5 @@ export function getSalesTax({ zipcode }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_SALES_TAX_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }

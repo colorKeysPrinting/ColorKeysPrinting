@@ -54,7 +54,7 @@ export function login({ email, password }) {
                 dispatch({ type: ActionTypes.LOGIN_SUCCESS, ...payload });
             })
             .catch(error => {
-                dispatch({ type: ActionTypes.LOGIN_ERROR, error });
+                dispatch({ type: ActionTypes.LOGIN_ERROR });
             });
     }
 }
@@ -71,10 +71,6 @@ export function forgotPassword({ email }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.FORGOT_PASSWORD_SUCCESS, ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -91,10 +87,6 @@ export function passwordReset({ password }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.PASSWORD_RESET_SUCCESS, ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -104,9 +96,5 @@ export function getCurrentUser() {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_CURRENT_USER_SUCCESS, ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
