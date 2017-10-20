@@ -12,7 +12,8 @@ import assets                               from 'libs/assets';
 
 import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
-import { getUsers, getFundProperties }      from 'ducks/users/actions';
+import { getUsers }                         from 'ducks/users/actions';
+import { getFundProperties }                from 'ducks/properties/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
@@ -36,13 +37,12 @@ class OrdersPage extends React.Component {
 
     componentWillMount() {
         const { cookies } = this.props;
-        const jwt = cookies.get('sibi-ge-admin');
 
-        if (jwt) {
+        if (cookies.get('sibi-ge-admin')) {
             this.props.triggerSpinner({ isOn: true });
             this.props.getFundProperties();
-            this.props.getUsers({ type: jwt.type });
-            this.props.getOrders({ type: jwt.type });
+            this.props.getUsers();
+            this.props.getOrders();
         }
 
         this.props.setActiveTab('orders');
@@ -280,7 +280,7 @@ const select = (state) => ({
     orders         : state.orders.get('orders'),
     zeroOrders     : state.orders.get('zeroOrders'),
     users          : state.users.get('users'),
-    fundProperties : state.users.get('fundProperties'),
+    fundProperties : state.properties.get('fundProperties'),
 });
 
 const actions = {

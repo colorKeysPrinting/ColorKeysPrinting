@@ -69,7 +69,6 @@ export default class ApplianceProducts extends React.Component {
             { label: 'Electric', value: 'Electric' }
         ]
 
-        // TODO: need to come up with a design for switching between size and capacity for the product
         return (
             <div id="appliance-product">
                 <input name="appliance-manuf-name" className="left-col" type="text" placeholder="Manufacturer Name (e.g. GE)" value={applianceManufacturerName} onChange={(e) => this.props.update({ isProduct: true, key: 'applianceManufacturerName', value: e.target.value})} disabled={isDisabled} />

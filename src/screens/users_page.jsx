@@ -35,11 +35,10 @@ class UsersPage extends React.Component {
 
     componentWillMount() {
         const { cookies, activeUser } = this.props;
-        const jwt = cookies.get('sibi-ge-admin');
 
-        if (jwt) {
+        if (cookies.get('sibi-ge-admin')) {
             this.props.triggerSpinner({ isOn: true });
-            this.props.getUsers({ type: jwt.type });
+            this.props.getUsers();
         }
 
         this.props.setActiveTab('users');

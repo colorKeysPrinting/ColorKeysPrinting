@@ -50,8 +50,8 @@ class HeaderBar extends React.Component {
         if (cookies.get('sibi-ge-admin')) {
             if (!_.isEqual(nextProps.activeUser, activeUser)) {
                 if (nextProps.activeUser.size > 0) {
-                    this.props.getUsers({ type: nextProps.activeUser.get('type') });
-                    this.props.getOrders({ type: nextProps.activeUser.get('type') });
+                    this.props.getUsers();
+                    this.props.getOrders();
 
                     if (location.prevPath && location.prevPath !== '/login') {
                         history.push({ pathname: location.prevPath, search: (location.prevSearch) ? location.prevSearch : null})
@@ -90,7 +90,7 @@ class HeaderBar extends React.Component {
     render() {
         const { cookies, activeUser, location, isLogout, activeTab, orders, users } = this.props;
         const jwt = cookies.get('sibi-ge-admin');
-        let pendingOrders = 0, pendingUsers = 0, activeTabs = { dashboard: '', orders: '', users: '', products: '', new_order: '' };
+        let pendingOrders = 0, pendingUsers = 0, activeTabs = { dashboard: '', orders: '', users: '', properties: '', products: '', new_order: '' };
 
         const isProcessOrder = (location.pathname !== '/process_order') ? false : true;
 
@@ -108,6 +108,10 @@ class HeaderBar extends React.Component {
 
                 if (key === 'users' && (permissions['manageAllUsers'] || permissions['manageAllFundUsers'] || permissions['manageAllManufacturerUsers'] || permissions['manageSubordinateUsers'])) {
                     activeTabs['users'] = 'Users';
+                }
+
+                if (key === 'properties' && (permissions['manageAllUsers'])) { // TODO: need to update this with the correct permissions
+                    activeTabs['properties'] = 'Properties';
                 }
 
                 if (key === 'products' && (permissions['viewAllProducts'] || permissions['manageAllProducts'] || permissions['manageFundPreferredProducts'] || permissions['manageFundProducts'])) {
