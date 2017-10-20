@@ -7,8 +7,10 @@ import Home                                from 'screens/home';
 import OrdersPage                          from 'screens/orders_page';
 import UsersPage                           from 'screens/users_page';
 import ProductsPage                        from 'screens/products_page';
+// import PropertiesPage                      from 'screens/properties_page';
 import DashboardPage                       from 'screens/dashboard_page';
 import OrderDetails                        from 'screens/order_details';
+// import PropertyDetails                     from 'screens/property_details';
 import NewOrderPage                        from 'screens/new_order_page';
 import ProcessOrderPage                    from 'screens/process_order_page';
 import EditProductPage                     from 'screens/edit_product_page';
@@ -24,6 +26,8 @@ export default (
                 <Route exact path="/orders" component={OrdersPage} />
                 <Route exact path="/users" component={UsersPage} />
                 <Route exact path="/products" component={ProductsPage} />
+                {/* <Route exact path="/properties" component={PropertiesPage} /> */}
+                {/* <Route exact path="/property_details" component={PropertyDetails} /> */}
                 <Route exact path="/dashboard" component={DashboardPage} />
                 <Route exact path="/order_details" component={OrderDetails} />
                 <Route exact path="/new_order" component={NewOrderPage} />

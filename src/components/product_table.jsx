@@ -64,10 +64,7 @@ export default function ProductTable(props) {
             case 'code':
             case 'address':
                 if (row === 'product') {
-                    if (props.type === 'processOrder') {
-                        value = (!props.replacement) ? `#${ (props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber }` : `#${ props.replacement }`;
-
-                    } else if (props.type === 'orderDetails') {
+                    if (props.type === 'orderDetails') {
                         value = props.address;
                     }
 

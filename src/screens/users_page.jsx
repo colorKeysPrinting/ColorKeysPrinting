@@ -27,7 +27,6 @@ class UsersPage extends React.Component {
             sortby: {column: 'status', isAsc: 'desc' }
         };
 
-        this.update = this.update.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.orderBy = this.orderBy.bind(this);
         this.focus = this.focus.bind(this);
@@ -35,11 +34,10 @@ class UsersPage extends React.Component {
 
     componentWillMount() {
         const { cookies, activeUser } = this.props;
-        const jwt = cookies.get('sibi-ge-admin');
 
-        if (jwt) {
+        if (cookies.get('sibi-ge-admin')) {
             this.props.triggerSpinner({ isOn: true });
-            this.props.getUsers({ type: jwt.type });
+            this.props.getUsers();
         }
 
         this.props.setActiveTab('users');
@@ -52,17 +50,13 @@ class UsersPage extends React.Component {
         }
     }
 
-    update({ type, value }) {
-        this.setState({ [type]: value });
-    }
-
-    handleAction({ token, type, item }) {
+    handleAction({ type, item }) {
         let dialog;
         if (type === 'approve') {
             dialog = <div className="alert-box">
                 <p>Are you sure you want to approve this user?</p>
                 <div className="btn borderless" type="submit" value="Cancel" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
-                <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveUser({ token, id: item.id }) } >Approve</div>
+                <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveUser({ id: item.id }) } >Approve</div>
             </div>
         }
 
@@ -90,7 +84,7 @@ class UsersPage extends React.Component {
     render() {
         const { cookies, activeUser, users, spinner, zeroUsers } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        let pageContent;
+        let data = [];
 
         const headers = {
             id: '',
@@ -109,7 +103,7 @@ class UsersPage extends React.Component {
         if (users.size > 0 ) {
             const permissions = activeUser.get('permissions').toJS();
 
-            let data = _.map(users.toJS(), (user) => {
+            data = _.map(users.toJS(), (user) => {
                 const cols = {};
 
                 _.each(headers, (value, key) => {
@@ -204,38 +198,38 @@ class UsersPage extends React.Component {
                 });
             }
 
-            pageContent = <div className="table-card">
-                <div className="card-header">
-                    <h2>Users</h2>
-                    <div className="search-wrapper">
-                        <img src={assets('./images/icon-search.svg')} className="search-icon" onClick={this.focus} />
-                        <SearchInput className="search-input" onChange={(value) => this.update({ type: 'searchTerm', value })} ref={(input) => { this.textInput = input; }} />
-                    </div>
-                </div>
-                <MyTable
-                    type="users"
-                    headers={headers}
-                    data={data}
-                    sortby={sortby}
-                    handleAction={this.handleAction}
-                />
-            </div>;
-
             this.props.triggerSpinner({ isOn: false });
 
         } else if (zeroUsers) {
-            pageContent = <div>
-                <h1>User Status</h1>
-                <p>There are currently no users to display</p>
-            </div>;
-
             this.props.triggerSpinner({ isOn: false });
         }
 
         return (
             <Loader loaded={spinner} >
                 <div id="users-page" className="container">
-                    { pageContent }
+                    { (!zeroUsers && data) ? (
+                        <div className="table-card">
+                            <div className="card-header">
+                                <h2>Users</h2>
+                                <div className="search-wrapper">
+                                    <img src={assets('./images/icon-search.svg')} className="search-icon" onClick={this.focus} />
+                                    <SearchInput className="search-input" onChange={(value) => this.setState({ searchTerm: value })} ref={(input) => { this.textInput = input; }} />
+                                </div>
+                            </div>
+                            <MyTable
+                                type="users"
+                                headers={headers}
+                                data={data}
+                                sortby={sortby}
+                                handleAction={this.handleAction}
+                            />
+                        </div>
+                    ) : (
+                        <div>
+                            <h1>User Status</h1>
+                            <p>There are currently no users to display</p>
+                        </div>
+                    )}
                 </div>
                 { alert }
             </Loader>

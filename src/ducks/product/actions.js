@@ -100,10 +100,6 @@ export function getProductById({ id }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PRODUCT_BY_ID_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -120,10 +116,6 @@ export function createProductPart({ productId, partId }) {
             .then(payload => {
                 dispatch(getProductById({ id: productId }));
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -140,9 +132,5 @@ export function removePart({ productId, partId }) {
             .then(payload => {
                 dispatch(getProductById({ id: productId }));
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }

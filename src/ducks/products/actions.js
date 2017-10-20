@@ -58,10 +58,6 @@ export function getProducts() {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PRODUCTS_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -77,10 +73,6 @@ export function updateProduct({ category, product }) {
             .then(payload => {
                 dispatch(getUserProductCategories({ category }));
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -102,10 +94,6 @@ export function createProduct({ category, product, applianceAssociatedParts }) {
 
                 dispatch(getUserProductCategories({ category }));
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -115,10 +103,6 @@ export function getProductCategories() {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PRODUCT_CATEGORIES_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -133,10 +117,6 @@ export function getUserProductCategories({ category }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_USER_PRODUCT_CATEGORIES_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -151,10 +131,6 @@ export function getProductsForCategory({ categoryId, category }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_CATEGORY_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -172,10 +148,6 @@ export function getProductsForSubCategory({ category, subCategory, subSubCategor
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -185,10 +157,6 @@ export function getParts() {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PARTS_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -201,10 +169,6 @@ export function archiveProduct({ category, id }) {
             .then(payload => {
                 dispatch(getUserProductCategories({ category }));
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -217,9 +181,5 @@ export function unarchiveProduct({ category, id }) {
             .then(payload => {
                 dispatch(getUserProductCategories({ category }));
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }

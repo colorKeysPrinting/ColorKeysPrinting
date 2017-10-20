@@ -54,7 +54,7 @@ export default class EditPartOverlay extends React.Component {
         let { modelNumber, parts } = this.props;
 
         const part = _.find(parts.toJS(), ['modelNumber', modelNumber]);
-        this.props.getPartById({ token, id: part.id });
+        this.props.getPartById({ id: part.id });
         this.props.verifyPart({ verified: true });
         this.props.resetFound();
     }
@@ -80,12 +80,12 @@ export default class EditPartOverlay extends React.Component {
         });
 
         // TODO: may need to have a check here to check to see if the part is already added to the product. If so, need to increment the quantity
-        (id) ? this.props.updatePart({ token, part, productId }) : this.props.createPart({ token, part, productId });
+        (id) ? this.props.updatePart({ part, productId }) : this.props.createPart({ part, productId });
         this.props.close();
     }
 
     render() {
-        const { token, isDisabled, productCategoryId, id, description, code, imageUrl, modelNumber, gePrice, sibiPrice, includedInManufacturerInstall, isPartVerified, isPartFound } = this.props;
+        const { isDisabled, productCategoryId, id, description, code, imageUrl, modelNumber, gePrice, sibiPrice, includedInManufacturerInstall, isPartVerified, isPartFound } = this.props;
 
         return (
             <Overlay type="edit-part">
@@ -150,7 +150,7 @@ export default class EditPartOverlay extends React.Component {
                         <p> - Use the existing part</p>
                         <p> - continue creating a new part (this will completely replace the existing part)</p>
                         <p> - modify the existing part?</p>
-                        <div className="btn blue" onClick={() => this.props.addPart({ token, modelNumber })} >Add</div>
+                        <div className="btn blue" onClick={() => this.props.addPart({ modelNumber })} >Add</div>
                         <div className="btn borderless red fill" onClick={() => {
                             this.props.verifyPart({ verified: true });
                             this.props.resetFound();

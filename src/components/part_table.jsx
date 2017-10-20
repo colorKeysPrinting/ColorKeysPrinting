@@ -7,25 +7,18 @@ import MyTable                                              from 'components/my_
 export default function PartTable(props) {
     const part = props.part;
 
-    const partDetailHeaders = {
-        partDescription: '',
-        code: '',
-        qty: '',
-        price: ''
-    };
-
     const partDetailRows = (props.type === 'processOrder') ? ['part', 'outOfStock', 'install'] : ['part', 'outOfStock'];
 
     const partDetails = _.map(partDetailRows, (row) => {
         let cols = {};
-        _.each(partDetailHeaders, (header, key) => {
+        _.each(['partDescription','code','qty','price'], (header) => {
             let value;
-            switch(key) {
+            switch(header) {
             case 'partDescription':
                 if (row === 'part') {
                     value = <div className="no-limit">
                         <span className="product-header">{(!props.replacement) ? part.description : `Replaced with part #: ${props.replacement}`}</span>
-                        <div className="table-cell-details" style={{ minWidth: '100px' }}>{ `${(props.replacement) ? 'Original' : ''} Part Code ${part.code}` }</div>
+                        <div className="table-cell-details" style={{ minWidth: '100px' }}>{ `${(props.replacement) ? 'Original' : ''} Model Number: ${part.modelNumber}` }</div>
                     </div>;
 
                 } else if (row === 'outOfStock') {
@@ -46,12 +39,6 @@ export default function PartTable(props) {
                 }
                 break;
 
-            case 'code':
-                value = (props.outOfStock !== props.productIndex) ? (
-                    (row === 'part' && props.type === 'processOrder') ? `#${ (!props.replacement) ? part.modelNumber : props.replacement }` : null
-                ) : null;
-                break;
-
             case 'qty':
                 if (props.type === 'processOrder') {
                     value = (row === 'part' && props.outOfStock !== props.productIndex) ? props.qty : null;
@@ -69,7 +56,7 @@ export default function PartTable(props) {
 
                 break;
             }
-            cols[key] = value;
+            cols[header] = value;
         });
         return cols;
     });

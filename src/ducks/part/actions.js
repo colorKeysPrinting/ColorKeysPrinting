@@ -48,10 +48,6 @@ export function getPartById({ id }) {
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PART_BY_ID_SUCCESS , ...payload });
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -70,10 +66,6 @@ export function createPart({ part, productId }) {
                     dispatch(update({ isProduct: true, key: 'applianceAssociatedParts', value: payload.data }));
                 }
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 
@@ -90,9 +82,5 @@ export function updatePart({ part, productId }) {
                 dispatch(getParts());
                 dispatch(getProductById({ id: productId }))
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }

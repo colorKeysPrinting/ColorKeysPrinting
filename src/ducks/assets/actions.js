@@ -60,10 +60,6 @@ export function uploadImage({ key, imageFile }) {
 
                 dispatch(uploadImageS3({ url: data.upload_url, type: imageFile.type, key, formData }));
             })
-            .catch(error => {
-                alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
-                throw(error);
-            });
     }
 }
 

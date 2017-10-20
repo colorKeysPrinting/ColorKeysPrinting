@@ -142,7 +142,7 @@ class ProcessOrderPage extends React.Component {
 
             const productHeaders = {
                 productDescription: '',
-                code: 'Model # or Code #',
+                code: 'Install Code',
                 qty: 'Qty',
                 price: 'Cost'
             };
@@ -379,7 +379,6 @@ const select = (state) => ({
     spinner        : state.ui.get('spinner'),
     activeUser     : state.activeUser.get('activeUser'),
     order          : state.orders.get('order'),
-    processSuccess : state.orders.get('processSuccess'),
 });
 
 const actions = {
