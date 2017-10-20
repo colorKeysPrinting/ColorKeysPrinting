@@ -8,7 +8,6 @@ import orders               from 'ducks/orders/reducer';
 import products             from 'ducks/products/reducer';
 import product              from 'ducks/product/reducer';
 import properties           from 'ducks/properties/reducer';
-import property             from 'ducks/property/reducer';
 import part                 from 'ducks/part/reducer';
 import ui                   from 'ducks/ui/reducer';
 import users                from 'ducks/users/reducer';
@@ -23,7 +22,6 @@ const rootReducer = combineReducers({
     products,
     product,
     properties,
-    property,
     part,
     ui,
     users,
