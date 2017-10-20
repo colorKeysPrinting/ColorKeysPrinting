@@ -25,7 +25,7 @@ instance.interceptors.response.use((response)=>{
     return response;
 },(error) => {
     if (error.response) {
-        alert(`Error: ${error.response.data.statusCode} - ${error.response.data.message}`);
+        alert(`Error: ${error.response.data.message}`);
         return Promise.reject(error);
     }
 })
