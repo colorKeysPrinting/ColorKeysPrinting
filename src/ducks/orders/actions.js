@@ -9,13 +9,6 @@ export const ActionTypes = {
     CLEAR_ORDER             : 'sibi_ge_admin/products/CLEAR_ORDER',
     GET_ORDER_BY_ID_SUCCESS : 'sibi_ge_admin/products/GET_ORDER_BY_ID_SUCCESS',
     GET_ORDERS_SUCCESS      : 'sibi_ge_admin/products/GET_ORDERS_SUCCESS',
-    APPROVE_ORDER_SUCCESS   : 'sibi_ge_admin/products/APPROVE_ORDER_SUCCESS',
-    UPDATE_ORDER_SUCCESS    : 'sibi_ge_admin/products/UPDATE_ORDER_SUCCESS',
-    UPDATE_INSTALL_DATE_SUCCESS: 'sibi_ge_admin/products/UPDATE_INSTALL_DATE_SUCCESS',
-    UPDATE_MODEL_NUMBER_SUCCESS: 'sibi_ge_admin/products/UPDATE_MODEL_NUMBER_SUCCESS',
-    CREATE_ORDER_SUCCESS    : 'sibi_ge_admin/products/CREATE_ORDER_SUCCESS',
-    PROCESS_ORDER_SUCCESS   : 'sibi_ge_admin/products/PROCESS_ORDER_SUCCESS',
-    REMOVE_ORDER_SUCCESS    : 'sibi_ge_admin/products/REMOVE_ORDER_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -24,13 +17,6 @@ export const ActionTypes = {
 export function clearOrder() {
     return {
         type: ActionTypes.CLEAR_ORDER
-    }
-}
-
-const configureOrderProduct = ({ order }) => {
-    return {
-        type: ActionTypes.CONFIGURE_ORDER_PRODUCT,
-        order
     }
 }
 
@@ -85,7 +71,8 @@ export function approveOrder({ id }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.APPROVE_ORDER_SUCCESS , ...payload });
+                dispatch(getOrderById({ id }));
+                dispatch(getOrders());
             })
     }
 }
@@ -100,7 +87,8 @@ export function updateOrder({ order }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.UPDATE_ORDER_SUCCESS , ...payload });
+                dispatch(getOrderById({ id }));
+                dispatch(getOrders());
             })
     }
 }
@@ -115,7 +103,7 @@ export function updateInstallDate ({ id, installDate }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.UPDATE_INSTALL_DATE_SUCCESS , ...payload });
+                dispatch(getOrderById({ id }));
             })
     }
 }
@@ -130,7 +118,7 @@ export function updateModelNumber ({ id, data }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.UPDATE_MODEL_NUMBER_SUCCESS , ...payload });
+                dispatch(getOrderById({ id }));
             })
     }
 }
@@ -142,7 +130,7 @@ export function createOrder() {
             url     : `/createOrder`,
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.CREATE_ORDER_SUCCESS , ...payload });
+                dispatch(getOrders());
             })
     }
 }
@@ -158,7 +146,8 @@ export function processOrder({ id, processedByName, geOrderNumber }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.PROCESS_ORDER_SUCCESS , ...payload });
+                dispatch(getOrderById({ id }));
+                dispatch(getOrders());
             })
     }
 }
@@ -170,7 +159,7 @@ export function removeOrder(id) {
             url     : `/order/${id}`
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.REMOVE_ORDER_SUCCESS , ...payload });
+                dispatch(getOrders());
             })
     }
 }

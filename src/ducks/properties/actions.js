@@ -6,8 +6,9 @@ import Api                      from 'libs/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
-    GET_FUNDS_SUCCESS : 'sibi_ge_admin/users/GET_FUNDS_SUCCESS',
-    GET_FUND_PROPERTIES_SUCCESS : 'sibi_ge_admin/users/GET_FUND_PROPERTIES_SUCCESS',
+    GET_FUNDS_SUCCESS           : 'sibi_ge_admin/properties/GET_FUNDS_SUCCESS',
+    GET_FUND_PROPERTIES_SUCCESS : 'sibi_ge_admin/properties/GET_FUND_PROPERTIES_SUCCESS',
+    GET_PROPERTIES_SUCCESS      : 'sibi_ge_admin/properties/GET_PROPERTIES_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -40,9 +41,9 @@ export function getFundProperties() {
 
 export function getProperties() {
     return (dispatch) => {
-        return Api({ url : `/products` })
+        return Api({ url : `/properties` })
             .then(payload => {
-                dispatch({ type: ActionTypes.GET_PRODUCTS_SUCCESS , ...payload });
+                dispatch({ type: ActionTypes.GET_PROPERTIES_SUCCESS , ...payload });
             })
     }
 }
@@ -51,100 +52,37 @@ export function createProperty({ property }) {
     return (dispatch) => {
         return Api({
             method  : 'post',
-            url     : `/createProperty`,
+            url     : `/properties`,
             data    : {
                 ...property
             }
         })
             .then(payload => {
-                dispatch(getUserPropertyCategories({ category }));
+                dispatch(getFundProperties());
             })
     }
 }
 
-export function getPropertyCategories() {
-    return (dispatch) => {
-        return Api({ url : `/productCategories` })
-            .then(payload => {
-                dispatch({ type: ActionTypes.GET_PRODUCT_CATEGORIES_SUCCESS , ...payload });
-            })
-    }
-}
-
-export function getUserPropertyCategories({ category }) {
-    return (dispatch) => {
-        return Api({
-            url     : `/productCategoriesForUser`,
-            headers : {
-                category
-            }
-        })
-            .then(payload => {
-                dispatch({ type: ActionTypes.GET_USER_PRODUCT_CATEGORIES_SUCCESS , ...payload });
-            })
-    }
-}
-
-export function getPropertiesForCategory({ categoryId, category }) {
-    return (dispatch) => {
-        return Api({
-            url     : `/productsForCategory?categoryId=${categoryId}`,
-            headers : {
-                category
-            }
-        })
-            .then(payload => {
-                dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_CATEGORY_SUCCESS , ...payload });
-            })
-    }
-}
-
-export function getPropertiesForSubCategory({ category, subCategory, subSubCategory }) {
-    return (dispatch) => {
-        const id = (subSubCategory) ? subSubCategory.id : subCategory.id;
-        return Api({
-            url     : `/productsForSubcategory?subcategoryId=${id}`,
-            headers : {
-                category,
-                subCategory: subCategory.name,
-                subSubCategory: (subSubCategory) ? subSubCategory.name : null
-            }
-        })
-            .then(payload => {
-                dispatch({ type: ActionTypes.GET_PRODUCTS_FOR_SUB_CATEGORY_SUCCESS , ...payload });
-            })
-    }
-}
-
-export function getParts() {
-    return (dispatch) => {
-        return Api({ url : `/parts` })
-            .then(payload => {
-                dispatch({ type: ActionTypes.GET_PARTS_SUCCESS , ...payload });
-            })
-    }
-}
-
-export function archiveProperty({ category, id }) {
+export function archiveProperty({ id }) {
     return (dispatch) => {
         return Api({
             method  : 'post',
-            url     : `/products/${id}/archive`
+            url     : `/properties/${id}/archive`
         })
             .then(payload => {
-                dispatch(getUserPropertyCategories({ category }));
+                dispatch(getFundProperties());
             })
     }
 }
 
-export function unarchiveProperty({ category, id }) {
+export function unarchiveProperty({ id }) {
     return (dispatch) => {
         return Api({
             method  : 'post',
-            url     : `/products/${id}/unarchive`
+            url     : `/properties/${id}/unarchive`
         })
             .then(payload => {
-                dispatch(getUserPropertyCategories({ category }));
+                dispatch(getFundProperties());
             })
     }
 }
