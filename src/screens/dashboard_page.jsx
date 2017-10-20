@@ -4,7 +4,8 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 
 import { logout }                           from 'ducks/active_user/actions';
-import { getUsers, getFundProperties }      from 'ducks/users/actions';
+import { getUsers }                         from 'ducks/users/actions';
+import { getFundProperties }                from 'ducks/properties/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import InfoCard                             from 'components/info_card';
@@ -34,7 +35,7 @@ class DashboardPage extends React.Component {
 const select = (state) => ({
     activeUser      : state.activeUser.get('activeUser'),
     users           : state.users.get('users'),
-    fundProperties  : state.users.get('fundProperties'),
+    fundProperties  : state.properties.get('fundProperties'),
 });
 
 const actions = {

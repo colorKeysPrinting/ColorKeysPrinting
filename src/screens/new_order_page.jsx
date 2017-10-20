@@ -5,7 +5,7 @@ import { withCookies }                      from 'react-cookie';
 import Iframe                               from 'react-iframe';
 
 import { logout }                           from 'ducks/active_user/actions';
-import { getUsers, getFundProperties }      from 'ducks/users/actions';
+import { getUsers }                         from 'ducks/users/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 class NewOrderPage extends React.Component {
@@ -56,7 +56,6 @@ const select = (state) => ({
 const actions = {
     logout,
     getUsers,
-    getFundProperties,
     setActiveTab
 }
 
