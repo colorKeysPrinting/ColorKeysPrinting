@@ -1,14 +1,15 @@
 'use strict';
 
 import Api                      from 'libs/network';
+import { Cookies }              from 'react-cookie';
 
 // /////////////////////////////////////
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
     GET_FUNDS_SUCCESS           : 'sibi_ge_admin/properties/GET_FUNDS_SUCCESS',
+    GET_PROPERTY_BY_ID_SUCCESS  : 'sibi_ge_admin/properties/GET_PROPERTY_BY_ID_SUCCESS',
     GET_FUND_PROPERTIES_SUCCESS : 'sibi_ge_admin/properties/GET_FUND_PROPERTIES_SUCCESS',
-    GET_PROPERTIES_SUCCESS      : 'sibi_ge_admin/properties/GET_PROPERTIES_SUCCESS',
 }
 
 // /////////////////////////////////////
@@ -19,13 +20,25 @@ export const ActionTypes = {
 //             ASYNC CALLS
 // /////////////////////////////////////
 export function getFunds() {
-    return (dispatch, getState) => {
-        const email = (getState().activeUser.getIn(['activeUser','email'])).toLowerCase();
+    return (dispatch) => {
+        const cookies = new Cookies();
+        const jwt = cookies.get('sibi-ge-admin');
+
+        const email = (jwt.email).toLowerCase();
         const match = email.match(/^.*@(.+)$/)
 
         return Api({ url : `/funds?fundEmailDomain=${match[1]}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_FUNDS_SUCCESS , ...payload });
+            })
+    }
+}
+
+export function getPropertyById({ id }) {
+    return (dispatch) => {
+        return Api({ url : `/properties/${id}` })
+            .then(payload => {
+                dispatch({ type: ActionTypes.GET_PROPERTY_BY_ID_SUCCESS , ...payload });
             })
     }
 }
@@ -39,20 +52,27 @@ export function getFundProperties() {
     }
 }
 
-export function getProperties() {
-    return (dispatch) => {
-        return Api({ url : `/properties` })
-            .then(payload => {
-                dispatch({ type: ActionTypes.GET_PROPERTIES_SUCCESS , ...payload });
-            })
-    }
-}
 
 export function createProperty({ property }) {
     return (dispatch) => {
         return Api({
             method  : 'post',
-            url     : `/properties`,
+            url     : `/createFundsProperty`,
+            data    : {
+                ...property
+            }
+        })
+            .then(payload => {
+                dispatch(getFundProperties());
+            })
+    }
+}
+
+export function updateProperty({ property }) {
+    return (dispatch) => {
+        return Api({
+            method  : 'patch',
+            url     : `/fundsProperties/${property.id}`,
             data    : {
                 ...property
             }

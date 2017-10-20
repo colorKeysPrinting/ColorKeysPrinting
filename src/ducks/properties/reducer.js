@@ -9,6 +9,7 @@ import { ActionTypes }          from './actions';
 //             REDUCER
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
+    property: {},
     funds: [],
     fundProperties: [],
     properties: [],
@@ -23,14 +24,14 @@ export default (state = initialState, action) => {
         state = state.set('funds', Immutable.fromJS(action.data));
         break;
 
+    case ActionTypes.GET_PROPERTY_BY_ID_SUCCESS:
+        state = state.set('property', Immutable.fromJS(action.data));
+        break;
+
     case ActionTypes.GET_FUND_PROPERTIES_SUCCESS:
         console.log('receiving fund properties');
         state = state.set('fundProperties', Immutable.fromJS(action.data));
         state = state.set('zeroProperties', (_.size(action.data) <= 0) ? true : false );
-        break;
-
-    case ActionTypes.GET_PROPERTIES_SUCCESS:
-        state = state.set('properties', Immutable.fromJS(action.data));
         break;
 
     default:
