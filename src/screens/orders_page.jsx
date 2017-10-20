@@ -12,7 +12,6 @@ import assets                               from 'libs/assets';
 
 import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
-import { getUsers }                         from 'ducks/users/actions';
 import { getFundProperties }                from 'ducks/properties/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
@@ -40,7 +39,6 @@ class OrdersPage extends React.Component {
         if (cookies.get('sibi-ge-admin')) {
             this.props.triggerSpinner({ isOn: true });
             this.props.getFundProperties();
-            this.props.getUsers();
             this.props.getOrders();
         }
 
@@ -99,9 +97,9 @@ class OrdersPage extends React.Component {
     }
 
     render() {
-        const { cookies, spinner, activeUser, orders, users, fundProperties, zeroOrders } = this.props;
+        const { cookies, spinner, activeUser, orders, fundProperties, zeroOrders } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        let pageContent;
+        let data = [];
 
         const headers = {
             id: '',
@@ -120,10 +118,9 @@ class OrdersPage extends React.Component {
         const KEYS_TO_FILTERS = ['propertyId','address','occupied','userId','geOrderNumber','createdAt','totalCost','orderStatus'];
 
         if (orders.size > 0 &&
-            users.size > 0 &&
             fundProperties.size > 0) {
 
-            let data = _.map(orders.toJS(), (item) => {
+            data = _.map(orders.toJS(), (item) => {
                 const cols = {};
                 const fundProperty = _.find(fundProperties.toJS(), ['id', item['fundPropertyId']]);
 
@@ -146,7 +143,7 @@ class OrdersPage extends React.Component {
                         value = (item[key]) ? 'Occupied' : 'Vacant';
 
                     } else if (key === 'userId') {
-                        value = `${item.user.firstName} ${item.user.lastName}`;
+                        value = (item.user) ? `${item.user.firstName} ${item.user.lastName}` : '';
 
                     } else if (key === 'geOrderNumber') {
                         value = item[key];
@@ -189,7 +186,7 @@ class OrdersPage extends React.Component {
                 headers[key] = value;
             });
 
-            // this initially sets the "Pending" orders before everything and "Approved" orders at the end
+            // this maps the actual cost ammount back to totalCost
             if(searchTerm !== '') {
                 data = _.map(data, (item) => {
                     item.totalCost = `${item.totalCost}`;
@@ -199,6 +196,7 @@ class OrdersPage extends React.Component {
                 data = filter(searchTerm, KEYS_TO_FILTERS, data);
             }
 
+            // this initially sets the "Pending" orders before everything and "Approved" orders at the end
             if (sortby.column === '') {
                 const re = /manufacturer/;
                 if (re.exec(activeUser.get('type'))) {
@@ -228,40 +226,40 @@ class OrdersPage extends React.Component {
                 data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
             }
 
-            pageContent = <div className="table-card">
-                <div className="card-header">
-                    <h2>Orders</h2>
-                    <div className="search-wrapper">
-                        <img src={assets('./images/icon-search.svg')} className="search-icon"/>
-                        <SearchInput className="search-input" onChange={(value) => this.setState({ searchTerm: value })} />
-                    </div>
-                </div>
-                <MyTable
-                    type="orders"
-                    dataClassName="table-row-clickable"
-                    headers={headers}
-                    data={data}
-                    sortby={(sortby.column !== '') ? sortby : { column: 'orderStatus', isAsc: 'asc' }}
-                    handleAction={this.handleAction}
-                    handleItem={this.handleItem}
-                />
-            </div>;
-
             this.props.triggerSpinner({ isOn: false });
 
         } else if (zeroOrders) {
-            pageContent = <div>
-                <h1>Order Status</h1>
-                <p>There are currently no orders to display</p>
-            </div>;
-
             this.props.triggerSpinner({ isOn: false });
         }
 
         return (
             <Loader loaded={spinner} >
                 <div id="orders-page" className="container">
-                    { pageContent }
+                    { (!zeroOrders && data) ? (
+                        <div className="table-card">
+                            <div className="card-header">
+                                <h2>Orders</h2>
+                                <div className="search-wrapper">
+                                    <img src={assets('./images/icon-search.svg')} className="search-icon"/>
+                                    <SearchInput className="search-input" onChange={(value) => this.setState({ searchTerm: value })} />
+                                </div>
+                            </div>
+                            <MyTable
+                                type="orders"
+                                dataClassName="table-row-clickable"
+                                headers={headers}
+                                data={data}
+                                sortby={(sortby.column !== '') ? sortby : { column: 'orderStatus', isAsc: 'asc' }}
+                                handleAction={this.handleAction}
+                                handleItem={this.handleItem}
+                            />
+                        </div>
+                    ) : (
+                        <div>
+                            <h1>Order Status</h1>
+                            <p>There are currently no orders to display</p>
+                        </div>
+                    ) }
                 </div>
                 { alert }
             </Loader>
@@ -274,14 +272,12 @@ const select = (state) => ({
     activeUser     : state.activeUser.get('activeUser'),
     orders         : state.orders.get('orders'),
     zeroOrders     : state.orders.get('zeroOrders'),
-    users          : state.users.get('users'),
     fundProperties : state.properties.get('fundProperties'),
 });
 
 const actions = {
     triggerSpinner,
     getOrders,
-    getUsers,
     getFundProperties,
     approveOrder,
     setActiveTab
