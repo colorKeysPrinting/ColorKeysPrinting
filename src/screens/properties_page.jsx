@@ -3,6 +3,7 @@ import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
+import { Link }                             from 'react-router-dom';
 import moment                               from 'moment';
 import SearchInput                          from 'react-search-input';
 import Loader                               from 'react-loader';
@@ -37,7 +38,6 @@ class PropertiesPage extends React.Component {
 
         if (cookies.get('sibi-ge-admin')) {
             this.props.triggerSpinner({ isOn: true });
-            this.props.getFunds();
             this.props.getFundProperties();
         }
 
@@ -82,9 +82,9 @@ class PropertiesPage extends React.Component {
     }
 
     render() {
-        const { spinner, activeUser, funds, fundProperties, zeroProperties } = this.props;
+        const { spinner, activeUser, fundProperties, zeroProperties } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        let data = [];
+        let data = {};
 
         const headers = {
             id: '',
@@ -95,13 +95,9 @@ class PropertiesPage extends React.Component {
             action: ''
         };
 
-        const KEYS_TO_FILTERS = ['propertyId','address','occupied','userId','geOrderNumber','createdAt','totalCost','orderStatus'];
+        const KEYS_TO_FILTERS = ['region','office','address','userId','unitId'];
 
         if (fundProperties.size > 0) {
-
-            _.each(headers, (header, key) => {
-                headers[key] = (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{ cursor: 'pointer' }} >{ header }</div>;
-            });
 
             data = _.map(fundProperties.toJS(), (property) => {
                 const cols = {};
@@ -122,13 +118,10 @@ class PropertiesPage extends React.Component {
                         value = `${property['addressLineOne']}, ${property['addressLineTwo']}, ${property['city']}, ${property['state']}, ${property['zipcode']}`;
 
                     } else if (key === 'unitId') {
-                        value = `${property.user.firstName} ${property.user.lastName}`;
+                        value = property.propertyUnitId;
 
                     } else if (key === 'action') {
-                        const permissions = activeUser.get('permissions').toJS();
-                        if (permissions.approveAllOrders || permissions.approveFundOrders) {
-                            value = (property['orderStatus'] === 'Pending') ? 'edit' : '';
-                        }
+                        value = 'edit';
                     }
 
                     cols[key] = value;
@@ -137,15 +130,12 @@ class PropertiesPage extends React.Component {
                 return cols;
             });
 
-            // this initially sets the "Pending" properties before everything and "Approved" properties at the end
-            if(searchTerm !== '') {
-                data = _.map(data, (property) => {
-                    property.totalCost = `${property.totalCost}`;
-                    return property;
-                });
+            _.each(headers, (header, key) => {
+                headers[key] = (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{ cursor: 'pointer' }} >{ header }</div>;
+            });
 
-                data = filter(searchTerm, KEYS_TO_FILTERS, data);
-            }
+            // this initially sets the "Pending" properties before everything and "Approved" properties at the end
+            data = (searchTerm !== '') ? filter(searchTerm, KEYS_TO_FILTERS, data) : _.orderBy(data, [sortby.column], [sortby.isAsc]);
 
             if (sortby.column === '') {
                 // data = _.partition(data, ['orderStatus', 'Processed']);
@@ -173,13 +163,16 @@ class PropertiesPage extends React.Component {
         return (
             <Loader loaded={spinner} >
                 <div id="properties-page" className="container">
-                    {(!zeroProperties && data) ? (
+                    {(!zeroProperties && _.size(data) > 0) ? (
                         <div className="table-card">
                             <div className="card-header">
                                 <h2>Properties</h2>
-                                <div className="search-wrapper">
-                                    <img src={assets('./images/icon-search.svg')} className="search-icon"/>
-                                    <SearchInput className="search-input" onChange={(value) => this.setState({ searchTerm: value })} />
+                                <div className="header-action-section">
+                                    <div className="search-wrapper">
+                                        <img src={assets('./images/icon-search.svg')} className="search-icon"/>
+                                        <SearchInput className="search-input" onChange={(value) => this.setState({ searchTerm: value })} />
+                                    </div>
+                                    <Link to={`/property_details`} className="btn blue">Add</Link>
                                 </div>
                             </div>
                             <MyTable

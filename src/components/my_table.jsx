@@ -11,7 +11,7 @@ export default class MyTable extends React.Component {
         className       : PropTypes.string,
         dataClassName   : PropTypes.string,
         headers         : PropTypes.object,
-        data            : PropTypes.object.isRequired,
+        data            : PropTypes.array.isRequired,
         sortby          : PropTypes.object,
         handleAction    : PropTypes.func,
         handleItem      : PropTypes.func,
@@ -58,7 +58,7 @@ export default class MyTable extends React.Component {
                             const col = _.map(item, (col, id) => {
                                 if (id !== 'id') {
                                     if (id === 'action') {
-                                        return (col === 'process' || col === 'approve' || type === 'products') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ type: col, item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
+                                        return (col !== '') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ type: col, item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
 
                                     } else {
                                         if (id === 'totalCost') {

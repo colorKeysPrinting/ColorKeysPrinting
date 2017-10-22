@@ -174,16 +174,7 @@ class OrdersPage extends React.Component {
             });
 
             _.each(headers, (header, key) => {
-                let value;
-
-                if (key === 'id' || key === 'action') {
-                    value = <div>{header}</div>;
-
-                } else {
-                    value = <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
-                }
-
-                headers[key] = value;
+                headers[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
             });
 
             // this maps the actual cost ammount back to totalCost
@@ -235,7 +226,7 @@ class OrdersPage extends React.Component {
         return (
             <Loader loaded={spinner} >
                 <div id="orders-page" className="container">
-                    { (!zeroOrders && data) ? (
+                    { (!zeroOrders && _.size(data) > 0) ? (
                         <div className="table-card">
                             <div className="card-header">
                                 <h2>Orders</h2>

@@ -2,11 +2,15 @@
 
 import Api                      from 'libs/network';
 import { Cookies }              from 'react-cookie';
+import _                        from 'lodash';
 
 // /////////////////////////////////////
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
+    CLEAR_PROPERTY              : 'sibi_ge_admin/properties/CLEAR_PROPERTY',
+    UPDATE                      : 'sibi_ge_admin/properties/UPDATE',
+    CREATE_NEW_PROPERTY         : 'sibi_ge_admin/properties/CREATE_NEW_PROPERTY',
     GET_FUNDS_SUCCESS           : 'sibi_ge_admin/properties/GET_FUNDS_SUCCESS',
     GET_PROPERTY_BY_ID_SUCCESS  : 'sibi_ge_admin/properties/GET_PROPERTY_BY_ID_SUCCESS',
     GET_FUND_PROPERTIES_SUCCESS : 'sibi_ge_admin/properties/GET_FUND_PROPERTIES_SUCCESS',
@@ -15,6 +19,25 @@ export const ActionTypes = {
 // /////////////////////////////////////
 //             LOCAL ACTIONS
 // /////////////////////////////////////
+export function clearProperty() {
+    return {
+        type: ActionTypes.CLEAR_PROPERTY
+    }
+}
+
+export function update({ key, value }) {
+    return {
+        type: ActionTypes.UPDATE,
+        key,
+        value
+    }
+}
+
+export function createNewProperty() {
+    return {
+        type: ActionTypes.CREATE_NEW_PROPERTY
+    }
+}
 
 // /////////////////////////////////////
 //             ASYNC CALLS
@@ -55,6 +78,10 @@ export function getFundProperties() {
 
 export function createProperty({ property }) {
     return (dispatch) => {
+        _.each(property, (element, key) => {
+            (element === '') ? delete property[key] : null;
+        });
+
         return Api({
             method  : 'post',
             url     : `/createFundsProperty`,

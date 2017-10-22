@@ -158,7 +158,7 @@ class UsersPage extends React.Component {
             });
 
             _.each(headers, (header, key) => {
-                headers[key] =  (key === 'id' || key === 'action') ? header : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
+                headers[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
             });
 
             // this initially sets the "Pending" users before everything
@@ -207,7 +207,7 @@ class UsersPage extends React.Component {
         return (
             <Loader loaded={spinner} >
                 <div id="users-page" className="container">
-                    { (!zeroUsers && data) ? (
+                    { (!zeroUsers && _.size(data) > 0) ? (
                         <div className="table-card">
                             <div className="card-header">
                                 <h2>Users</h2>

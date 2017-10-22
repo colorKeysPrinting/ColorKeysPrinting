@@ -110,9 +110,9 @@ class HeaderBar extends React.Component {
                     activeTabs['users'] = 'Users';
                 }
 
-                // if (key === 'properties' && (permissions['manageAllUsers'])) { // TODO: need to update this with the correct permissions
-                //     activeTabs['properties'] = 'Properties';
-                // }
+                if (key === 'properties' && (permissions['manageAllUsers'])) { // TODO: need to update this with the correct permissions
+                    activeTabs['properties'] = 'Properties';
+                }
 
                 if (key === 'products' && (permissions['viewAllProducts'] || permissions['manageAllProducts'] || permissions['manageFundPreferredProducts'] || permissions['manageFundProducts'])) {
                     // activeTabs['products'] = 'Products';

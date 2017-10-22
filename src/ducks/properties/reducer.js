@@ -13,12 +13,36 @@ const initialState = Immutable.fromJS({
     funds: [],
     fundProperties: [],
     properties: [],
-    zeroProperties: false
+    zeroProperties: false,
+    defaultProperty: {
+        addressLineOne: '',
+        addressLineTwo: '',
+        city: '',
+        fundId: '',
+        id : '',
+        pmOfficeName: '',
+        propertyUnitId: '',
+        region: '',
+        state: '',
+        zipcode: '',
+    }
 });
 
 export default (state = initialState, action) => {
 
     switch (action.type) {
+    case ActionTypes.CLEAR_PROPERTY:
+        state = state.set('property', state.get('defaultProperty'));
+        break;
+
+    case ActionTypes.UPDATE:
+        state = state.updateIn(['property', action.key], value=>action.value);
+        break;
+
+    case ActionTypes.CREATE_NEW_PROPERTY:
+        state = state.set('property', state.get('defaultProperty'));
+        break;
+
     case ActionTypes.GET_FUNDS_SUCCESS:
         console.log('receiving funds');
         state = state.set('funds', Immutable.fromJS(action.data));

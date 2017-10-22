@@ -30,10 +30,9 @@ class OrderDetails extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies, location } = this.props;
-        const jwt = cookies.get('sibi-ge-admin');
+        const { cookies, history, location } = this.props;
 
-        if (jwt) {
+        if (cookies.get('sibi-ge-admin')) {
             const reOrder = /orderId=(.*)/;
             const orderId = reOrder.exec(location.search)[1];
 
@@ -43,7 +42,7 @@ class OrderDetails extends React.Component {
 
             } else {
                 alert('No orderId provided routing back to orders');
-                this.props.history.push(`/orders`);
+                history.push(`/orders`);
             }
         }
 
@@ -59,10 +58,6 @@ class OrderDetails extends React.Component {
     }
 
     handleAction({ orderId }) {
-        console.log('user action:', orderId);
-        const { cookies } = this.props;
-        const jwt = cookies.get('sibi-ge-admin');
-
         this.props.approveOrder({ id: orderId });
     }
 
