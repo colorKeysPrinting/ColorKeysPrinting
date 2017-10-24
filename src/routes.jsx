@@ -27,7 +27,7 @@ export default (
                 <Route exact path="/users" component={UsersPage} />
                 <Route exact path="/products/:tab,:subTab" component={ProductsPage} />
                 <Route exact path="/properties" component={PropertiesPage} />
-                <Route exact path="/property_details/:id" component={PropertyDetails} />
+                <Route exact path="/property_details/:id" component={PropertiesPage} />
                 <Route exact path="/dashboard" component={DashboardPage} />
                 <Route exact path="/order_details/:id" component={OrderDetails} />
                 <Route exact path="/new_order" component={NewOrderPage} />

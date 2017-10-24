@@ -17,15 +17,16 @@ import { getFundProperties }                from 'ducks/properties/actions';
 
 import MyTable                              from 'components/my_table';
 import Overlay                              from 'components/overlay';
+import PropertyDetails                      from 'screens/property_details';
 
 class PropertiesPage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            alert: null,
             searchTerm: '',
-            sortby: { column: '', isAsc: false }
+            sortby: { column: '', isAsc: false },
+            propertyDetails: ''
         };
 
         this.handleAction = this.handleAction.bind(this);
@@ -45,9 +46,20 @@ class PropertiesPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+        const { history, location, activeUser } = this.props;
+
+        if (!_.isEqual(nextProps.activeUser, activeUser)) {
             const path = (nextProps.activeUser.size > 0) ? `/properties` : `/login`;
             this.props.history.push(path);
+        }
+
+        if(!_.isEqual(nextProps.location, location)) {
+            const propertyDetails = (_.includes(nextProps.location.pathname,'/property_details')) ? (
+                <Overlay type="propery-details">
+                    <PropertyDetails />
+                </Overlay>
+            ) : '';
+            this.setState({ propertyDetails });
         }
     }
 
@@ -59,31 +71,19 @@ class PropertiesPage extends React.Component {
         });
     }
 
-    handleAction({ type, property }) {
-        const { history, location } = this.props;
-        let dialog;
-
-        if (type === 'approve') {
-
-        }
-
-        this.setState({
-            alert: <Overlay type="alert" closeOverlay={()=>{this.setState({ alert: null }) }}>
-                { dialog }
-            </Overlay>
-        });
+    handleAction(type, property) {
+        this.props.triggerSpinner({ isOn: true });
+        (type === 'edit') ? this.props.history.push(`/property_details/${property.id}`) : null;
     }
 
-    handleItem({ item }) {
+    handleItem(item)  {
         const { history, activeUser } = this.props;
         const permissions = activeUser.get('permissions').toJS();
-
-        history.push(`/property_details/${item.id}`);
     }
 
     render() {
         const { spinner, activeUser, fundProperties, zeroProperties } = this.props;
-        const { searchTerm, sortby, alert } = this.state;
+        const { searchTerm, sortby, propertyDetails } = this.state;
         let data = {};
 
         const headers = {
@@ -121,6 +121,7 @@ class PropertiesPage extends React.Component {
                         value = property.propertyUnitId;
 
                     } else if (key === 'action') {
+                        // TODO: check permissions once permissions is updated
                         value = 'edit';
                     }
 
@@ -193,6 +194,7 @@ class PropertiesPage extends React.Component {
                     )}
                 </div>
                 { alert }
+                { propertyDetails }
             </Loader>
         );
     }

@@ -34,6 +34,7 @@
 @import "partials/overlay-container";
 @import "partials/overlay-component";
 @import "partials/part-overlay";
+@import "partials/spinner";
 
 /**********************/
 /*        Pages       */
@@ -46,3 +47,4 @@
 @import "pages/product-page";
 @import "pages/login";
 @import "pages/properties-page";
+@import "pages/property-details-page";

@@ -1,0 +1,11 @@
+#property-details-page {
+    border-radius: 5px;
+    max-width: 500px;
+    margin: 20% auto;
+    .content {
+        .left-col, .right-col {
+            float: left;
+            width: 50%;
+        }
+    }
+}

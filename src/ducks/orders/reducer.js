@@ -29,7 +29,6 @@ export default (state = initialState, action) => {
         break;
 
     case ActionTypes.GET_ORDERS_SUCCESS:
-        console.log('receiving orders', action.data);
         state = state.set('orders', Immutable.fromJS(action.data));
         state = state.set('zeroOrders', (_.size(action.data) <= 0) ? true : false );
         break;

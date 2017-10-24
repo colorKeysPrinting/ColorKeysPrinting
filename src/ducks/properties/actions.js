@@ -59,7 +59,7 @@ export function getFunds() {
 
 export function getPropertyById({ id }) {
     return (dispatch) => {
-        return Api({ url : `/properties/${id}` })
+        return Api({ url : `/fundsProperties/${id}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_PROPERTY_BY_ID_SUCCESS , ...payload });
             })
@@ -86,7 +86,7 @@ export function createProperty({ property }) {
             method  : 'post',
             url     : `/createFundsProperty`,
             data    : {
-                ...property
+                ...property.toJS()
             }
         })
             .then(payload => {
@@ -99,9 +99,9 @@ export function updateProperty({ property }) {
     return (dispatch) => {
         return Api({
             method  : 'patch',
-            url     : `/fundsProperties/${property.id}`,
+            url     : `/fundsProperties/${property.get('id')}`,
             data    : {
-                ...property
+                ...property.toJS()
             }
         })
             .then(payload => {

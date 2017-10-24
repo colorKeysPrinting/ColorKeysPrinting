@@ -1,20 +1,20 @@
-import React                    from 'react';
-import _                        from 'lodash';
-import { connect }              from 'react-redux';
-import { withRouter }           from 'react-router';
-import { withCookies }          from 'react-cookie';
-import { Link }                 from 'react-router-dom';
-import Tabs, { TabPane }        from 'rc-tabs';
-import TabContent               from 'rc-tabs/lib/TabContent';
-import ScrollableInkTabBar      from 'rc-tabs/lib/ScrollableInkTabBar';
-import assets                   from 'libs/assets';
+import React                                from 'react';
+import _                                    from 'lodash';
+import { connect }                          from 'react-redux';
+import { withRouter }                       from 'react-router';
+import { withCookies }                      from 'react-cookie';
+import { Link }                             from 'react-router-dom';
+import Tabs, { TabPane }                    from 'rc-tabs';
+import TabContent                           from 'rc-tabs/lib/TabContent';
+import ScrollableInkTabBar                  from 'rc-tabs/lib/ScrollableInkTabBar';
+import assets                               from 'libs/assets';
 
-import { setActiveTab }         from 'ducks/header/actions';
-import { logout, getCurrentUser }               from 'ducks/active_user/actions';
-import { getUsers }             from 'ducks/users/actions';
-import { getOrders }            from 'ducks/orders/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
+import { logout, getCurrentUser }           from 'ducks/active_user/actions';
+import { getUsers }                         from 'ducks/users/actions';
+import { getOrders }                        from 'ducks/orders/actions';
 
-import Overlay                  from 'components/overlay';
+import Overlay                              from 'components/overlay';
 
 class HeaderBar extends React.Component {
 

@@ -33,6 +33,7 @@ export default (state = initialState, action) => {
     switch (action.type) {
     case ActionTypes.CLEAR_PROPERTY:
         state = state.set('property', state.get('defaultProperty'));
+        state = state.set('funds', []);
         break;
 
     case ActionTypes.UPDATE:
