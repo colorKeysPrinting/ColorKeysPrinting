@@ -37,6 +37,7 @@ class EditProductPage extends React.Component {
     }
 
     componentWillMount() {
+        const { id } = this.props.match.params;
         const { cookies, productCategories } = this.props;
         const jwt = cookies.get('sibi-ge-admin');
 
@@ -45,11 +46,8 @@ class EditProductPage extends React.Component {
             this.props.getProducts();
             this.props.getParts();
 
-            const reProduct = /productId=(.*)/;
-            const match = reProduct.exec(location.search);
-
-            if (match) {
-                this.props.getProductById({ id: match[1] });
+            if (id) {
+                this.props.getProductById({ id });
                 this.props.verifyProduct({ verified: true });
             } else {
                 this.props.verifyProduct({ verified: false });
@@ -354,7 +352,7 @@ class EditProductPage extends React.Component {
             <Loader loaded={spinner} >
                 <div id="edit-product-page">
                     <div className="title-bar">
-                        <h2>{ (location.search) ? 'Edit' : 'Add' } Product</h2>
+                        <h2>{ (this.props.match.params) ? 'Edit' : 'Add' } Product</h2>
                     </div>
                     <hr />
                     <form onSubmit={(e) => {e.preventDefault(); this.props.checkModelNum({ key: 'product', modelNumber: product.get('sibiModelNumber') });}} >

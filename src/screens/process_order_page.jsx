@@ -36,16 +36,14 @@ class ProcessOrderPage extends React.Component {
     }
 
     componentWillMount() {
+        const { id } = this.props.match.params;
         const { history, location, cookies } = this.props;
-        const reOrder = /orderId=(.*)/;
         const jwt = cookies.get('sibi-ge-admin');
 
-        const orderId = reOrder.exec(location.search);
-
         if (jwt) {
-            if (orderId[1]) {
+            if (id) {
                 this.props.triggerSpinner({ isOn: true });
-                this.props.getOrderById({ id: orderId[1] });
+                this.props.getOrderById({ id });
             } else {
                 alert('No orderId provided routing back to orders');
                 (location.prevPath) ? history.goBack() : history.push(`/login`);

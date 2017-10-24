@@ -25,15 +25,15 @@ export default (
             <Switch>
                 <Route exact path="/orders" component={OrdersPage} />
                 <Route exact path="/users" component={UsersPage} />
-                <Route exact path="/products" component={ProductsPage} />
+                <Route exact path="/products/:tab,:subTab" component={ProductsPage} />
                 <Route exact path="/properties" component={PropertiesPage} />
-                <Route exact path="/property_details" component={PropertyDetails} />
+                <Route exact path="/property_details/:id" component={PropertyDetails} />
                 <Route exact path="/dashboard" component={DashboardPage} />
-                <Route exact path="/order_details" component={OrderDetails} />
+                <Route exact path="/order_details/:id" component={OrderDetails} />
                 <Route exact path="/new_order" component={NewOrderPage} />
                 <Route exact path="/login" component={LoginOverlay} />
-                <Route exact path="/process_order" component={ProcessOrderPage} />
-                <Route exact path="/edit_product" component={EditProductPage} />
+                <Route exact path="/process_order/:id" component={ProcessOrderPage} />
+                <Route exact path="/edit_product/:id" component={EditProductPage} />
                 <Route component={NotFound} />
             </Switch>
         </div>

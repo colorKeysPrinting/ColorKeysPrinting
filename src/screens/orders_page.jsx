@@ -72,7 +72,7 @@ class OrdersPage extends React.Component {
             </div>
 
         } else if (type === 'process') {
-            history.push({ pathname: `/process_order`, prevPath: location.pathname, search: `orderId=${item.id}` });
+            history.push({ pathname: `/process_order/${item.id}`, prevPath: location.pathname });
         }
 
         this.setState({
@@ -85,15 +85,15 @@ class OrdersPage extends React.Component {
     handleItem({ item }) {
         const { history, activeUser } = this.props;
         const permissions = activeUser.get('permissions').toJS();
-        let pathname = `/order_details`;
+        let pathname = `/order_details/${item.id}`;
 
         if (permissions.viewAllApprovedAndProcessedOrders || permissions.processManufacturerOrders) {
             if ((item['orderStatus'] === 'Approved')) {
-                pathname = `/process_order`;
+                pathname = `/process_order/${item.id}`;
             }
         }
 
-        history.push({ pathname, search: `orderId=${item.id}` });
+        history.push(pathname);
     }
 
     render() {

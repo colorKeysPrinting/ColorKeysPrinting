@@ -30,15 +30,13 @@ class OrderDetails extends React.Component {
     }
 
     componentWillMount() {
+        const { id } = this.props.match.params;
         const { cookies, history, location } = this.props;
 
         if (cookies.get('sibi-ge-admin')) {
-            const reOrder = /orderId=(.*)/;
-            const orderId = reOrder.exec(location.search)[1];
-
-            if (orderId) {
+            if (id) {
                 this.props.triggerSpinner({ isOn: true });
-                this.props.getOrderById({ id: orderId });
+                this.props.getOrderById({ id });
 
             } else {
                 alert('No orderId provided routing back to orders');

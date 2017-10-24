@@ -32,7 +32,8 @@ class ProductsPage extends React.Component {
             this.props.getUserProductCategories({ category: jwt.trade }); // need to update this to account for the activeUser trade
         }
 
-        if (location.search) {
+        if (this.props.match.params) {
+            // TODO: need to update this to use the pararms
             let activeKey = /tab=(\d{1})/.exec(location.search);
             let activeSubKey = /subTab=(\d{1})/.exec(location.search);
 
@@ -73,7 +74,7 @@ class ProductsPage extends React.Component {
         (activeKey) ? this.setState({ activeKey }) : null;
         (activeSubKey) ? this.setState({ activeSubKey }) : null;
 
-        history.push({pathname: `/products`, search: `${(activeKey)? `tab=${activeKey}` : ''}${(activeSubKey) ? `,subTab=${activeSubKey}` : ''}`})
+        history.push({pathname: `/products/${(activeKey) ? `tab=${activeKey}` : ''}${(activeSubKey) ? `,subTab=${activeSubKey}` : ''}` })
     }
 
     render() {
@@ -109,7 +110,7 @@ class ProductsPage extends React.Component {
                                         const jwt = cookies.get('sibi-ge-admin');
 
                                         value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ category: jwt.trade, id: product.id }) } className="product-action">Unarchive</div>
-                                            : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;
+                                            : <Link to={{ pathname: `/edit_product/${product.id}` }} className="product-action">Edit</Link>;
 
                                     } else if (key === 'featured') {
                                         if (product.sortIndex <= 4) {
@@ -161,7 +162,7 @@ class ProductsPage extends React.Component {
                                 } else if (key === 'action') {
 
                                     value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ category: category.name, subCategory: subName, id: product.id }) } className="product-action">Unarchive</div>
-                                        : <Link to={{ pathname: `/edit_product`, search: `productId=${product.id}` }} className="product-action">Edit</Link>;
+                                        : <Link to={{ pathname: `/edit_product/${product.id}` }} className="product-action">Edit</Link>;
 
                                 } else if (key === 'featured') {
                                     if (product.sortIndex <= 4) {

@@ -16,15 +16,13 @@ import { setActiveTab }                     from 'ducks/header/actions';
 class PropertyDetails extends React.Component {
 
     componentWillMount() {
+        const { id } = this.props.match.params;
         const { cookies, location } = this.props;
 
         if (cookies.get('sibi-ge-admin')) {
-            const reProperty = /propertyId=(.*)/;
-            const match = reProperty.exec(location.search);
-
-            if (match) {
+            if (id) {
                 this.props.triggerSpinner({ isOn: true });
-                this.props.getPropertyById({ id: match[1] });
+                this.props.getPropertyById({ id });
 
             } else {
                 this.props.createNewProperty();

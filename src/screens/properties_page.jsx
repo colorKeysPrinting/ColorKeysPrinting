@@ -74,11 +74,11 @@ class PropertiesPage extends React.Component {
         });
     }
 
-    handleItem({ property }) {
+    handleItem({ item }) {
         const { history, activeUser } = this.props;
         const permissions = activeUser.get('permissions').toJS();
 
-        history.push({ pathname: `/property_details`, search: `propertyId=${property.id}` });
+        history.push(`/property_details/${item.id}`);
     }
 
     render() {
