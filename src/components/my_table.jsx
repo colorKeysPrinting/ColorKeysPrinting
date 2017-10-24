@@ -58,33 +58,33 @@ export default class MyTable extends React.Component {
                             const col = _.map(item, (col, id) => {
                                 if (id !== 'id') {
                                     if (id === 'action') {
-                                        return (col !== '') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction({ type: col, item })}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
+                                        return (col !== '') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction(col, item)}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
 
                                     } else {
                                         if (id === 'totalCost') {
-                                            return <td title={`$${col}`} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>${ col }</td>;
+                                            return <td title={`$${col}`} key={`table-item-${id}`} onClick={() => this.state.handleItem(item)}>${ col }</td>;
 
                                         } else if (col === 'Pending') {
                                             const lowercase = col.toLowerCase();
-                                            return <td title={col} key={`table-item-${id}`} className="pending" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                                            return <td title={col} key={`table-item-${id}`} className="pending" onClick={() => this.state.handleItem(item)}>{ col }</td>;
 
                                         } else if (col === 'Approved') {
                                             const lowercase = col.toLowerCase();
-                                            return <td title={col} key={`table-item-${id}`} className="approved" onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                                            return <td title={col} key={`table-item-${id}`} className="approved" onClick={() => this.state.handleItem(item)}>{ col }</td>;
 
                                         } else if (col === 'Shipped') {
                                             const lowercase = col.toLowerCase();
-                                            return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                                            return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem(item)}>{ col }</td>;
 
                                         } else if (id === 'phoneNumber') {
                                             const phoneFormat = formatPhoneNumbers(col);
-                                            return <td title={phoneFormat} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ phoneFormat }</td>;
+                                            return <td title={phoneFormat} key={`table-item-${id}`} onClick={() => this.state.handleItem(item)}>{ phoneFormat }</td>;
 
                                         } else if ((typeof col) !== 'string') {
-                                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                                            return <td key={`table-item-${id}`} onClick={() => this.state.handleItem(item)}>{ col }</td>;
 
                                         } else {
-                                            return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem({ item })}>{ col }</td>;
+                                            return <td title={col} key={`table-item-${id}`} onClick={() => this.state.handleItem(item)}>{ col }</td>;
                                         }
                                     }
                                 }

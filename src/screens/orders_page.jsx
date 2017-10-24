@@ -60,7 +60,7 @@ class OrdersPage extends React.Component {
         });
     }
 
-    handleAction({ type, item }) {
+    handleAction(type, order) {
         const { history, location } = this.props;
         let dialog;
 
@@ -68,11 +68,11 @@ class OrdersPage extends React.Component {
             dialog = <div className="alert-box">
                 <p>Are you sure you want to approve this order?</p>
                 <div className="btn borderless" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
-                <div className="btn blue" onClick={()=> this.props.approveOrder({ id: item.id }) } >Approve</div>
+                <div className="btn blue" onClick={()=> this.props.approveOrder({ id: order.id }) } >Approve</div>
             </div>
 
         } else if (type === 'process') {
-            history.push({ pathname: `/process_order/${item.id}`, prevPath: location.pathname });
+            history.push({ pathname: `/process_order/${order.id}`, prevPath: location.pathname });
         }
 
         this.setState({
@@ -82,14 +82,14 @@ class OrdersPage extends React.Component {
         });
     }
 
-    handleItem({ item }) {
+    handleItem(order) {
         const { history, activeUser } = this.props;
         const permissions = activeUser.get('permissions').toJS();
-        let pathname = `/order_details/${item.id}`;
+        let pathname = `/order_details/${order.id}`;
 
         if (permissions.viewAllApprovedAndProcessedOrders || permissions.processManufacturerOrders) {
-            if ((item['orderStatus'] === 'Approved')) {
-                pathname = `/process_order/${item.id}`;
+            if ((order['orderStatus'] === 'Approved')) {
+                pathname = `/process_order/${order.id}`;
             }
         }
 

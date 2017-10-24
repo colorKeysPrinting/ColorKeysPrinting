@@ -50,13 +50,13 @@ class UsersPage extends React.Component {
         }
     }
 
-    handleAction({ type, item }) {
+    handleAction(type, user) {
         let dialog;
         if (type === 'approve') {
             dialog = <div className="alert-box">
                 <p>Are you sure you want to approve this user?</p>
                 <div className="btn borderless" type="submit" value="Cancel" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
-                <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveUser({ id: item.id }) } >Approve</div>
+                <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveUser({ id: user.id }) } >Approve</div>
             </div>
         }
 
