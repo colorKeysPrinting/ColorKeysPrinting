@@ -1,23 +1,22 @@
-import React                                                from 'react';
-import _                                                    from 'lodash';
-import { connect }                                          from 'react-redux';
-import { withRouter }                                       from 'react-router';
-import { withCookies }                                      from 'react-cookie';
-import moment                                               from 'moment';
-import assets                                               from 'libs/assets';
-import Iframe                                               from 'react-iframe';
-import Loader                                               from 'react-loader';
+import React                                from 'react';
+import _                                    from 'lodash';
+import { connect }                          from 'react-redux';
+import { withRouter }                       from 'react-router';
+import { withCookies }                      from 'react-cookie';
+import moment                               from 'moment';
+import assets                               from 'libs/assets';
+import Iframe                               from 'react-iframe';
 
-import { formatPhoneNumbers }                               from 'libs/reformat';
+import { formatPhoneNumbers }               from 'libs/reformat';
 
-import { logout }                                           from 'ducks/active_user/actions';
-import { triggerSpinner }                                   from 'ducks/ui/actions';
-import { getOrderById, approveOrder, clearOrder }           from 'ducks/orders/actions';
-import { setActiveTab }                                     from 'ducks/header/actions';
+import { logout }                           from 'ducks/active_user/actions';
+import { getOrderById, approveOrder, clearOrder } from 'ducks/orders/actions';
+import { setActiveTab }                     from 'ducks/header/actions';
 
-import MyTable                                              from 'components/my_table';
-import ProductTable                                         from 'components/product_table';
-import PartTable                                            from 'components/part_table';
+import MyTable                              from 'components/my_table';
+import ProductTable                         from 'components/product_table';
+import PartTable                            from 'components/part_table';
+import Spinner                              from 'components/spinner';
 
 class OrderDetails extends React.Component {
     constructor(props) {
@@ -35,7 +34,6 @@ class OrderDetails extends React.Component {
 
         if (cookies.get('sibi-ge-admin')) {
             if (id) {
-                this.props.triggerSpinner({ isOn: true });
                 this.props.getOrderById({ id });
 
             } else {
@@ -62,6 +60,8 @@ class OrderDetails extends React.Component {
     render() {
         const { order, spinner, activeUser } = this.props;
         let pageData, tenantInfoTitle, tenantInfoDetails;;
+        const height = (window.innerHeight - 69);
+        const width = window.innerWidth;
 
         const productHeaders = {
             productDescription: '',
@@ -261,9 +261,6 @@ class OrderDetails extends React.Component {
                     </div>
                 </div>;
             } else {
-                const height = (window.innerHeight - 69);
-                const width = window.innerWidth;
-
                 pageData = <div style={{ position: 'absolute', top: '69px', height, width }}>
                     <Iframe
                         url={`${process.env.ORDER_URL}/edit/${this.state.editOrder}`}
@@ -273,29 +270,23 @@ class OrderDetails extends React.Component {
                     />
                 </div>;
             }
-
-            this.props.triggerSpinner({ isOn: false });
         }
 
         return (
-            <Loader loaded={spinner} >
-                <div id="order-details-page">
-                    { pageData }
-                </div>
-            </Loader>
+            <div id="order-details-page">
+                { (pageData) ? pageData : <Spinner/> }
+            </div>
         );
     }
 }
 
 const select = (state) => ({
-    spinner    : state.ui.get('spinner'),
     order      : state.orders.get('order'),
     activeUser : state.activeUser.get('activeUser'),
 });
 
 const actions = {
     logout,
-    triggerSpinner,
     getOrderById,
     approveOrder,
     clearOrder,

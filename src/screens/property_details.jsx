@@ -72,6 +72,7 @@ class PropertyDetails extends React.Component {
                         e.preventDefault();
                         (match.params.id !== 'new') ? this.props.updateProperty() : this.props.createProperty();
                         history.goBack()}}>
+
                         {(funds.size > 0 && property.size > 0) ? (
                             <div className="content">
                                 <Select

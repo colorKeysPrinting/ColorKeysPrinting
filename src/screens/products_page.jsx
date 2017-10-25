@@ -4,17 +4,16 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
 import { Link }                             from 'react-router-dom';
-import Loader                               from 'react-loader';
 import Tabs, { TabPane }                    from 'rc-tabs';
 import TabContent                           from 'rc-tabs/lib/TabContent';
 import ScrollableInkTabBar                  from 'rc-tabs/lib/ScrollableInkTabBar';
 import assets                               from 'libs/assets';
 
-import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getUserProductCategories, getProductsForSubCategory, unarchiveProduct }          from 'ducks/products/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
+import Spinner                              from 'components/spinner';
 
 class ProductsPage extends React.Component {
     constructor(props) {
@@ -28,7 +27,6 @@ class ProductsPage extends React.Component {
         const { cookies, activeUser, locaction } = this.props;
 
         if (cookies.get('sibi-ge-admin')) {
-            this.props.triggerSpinner({ isOn: true });
             this.props.getUserProductCategories({ category: jwt.trade }); // need to update this to account for the activeUser trade
         }
 
@@ -79,155 +77,130 @@ class ProductsPage extends React.Component {
 
     render() {
         const { cookies, products, productCategories, productSubCategories, productsInCategory, activeUser } = this.props;
-        let tabs, tabContent, pageContent, editProductSection;
-
-        if (activeUser.size > 0 &&
-            productCategories.size > 0 &&
-            productSubCategories.size > 0 &&
-            productsInCategory.size > 0) {
-
-            const products = productsInCategory.toJS();
-
-            tabContent = _.map(productCategories.toJS(), (category) => {
-                return _.map(category.subcategories, (subCategory, index) => {
-                    const subName = subCategory.name;
-                    let content;
-
-                    if (subCategory.containedSubCategories) {
-                        const subTabContent = _.map(subCategory.containedSubCategories, (subSubCategory, subIndex) => {
-                            const subSubName = subSubCategory.name;
-
-                            const data = _.map(products[category.name][subName][subSubName], (product) => {
-                                const cols = {};
-
-                                _.each(['id','name','featured','action'], (key) => {
-                                    let value = product[key];
-
-                                    if (key === 'id') {
-                                        value = { ...product, category: category.id, subCategory: subCategory.id, subSubCategory: subSubCategory.id };
-
-                                    } else if (key === 'action') {
-                                        const jwt = cookies.get('sibi-ge-admin');
-
-                                        value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ category: jwt.trade, id: product.id }) } className="product-action">Unarchive</div>
-                                            : <Link to={{ pathname: `/edit_product/${product.id}` }} className="product-action">Edit</Link>;
-
-                                    } else if (key === 'featured') {
-                                        if (product.sortIndex <= 4) {
-                                            value = <div className="featured-column">Featured {product.sortIndex + 1}</div>;
-                                        }
-                                    }
-
-                                    cols[key] = value;
-                                });
-
-                                return cols;
-                            });
-
-                            return (
-                                <TabPane
-                                    tab={subSubName}
-                                    key={subIndex}
-                                >
-                                    <MyTable
-                                        className="products-table"
-                                        type="products"
-                                        tab={subSubName}
-                                        data={(_.size(data) > 0) ? data : {}}
-                                    />
-                                </TabPane>
-                            );
-                        });
-
-                        content = <Tabs
-                            tabBarPosition="top"
-                            activeKey={this.state.activeSubKey}
-                            onChange={(activeSubKey) => this.updateTabs({ activeKey: this.state.activeKey, activeSubKey })}
-                            renderTabBar={()=><ScrollableInkTabBar />}
-                            renderTabContent={()=><TabContent style={{ overflow: 'none' }} />}
-                        >
-                            { subTabContent }
-                        </Tabs>;
-
-                    } else {
-                        const data = _.map(products[category.name][subName], (product) => {
-                            const cols = {};
-
-                            _.each(['id','name','featured','action'], (key) => {
-                                let value = product[key];
-
-                                if (key === 'id') {
-                                    value = { ...product, category: category.id, subCategory: subCategory.id };
-
-                                } else if (key === 'action') {
-
-                                    value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ category: category.name, subCategory: subName, id: product.id }) } className="product-action">Unarchive</div>
-                                        : <Link to={{ pathname: `/edit_product/${product.id}` }} className="product-action">Edit</Link>;
-
-                                } else if (key === 'featured') {
-                                    if (product.sortIndex <= 4) {
-                                        value = <div className="featured-column">featured {product.sortIndex + 1}</div>;
-                                    }
-                                }
-
-                                cols[key] = value;
-                            });
-
-                            return cols;
-                        });
-
-                        content = <MyTable
-                            className="products-table"
-                            type="products"
-                            tab={subName}
-                            data={data}
-                        />;
-                    }
-
-                    return (
-                        <TabPane
-                            tab={subName}
-                            key={index}
-                        >
-                            { content }
-                        </TabPane>
-                    );
-                });
-            });
-
-            pageContent = <div>
-                <div className="table-card">
-                    <div className="card-header">
-                        <h2>Products</h2>
-                        { (activeUser.toJS().type === 'superAdmin') ? <Link to={`/edit_product`} className="btn blue" >Add</Link> : null }
-                    </div>
-                    <Tabs
-                        tabBarPosition="top"
-                        activeKey={this.state.activeKey}
-                        onChange={(activeKey) => this.updateTabs({ activeKey })}
-                        renderTabBar={()=><ScrollableInkTabBar />}
-                        renderTabContent={()=><TabContent style={{ overflow: 'none' }} />}
-                    >
-                        { tabContent }
-                    </Tabs>
-                </div>
-            </div>;
-
-            this.props.triggerSpinner({ isOn: false });
-        }
 
         return (
-            <Loader loaded={this.props.spinner} >
-                <div id="products-page" className="container">
-                    { pageContent }
-                </div>
-            </Loader>
+            <div id="products-page" className="container">
+                { (activeUser.size > 0 &&
+                    productCategories.size > 0 &&
+                    productSubCategories.size > 0 &&
+                    productsInCategory.size > 0) ? <div>
+                        <div className="table-card">
+                            <div className="card-header">
+                                <h2>Products</h2>
+                                { (activeUser.toJS().type === 'superAdmin') ? <Link to={`/edit_product`} className="btn blue" >Add</Link> : null }
+                            </div>
+                            <Tabs
+                                tabBarPosition="top"
+                                activeKey={this.state.activeKey}
+                                onChange={(activeKey) => this.updateTabs({ activeKey })}
+                                renderTabBar={()=><ScrollableInkTabBar />}
+                                renderTabContent={()=><TabContent style={{ overflow: 'none' }} />}
+                            >
+                                { _.map(productCategories.toJS(), (category) => {
+                                    return _.map(category.subcategories, (subCategory, index) => {
+                                        const subName = subCategory.name;
+
+                                        return (
+                                            <TabPane
+                                                tab={subName}
+                                                key={index}
+                                            >
+                                                { (subCategory.containedSubCategories) ? (
+                                                    <Tabs
+                                                        tabBarPosition="top"
+                                                        activeKey={this.state.activeSubKey}
+                                                        onChange={(activeSubKey) => this.updateTabs({ activeKey: this.state.activeKey, activeSubKey })}
+                                                        renderTabBar={()=><ScrollableInkTabBar />}
+                                                        renderTabContent={()=><TabContent style={{ overflow: 'none' }} />}
+                                                    >
+                                                        {  _.map(subCategory.containedSubCategories, (subSubCategory, subIndex) => {
+                                                            const subSubName = subSubCategory.name;
+
+                                                            return (
+                                                                <TabPane
+                                                                    tab={subSubName}
+                                                                    key={subIndex}
+                                                                >
+                                                                    <MyTable
+                                                                        className="products-table"
+                                                                        type="products"
+                                                                        tab={subSubName}
+                                                                        data={productsInCategory.getIn([category.name,subName,subSubName]).map((product) => {
+                                                                            const cols = {};
+
+                                                                            _.each(['id','name','featured','action'], (key) => {
+                                                                                let value = product[key];
+
+                                                                                if (key === 'id') {
+                                                                                    value = { ...product, category: category.id, subCategory: subCategory.id, subSubCategory: subSubCategory.id };
+
+                                                                                } else if (key === 'action') {
+                                                                                    const jwt = cookies.get('sibi-ge-admin');
+
+                                                                                    value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ category: jwt.trade, id: product.id }) } className="product-action">Unarchive</div>
+                                                                                        : <Link to={{ pathname: `/edit_product/${product.id}` }} className="product-action">Edit</Link>;
+
+                                                                                } else if (key === 'featured') {
+                                                                                    if (product.sortIndex <= 4) {
+                                                                                        value = <div className="featured-column">Featured {product.sortIndex + 1}</div>;
+                                                                                    }
+                                                                                }
+
+                                                                                cols[key] = value;
+                                                                            });
+
+                                                                            return cols;
+                                                                        })}
+                                                                    />
+                                                                </TabPane>
+                                                            );
+                                                        }) }
+                                                    </Tabs>
+                                                ) : (
+                                                    <MyTable
+                                                        className="products-table"
+                                                        type="products"
+                                                        tab={subName}
+                                                        data={productsInCategory.getIn([category.name,subName]).map((product) => {
+                                                            const cols = {};
+
+                                                            _.each(['id','name','featured','action'], (key) => {
+                                                                let value = product[key];
+
+                                                                if (key === 'id') {
+                                                                    value = { ...product, category: category.id, subCategory: subCategory.id };
+
+                                                                } else if (key === 'action') {
+
+                                                                    value = (product.archived) ? <div onClick={() => this.props.unarchiveProduct({ category: category.name, subCategory: subName, id: product.id }) } className="product-action">Unarchive</div>
+                                                                        : <Link to={{ pathname: `/edit_product/${product.id}` }} className="product-action">Edit</Link>;
+
+                                                                } else if (key === 'featured') {
+                                                                    if (product.sortIndex <= 4) {
+                                                                        value = <div className="featured-column">featured {product.sortIndex + 1}</div>;
+                                                                    }
+                                                                }
+
+                                                                cols[key] = value;
+                                                            });
+
+                                                            return cols;
+                                                        })}
+                                                    />
+                                                ) }
+                                            </TabPane>
+                                        );
+                                    });
+                                }) }
+                            </Tabs>
+                        </div>
+                    </div> : <Spinner/> }
+            </div>
         );
     }
 }
 
 const select = (state) => ({
-    spinner                 : state.ui.get('spinner'),
     activeUser              : state.activeUser.get('activeUser'),
     productsInCategory      : state.products.get('productsInCategory'),
     productCategories       : state.products.get('productCategories'),
@@ -235,7 +208,6 @@ const select = (state) => ({
 });
 
 const actions = {
-    triggerSpinner,
     getUserProductCategories,
     getProductsForSubCategory,
     unarchiveProduct,

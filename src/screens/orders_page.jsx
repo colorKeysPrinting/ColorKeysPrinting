@@ -5,7 +5,6 @@ import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
 import moment                               from 'moment';
 import SearchInput                          from 'react-search-input';
-import Loader                               from 'react-loader';
 
 import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
@@ -17,6 +16,7 @@ import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
 import Overlay                              from 'components/overlay';
+import Spinner                              from 'components/spinner';
 
 class OrdersPage extends React.Component {
     constructor(props) {
@@ -37,7 +37,7 @@ class OrdersPage extends React.Component {
         const { cookies } = this.props;
 
         if (cookies.get('sibi-ge-admin')) {
-            this.props.triggerSpinner({ isOn: true });
+            this.props.triggerSpinner(true);
             this.props.getFundProperties();
             this.props.getOrders();
         }
@@ -99,7 +99,7 @@ class OrdersPage extends React.Component {
     render() {
         const { cookies, spinner, activeUser, orders, fundProperties, zeroOrders } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        let data = [];
+        let data;
 
         const headers = {
             id: '',
@@ -217,16 +217,16 @@ class OrdersPage extends React.Component {
                 data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
             }
 
-            this.props.triggerSpinner({ isOn: false });
+            this.props.triggerSpinner(false);
 
         } else if (zeroOrders) {
-            this.props.triggerSpinner({ isOn: false });
+            this.props.triggerSpinner(false);
         }
 
         return (
-            <Loader loaded={spinner} >
+            <div>
                 <div id="orders-page" className="container">
-                    { (!zeroOrders && _.size(data) > 0) ? (
+                    { (!zeroOrders && data) ? (
                         <div className="table-card">
                             <div className="card-header">
                                 <h2>Orders</h2>
@@ -246,14 +246,16 @@ class OrdersPage extends React.Component {
                             />
                         </div>
                     ) : (
-                        <div>
-                            <h1>Order Status</h1>
-                            <p>There are currently no orders to display</p>
-                        </div>
+                        (!spinner) ? (
+                            <div>
+                                <h1>Order Status</h1>
+                                <p>There are currently no orders to display</p>
+                            </div>
+                        ) : <Spinner />
                     ) }
                 </div>
                 { alert }
-            </Loader>
+            </div>
         );
     }
 }

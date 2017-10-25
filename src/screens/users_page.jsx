@@ -4,7 +4,6 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import moment                               from 'moment';
 import SearchInput                          from 'react-search-input';
-import Loader                               from 'react-loader';
 
 import Select                               from 'components/select_box';
 import filter                               from 'libs/filter';
@@ -16,6 +15,7 @@ import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
 import Overlay                              from 'components/overlay';
+import Spinner                              from 'components/spinner';
 
 class UsersPage extends React.Component {
     constructor(props) {
@@ -36,7 +36,7 @@ class UsersPage extends React.Component {
         const { cookies, activeUser } = this.props;
 
         if (cookies.get('sibi-ge-admin')) {
-            this.props.triggerSpinner({ isOn: true });
+            this.props.triggerSpinner(true);
             this.props.getUsers();
         }
 
@@ -84,7 +84,7 @@ class UsersPage extends React.Component {
     render() {
         const { cookies, activeUser, users, spinner, zeroUsers } = this.props;
         const { searchTerm, sortby, alert } = this.state;
-        let data = [];
+        let data;
 
         const headers = {
             id: '',
@@ -198,16 +198,16 @@ class UsersPage extends React.Component {
                 });
             }
 
-            this.props.triggerSpinner({ isOn: false });
+            this.props.triggerSpinner(false);
 
         } else if (zeroUsers) {
-            this.props.triggerSpinner({ isOn: false });
+            this.props.triggerSpinner(false);
         }
 
         return (
-            <Loader loaded={spinner} >
+            <div>
                 <div id="users-page" className="container">
-                    { (!zeroUsers && _.size(data) > 0) ? (
+                    { (!zeroUsers && data) ? (
                         <div className="table-card">
                             <div className="card-header">
                                 <h2>Users</h2>
@@ -225,14 +225,16 @@ class UsersPage extends React.Component {
                             />
                         </div>
                     ) : (
-                        <div>
-                            <h1>User Status</h1>
-                            <p>There are currently no users to display</p>
-                        </div>
+                        (!spinner) ? (
+                            <div>
+                                <h1>User Status</h1>
+                                <p>There are currently no users to display</p>
+                            </div>
+                        ) : <Spinner />
                     )}
                 </div>
                 { alert }
-            </Loader>
+            </div>
         );
     }
 }

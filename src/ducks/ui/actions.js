@@ -28,10 +28,10 @@ export function goHome() {
     };
 }
 
-export function triggerSpinner({ isOn }) {
+export function triggerSpinner(isActive) {
     return {
         type: ActionTypes.TRIGGER_SPINNER,
-        isOn
+        isActive
     }
 }
 

@@ -6,7 +6,6 @@ import { withRouter }                       from 'react-router';
 import { Link }                             from 'react-router-dom';
 import moment                               from 'moment';
 import SearchInput                          from 'react-search-input';
-import Loader                               from 'react-loader';
 
 import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
@@ -18,6 +17,7 @@ import { getFundProperties }                from 'ducks/properties/actions';
 import MyTable                              from 'components/my_table';
 import Overlay                              from 'components/overlay';
 import PropertyDetails                      from 'screens/property_details';
+import Spinner                              from 'components/spinner';
 
 class PropertiesPage extends React.Component {
     constructor(props) {
@@ -38,7 +38,7 @@ class PropertiesPage extends React.Component {
         const { cookies } = this.props;
 
         if (cookies.get('sibi-ge-admin')) {
-            this.props.triggerSpinner({ isOn: true });
+            this.props.triggerSpinner(true);
             this.props.getFundProperties();
         }
 
@@ -72,7 +72,7 @@ class PropertiesPage extends React.Component {
     }
 
     handleAction(type, property) {
-        this.props.triggerSpinner({ isOn: true });
+        this.props.triggerSpinner(true);
         (type === 'edit') ? this.props.history.push(`/property_details/${property.id}`) : null;
     }
 
@@ -84,7 +84,7 @@ class PropertiesPage extends React.Component {
     render() {
         const { spinner, activeUser, fundProperties, zeroProperties } = this.props;
         const { searchTerm, sortby, propertyDetails } = this.state;
-        let data = {};
+        let data;
 
         const headers = {
             id: '',
@@ -155,16 +155,16 @@ class PropertiesPage extends React.Component {
                 data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
             }
 
-            this.props.triggerSpinner({ isOn: false });
+            this.props.triggerSpinner(false);
 
         } else if (zeroProperties) {
-            this.props.triggerSpinner({ isOn: false });
+            this.props.triggerSpinner(false);
         }
 
         return (
-            <Loader loaded={spinner} >
+            <div>
                 <div id="properties-page" className="container">
-                    {(!zeroProperties && _.size(data) > 0) ? (
+                    {(!zeroProperties && data) ? (
                         <div className="table-card">
                             <div className="card-header">
                                 <h2>Properties</h2>
@@ -187,15 +187,17 @@ class PropertiesPage extends React.Component {
                             />
                         </div>
                     ) : (
-                        <div>
-                            <h1>Properties Status</h1>
-                            <p>There are currently no properties to display</p>
-                        </div>
+                        (!spinner) ? (
+                            <div>
+                                <h1>Properties Status</h1>
+                                <p>There are currently no properties to display</p>
+                            </div>
+                        ) : <Spinner />
                     )}
                 </div>
                 { alert }
                 { propertyDetails }
-            </Loader>
+            </div>
         );
     }
 }

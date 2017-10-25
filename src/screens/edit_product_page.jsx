@@ -3,7 +3,6 @@ import { connect }              from 'react-redux';
 import { withRouter }           from 'react-router';
 import { withCookies }          from 'react-cookie';
 import Select                   from 'react-select';
-import Loader                   from 'react-loader';
 import _                        from 'lodash';
 import assets                   from 'libs/assets';
 
@@ -42,7 +41,7 @@ class EditProductPage extends React.Component {
         const jwt = cookies.get('sibi-ge-admin');
 
         if (jwt) {
-            this.props.triggerSpinner({ isOn: true });
+            this.props.triggerSpinner(true);
             this.props.getProducts();
             this.props.getParts();
 
@@ -349,7 +348,7 @@ class EditProductPage extends React.Component {
         }
 
         return (
-            <Loader loaded={spinner} >
+            <div>
                 <div id="edit-product-page">
                     <div className="title-bar">
                         <h2>{ (this.props.match.params) ? 'Edit' : 'Add' } Product</h2>
@@ -419,7 +418,7 @@ class EditProductPage extends React.Component {
                     }}>Create New</div>
                     <div className="btn blue" onClick={() => this.modifyExistingProduct()}>Modify Existing</div>
                 </div> : null }
-            </Loader>
+            </div>
         );
     }
 }

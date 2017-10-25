@@ -6,17 +6,16 @@ import { withRouter }                       from 'react-router';
 import { Link }                             from 'react-router-dom';
 import moment                               from 'moment';
 import DayPickerInput                       from 'react-day-picker/DayPickerInput';
-import Loader                               from 'react-loader';
 
 import assets                               from 'libs/assets';
 
-import { getOrderById, processOrder, updateInstallDate, updateModelNumber }          from 'ducks/orders/actions';
-import { triggerSpinner }                   from 'ducks/ui/actions';
+import { clearOrder, getOrderById, processOrder, updateInstallDate, updateModelNumber }          from 'ducks/orders/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
 import ProductTable                         from 'components/product_table';
 import PartTable                            from 'components/part_table';
+import Spinner                              from 'components/spinner';
 
 class ProcessOrderPage extends React.Component {
     constructor(props) {
@@ -42,7 +41,6 @@ class ProcessOrderPage extends React.Component {
 
         if (jwt) {
             if (id) {
-                this.props.triggerSpinner({ isOn: true });
                 this.props.getOrderById({ id });
             } else {
                 alert('No orderId provided routing back to orders');
@@ -51,6 +49,10 @@ class ProcessOrderPage extends React.Component {
         }
 
         this.props.setActiveTab('orders');
+    }
+
+    componentWillUnmount() {
+        this.props.clearOrder();
     }
 
     componentWillUpdate(nextProps) {
@@ -110,7 +112,6 @@ class ProcessOrderPage extends React.Component {
         let orderPageData;
 
         if (order.size > 0) {
-            const myOrder = order.toJS();
 
             //TABLE HEADERS
             const userHeaders = {
@@ -122,7 +123,7 @@ class ProcessOrderPage extends React.Component {
                 hotshotCode: ''
             };
 
-            const occupancyHeaders = (myOrder.occupied) ? {
+            const occupancyHeaders = (order.get('occupied')) ? {
                 occupancy: 'Occupancy',
                 tenantName: 'Tenant Name',
                 phoneNumber: 'Phone Number',
@@ -145,21 +146,21 @@ class ProcessOrderPage extends React.Component {
                 price: 'Cost'
             };
 
-            if (!myOrder.processedAt) {
+            if (!order.get('processedAt')) {
                 const permissions = activeUser.get('permissions').toJS();
-                const user = myOrder.createdByUser;
+                const user = order.get('createdByUser');
 
-                userHeaders['hotshotInstallDate'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
-                userHeaders['hotshotCode'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
+                userHeaders['hotshotInstallDate'] = (order.get('isApplianceHotShotDelivery')) ? 'Hot Shot Install Date' : 'Install Date';
+                userHeaders['hotshotCode'] = (order.get('isApplianceHotShotDelivery')) ? 'Hot Shot Code' : '';
 
                 const orderProcessHeading = {
-                    accountNumber: (myOrder.pmOffice.applianceGEAccountNumber) ? myOrder.pmOffice.applianceGEAccountNumber : myOrder.fund.applianceGEAccountNumber,
-                    fund: myOrder.fund.name,
-                    address: `${myOrder.fundProperty.addressLineOne} ${myOrder.fundProperty.addressLineTwo} ${myOrder.fundProperty.addressLineThree}, ${myOrder.fundProperty.city}, ${myOrder.fundProperty.state}, ${myOrder.fundProperty.zipcode}`
+                    accountNumber: (order.getIn(['pmOffice', 'applianceGEAccountNumber'])) ? order.getIn(['pmOffice', 'applianceGEAccountNumber']) : order.getIn(['fund','applianceGEAccountNumber']),
+                    fund: order.getIn(['fund','name']),
+                    address: `${order.getIn(['fundProperty', 'addressLineOne'])} ${order.getIn(['fundProperty','addressLineTwo'])} ${order.getIn(['fundProperty','addressLineThree'])}, ${order.getIn(['fundProperty','city'])}, ${order.getIn(['fundProperty','state'])}, ${order.getIn(['fundProperty','zipcode'])}`
                 };
 
                 const productsAndDestinations = [];
-                _.each(myOrder.productsAndDestinations, (product) => {
+                _.each(order.get('productsAndDestinations').toJS(), (product) => {
                     productsAndDestinations.push(product);
 
                     _.each(product.includedParts, (part) => {
@@ -167,26 +168,26 @@ class ProcessOrderPage extends React.Component {
                     });
                 });
 
-                const productsAndParts = productsAndDestinations.concat(myOrder.partsAndDestinations);
+                const productsAndParts = productsAndDestinations.concat(order.get('partsAndDestinations'));
 
                 // ***************** USER TABLE DATA *****************
                 const userCols = {};
                 _.each(userHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'orderedBy') {
-                        value = user.firstName + ' ' + user.lastName;
+                        value = `${user.get('firstName')} ${user.get('lastName')}`;
 
                     } else if (key === 'phoneNumber'){
-                        value = user.phoneNumber;
+                        value = user.get('phoneNumber');
 
                     } else if (key === 'email') {
-                        value = user.email;
+                        value = user.get('email');
 
                     } else if (key === 'hotshotDelivery') {
-                        value = (myOrder.isApplianceHotShotDelivery) ? 'Yes' : 'No';
+                        value = (order.get('isApplianceHotShotDelivery')) ? 'Yes' : 'No';
 
                     } else if (key === 'hotshotInstallDate') {
-                        const formattedDay = moment(myOrder.installDate).format('MM/DD/YYYY');
+                        const formattedDay = moment(order.get('installDate')).format('MM/DD/YYYY');
                         if (permissions.updateAllOrders || permissions.updateFundOrders) {
                             value = <div className="no-limit">
                                 <DayPickerInput
@@ -201,7 +202,7 @@ class ProcessOrderPage extends React.Component {
                         }
 
                     } else if (key === 'hotshotCode') {
-                        value = (myOrder.isApplianceHotShotDelivery) ? <div>{ myOrder.applianceHotShotCode }</div> : null;
+                        value = (order.get('isApplianceHotShotDelivery')) ? <div>{ order.get('applianceHotShotCode') }</div> : null;
                     }
                     userCols[key] = value;
                 });
@@ -212,22 +213,22 @@ class ProcessOrderPage extends React.Component {
                     value = order[key]
 
                     if (key === 'occupancy') {
-                        value = (!myOrder.occupied) ? 'Unoccupied' : 'Occupied';
+                        value = (!order.get('occupied')) ? 'Unoccupied' : 'Occupied';
                     }
 
-                    if (myOrder.occupied) {
+                    if (order.get('occupied')) {
                         if (key === 'tenantName'){
-                            value = `${myOrder.tenantFirstName} ${myOrder.tenantLastName}`;
+                            value = `${order.get('tenantFirstName')} ${order.get('tenantLastName')}`;
 
                         } else if (key === 'phoneNumber') {
-                            value = myOrder.tenantPhone;
+                            value = order.get('tenantPhone');
 
                         } else if (key === 'email') {
-                            value = myOrder.tenantEmail;
+                            value = order.get('tenantEmail');
                         }
                     } else {
                         if ( key === 'lockBox') {
-                            value = `${myOrder.lockBoxCode}`;
+                            value = `${order.get('lockBoxCode')}`;
                         }
                     }
 
@@ -239,13 +240,13 @@ class ProcessOrderPage extends React.Component {
                 _.each(officeHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'pmOffice') {
-                        value = (myOrder.pmOffice) ? myOrder.pmOffice.name : null;
+                        value = (order.get('pmOffice')) ? order.getIn(['pmOffice','name']) : null;
 
                     } else if (key === 'phoneNumber'){
-                        value = (myOrder.pmOffice) ? myOrder.pmOffice.phoneNumber : null;
+                        value = (order.get('pmOffice')) ? order.get(['pmOffice','phoneNumber']) : null;
 
                     } else if (key === 'email') {
-                        value = (myOrder.pmOffice) ? myOrder.pmOffice.email : null;
+                        value = (order.get('pmOffice')) ? order.get(['pmOffice','email']) : null;
                     }
                     officeCols[key] = value;
                 });
@@ -344,9 +345,9 @@ class ProcessOrderPage extends React.Component {
                     <div className="cost-section">
                         <h5 className="cost-header">Order Summary </h5>
                         <div className="cost-row">
-                            <h5>Subtotal: <span>${ myOrder.totalCost }</span></h5>
-                            <h5>Sales Tax: <span>${ myOrder.salesTax }</span></h5>
-                            <h5>Total: <span>${ (parseFloat(myOrder.totalCost) + parseFloat(myOrder.salesTax)).toFixed(2) }</span></h5>
+                            <h5>Subtotal: <span>${ order.get('totalCost') }</span></h5>
+                            <h5>Sales Tax: <span>${ order.get('salesTax') }</span></h5>
+                            <h5>Total: <span>${ (parseFloat(order.get('totalCost')) + parseFloat(order.get('salesTax'))).toFixed(2) }</span></h5>
                         </div>
                     </div>
                 </div>
@@ -357,35 +358,29 @@ class ProcessOrderPage extends React.Component {
                     <h4>You can now close this tab.</h4>
                 </div>;
             }
-
-            this.props.triggerSpinner({ isOn: false });
         }
 
         return (
-            <Loader loaded={spinner} >
-                <div id="process-orders-page">
-                    <div className="container">
-                        { orderPageData }
-                    </div>
+            <div id="process-orders-page">
+                <div className="container">
+                    { orderPageData ? orderPageData : <Spinner/> }
                 </div>
-            </Loader>
+            </div>
         );
     }
 }
 
 const select = (state) => ({
-    spinner        : state.ui.get('spinner'),
     activeUser     : state.activeUser.get('activeUser'),
     order          : state.orders.get('order'),
 });
 
 const actions = {
-    triggerSpinner,
+    clearOrder,
     getOrderById,
     processOrder,
     updateInstallDate,
     updateModelNumber,
-    triggerSpinner,
     setActiveTab,
 }
 
