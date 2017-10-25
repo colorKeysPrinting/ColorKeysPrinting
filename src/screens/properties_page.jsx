@@ -173,7 +173,7 @@ class PropertiesPage extends React.Component {
                                         <img src={assets('./images/icon-search.svg')} className="search-icon"/>
                                         <SearchInput className="search-input" onChange={(value) => this.setState({ searchTerm: value })} />
                                     </div>
-                                    <Link to={`/property_details`} className="btn blue">Add</Link>
+                                    <Link to={`/property_details/new`} className="btn blue">Add</Link>
                                 </div>
                             </div>
                             <MyTable

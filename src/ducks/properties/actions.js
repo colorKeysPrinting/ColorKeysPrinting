@@ -76,8 +76,9 @@ export function getFundProperties() {
 }
 
 
-export function createProperty({ property }) {
-    return (dispatch) => {
+export function createProperty() {
+    return (dispatch, getState) => {
+        const property = getState().properties.get('property').toJS();
         _.each(property, (element, key) => {
             (element === '') ? delete property[key] : null;
         });
@@ -86,7 +87,7 @@ export function createProperty({ property }) {
             method  : 'post',
             url     : `/createFundsProperty`,
             data    : {
-                ...property.toJS()
+                ...property
             }
         })
             .then(payload => {
@@ -95,13 +96,14 @@ export function createProperty({ property }) {
     }
 }
 
-export function updateProperty({ property }) {
+export function updateProperty() {
     return (dispatch) => {
+        const property = getState().properties.get('property').toJS();
         return Api({
             method  : 'patch',
-            url     : `/fundsProperties/${property.get('id')}`,
+            url     : `/fundsProperties/${property.id}`,
             data    : {
-                ...property.toJS()
+                ...property
             }
         })
             .then(payload => {

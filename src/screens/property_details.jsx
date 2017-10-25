@@ -20,13 +20,8 @@ class PropertyDetails extends React.Component {
         const { cookies } = this.props;
 
         if (cookies.get('sibi-ge-admin')) {
-            if (id) {
-                this.props.getFunds();
-                this.props.getPropertyById({ id });
-
-            } else {
-                this.props.createNewProperty();
-            }
+            this.props.getFunds();
+            (id !== 'new') ? this.props.getPropertyById({ id }) : this.props.createNewProperty();
         }
     }
 
@@ -70,12 +65,12 @@ class PropertyDetails extends React.Component {
             <div id="property-details-page">
                 <div className="modal">
                     <div className="titleBar">
-                        <div className="title">{(match.params) ? 'Edit': 'Create'} Property</div>
+                        <div className="title">{(match.params.id !== 'new') ? 'Edit': 'Create'} Property</div>
                         <div onClick={() => history.goBack()} className="icon-close"><img src={assets('./images/icon-x-big.svg')} /></div>
                     </div>
                     <form onSubmit={(e) => {
                         e.preventDefault();
-                        (match.params) ? this.props.updateProperty({ property }) : this.props.createProperty({ property });
+                        (match.params.id !== 'new') ? this.props.updateProperty() : this.props.createProperty();
                         history.goBack()}}>
                         {(funds.size > 0 && property.size > 0) ? (
                             <div className="content">
@@ -85,7 +80,7 @@ class PropertyDetails extends React.Component {
                                     options={fundsOptions}
                                     onChange={(selected) => this.props.update({ key: 'fundId', value: (selected) ? selected.value : null })}
                                     required
-                                    disabled={(this.props.match.params) ? true : false}
+                                    disabled={(match.params.id !== 'new') ? true : false}
                                 />
                                 <Select
                                     name="pmOfficeName"

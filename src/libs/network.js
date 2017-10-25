@@ -26,6 +26,7 @@ instance.interceptors.response.use((response)=>{
 },(error) => {
     if (error.response) {
         alert(`Error: ${error.response.data.message}`);
+        throw(error);
         return Promise.reject(error);
     }
 })
