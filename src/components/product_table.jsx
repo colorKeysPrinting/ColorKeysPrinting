@@ -29,7 +29,7 @@ export default function ProductTable(props) {
                         value = (!props.replacement) ? <div className="no-limit">
                             <div className="table-cell-details">{ `Color: ${props.color}` }</div>
                             <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
-                            <div className="table-cell-details">{ (product.applianceSize) ? `Size: ${product.applianceSize}` : `Volume: ${product.applianceCapacity}` }</div>
+                            <div className="table-cell-details">{ (product.applianceCapacity) ? `Volume: ${product.applianceCapacity}` : '' }</div>
                             <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
                             <div className="table-cell-details">{ `Height: ${product.applianceHeight}` }</div>
                             <div className="table-cell-details">{ `Depth: ${product.applianceDepth}` }</div>

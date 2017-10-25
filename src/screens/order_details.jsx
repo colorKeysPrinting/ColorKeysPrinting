@@ -93,7 +93,7 @@ class OrderDetails extends React.Component {
                 const orderStatus = order.get('orderStatus');
 
                 const orderPageHeading = {
-                    address: `${order.getIn(['pmOffice','addressLineOne'])} ${(!_.isNull(order.getIn(['pmOffice','addressLineTwo']))) ? `${order.getIn(['pmOffice','addressLineTwo'])},` : ''} ${(!_.isNull(order.getIn(['pmOffice','addressLineThree']))) ? `${order.getIn(['pmOffice','addressLineThree'])},` : ''}, ${order.getIn(['pmOffice','city'])}, ${order.getIn(['pmOffice','state'])}, ${order.getIn(['pmOffice','zipcode'])}`,
+                    address: `${order.getIn(['pmOffice','addressLineOne'])} ${(!_.isNull(order.getIn(['pmOffice','addressLineTwo']))) ? `${order.getIn(['pmOffice','addressLineTwo'])},` : ''} ${(!_.isNull(order.getIn(['pmOffice','addressLineThree']))) ? `${order.getIn(['pmOffice','addressLineThree'])},` : ''} ${order.getIn(['pmOffice','city'])}, ${order.getIn(['pmOffice','state'])}, ${order.getIn(['pmOffice','zipcode'])}`,
                     PM: order.getIn(['pmOffice','name'])
                 };
 
