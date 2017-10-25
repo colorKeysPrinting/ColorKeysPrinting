@@ -83,23 +83,22 @@ class OrderDetails extends React.Component {
         };
 
         if (order.size > 0) {
-            const myOrder = order.toJS();
-            const user = myOrder.createdByUser;
-            const permissions = activeUser.get('permissions').toJS();
+            const user = order.get('createdByUser');
+            const permissions = activeUser.get('permissions');
 
-            orderHeaders['hotshotInstallDate'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Install Date' : 'Install Date';
-            orderHeaders['hotshotCode'] = (myOrder.isApplianceHotShotDelivery) ? 'Hot Shot Code' : '';
+            orderHeaders['hotshotInstallDate'] = (order.get('isApplianceHotShotDelivery')) ? 'Hot Shot Install Date' : 'Install Date';
+            orderHeaders['hotshotCode'] = (order.get('isApplianceHotShotDelivery')) ? 'Hot Shot Code' : '';
 
             if (!this.state.editOrder) {
-                const orderStatus = myOrder.orderStatus;
+                const orderStatus = order.get('orderStatus');
 
                 const orderPageHeading = {
-                    address: `${myOrder.pmOffice.addressLineOne} ${myOrder.pmOffice.addressLineTwo} ${myOrder.pmOffice.addressLineThree}, ${myOrder.pmOffice.city}, ${myOrder.pmOffice.state}, ${myOrder.pmOffice.zipcode}`,
-                    PM: myOrder.pmOffice.name
+                    address: `${order.getIn(['pmOffice','addressLineOne'])} ${(!_.isNull(order.getIn(['pmOffice','addressLineTwo']))) ? `${order.getIn(['pmOffice','addressLineTwo'])},` : ''} ${(!_.isNull(order.getIn(['pmOffice','addressLineThree']))) ? `${order.getIn(['pmOffice','addressLineThree'])},` : ''}, ${order.getIn(['pmOffice','city'])}, ${order.getIn(['pmOffice','state'])}, ${order.getIn(['pmOffice','zipcode'])}`,
+                    PM: order.getIn(['pmOffice','name'])
                 };
 
                 const productsAndDestinations = [];
-                _.each(myOrder.productsAndDestinations, (product) => {
+                _.each(order.get('productsAndDestinations').toJS(), (product) => {
                     productsAndDestinations.push(product);
 
                     _.each(product.includedParts, (part) => {
@@ -107,22 +106,22 @@ class OrderDetails extends React.Component {
                     });
                 });
 
-                const productsAndParts = productsAndDestinations.concat(myOrder.partsAndDestinations);
+                const productsAndParts = productsAndDestinations.concat(order.get('partsAndDestinations'));
 
-                if (myOrder.occupied) {
-                    const formatTenantPhone = formatPhoneNumbers(myOrder.tenantPhone);
+                if (order.get('occupied')) {
+                    const formatTenantPhone = formatPhoneNumbers(order.get('tenantPhone'));
                     tenantInfoTitle = <tr>
                         <td><div className="table-header">Tenant Info: </div></td>
                     </tr>;
 
                     tenantInfoDetails = <tr>
-                        <td><div>{`${myOrder.tenantFirstName} ${myOrder.tenantLastName}`} ∙ {formatTenantPhone} ∙ {myOrder.tenantEmail}</div></td>
+                        <td><div>{`${order.get('tenantFirstName')} ${order.get('tenantLastName')}`} ∙ {formatTenantPhone} ∙ {(!_.isNull(order.get('tenantEmail'))) ? order.get('tenantEmail') : ''}</div></td>
                     </tr>;
 
                 } else {
-                    const formatUserPhone = (user.phoneNumber) ? formatPhoneNumbers(user.phoneNumber) : '';
-                    const formatOfficePhone = (myOrder.pmOffice) ? formatPhoneNumbers(myOrder.pmOffice.phoneNumber) : '';
-                    const pmOfficeName = (myOrder.pmOffice) ? myOrder.pmOffice.name : orderPageHeading.PM;
+                    const formatUserPhone = (user.get('phoneNumber')) ? formatPhoneNumbers(user.get('phoneNumber')) : '';
+                    const formatOfficePhone = (order.get('pmOffice')) ? formatPhoneNumbers(order.getIn(['pmOffice','phoneNumber'])) : '';
+                    const pmOfficeName = (order.get('pmOffice')) ? order.getIn(['pmOffice','name']) : orderPageHeading.PM;
 
                     tenantInfoTitle = <tr>
                         <td><div className="table-header">Delivery Contact: </div></td>
@@ -131,7 +130,7 @@ class OrderDetails extends React.Component {
 
                     tenantInfoDetails = [
                         <tr key='tenantInfoDetails1'>
-                            <td><div>{user.firstName} {user.lastName}</div></td>
+                            <td><div>{user.get('firstName')} {user.get('lastName')}</div></td>
                             <td><div>{formatUserPhone}</div></td>
                         </tr>,
                         <tr key='tenantInfoDetails2'>
@@ -142,35 +141,35 @@ class OrderDetails extends React.Component {
                 }
 
                 const orderDetailsCols = {};
-                orderHeaders.lockBoxCode = (myOrder.lockBoxCode) ? 'Lockbox Code' : 'Tenant';
+                orderHeaders.lockBoxCode = (order.get('lockBoxCode')) ? 'Lockbox Code' : 'Tenant';
                 _.each(orderHeaders, (value, key) => {
                     value = order[key]
                     if (key === 'orderStatus') {
-                        value = myOrder.orderStatus;
+                        value = order.get('orderStatus');
 
                     } else if (key === 'geOrderNumber'){
-                        value = myOrder.geOrderNumber;
+                        value = order.get('geOrderNumber');
 
                     } else if (key === 'installTime') {
-                        value = (myOrder.applianceDeliveryTime) ? myOrder.applianceDeliveryTime : 'Not Specified';
+                        value = (order.get('applianceDeliveryTime')) ? order.get('applianceDeliveryTime') : 'Not Specified';
 
                     } else if (key === 'occupied') {
-                        value = (myOrder.occupied === false) ? 'Unoccupied' : 'Occupied';
+                        value = (order.get('occupied') === false) ? 'Unoccupied' : 'Occupied';
 
                     } else if (key === 'lockBoxCode') {
-                        value = (myOrder.lockBoxCode) ? myOrder.lockBoxCode : `${myOrder.tenantFirstName} ${myOrder.tenantLastName}`;
+                        value = (order.get('lockBoxCode')) ? order.get('lockBoxCode') : `${order.get('tenantFirstName')} ${order.get('tenantLastName')}`;
 
                     } else if (key === 'createdBy') {
-                        value = `${myOrder.orderUser.firstName} ${myOrder.orderUser.lastName}`;
+                        value = `${order.getIn(['orderUser','firstName'])} ${order.getIn(['orderUser','lastName'])}`;
 
                     } else if (key === 'hotshotDelivery') {
-                        value = (myOrder.isApplianceHotShotDelivery) ? 'Yes' : 'No';
+                        value = (order.get('isApplianceHotShotDelivery')) ? 'Yes' : 'No';
 
                     } else if (key === 'hotshotInstallDate') {
-                        value = moment(myOrder.installDate).format('MM/DD/YYYY');
+                        value = moment(order.get('installDate')).format('MM/DD/YYYY');
 
                     } else if (key === 'hotshotCode') {
-                        value = (myOrder.isApplianceHotShotDelivery) ? myOrder.applianceHotShotCode : null;
+                        value = (order.get('isApplianceHotShotDelivery')) ? order.get('applianceHotShotCode') : '';
                     }
 
                     orderDetailsCols[key] = value;
@@ -179,15 +178,15 @@ class OrderDetails extends React.Component {
                 pageData = <div className="container">
                     <div className="details-header">
                         <div className="header-property pure-u-2-3">
-                            <h2 className="order-number">Order: { myOrder.orderNumber }</h2>
+                            <h2 className="order-number">Order: { order.get('orderNumber') }</h2>
                             <div className="property-manager">{ orderPageHeading.address } ● PM Office: { orderPageHeading.PM }</div>
                         </div>
                         { (orderStatus == 'Pending') ? <div className="button-container pure-u-1-3">
-                            { (permissions.updateAllOrders || permissions.updateFundOrders || permissions.updateFundOrdersPriorToApproval)
-                                ? <div className="btn blue" onClick={() => this.editOrder({ orderId: myOrder.id })}>Edit</div>
+                            { (permissions.get('updateAllOrders') || permissions.get('updateFundOrders') || permissions.get('updateFundOrdersPriorToApproval'))
+                                ? <div className="btn blue" onClick={() => this.editOrder({ orderId: order.get('id') })}>Edit</div>
                                 : null }
-                            { (permissions.viewAllApprovedAndProcessedOrders || permissions.approveAllOrders || permissions.approveFundOrders)
-                                ? <div className="btn blue" onClick={() => this.handleAction({ orderId: myOrder.id })}>Approve</div>
+                            { (permissions.get('viewAllApprovedAndProcessedOrders') || permissions.get('approveAllOrders') || permissions.get('approveFundOrders'))
+                                ? <div className="btn blue" onClick={() => this.handleAction({ orderId: order.get('id') })}>Approve</div>
                                 : null }
                         </div> : null }
                     </div>
@@ -212,8 +211,8 @@ class OrderDetails extends React.Component {
                             if (orderDetail.product) {
                                 const replacement = (orderDetail.selectedColorInfo.replacementManufacturerModelNumber) ? orderDetail.selectedColorInfo.replacementManufacturerModelNumber : false;
                                 const address = <div className="no-limit">
-                                    <div>{`${myOrder.fundProperty.addressLineOne} ${myOrder.fundProperty.addressLineTwo} ${myOrder.fundProperty.addressLineThree},`}</div>
-                                    <div>{`${myOrder.fundProperty.city}, ${myOrder.fundProperty.state}, ${myOrder.fundProperty.zipcode}`}</div>
+                                    <div>{`${order.getIn(['fundProperty','addressLineOne'])} ${(!_.isNull(order.getIn(['fundProperty','addressLineTwo']))) ? `${order.getIn(['fundProperty','addressLineTwo'])},` : ''} ${(!_.isNull(order.getIn(['fundProperty','addressLineThree']))) ? `${order.getIn(['fundProperty','addressLineThree'])},` : ''}`}</div>
+                                    <div>{`${order.getIn(['fundProperty','city'])}, ${order.getIn(['fundProperty','state'])}, ${order.getIn(['fundProperty','zipcode'])}`}</div>
                                 </div>;
 
                                 return <ProductTable
@@ -247,15 +246,15 @@ class OrderDetails extends React.Component {
                         }) }
                     </div>
                     <div>
-                        {(myOrder.isApplianceHotShotDelivery) ? <div className="cost-section" >
-                            <h5 style={{right: '8%', position: 'absolute', margin: '-6px' }}>Hot Shot Delivery: <span>${ myOrder.applianceHotShotPrice }</span></h5>
+                        {(order.get('isApplianceHotShotDelivery')) ? <div className="cost-section" >
+                            <h5 style={{right: '8%', position: 'absolute', margin: '-6px' }}>Hot Shot Delivery: <span>${ (!_.isNull(order.get('applianceHotShotPrice'))) ? order.get('applianceHotShotPrice') : '' }</span></h5>
                         </div> : null}
                         <div className="cost-section">
                             <h5 className="cost-header">Order Summary </h5>
                             <div className="cost-row">
-                                <h5>Subtotal: <span>${ myOrder.subTotalCost }</span></h5>
-                                <h5>Sales Tax: <span>${ myOrder.salesTax }</span></h5>
-                                <h5>Total: <span>${ myOrder.totalCost }</span></h5>
+                                <h5>Subtotal: <span>${ order.get('subTotalCost') }</span></h5>
+                                <h5>Sales Tax: <span>${ order.get('salesTax') }</span></h5>
+                                <h5>Total: <span>${ order.get('totalCost') }</span></h5>
                             </div>
                         </div>
                     </div>

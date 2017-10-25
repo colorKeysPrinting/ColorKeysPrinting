@@ -92,7 +92,7 @@ class UsersPage extends React.Component {
             office: 'PM Office',
             email: 'Email',
             phoneNumber: 'Phone',
-            createdAt: 'Acount Created',
+            createdAt: 'Account Created',
             autoApprovedOrders: 'Auto-approve',
             status: 'Status',
             action: ''
@@ -101,7 +101,7 @@ class UsersPage extends React.Component {
         const KEYS_TO_FILTERS = ['name','office','email','phoneNumber','createdAt','autoApprovedOrders','status'];
 
         if (users.size > 0 ) {
-            const permissions = activeUser.get('permissions').toJS();
+            const permissions = activeUser.get('permissions');
 
             data = _.map(users.toJS(), (user) => {
                 const cols = {};
@@ -119,7 +119,7 @@ class UsersPage extends React.Component {
                         value = (user.fundLocation) ? user.fundLocation.city : '';
 
                     } else if (key === 'email') {
-                        value = user['email'];
+                        value = (!_.isNull(user['email'])) ? user['email'] : '';
 
                     } else if (key === 'createdAt') {
                         value = moment(new Date(value)).format('MMM DD, YYYY, HH:MM');
@@ -139,14 +139,14 @@ class UsersPage extends React.Component {
                             value={autoApprovedOrders}
                             options={options}
                             onChange={({ user, value }) => this.props.autoApproveUserOrders({ user, autoApprovedOrders:  value })}
-                            disabled={(permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers) ? false : true}
+                            disabled={(permissions.get('manageAllUsers') || permissions.get('manageAllFundUsers') || permissions.get('manageAllManufacturerUsers')) ? false : true}
                         />;
 
                     } else if (key === 'status') {
                         value = (user['type'] === 'pending') ? 'Pending' : 'Approved';
 
                     } else if (key === 'action') {
-                        if ((permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers || permissions.manageSubordinateUsers)) {
+                        if ((permissions.get('manageAllUsers') || permissions.get('manageAllFundUsers') || permissions.get('manageAllManufacturerUsers') || permissions.get('manageSubordinateUsers'))) {
                             value = (user['type'] === 'pending') ? 'approve' : '';
                         }
                     }
@@ -192,7 +192,7 @@ class UsersPage extends React.Component {
                         value={autoApprovedOrders}
                         options={options}
                         onChange={(value) => this.handleAutoApprove({ user: item.id, autoApprovedOrders: value })}
-                        disabled={(permissions.manageAllUsers || permissions.manageAllFundUsers || permissions.manageAllManufacturerUsers) ? false : true}
+                        disabled={(permissions.get('manageAllUsers') || permissions.get('manageAllFundUsers') || permissions.get('manageAllManufacturerUsers')) ? false : true}
                     />;
                     return item;
                 });

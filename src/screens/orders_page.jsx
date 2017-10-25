@@ -84,16 +84,11 @@ class OrdersPage extends React.Component {
 
     handleItem(order) {
         const { history, activeUser } = this.props;
-        const permissions = activeUser.get('permissions').toJS();
-        let pathname = `/order_details/${order.id}`;
+        const permissions = activeUser.get('permissions');
 
-        if (permissions.viewAllApprovedAndProcessedOrders || permissions.processManufacturerOrders) {
-            if ((order['orderStatus'] === 'Approved')) {
-                pathname = `/process_order/${order.id}`;
-            }
-        }
+        const pathname = (permissions.get('viewAllApprovedAndProcessedOrders') || permissions.get('processManufacturerOrders')) ? 'process_order' : 'order_details';
 
-        history.push(pathname);
+        history.push(`/${pathname}/${order.id}`);
     }
 
     render() {
@@ -137,7 +132,7 @@ class OrdersPage extends React.Component {
                         value = fundProperty.propertyUnitId;
 
                     } else if (key === 'address') {
-                        value = `${fundProperty['addressLineOne']}, ${fundProperty['addressLineTwo']}, ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
+                        value = `${fundProperty['addressLineOne']}, ${(fundProperty['addressLineTwo']) ? `${fundProperty['addressLineTwo']},` : ''} ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
 
                     } else if (key === 'occupied') {
                         value = (item[key]) ? 'Occupied' : 'Vacant';
@@ -145,24 +140,15 @@ class OrdersPage extends React.Component {
                     } else if (key === 'userId') {
                         value = (item.user) ? `${item.user.firstName} ${item.user.lastName}` : '';
 
-                    } else if (key === 'geOrderNumber') {
-                        value = item[key];
-
                     } else if (key === 'createdAt') {
                         value = moment(new Date(value)).format('MMM DD, YYYY HH:MM');
 
-                    } else if (key === 'totalCost') {
-                        value = parseFloat(item[key]);
-
-                    } else if (key === 'orderStatus') {
-                        value = item[key];
-
                     } else if (key === 'action') {
-                        const permissions = activeUser.get('permissions').toJS();
-                        if (permissions.approveAllOrders || permissions.approveFundOrders) {
+                        const permissions = activeUser.get('permissions');
+                        if (permissions.get('approveAllOrders') || permissions.get('approveFundOrders')) {
                             value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
 
-                        } else if (permissions.processManufacturerOrders) {
+                        } else if (permissions.get('processManufacturerOrders')) {
                             value = (item['orderStatus'] === 'Approved') ? 'process' : value;
                         }
                     }

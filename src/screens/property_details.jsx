@@ -98,7 +98,7 @@ class PropertyDetails extends React.Component {
                                 <Select
                                     name="state"
                                     className="right-col"
-                                    value={property.get('state') || ''}
+                                    value={property.get('state')}
                                     options={stateOptions}
                                     onChange={(selected) => this.props.update({ key: 'state', value: (selected) ? selected.value : null })}
                                     required

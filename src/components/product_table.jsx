@@ -21,7 +21,7 @@ export default function ProductTable(props) {
 
                 } else if (row === 'outOfStock') {
                     if (props.type === 'processOrder') {
-                        if (props.permissions.updateAllOrders || props.permissions.updateFundOrders) {
+                        if (props.permissions.get('updateAllOrders') || props.permissions.get('updateFundOrders')) {
                             value = (props.outOfStock !== props.productIndex) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless cancel-button" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
                         }
 
@@ -72,13 +72,13 @@ export default function ProductTable(props) {
                     value = null;
 
                 } else if (row === 'install') {
-                    value = (props.type === 'processOrder' && props.installAppliance) ? `#${ product.applianceInstallCode }` : null;
+                    value = (props.type === 'processOrder' && props.installAppliance) ? `${ product.applianceInstallCode }` : null;
 
                 } else if (row === 'remove') {
-                    value = (props.type === 'processOrder' && props.removeOldAppliance) ? `#${ product.applianceRemovalCode }` : null;
+                    value = (props.type === 'processOrder' && props.removeOldAppliance) ? `${ product.applianceRemovalCode }` : null;
 
                 } else if (row === 'disconnect') {
-                    value = (props.type === 'processOrder' && props.removeOldAppliance) ? `#${ product.applianceDisconnectCode }` : null;
+                    value = (props.type === 'processOrder' && props.removeOldAppliance) ? `${ product.applianceDisconnectCode }` : null;
                 }
 
                 value = (props.outOfStock !== props.productIndex) ? value : null;

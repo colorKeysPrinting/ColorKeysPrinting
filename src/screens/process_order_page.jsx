@@ -147,7 +147,7 @@ class ProcessOrderPage extends React.Component {
             };
 
             if (!order.get('processedAt')) {
-                const permissions = activeUser.get('permissions').toJS();
+                const permissions = activeUser.get('permissions');
                 const user = order.get('createdByUser');
 
                 userHeaders['hotshotInstallDate'] = (order.get('isApplianceHotShotDelivery')) ? 'Hot Shot Install Date' : 'Install Date';
@@ -156,7 +156,7 @@ class ProcessOrderPage extends React.Component {
                 const orderProcessHeading = {
                     accountNumber: (order.getIn(['pmOffice', 'applianceGEAccountNumber'])) ? order.getIn(['pmOffice', 'applianceGEAccountNumber']) : order.getIn(['fund','applianceGEAccountNumber']),
                     fund: order.getIn(['fund','name']),
-                    address: `${order.getIn(['fundProperty', 'addressLineOne'])} ${order.getIn(['fundProperty','addressLineTwo'])} ${order.getIn(['fundProperty','addressLineThree'])}, ${order.getIn(['fundProperty','city'])}, ${order.getIn(['fundProperty','state'])}, ${order.getIn(['fundProperty','zipcode'])}`
+                    address: `${order.getIn(['fundProperty', 'addressLineOne'])} ${(!_.isNull(order.getIn(['fundProperty','addressLineTwo']))) ? `${order.getIn(['fundProperty','addressLineTwo'])},` : ''} ${(!_.isNull(order.getIn(['fundProperty','addressLineThree']))) ? `${order.getIn(['fundProperty','addressLineThree'])},` : ''} ${order.getIn(['fundProperty','city'])} ${order.getIn(['fundProperty','state'])} ${order.getIn(['fundProperty','zipcode'])}`
                 };
 
                 const productsAndDestinations = [];
@@ -178,17 +178,17 @@ class ProcessOrderPage extends React.Component {
                         value = `${user.get('firstName')} ${user.get('lastName')}`;
 
                     } else if (key === 'phoneNumber'){
-                        value = user.get('phoneNumber');
+                        value = (!_.isNull(user.get('phoneNumber'))) ? user.get('phoneNumber') : '';
 
                     } else if (key === 'email') {
-                        value = user.get('email');
+                        value = (!_.isNull(user.get('email'))) ? user.get('email') : '';
 
                     } else if (key === 'hotshotDelivery') {
                         value = (order.get('isApplianceHotShotDelivery')) ? 'Yes' : 'No';
 
                     } else if (key === 'hotshotInstallDate') {
                         const formattedDay = moment(order.get('installDate')).format('MM/DD/YYYY');
-                        if (permissions.updateAllOrders || permissions.updateFundOrders) {
+                        if (permissions.get('updateAllOrders') || permissions.get('updateFundOrders')) {
                             value = <div className="no-limit">
                                 <DayPickerInput
                                     value={formattedDay}
@@ -224,7 +224,7 @@ class ProcessOrderPage extends React.Component {
                             value = order.get('tenantPhone');
 
                         } else if (key === 'email') {
-                            value = order.get('tenantEmail');
+                            value = (!_.isNull(order.get('tenantEmail'))) ? order.get('tenantEmail') : '';
                         }
                     } else {
                         if ( key === 'lockBox') {
@@ -259,7 +259,7 @@ class ProcessOrderPage extends React.Component {
                             <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
                             <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
                         </div>
-                        {(permissions.viewAllApprovedAndProcessedOrders || permissions.processManufacturerOrders)
+                        {(permissions.get('viewAllApprovedAndProcessedOrders') || permissions.get('processManufacturerOrders'))
                             ? <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.props.processOrder({ id: order.get('id'), processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });}}>
                                 <div className="input-container">
                                     <label htmlFor="processed-by">Processed By</label>
