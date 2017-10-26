@@ -12,7 +12,7 @@ import DashboardPage                        from 'screens/dashboard_page';
 import PropertyDetails                      from 'screens/property_details';
 import NewOrderPage                         from 'screens/new_order_page';
 import ProcessOrderPage                     from 'screens/process_order_page';
-import EditOrderPage                        from 'screens/process_order_page';
+import EditOrderPage                        from 'screens/edit_order_page';
 import EditProductPage                      from 'screens/edit_product_page';
 import LoginOverlay                         from 'screens/login';
 

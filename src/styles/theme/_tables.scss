@@ -200,15 +200,18 @@ table tr:last-child td:last-child {
             border-bottom: 1px solid $medium-light-gray;
             .table-header {
                 &:nth-child(1) {
-                    width: 58%;
+                    width: 42%;
                 }
                 &:nth-child(2) {
-                    width: 20%;
+                    width: 24%;
                 }
                 &:nth-child(3) {
-                    width: 11%;
+                    width: 15%;
                 }
                 &:nth-child(4) {
+                    width: 7%;
+                }
+                &:nth-child(5) {
                     width: 11%;
                 }
             }
@@ -245,15 +248,18 @@ table tr:last-child td:last-child {
                         .table-row {
                             td {
                                 &:nth-child(1) {
-                                    width: 58%;
+                                    width: 42%;
                                 }
                                 &:nth-child(2) {
-                                    width: 20%;
+                                    width: 24%;
                                 }
                                 &:nth-child(3) {
-                                    width: 11%;
+                                    width: 15%;
                                 }
                                 &:nth-child(4) {
+                                    width: 7%;
+                                }
+                                &:nth-child(5) {
                                     width: 11%;
                                 }
                             }
@@ -289,15 +295,18 @@ table tr:last-child td:last-child {
             .table-row {
                 td {
                     &:nth-child(1) {
-                        width: 58%;
+                        width: 42%;
                     }
                     &:nth-child(2) {
-                        width: 20%;
+                        width: 24%;
                     }
                     &:nth-child(3) {
-                        width: 11%;
+                        width: 15%;
                     }
                     &:nth-child(4) {
+                        width: 7%;
+                    }
+                    &:nth-child(5) {
                         width: 11%;
                     }
                 }

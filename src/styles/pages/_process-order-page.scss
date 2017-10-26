@@ -26,6 +26,12 @@
         .process-order {
             align-self: flex-end;
         }
+        .button-container {
+            text-align: right;
+            .btn {
+                margin-left: 15px;
+            }
+        }
     }
     .user-table {
         padding: 9px 0;
@@ -42,6 +48,9 @@
         }
         td {
             //Datepicker
+            .date-input {
+                border: none;
+            }
             &:nth-child(3) {
                 padding: 0;
                 vertical-align: middle;
