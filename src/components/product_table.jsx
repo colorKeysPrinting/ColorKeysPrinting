@@ -130,7 +130,7 @@ export default function ProductTable(props) {
                     <MyTable
                         type="productDetailsImage"
                         headers={(props.productIndex === 0) ? {productImage: 'Product'} : null}
-                        data={(!props.replacement) ? [[<img src={props.image} alt="" height="100" width="auto" />]] : null}
+                        data={(!props.replacement) ? [{productImage: <img src={props.image} alt="" height="100" width="auto" />}] : null}
                     />
                 </td>
                 <td className="product-details-table">

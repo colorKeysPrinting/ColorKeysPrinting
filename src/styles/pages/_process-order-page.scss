@@ -32,11 +32,22 @@
         .table {
             border: 1px solid $border-gray;
         }
+    }
+    .install-table {
+        display: inline-block;
+        width: 58%;
+        padding: 9px 9px 18px 0;
+        .table {
+            border: 1px solid $border-gray;
+        }
         td {
             //Datepicker
-            &:nth-child(5) {
+            &:nth-child(3) {
                 padding: 0;
                 vertical-align: middle;
+                input {
+                    max-width: 100px;
+                }
             }
             div {
                 overflow: initial;
@@ -46,14 +57,17 @@
             }
         }
     }
-    .occupancy-table {
-        display: inline-block;
-        width: 58%;
+    .special-instructions-table {
+        width: 46%;
         padding: 9px 9px 18px 0;
         .table {
             border: 1px solid $border-gray;
+            textarea {
+                width: 98%;
+                max-width: 98%;
+                min-height: 100px;
+            }
         }
-        
     }
     .office-table {
         display: inline-block;

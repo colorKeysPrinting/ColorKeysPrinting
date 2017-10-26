@@ -186,7 +186,7 @@ class ProcessOrderPage extends React.Component {
                     installDate: (order.get('isApplianceHotShotDelivery')) ? 'Hot Shot Install Date' : 'Install Date',
                 }
 
-                if (order.get('isApplianceHotShotDelivery')) { userHeaders['applianceHotShotCode'] = 'Hot Shot Code' }
+                if (order.get('isApplianceHotShotDelivery')) { installHeaders['applianceHotShotCode'] = 'Hot Shot Code' }
 
                 const installCols = {};
                 _.each(installHeaders, (value, key) => {
@@ -205,7 +205,7 @@ class ProcessOrderPage extends React.Component {
                                     value={formattedDay}
                                     onDayChange={day => this.updateInstallDate({ day })}
                                 />
-                            ) : <input type="text" value={formattedDay} disabled />
+                            ) : <input type="text" value={formattedDay} readOnly />
                         }</div>
                         break;
                     default:
@@ -215,6 +215,7 @@ class ProcessOrderPage extends React.Component {
 
                 // ***************** OFFICE TABLE DATA *****************
                 const officeHeaders = {
+                    name: 'PM Office',
                     phoneNumber: 'Phone Number',
                     email: 'Email'
                 };
@@ -225,7 +226,6 @@ class ProcessOrderPage extends React.Component {
                 });
 
                 // ***************** PRODUCTS TABLE DATA *****************
-// TODO: I ended here. need to also create table for installer info
                 const productHeaders = {
                     productDescription: '',
                     code: 'Install Code',
@@ -237,10 +237,10 @@ class ProcessOrderPage extends React.Component {
                 orderPageData = <div>
                     <div className="page-header">
                         <div className="order-info">
-                            <h2>Order: <span>*** update this ***</span></h2>
+                            <h2>Order: <span>{ (order.get('orderNumber')) ? order.get('orderNumber') : 'Not Provided' }</span></h2>
                             <h2>GE Account: <span>{ (order.getIn(['pmOffice', 'applianceGEAccountNumber'])) ? order.getIn(['pmOffice', 'applianceGEAccountNumber']) : order.getIn(['fund','applianceGEAccountNumber']) }</span></h2>
-                            <h2>Fund: <span>{ order.getIn(['fund','name']) }</span></h2>
-                            <h2>PM Office: <span>*** update this ***</span></h2>
+                            <h2>Fund: <span>{ (order.getIn(['fund','name'])) ? order.getIn(['fund','name']) : 'Not Provided' }</span></h2>
+                            <h2>PM Office: <span>{ (order.getIn(['pmOffice','name'])) ? order.getIn(['pmOffice','name']) : 'Not Provided' }</span></h2>
                             <h4>Ship-to Address: <span>{ `${order.getIn(['fundProperty', 'addressLineOne'])} ${(!_.isNull(order.getIn(['fundProperty','addressLineTwo']))) ? `${order.getIn(['fundProperty','addressLineTwo'])},` : ''} ${(!_.isNull(order.getIn(['fundProperty','addressLineThree']))) ? `${order.getIn(['fundProperty','addressLineThree'])},` : ''} ${order.getIn(['fundProperty','city'])} ${order.getIn(['fundProperty','state'])} ${order.getIn(['fundProperty','zipcode'])}` }</span></h4>
                         </div>
                         {(permissions.get('viewAllApprovedAndProcessedOrders') || permissions.get('processManufacturerOrders'))
@@ -262,21 +262,28 @@ class ProcessOrderPage extends React.Component {
                         className="user-table"
                         type="userDetails"
                         headers={userHeaders}
-                        data={{ userCols }}
+                        data={[userCols]}
                     />
                     <MyTable
-                        className="occupancy-table"
-                        type="occupancyDetails"
+                        className="install-table"
+                        type="installDetails"
                         headers={installHeaders}
-                        data={{ installCols }}
+                        data={[installCols]}
                     />
                     <MyTable
                         className="office-table"
                         type="officeDetails"
-                        titel="PM Office"
                         headers={officeHeaders}
-                        data={{ officeCols }}
+                        data={[officeCols]}
                     />
+                    {(order.get('specialInstructions')) ?
+                        <MyTable
+                            className="special-instructions-table"
+                            type="specialInstructions"
+                            headers={{specialInstructions: 'Special Instructions'}}
+                            data={[{specialInstructions: <textarea readOnly>{ order.get('specialInstructions') }</textarea>}]}
+                        /> : null}
+
                     <div className="product-table-wrapper">
                         { _.map(productsAndParts, (orderDetail, productIndex) => {
                             if (orderDetail.product) {

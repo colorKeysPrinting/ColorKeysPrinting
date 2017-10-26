@@ -27,6 +27,11 @@ table tr:last-child td:last-child {
         background: $table-header-gray;
         // border: none !important;
         }
+        .table-title {
+            padding: 13px;
+            text-align: center;
+            border-bottom: none;
+        }
         .table-header {
             font-size: 14px;
             font-weight: 600;

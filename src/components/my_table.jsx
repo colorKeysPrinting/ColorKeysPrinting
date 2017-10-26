@@ -29,13 +29,13 @@ export default class MyTable extends React.Component {
     }
 
     render() {
-        const { headers, sortby, data, type, className, dataClassName } = this.props;
+        const { headers, sortby, data, type, className, dataClassName, title } = this.props;
 
         return (
             <div className={ (className) ? className : '' }>
                 <table className="table">
                     <thead className="head">
-                        { (props.title) ? <tr><td><h2>{ props.title }</h2></td></tr> : null }
+                        { (title) ? <tr><td className="table-title" colSpan={_.size(headers)}><h4>{ title }</h4></td></tr> : null }
                         <tr>{ (headers) ? (
                             _.map(headers, (header, id) => {
                                 if (id !== 'id') {
