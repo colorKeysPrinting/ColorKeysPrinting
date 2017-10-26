@@ -34,6 +34,16 @@ export default function ProductTable(props) {
                         if (props.permissions.get('updateAllOrders') || props.permissions.get('updateFundOrders')) {
                             cols[key] = (isOutOfStockActive) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless cancel-button" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>;
                         }
+
+                    } else if (props.type === 'orderDetails') {
+                        value = (!props.replacement) ? <div className="no-limit">
+                            <div className="table-cell-details">{ `Color: ${props.color}` }</div>
+                            <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
+                            <div className="table-cell-details">{ (product.applianceCapacity) ? `Volume: ${product.applianceCapacity}` : '' }</div>
+                            <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
+                            <div className="table-cell-details">{ `Height: ${product.applianceHeight}` }</div>
+                            <div className="table-cell-details">{ `Depth: ${product.applianceDepth}` }</div>
+                        </div> : null;
                     }
                 } else if (row === 'productDetails') {
                     cols[key] = <div className="no-limit">
