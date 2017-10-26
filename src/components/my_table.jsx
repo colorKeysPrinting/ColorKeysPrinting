@@ -10,6 +10,7 @@ export default class MyTable extends React.Component {
         type            : PropTypes.string.isRequired,
         className       : PropTypes.string,
         dataClassName   : PropTypes.string,
+        title           : PropTypes.string,
         headers         : PropTypes.object,
         data            : PropTypes.array.isRequired,
         sortby          : PropTypes.object,
@@ -34,6 +35,7 @@ export default class MyTable extends React.Component {
             <div className={ (className) ? className : '' }>
                 <table className="table">
                     <thead className="head">
+                        { (props.title) ? <tr><td><h2>{ props.title }</h2></td></tr> : null }
                         <tr>{ (headers) ? (
                             _.map(headers, (header, id) => {
                                 if (id !== 'id') {

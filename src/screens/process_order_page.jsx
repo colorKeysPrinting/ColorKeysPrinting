@@ -4,12 +4,14 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import { withRouter }                       from 'react-router';
 import { Link }                             from 'react-router-dom';
+import Iframe                               from 'react-iframe';
 import moment                               from 'moment';
 import DayPickerInput                       from 'react-day-picker/DayPickerInput';
 
 import assets                               from 'libs/assets';
+import { formatPhoneNumbers }               from 'libs/reformat';
 
-import { clearOrder, getOrderById, processOrder, updateInstallDate, updateModelNumber }          from 'ducks/orders/actions';
+import * as orderActions                    from 'ducks/orders/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
 import MyTable                              from 'components/my_table';
@@ -25,10 +27,14 @@ class ProcessOrderPage extends React.Component {
             orderNumber: '',
             processedBy: '',
             modelNumber: '',
-            outOfStock: ''
+            outOfStock: '',
+            editOrder: false,
+            productsAndParts: {}
         };
 
         this.update = this.update.bind(this);
+        this.editOrder = this.editOrder.bind(this);
+        this.handleAction = this.handleAction.bind(this);
         this.updateInstallDate = this.updateInstallDate.bind(this);
         this.updateModelNumber = this.updateModelNumber.bind(this);
         this.showOutOfStock = this.showOutOfStock.bind(this);
@@ -37,9 +43,8 @@ class ProcessOrderPage extends React.Component {
     componentWillMount() {
         const { id } = this.props.match.params;
         const { history, location, cookies } = this.props;
-        const jwt = cookies.get('sibi-ge-admin');
 
-        if (jwt) {
+        if (cookies.get('sibi-ge-admin')) {
             if (id) {
                 this.props.getOrderById({ id });
             } else {
@@ -57,16 +62,24 @@ class ProcessOrderPage extends React.Component {
 
     componentWillUpdate(nextProps) {
         if (!_.isEqual(nextProps.order, this.props.order)) {
-            const order = nextProps.order.toJS();
+            const order = nextProps.order;
 
-            if (!order.processedAt) {
-                this.setState({ installDate: nextProps.order.toJS().installDate });
+            if (!order.get('processedAt')) {
+                this.setState({ installDate: order.get('installDate') });
             }
         }
     }
 
     update({ type, value }) {
         this.setState({ [type]: value });
+    }
+
+    editOrder({ orderId }) {
+        this.setState({ editOrder: orderId });
+    }
+
+    handleAction({ orderId }) {
+        this.props.approveOrder({ id: orderId });
     }
 
     updateInstallDate({ day }) {
@@ -109,55 +122,12 @@ class ProcessOrderPage extends React.Component {
 
     render() {
         const { order, spinner, activeUser } = this.props;
-        let orderPageData;
+        let orderPageData, tenantInfoTitle, tenantInfoDetails;
 
         if (order.size > 0) {
-
-            //TABLE HEADERS
-            const userHeaders = {
-                orderedBy: 'Ordered By',
-                phoneNumber: 'Phone Number',
-                email: 'Email',
-                hotshotDelivery: 'Hot Shot Delivery',
-                hotshotInstallDate: '',
-                hotshotCode: ''
-            };
-
-            const occupancyHeaders = (order.get('occupied')) ? {
-                occupancy: 'Occupancy',
-                tenantName: 'Tenant Name',
-                phoneNumber: 'Phone Number',
-                email: 'Email'
-            } : {
-                occupancy: 'Occupancy',
-                lockBox: 'Lockbox Code'
-            };
-
-            const officeHeaders = {
-                pmOffice: 'PM Office',
-                phoneNumber: 'Phone Number',
-                email: 'Email'
-            };
-
-            const productHeaders = {
-                productDescription: '',
-                code: 'Install Code',
-                qty: 'Qty',
-                price: 'Cost'
-            };
-
             if (!order.get('processedAt')) {
                 const permissions = activeUser.get('permissions');
                 const user = order.get('createdByUser');
-
-                userHeaders['hotshotInstallDate'] = (order.get('isApplianceHotShotDelivery')) ? 'Hot Shot Install Date' : 'Install Date';
-                userHeaders['hotshotCode'] = (order.get('isApplianceHotShotDelivery')) ? 'Hot Shot Code' : '';
-
-                const orderProcessHeading = {
-                    accountNumber: (order.getIn(['pmOffice', 'applianceGEAccountNumber'])) ? order.getIn(['pmOffice', 'applianceGEAccountNumber']) : order.getIn(['fund','applianceGEAccountNumber']),
-                    fund: order.getIn(['fund','name']),
-                    address: `${order.getIn(['fundProperty', 'addressLineOne'])} ${(!_.isNull(order.getIn(['fundProperty','addressLineTwo']))) ? `${order.getIn(['fundProperty','addressLineTwo'])},` : ''} ${(!_.isNull(order.getIn(['fundProperty','addressLineThree']))) ? `${order.getIn(['fundProperty','addressLineThree'])},` : ''} ${order.getIn(['fundProperty','city'])} ${order.getIn(['fundProperty','state'])} ${order.getIn(['fundProperty','zipcode'])}`
-                };
 
                 const productsAndDestinations = [];
                 _.each(order.get('productsAndDestinations').toJS(), (product) => {
@@ -171,93 +141,107 @@ class ProcessOrderPage extends React.Component {
                 const productsAndParts = productsAndDestinations.concat(order.get('partsAndDestinations'));
 
                 // ***************** USER TABLE DATA *****************
+                const userHeaders = {
+                    createdBy: 'Ordered By',
+                    phoneNumber: 'Phone Number',
+                    email: 'Email',
+                    occupied: 'Occupancy'
+                };
+
+                (order.get('occupied')) ? (
+                    userHeaders['tenantName'] = 'Tenant Name',
+                    userHeaders['tenantPhone'] = 'Phone Number',
+                    userHeaders['tenantEmail'] = 'Email'
+                ) : (
+                    userHeaders['lockBoxCode'] ='Lockbox Code'
+                )
+
                 const userCols = {};
                 _.each(userHeaders, (value, key) => {
-                    value = order[key]
-                    if (key === 'orderedBy') {
-                        value = `${user.get('firstName')} ${user.get('lastName')}`;
-
-                    } else if (key === 'phoneNumber'){
-                        value = (!_.isNull(user.get('phoneNumber'))) ? user.get('phoneNumber') : '';
-
-                    } else if (key === 'email') {
-                        value = (!_.isNull(user.get('email'))) ? user.get('email') : '';
-
-                    } else if (key === 'hotshotDelivery') {
-                        value = (order.get('isApplianceHotShotDelivery')) ? 'Yes' : 'No';
-
-                    } else if (key === 'hotshotInstallDate') {
-                        const formattedDay = moment(order.get('installDate')).format('MM/DD/YYYY');
-                        if (permissions.get('updateAllOrders') || permissions.get('updateFundOrders')) {
-                            value = <div className="no-limit">
-                                <DayPickerInput
-                                    value={formattedDay}
-                                    onDayChange={(day) => this.updateInstallDate({ day })}
-                                />
-                            </div>;
-                        } else {
-                            value = <div className="no-limit">
-                                <input type="text" value={formattedDay} disabled />
-                            </div>;
-                        }
-
-                    } else if (key === 'hotshotCode') {
-                        value = (order.get('isApplianceHotShotDelivery')) ? <div>{ order.get('applianceHotShotCode') }</div> : null;
+                    switch(key) {
+                    case 'createdBy':
+                        userCols[key] = `${user.get('firstName')} ${user.get('lastName')}`;
+                        break;
+                    case 'phoneNumber':
+                        userCols[key] = (!_.isNull(user.get('phoneNumber'))) ? user.get('phoneNumber') : '';
+                        break;
+                    case 'email':
+                        userCols[key] = (!_.isNull(user.get('email'))) ? user.get('email') : '';
+                        break;
+                    case 'occupied':
+                        userCols[key] = (order.get(key)) ? 'Occupied' : 'Unoccupied';
+                        break;
+                    case 'tenantName':
+                        userCols[key] = `${order.get('tenantFirstName')} ${order.get('tenantFirstName')}`
+                        break;
+                    default:
+                        userCols[key] = (order.get(key)) ? order.get(key) : '';
                     }
-                    userCols[key] = value;
                 });
 
-                // ***************** OCCUPANCY TABLE DATA *****************
-                const occupancyCols = {};
-                _.each(occupancyHeaders, (value, key) => {
-                    value = order[key]
+                // ***************** INSTALLER TABLE DATA *****************
+                const installHeaders = {
+                    applianceDeliveryTime: 'Preferred Install Time',
+                    isApplianceHotShotDelivery: 'Hot Shot',
+                    installDate: (order.get('isApplianceHotShotDelivery')) ? 'Hot Shot Install Date' : 'Install Date',
+                }
 
-                    if (key === 'occupancy') {
-                        value = (!order.get('occupied')) ? 'Unoccupied' : 'Occupied';
+                if (order.get('isApplianceHotShotDelivery')) { userHeaders['applianceHotShotCode'] = 'Hot Shot Code' }
+
+                const installCols = {};
+                _.each(installHeaders, (value, key) => {
+                    switch(key){
+                    case 'applianceDeliveryTime':
+                        installCols[key] = (order.get(key)) ? order.get(key) : 'Not Specified';
+                        break;
+                    case 'isApplianceHotShotDelivery':
+                        installCols[key] = (order.get(key)) ? 'Yes' : 'No';
+                        break;
+                    case 'installDate':
+                        const formattedDay = moment(order.get(key)).format('MM/DD/YYYY');
+                        installCols[key] = <div className="no-limit">{
+                            (permissions.get('updateAllOrders') || permissions.get('updateFundOrders')) ? (
+                                <DayPickerInput
+                                    value={formattedDay}
+                                    onDayChange={day => this.updateInstallDate({ day })}
+                                />
+                            ) : <input type="text" value={formattedDay} disabled />
+                        }</div>
+                        break;
+                    default:
+                        installCols[key] = (order.get(key)) ? order.get(key) : '';
                     }
-
-                    if (order.get('occupied')) {
-                        if (key === 'tenantName'){
-                            value = `${order.get('tenantFirstName')} ${order.get('tenantLastName')}`;
-
-                        } else if (key === 'phoneNumber') {
-                            value = order.get('tenantPhone');
-
-                        } else if (key === 'email') {
-                            value = (!_.isNull(order.get('tenantEmail'))) ? order.get('tenantEmail') : '';
-                        }
-                    } else {
-                        if ( key === 'lockBox') {
-                            value = `${order.get('lockBoxCode')}`;
-                        }
-                    }
-
-                    occupancyCols[key] = value;
                 });
 
                 // ***************** OFFICE TABLE DATA *****************
+                const officeHeaders = {
+                    phoneNumber: 'Phone Number',
+                    email: 'Email'
+                };
+
                 const officeCols = {};
                 _.each(officeHeaders, (value, key) => {
-                    value = order[key]
-                    if (key === 'pmOffice') {
-                        value = (order.get('pmOffice')) ? order.getIn(['pmOffice','name']) : null;
-
-                    } else if (key === 'phoneNumber'){
-                        value = (order.get('pmOffice')) ? order.get(['pmOffice','phoneNumber']) : null;
-
-                    } else if (key === 'email') {
-                        value = (order.get('pmOffice')) ? order.get(['pmOffice','email']) : null;
-                    }
-                    officeCols[key] = value;
+                    officeCols[key] = (order.get('pmOffice')) ? (order.getIn(['pmOffice', key])) ? order.getIn(['pmOffice', key]) : 'Not Provided' : null;
                 });
 
                 // ***************** PRODUCTS TABLE DATA *****************
+// TODO: I ended here. need to also create table for installer info
+                const productHeaders = {
+                    productDescription: '',
+                    code: 'Install Code',
+                    address: 'Shipped to',
+                    qty: 'Qty',
+                    price: 'Cost'
+                };
+
                 orderPageData = <div>
                     <div className="page-header">
                         <div className="order-info">
-                            <h2>GE Account #: <span>{ orderProcessHeading.accountNumber }</span></h2>
-                            <h2>Fund: <span>{ orderProcessHeading.fund }</span></h2>
-                            <h4>Ship-to Address: <span>{ orderProcessHeading.address }</span></h4>
+                            <h2>Order: <span>*** update this ***</span></h2>
+                            <h2>GE Account: <span>{ (order.getIn(['pmOffice', 'applianceGEAccountNumber'])) ? order.getIn(['pmOffice', 'applianceGEAccountNumber']) : order.getIn(['fund','applianceGEAccountNumber']) }</span></h2>
+                            <h2>Fund: <span>{ order.getIn(['fund','name']) }</span></h2>
+                            <h2>PM Office: <span>*** update this ***</span></h2>
+                            <h4>Ship-to Address: <span>{ `${order.getIn(['fundProperty', 'addressLineOne'])} ${(!_.isNull(order.getIn(['fundProperty','addressLineTwo']))) ? `${order.getIn(['fundProperty','addressLineTwo'])},` : ''} ${(!_.isNull(order.getIn(['fundProperty','addressLineThree']))) ? `${order.getIn(['fundProperty','addressLineThree'])},` : ''} ${order.getIn(['fundProperty','city'])} ${order.getIn(['fundProperty','state'])} ${order.getIn(['fundProperty','zipcode'])}` }</span></h4>
                         </div>
                         {(permissions.get('viewAllApprovedAndProcessedOrders') || permissions.get('processManufacturerOrders'))
                             ? <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.props.processOrder({ id: order.get('id'), processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });}}>
@@ -283,12 +267,13 @@ class ProcessOrderPage extends React.Component {
                     <MyTable
                         className="occupancy-table"
                         type="occupancyDetails"
-                        headers={occupancyHeaders}
-                        data={{ occupancyCols }}
+                        headers={installHeaders}
+                        data={{ installCols }}
                     />
                     <MyTable
                         className="office-table"
                         type="officeDetails"
+                        titel="PM Office"
                         headers={officeHeaders}
                         data={{ officeCols }}
                     />
@@ -371,16 +356,12 @@ class ProcessOrderPage extends React.Component {
 }
 
 const select = (state) => ({
-    activeUser     : state.activeUser.get('activeUser'),
-    order          : state.orders.get('order'),
+    activeUser : state.activeUser.get('activeUser'),
+    order      : state.orders.get('order'),
 });
 
 const actions = {
-    clearOrder,
-    getOrderById,
-    processOrder,
-    updateInstallDate,
-    updateModelNumber,
+    ...orderActions,
     setActiveTab,
 }
 
