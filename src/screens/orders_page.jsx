@@ -86,7 +86,7 @@ class OrdersPage extends React.Component {
         const { history, activeUser } = this.props;
         const permissions = activeUser.get('permissions');
 
-        const pathname = (permissions.get('viewAllApprovedAndProcessedOrders') || permissions.get('processManufacturerOrders')) ? 'process_order' : 'order_details';
+        const pathname = (order.orderStatus === 'Approved') ? (permissions.get('viewAllApprovedAndProcessedOrders') || permissions.get('processManufacturerOrders')) ? 'process_order' : 'order_details' : 'order_details';
 
         history.push(`/${pathname}/${order.id}`);
     }

@@ -62,6 +62,7 @@ class ProcessOrderPage extends React.Component {
             const order = nextProps.order;
 
             if (!order.get('processedAt')) {
+                this.setState({ processedBy: `${this.props.activeUser.get('firstName')} ${this.props.activeUser.get('lastName')}`});
                 this.setState({ installDate: order.get('installDate') });
             }
         }
@@ -221,6 +222,7 @@ class ProcessOrderPage extends React.Component {
 
             // ***************** PRODUCTS TABLE DATA *****************
             const productHeaders = {
+                productImage: 'Product',
                 productDescription: '',
                 address: 'Shipped to',
                 code: 'Install Code',
@@ -322,7 +324,6 @@ class ProcessOrderPage extends React.Component {
                                 manufacturerModelNumber={orderDetail.selectedColorInfo.manufacturerModelNumber}
                                 color={orderDetail.selectedColorInfo.color}
                                 qty={(orderDetail.qty) ? orderDetail.qty : 1}
-                                installAppliance={orderDetail.installAppliance}
                                 removeOldAppliance={orderDetail.removeOldAppliance}
                                 price={orderDetail.ProductPrice.price}
                                 productsAndParts={productsAndParts}

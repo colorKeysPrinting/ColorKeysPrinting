@@ -7,12 +7,7 @@
         .order-info {
             text-align: left;
             h2 {
-                &:nth-child(1) {
-                    margin-bottom: 8px;
-                }
-                &:nth-child(2) {
-                    margin-bottom: 16px;
-                }
+                margin-bottom: 8px;
             }
             h4 {
                 font-weight: 600;

@@ -29,11 +29,16 @@ export default class MyTable extends React.Component {
     }
 
     render() {
-        const { headers, sortby, data, type, className, dataClassName, title } = this.props;
+        const { headers, sortby, data, type, className, dataClassName, title, colspan } = this.props;
 
         return (
-            <div className={ (className) ? className : '' }>
+            <div className={ (className) ? className : 'my-table' }>
                 <table className="table">
+                    {(colspan) ? <colgroup>{
+                        _.map(colspan, (col, key) => (
+                            <col key={`colspan${key}`} />
+                        ))
+                    }</colgroup>: null}
                     <thead className="head">
                         { (title) ? <tr><td className="table-title" colSpan={_.size(headers)}><h4>{ title }</h4></td></tr> : null }
                         <tr>{ (headers) ? (
