@@ -15,12 +15,23 @@ export default function ProductTable(props) {
         productRows.push('disconnect');
     }
 
+    const productDetails = (!props.replacement) ? (
+        <div>
+            <div className="table-cell-details">{ `Color: ${props.color}` }</div>
+            <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
+            <div className="table-cell-details">{ (product.applianceCapacity) ? `Volume: ${product.applianceCapacity}` : '' }</div>
+            <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
+            <div className="table-cell-details">{ `Height: ${product.applianceHeight}` }</div>
+            <div className="table-cell-details">{ `Depth: ${product.applianceDepth}` }</div>
+        </div>
+    ) : null;
+
     return (
         <MyTable
             type="productDetails"
             className="product-table"
             dataClassName="table-row product-row"
-            headers={props.productHeaders}
+            headers={(props.productIndex === 0) ? props.productHeaders : {}}
             colspan={props.productHeaders}
             data={_.map(productRows, (row) => {
                 let cols = {};
@@ -36,33 +47,29 @@ export default function ProductTable(props) {
                             cols[key] = <div className="no-limit">
                                 <span className="product-header">{ (!props.replacement) ? product.applianceDescription : `Replaced with model #: ${props.replacement}` }</span>
                                 <div className="table-cell-details">{ `${(props.replacement) ? 'Original' : ''} Model Number: ${(props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber}` }</div>
-                                {(props.type === '/process_order' && !props.processedAt && props.orderStatus !== 'Pending') ?
-                                    (props.permissions.get('updateAllOrders') || props.permissions.get('updateFundOrders')) ?
-                                        <div className="out-of-stock-btn">{(isOutOfStockActive) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless cancel-button" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>}</div>
-                                        : null
-                                    : null}
+                                <div className="out-of-stock-btn">
+                                    {(props.type === '/process_order' && !props.processedAt && props.orderStatus !== 'Pending')
+                                        ? (props.permissions.get('updateAllOrders') || props.permissions.get('updateFundOrders'))
+                                            ? (isOutOfStockActive) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless cancel-button" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>
+                                            : null
+                                        : productDetails}
+                                </div>
                             </div>;
 
                         } else if (row === 'productDetails') {
                             cols[key] = <div className="no-limit">
-                                {(props.outOfStock === props.productIndex) ? (
-                                    <form className="replace-form" onSubmit={(e) => {e.preventDefault(); props.updateModelNumber({ productsAndParts: props.productsAndParts });}}>
+                                {(props.outOfStock === props.productIndex)
+                                    ? ( <form className="replace-form" onSubmit={(e) => {e.preventDefault(); props.updateModelNumber({ productsAndParts: props.productsAndParts });}}>
                                         <div className="input-container">
                                             <label htmlFor="model-num-replace" >Enter Model # to replace product</label>
                                             <input name="model-num-replace" value={props.modelNumber} placeholder="JGB635DEKBB" onChange={(e) => props.update({ type: 'modelNumber', value: e.target.value })} required />
                                         </div>
                                         <input className="btn blue" type="submit" value="Replace" />
-                                    </form>
-                                ) : (
-                                    (!props.replacement) ? (<div>
-                                        <div className="table-cell-details">{ `Color: ${props.color}` }</div>
-                                        <div className="table-cell-details">{ `Fuel Type: ${product.applianceFuelType}` }</div>
-                                        <div className="table-cell-details">{ (product.applianceCapacity) ? `Volume: ${product.applianceCapacity}` : '' }</div>
-                                        <div className="table-cell-details">{ `Width: ${product.applianceWidth}` }</div>
-                                        <div className="table-cell-details">{ `Height: ${product.applianceHeight}` }</div>
-                                        <div className="table-cell-details">{ `Depth: ${product.applianceDepth}` }</div>
-                                    </div>) : null
-                                )}
+                                    </form>)
+                                    : (props.type === '/process_order' && !props.processedAt && props.orderStatus !== 'Pending')
+                                        ? productDetails
+                                        : null
+                                }
                             </div>;
 
                         } else if (row === 'install') {

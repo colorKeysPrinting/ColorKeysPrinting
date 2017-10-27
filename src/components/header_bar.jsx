@@ -172,7 +172,7 @@ class HeaderBar extends React.Component {
                     </Overlay> : null }
                 </div> : null }
                 <div className="login-section">
-                    { (jwt) ? <div onClick={this.showProfile}>
+                    { (jwt && activeUser.size > 0) ? <div onClick={this.showProfile}>
                         <img className="settings-icon" src={(activeUser.get('profilePic')) ? assets(activeUser.get('profilePic')) : assets('./images/icon-settings.svg')} alt="settingsButtons" width="40px" height="40px" />
                     </div> : null }
                 </div>
