@@ -58,12 +58,18 @@ class ProcessOrderPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.order, this.props.order)) {
-            const order = nextProps.order;
+        const { history, activeUser, order } = this.props;
+        const orderNew = nextProps.order;
 
-            if (!order.get('processedAt')) {
-                this.setState({ processedBy: `${this.props.activeUser.get('firstName')} ${this.props.activeUser.get('lastName')}`});
-                this.setState({ installDate: order.get('installDate') });
+        if (!_.isEqual(orderNew, order)) {
+            if (!orderNew.get('processedAt')) {
+                this.setState({ processedBy: `${activeUser.get('firstName')} ${activeUser.get('lastName')}`});
+                this.setState({ installDate: orderNew.get('installDate') });
+            }
+            if (_.size(order) > 0) {
+                if (!_.isEqual(orderNew.get('orderStatus'), order.get('orderStatus'))) {
+                    history.push(`/orders`);
+                }
             }
         }
     }
@@ -241,7 +247,7 @@ class ProcessOrderPage extends React.Component {
                     </div>
                     {(pageType === '/process_order' && !order.get('processedAt') && order.get('orderStatus') !== 'Pending')
                         ? (permissions.get('viewAllApprovedAndProcessedOrders') || permissions.get('processManufacturerOrders'))
-                            ? <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.props.processOrder({ id: order.get('id'), processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber });}}>
+                            ? <form className="process-order" onSubmit={(e) => {e.preventDefault(); this.props.processOrder({ id: order.get('id'), processedByName: this.state.processedBy, geOrderNumber: this.state.orderNumber }); }}>
                                 <div className="input-container">
                                     <label htmlFor="processed-by">Processed By</label>
                                     <input name="processed-by" type="text" value={this.state.processedBy} placeholder="Name" onChange={(e) => this.update({ type: 'processedBy', value: e.target.value })} required />

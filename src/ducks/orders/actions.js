@@ -71,6 +71,7 @@ export function approveOrder({ id }) {
             }
         })
             .then(payload => {
+                alert('Your order was approved.');
                 dispatch(getOrderById({ id }));
                 dispatch(getOrders());
             })
@@ -146,6 +147,7 @@ export function processOrder({ id, processedByName, geOrderNumber }) {
             }
         })
             .then(payload => {
+                alert('Your order has been processed.');
                 dispatch(getOrderById({ id }));
                 dispatch(getOrders());
             })

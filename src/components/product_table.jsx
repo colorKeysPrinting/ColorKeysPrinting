@@ -38,7 +38,7 @@ export default function ProductTable(props) {
                                 <div className="table-cell-details">{ `${(props.replacement) ? 'Original' : ''} Model Number: ${(props.manufacturerModelNumber) ? props.manufacturerModelNumber : product.sibiModelNumber}` }</div>
                                 {(props.type === '/process_order' && !props.processedAt && props.orderStatus !== 'Pending') ?
                                     (props.permissions.get('updateAllOrders') || props.permissions.get('updateFundOrders')) ?
-                                        (isOutOfStockActive) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless cancel-button" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>
+                                        <div className="out-of-stock-btn">{(isOutOfStockActive) ? <div className="btn blue" onClick={() => props.showOutOfStock({ productIndex: props.productIndex })} >Out of Stock?</div> : <div className="btn borderless cancel-button" onClick={() => props.showOutOfStock({ productIndex: '' })} >Cancel</div>}</div>
                                         : null
                                     : null}
                             </div>;
