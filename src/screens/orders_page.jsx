@@ -115,18 +115,18 @@ class OrdersPage extends React.Component {
         if (orders.size > 0 &&
             fundProperties.size > 0) {
 
-            data = _.map(orders.toJS(), (item) => {
+            data = _.map(orders.toJS(), (order) => {
                 const cols = {};
-                const fundProperty = _.find(fundProperties.toJS(), ['id', item['fundPropertyId']]);
+                const fundProperty = _.find(fundProperties.toJS(), ['id', order['fundPropertyId']]);
 
                 _.each(headers, (value, key) => {
-                    value = item[key];
+                    value = order[key];
 
                     if (key === 'id') {
-                        value = item.id;
+                        value = order.id;
 
                     } else if (key === 'office') {
-                        value = item.pmOffice.name;
+                        value = order.pmOffice.name;
 
                     } else if (key ==='propertyId') {
                         value = fundProperty.propertyUnitId;
@@ -135,10 +135,10 @@ class OrdersPage extends React.Component {
                         value = `${fundProperty['addressLineOne']}, ${(fundProperty['addressLineTwo']) ? `${fundProperty['addressLineTwo']},` : ''} ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
 
                     } else if (key === 'occupied') {
-                        value = (item[key]) ? 'Occupied' : 'Vacant';
+                        value = (order[key]) ? 'Occupied' : 'Vacant';
 
                     } else if (key === 'userId') {
-                        value = (item.user) ? `${item.user.firstName} ${item.user.lastName}` : '';
+                        value = (order['user']) ? `${order.user.firstName} ${order.user.lastName}` : '';
 
                     } else if (key === 'createdAt') {
                         value = moment(new Date(value)).format('MMM DD, YYYY HH:MM');
@@ -146,10 +146,10 @@ class OrdersPage extends React.Component {
                     } else if (key === 'action') {
                         const permissions = activeUser.get('permissions');
                         if (permissions.get('approveAllOrders') || permissions.get('approveFundOrders')) {
-                            value = (item['orderStatus'] === 'Pending') ? 'approve' : '';
+                            value = (order['orderStatus'] === 'Pending') ? 'approve' : '';
 
                         } else if (permissions.get('processManufacturerOrders')) {
-                            value = (item['orderStatus'] === 'Approved') ? 'process' : value;
+                            value = (order['orderStatus'] === 'Approved') ? 'process' : value;
                         }
                     }
 
@@ -165,9 +165,9 @@ class OrdersPage extends React.Component {
 
             // this maps the actual cost ammount back to totalCost
             if(searchTerm !== '') {
-                data = _.map(data, (item) => {
-                    item.totalCost = `${item.totalCost}`;
-                    return item;
+                data = _.map(data, (order) => {
+                    order.totalCost = `${order.totalCost}`;
+                    return order;
                 });
 
                 data = filter(searchTerm, KEYS_TO_FILTERS, data);

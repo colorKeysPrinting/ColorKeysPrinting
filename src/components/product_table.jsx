@@ -40,7 +40,7 @@ export default function ProductTable(props) {
                     let value;
                     switch(key) {
                     case 'productImage':
-                        cols[key] = (row === 'product') ? <img src={props.image} alt="" height="130" width="auto" /> : '';
+                        cols[key] = (row === 'product') ? <img src={props.image} alt="" className="product-image" /> : '';
                         break;
                     case 'productDescription':
                         if (row === 'product') {

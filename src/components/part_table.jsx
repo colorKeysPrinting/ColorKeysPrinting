@@ -25,7 +25,7 @@ export default function PartTable(props) {
                 _.each(partHeaders, (header) => {
                     switch(header) {
                     case 'partImage':
-                        cols[header] = (row === 'part') ? <img src={part.imageUrl} alt="" height="100" width="auto" /> : '';
+                        cols[header] = (row === 'part') ? <img src={part.imageUrl} alt="" className="part-image" /> : '';
                         break;
                     case 'partDescription':
                         if (row === 'part') {
