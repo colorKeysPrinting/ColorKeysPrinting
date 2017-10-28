@@ -37,7 +37,6 @@ class UsersPage extends React.Component {
 
         if (cookies.get('sibi-ge-admin')) {
             this.props.triggerSpinner(true);
-            this.props.getUsers();
         }
 
         this.props.setActiveTab('users');

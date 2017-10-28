@@ -39,7 +39,6 @@ class OrdersPage extends React.Component {
         if (cookies.get('sibi-ge-admin')) {
             this.props.triggerSpinner(true);
             this.props.getFundProperties();
-            this.props.getOrders();
         }
 
         this.props.setActiveTab('orders');
