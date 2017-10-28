@@ -58,10 +58,20 @@ class ProcessOrderPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        const { history, activeUser, order } = this.props;
+        const { history, location, match, activeUser, order } = this.props;
         const orderNew = nextProps.order;
 
         if (!_.isEqual(orderNew, order)) {
+            const permissions = activeUser.get('permissions');
+            const pageType = _.replace(location.pathname, `/${match.params.id}`, '');
+
+            if (pageType === '/process_order') {
+                if (!permissions.get('viewAllApprovedAndProcessedOrders') || !permissions.get('processManufacturerOrders')) {
+                    alert(`You do not have permissions to view this page.  To view this page login with an appropriate user.`);
+                    history.push(`/orders`);
+                }
+            }
+
             if (!orderNew.get('processedAt')) {
                 this.setState({ processedBy: `${activeUser.get('firstName')} ${activeUser.get('lastName')}`});
                 this.setState({ installDate: orderNew.get('installDate') });
