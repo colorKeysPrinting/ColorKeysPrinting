@@ -41,18 +41,28 @@ class HeaderBar extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        const { cookies, history, location, activeUser, isLogout } = this.props;
+        const { cookies, history, location, activeUser, isLogout, activeTab } = this.props;
 
         if (!_.isEqual(nextProps.isLogout, isLogout)) {
             this.props.logout();
         }
 
+
+
         if (cookies.get('sibi-ge-admin')) {
+            if (!_.isEqual(nextProps.activeTab, activeTab) && activeTab !== '' && nextProps.activeUser.size > 0) {
+                this.props.getUsers();
+                this.props.getOrders();
+
+            } else if (nextProps.activeTab === 'orders' && nextProps.activeUser.size === 0) {
+                this.props.getUsers();
+
+            } else if (nextProps.activeTab === 'users' && nextProps.activeUser.size === 0) {
+                this.props.getOrders();
+            }
+
             if (!_.isEqual(nextProps.activeUser, activeUser)) {
                 if (nextProps.activeUser.size > 0) {
-                    this.props.getUsers();
-                    this.props.getOrders();
-
                     if (location.prevPath && location.prevPath !== '/login') {
                         history.push({ pathname: location.prevPath })
                     } else if (location.pathname === '/login' || location.pathname === '/') {
@@ -172,7 +182,7 @@ class HeaderBar extends React.Component {
                     </Overlay> : null }
                 </div> : null }
                 <div className="login-section">
-                    { (jwt && activeUser.size > 0) ? <div onClick={this.showProfile}>
+                    { (jwt && activeUser.size > 0) ? <div onClick={() => this.showProfile()}>
                         <img className="settings-icon" src={(activeUser.get('profilePic')) ? assets(activeUser.get('profilePic')) : assets('./images/icon-settings.svg')} alt="settingsButtons" width="40px" height="40px" />
                     </div> : null }
                 </div>

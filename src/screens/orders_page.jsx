@@ -9,7 +9,6 @@ import SearchInput                          from 'react-search-input';
 import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
 
-import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
 import { getFundProperties }                from 'ducks/properties/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
@@ -34,11 +33,13 @@ class OrdersPage extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies } = this.props;
+        const { activeTab, cookies } = this.props;
 
         if (cookies.get('sibi-ge-admin')) {
-            this.props.triggerSpinner(true);
             this.props.getFundProperties();
+            if (activeTab === '') {
+                this.props.getOrders();
+            }
         }
 
         this.props.setActiveTab('orders');
@@ -202,10 +203,6 @@ class OrdersPage extends React.Component {
                 data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
             }
 
-            this.props.triggerSpinner(false);
-
-        } else if (zeroOrders) {
-            this.props.triggerSpinner(false);
         }
 
         return (
@@ -231,7 +228,7 @@ class OrdersPage extends React.Component {
                             />
                         </div>
                     ) : (
-                        (!spinner) ? (
+                        (zeroOrders) ? (
                             <div>
                                 <h1>Order Status</h1>
                                 <p>There are currently no orders to display</p>
@@ -246,15 +243,14 @@ class OrdersPage extends React.Component {
 }
 
 const select = (state) => ({
-    spinner        : state.ui.get('spinner'),
     activeUser     : state.activeUser.get('activeUser'),
     orders         : state.orders.get('orders'),
     zeroOrders     : state.orders.get('zeroOrders'),
     fundProperties : state.properties.get('fundProperties'),
+    activeTab      : state.header.get('activeTab'),
 });
 
 const actions = {
-    triggerSpinner,
     getOrders,
     getFundProperties,
     approveOrder,

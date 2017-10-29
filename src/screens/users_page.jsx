@@ -9,7 +9,6 @@ import Select                               from 'components/select_box';
 import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
 
-import { triggerSpinner }                   from 'ducks/ui/actions';
 import { getUsers, approveUser, autoApproveUserOrders }            from 'ducks/users/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
@@ -33,12 +32,9 @@ class UsersPage extends React.Component {
     }
 
     componentWillMount() {
-        const { cookies, activeUser } = this.props;
-
-        if (cookies.get('sibi-ge-admin')) {
-            this.props.triggerSpinner(true);
+        if (this.props.activeTab === '') {
+            this.props.getUsers();
         }
-
         this.props.setActiveTab('users');
     }
 
@@ -196,11 +192,6 @@ class UsersPage extends React.Component {
                     return item;
                 });
             }
-
-            this.props.triggerSpinner(false);
-
-        } else if (zeroUsers) {
-            this.props.triggerSpinner(false);
         }
 
         return (
@@ -224,7 +215,7 @@ class UsersPage extends React.Component {
                             />
                         </div>
                     ) : (
-                        (!spinner) ? (
+                        (zeroUsers) ? (
                             <div>
                                 <h1>User Status</h1>
                                 <p>There are currently no users to display</p>
@@ -239,14 +230,13 @@ class UsersPage extends React.Component {
 }
 
 const select = (state) => ({
-    spinner    : state.ui.get('spinner'),
     activeUser : state.activeUser.get('activeUser'),
     users      : state.users.get('users'),
-    zeroUsers  : state.users.get('zeroUsers')
+    zeroUsers  : state.users.get('zeroUsers'),
+    activeTab  : state.header.get('activeTab'),
 });
 
 const action = {
-    triggerSpinner,
     getUsers,
     approveUser,
     autoApproveUserOrders,
