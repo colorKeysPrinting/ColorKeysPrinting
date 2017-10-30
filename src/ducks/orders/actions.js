@@ -53,7 +53,7 @@ export function getOrders() {
             type = 'ordersForManufacturerAdmin';
             break;
         case 'manufacturerOrderProcessor':
-            type = 'ordersForManufacturer';
+            type = 'ordersForManufacturerProcessor';
             break;
         default:
             type = 'ordersForUser';
