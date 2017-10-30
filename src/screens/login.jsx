@@ -3,7 +3,7 @@ import { withRouter }               from 'react-router';
 import { connect }                  from 'react-redux';
 import assets                       from 'libs/assets';
 
-import { login, logout, resetLoginError, forgotPassword, resetSentEmail }     from 'ducks/active_user/actions';
+import { login, resetLoginError, forgotPassword, resetSentEmail }     from 'ducks/active_user/actions';
 
 import Overlay                      from 'components/overlay';
 
@@ -107,7 +107,6 @@ const select = (state) => ({
 
 const actions = {
     login,
-    logout,
     resetLoginError,
     forgotPassword,
     resetSentEmail

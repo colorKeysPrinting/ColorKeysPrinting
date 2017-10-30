@@ -3,7 +3,6 @@ import _                                    from 'lodash';
 import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 
-import { logout }                           from 'ducks/active_user/actions';
 import { getUsers }                         from 'ducks/users/actions';
 import { getFundProperties }                from 'ducks/properties/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
@@ -39,7 +38,6 @@ const select = (state) => ({
 });
 
 const actions = {
-    logout,
     getUsers,
     getFundProperties,
     setActiveTab

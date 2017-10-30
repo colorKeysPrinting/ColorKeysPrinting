@@ -3,8 +3,6 @@ import { withRouter }               from 'react-router';
 import { connect }                  from 'react-redux';
 import assets                       from 'libs/assets';
 
-// import { login, logout, passwordReset }     from 'ducks/active_user/actions';
-
 import Overlay                      from 'components/overlay';
 
 class fileUploaderOverlay extends React.Component {
@@ -149,10 +147,4 @@ class fileUploaderOverlay extends React.Component {
     }
 }
 
-const select = (state) => ({});
-
-const actions = {
-
-};
-
-export default connect(select, actions, null, { withRef: true })(withRouter(fileUploaderOverlay));
+export default withRouter(fileUploaderOverlay);

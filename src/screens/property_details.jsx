@@ -6,7 +6,6 @@ import { withCookies }                      from 'react-cookie';
 import Select                               from 'react-select';
 import assets                               from 'libs/assets';
 
-import { logout }                           from 'ducks/active_user/actions';
 import { triggerSpinner }                   from 'ducks/ui/actions';
 import * as propertiesActions               from 'ducks/properties/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
@@ -122,7 +121,6 @@ const select = (state) => ({
 });
 
 const actions = {
-    logout,
     setActiveTab,
     ...propertiesActions
 }

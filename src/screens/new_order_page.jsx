@@ -4,7 +4,6 @@ import { connect }                          from 'react-redux';
 import { withCookies }                      from 'react-cookie';
 import Iframe                               from 'react-iframe';
 
-import { logout }                           from 'ducks/active_user/actions';
 import { getUsers }                         from 'ducks/users/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
@@ -54,7 +53,6 @@ const select = (state) => ({
 });
 
 const actions = {
-    logout,
     getUsers,
     setActiveTab
 }
