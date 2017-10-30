@@ -18,9 +18,13 @@ export default (state = initialState, action) => {
 
     switch (action.type) {
     case ActionTypes.CLEAR_ORDER:
-        console.log('clear orders');
+        console.log('clear order');
         state = state.set('order', '');
-        state = state.set('orderProducts', []);
+        break;
+
+    case ActionTypes.CLEAR_ORDERS:
+        console.log('clear order');
+        state = state.set('orders', []);
         break;
 
     case ActionTypes.GET_ORDER_BY_ID_SUCCESS:
@@ -29,6 +33,7 @@ export default (state = initialState, action) => {
         break;
 
     case ActionTypes.GET_ORDERS_SUCCESS:
+        console.log('receiving orders');
         state = state.set('orders', Immutable.fromJS(action.data));
         state = state.set('zeroOrders', (_.size(action.data) <= 0) ? true : false );
         break;

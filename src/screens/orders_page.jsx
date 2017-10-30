@@ -37,9 +37,6 @@ class OrdersPage extends React.Component {
 
         if (cookies.get('sibi-ge-admin')) {
             this.props.getFundProperties();
-            if (activeTab === '') {
-                this.props.getOrders();
-            }
         }
 
         this.props.setActiveTab('orders');
@@ -113,47 +110,46 @@ class OrdersPage extends React.Component {
         const KEYS_TO_FILTERS = ['propertyId','address','occupied','userId','geOrderNumber','createdAt','totalCost','orderStatus'];
 
         if (orders.size > 0 &&
-            fundProperties.size > 0) {
+            fundProperties.size > 0 &&
+            activeUser.size > 0) {
 
             data = _.map(orders.toJS(), (order) => {
                 const cols = {};
                 const fundProperty = _.find(fundProperties.toJS(), ['id', order['fundPropertyId']]);
 
                 _.each(headers, (value, key) => {
-                    value = order[key];
+                    cols[key] = order[key];
 
                     if (key === 'id') {
-                        value = order.id;
+                        cols[key] = order.id;
 
                     } else if (key === 'office') {
-                        value = order.pmOffice.name;
+                        cols[key] = order.pmOffice.name;
 
                     } else if (key ==='propertyId') {
-                        value = fundProperty.propertyUnitId;
+                        cols[key] = fundProperty.propertyUnitId;
 
                     } else if (key === 'address') {
-                        value = `${fundProperty['addressLineOne']}, ${(fundProperty['addressLineTwo']) ? `${fundProperty['addressLineTwo']},` : ''} ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
+                        cols[key] = `${fundProperty['addressLineOne']}, ${(fundProperty['addressLineTwo']) ? `${fundProperty['addressLineTwo']},` : ''} ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
 
                     } else if (key === 'occupied') {
-                        value = (order[key]) ? 'Occupied' : 'Vacant';
+                        cols[key] = (order[key]) ? 'Occupied' : 'Vacant';
 
                     } else if (key === 'userId') {
-                        value = (order['user']) ? `${order.user.firstName} ${order.user.lastName}` : '';
+                        cols[key] = (order['user']) ? `${order.user.firstName} ${order.user.lastName}` : '';
 
                     } else if (key === 'createdAt') {
-                        value = moment(new Date(value)).format('MMM DD, YYYY HH:MM');
+                        cols[key] = moment(new Date(order[key])).format('MMM DD, YYYY HH:MM');
 
                     } else if (key === 'action') {
                         const permissions = activeUser.get('permissions');
                         if (permissions.get('approveAllOrders') || permissions.get('approveFundOrders')) {
-                            value = (order['orderStatus'] === 'Pending') ? 'approve' : '';
+                            cols[key] = (order['orderStatus'] === 'Pending') ? 'approve' : '';
 
                         } else if (permissions.get('processManufacturerOrders')) {
-                            value = (order['orderStatus'] === 'Approved') ? 'process' : value;
+                            cols[key] = (order['orderStatus'] === 'Approved') ? 'process' : '';
                         }
                     }
-
-                    cols[key] = value;
                 });
 
                 return cols;
@@ -243,15 +239,14 @@ class OrdersPage extends React.Component {
 }
 
 const select = (state) => ({
-    activeUser     : state.activeUser.get('activeUser'),
-    orders         : state.orders.get('orders'),
-    zeroOrders     : state.orders.get('zeroOrders'),
-    fundProperties : state.properties.get('fundProperties'),
-    activeTab      : state.header.get('activeTab'),
+    activeUser      : state.activeUser.get('activeUser'),
+    orders          : state.orders.get('orders'),
+    zeroOrders      : state.orders.get('zeroOrders'),
+    fundProperties  : state.properties.get('fundProperties'),
+    activeTab       : state.header.get('activeTab'),
 });
 
 const actions = {
-    getOrders,
     getFundProperties,
     approveOrder,
     setActiveTab

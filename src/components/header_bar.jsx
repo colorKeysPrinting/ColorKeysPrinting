@@ -11,8 +11,8 @@ import assets                               from 'libs/assets';
 
 import { setActiveTab }                     from 'ducks/header/actions';
 import { logout, getCurrentUser }           from 'ducks/active_user/actions';
-import { getUsers }                         from 'ducks/users/actions';
-import { getOrders }                        from 'ducks/orders/actions';
+import { getUsers, clearUsers }             from 'ducks/users/actions';
+import { getOrders, clearOrders }           from 'ducks/orders/actions';
 
 import Overlay                              from 'components/overlay';
 
@@ -41,19 +41,20 @@ class HeaderBar extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        const { cookies, history, location, activeUser, isLogout, activeTab } = this.props;
+        const { cookies, history, location, activeUser, isLogout, activeTab, orders, users } = this.props;
 
         if (!_.isEqual(nextProps.isLogout, isLogout)) {
             this.props.logout();
         }
 
-
-
         if (cookies.get('sibi-ge-admin')) {
-            if (!_.isEqual(nextProps.activeTab, activeTab) && activeTab !== '' && nextProps.activeUser.size > 0) {
+            if (!_.isEqual(nextProps.activeTab, activeTab) && activeTab !== '') {
                 this.props.getUsers();
                 this.props.getOrders();
 
+            } else if (!orders.size || !users.size) {
+                this.props.getUsers();
+                this.props.getOrders();
             }
 
             if (!_.isEqual(nextProps.activeUser, activeUser)) {
@@ -83,6 +84,8 @@ class HeaderBar extends React.Component {
     logout() {
         this.props.history.push(`/login`);
         this.props.logout();
+        this.props.clearOrders();
+        this.props.clearUsers();
     }
 
     tabActions({ activeTab }) {
@@ -109,10 +112,23 @@ class HeaderBar extends React.Component {
 
                 if (key === 'orders' && (permissions['viewAllOrders'] || permissions['viewAllApprovedAndProcessedOrders'] || permissions['viewFundOrders'])) {
                     activeTabs['orders'] = 'Orders';
+                    if (orders.size > 0) {
+                        const orderStatus = (_.includes(activeUser.get('type'), 'manufacturer')) ? 'approved' : 'pending';
+
+                        _.each(orders.toJS(), (order) => {
+                            pendingOrders = ((order.orderStatus).toLowerCase() === orderStatus) ? pendingOrders + 1 : pendingOrders;
+                        });
+                    }
                 }
 
                 if (key === 'users' && (permissions['manageAllUsers'] || permissions['manageAllFundUsers'] || permissions['manageAllManufacturerUsers'] || permissions['manageSubordinateUsers'])) {
                     activeTabs['users'] = 'Users';
+
+                    if (users.size > 0) {
+                        _.each(users.toJS(), (user) => {
+                            pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
+                        });
+                    }
                 }
 
                 if (key === 'properties' && (permissions['manageAllUsers'])) { // TODO: need to update this with the correct permissions
@@ -127,18 +143,6 @@ class HeaderBar extends React.Component {
                     activeTabs['new_order'] =  'New Order';
                 }
             });
-
-            if (orders.size > 0 &&
-                users.size > 0) {
-
-                _.each(orders.toJS(), (order) => {
-                    pendingOrders = ((order.orderStatus).toLowerCase() === 'pending') ? pendingOrders + 1 : pendingOrders;
-                });
-
-                _.each(users.toJS(), (user) => {
-                    pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
-                });
-            }
         }
 
 
@@ -200,6 +204,8 @@ const actions = {
     getCurrentUser,
     getUsers,
     getOrders,
+    clearUsers,
+    clearOrders
 }
 
 export default connect(select, actions, null, { withRef: true })(withRouter(withCookies(HeaderBar)));

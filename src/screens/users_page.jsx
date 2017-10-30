@@ -32,9 +32,6 @@ class UsersPage extends React.Component {
     }
 
     componentWillMount() {
-        if (this.props.activeTab === '') {
-            this.props.getUsers();
-        }
         this.props.setActiveTab('users');
     }
 
@@ -95,7 +92,8 @@ class UsersPage extends React.Component {
 
         const KEYS_TO_FILTERS = ['name','office','email','phoneNumber','createdAt','autoApprovedOrders','status'];
 
-        if (users.size > 0 ) {
+        if (users.size > 0 &&
+            activeUser.size > 0) {
             const permissions = activeUser.get('permissions');
 
             data = _.map(users.toJS(), (user) => {
@@ -237,7 +235,6 @@ const select = (state) => ({
 });
 
 const action = {
-    getUsers,
     approveUser,
     autoApproveUserOrders,
     setActiveTab

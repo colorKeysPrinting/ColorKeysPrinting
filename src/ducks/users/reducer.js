@@ -17,6 +17,9 @@ export default (state = initialState, action) => {
     let users, index;
 
     switch (action.type) {
+    case ActionTypes.CLEAR_USERS:
+        state = state.set('users', []);
+        break;
     case ActionTypes.GET_USERS_SUCCESS:
         console.log('receiving users');
         state = state.set('users', Immutable.fromJS(action.data));

@@ -6,16 +6,22 @@ import Api                      from 'libs/network';
 //             ACTION TYPES
 // /////////////////////////////////////
 export const ActionTypes = {
-    GET_USERS_SUCCESS : 'sibi_ge_admin/users/GET_USERS_SUCCESS',
-    APPROVE_USER_SUCCESS : 'sibi_ge_admin/users/APPROVE_USER_SUCCESS',
-    AUTO_APPROVE_USER_ORDERS: 'sibi_ge_admin/users/AUTO_APPROVE_USER_ORDERS',
-    DISABLE_USER_SUCCESS : 'sibi_ge_admin/users/DISABLE_USER_SUCCESS',
+    CLEAR_USERS              : 'sibi_ge_admin/users/CLEAR_USERS',
+    GET_USERS_SUCCESS        : 'sibi_ge_admin/users/GET_USERS_SUCCESS',
+    APPROVE_USER_SUCCESS     : 'sibi_ge_admin/users/APPROVE_USER_SUCCESS',
+    AUTO_APPROVE_USER_ORDERS : 'sibi_ge_admin/users/AUTO_APPROVE_USER_ORDERS',
+    DISABLE_USER_SUCCESS     : 'sibi_ge_admin/users/DISABLE_USER_SUCCESS',
 
 }
 
 // /////////////////////////////////////
 //             LOCAL ACTIONS
 // /////////////////////////////////////
+export function clearUsers() {
+    return {
+        type: ActionTypes.CLEAR_USERS
+    }
+}
 
 // /////////////////////////////////////
 //             ASYNC CALLS

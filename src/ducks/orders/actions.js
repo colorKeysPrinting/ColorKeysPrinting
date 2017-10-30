@@ -8,6 +8,7 @@ import { Cookies }              from 'react-cookie';
 // /////////////////////////////////////
 export const ActionTypes = {
     CLEAR_ORDER             : 'sibi_ge_admin/products/CLEAR_ORDER',
+    CLEAR_ORDERS            : 'sibi_ge_admin/products/CLEAR_ORDERS',
     GET_ORDER_BY_ID_SUCCESS : 'sibi_ge_admin/products/GET_ORDER_BY_ID_SUCCESS',
     GET_ORDERS_SUCCESS      : 'sibi_ge_admin/products/GET_ORDERS_SUCCESS',
 }
@@ -18,6 +19,12 @@ export const ActionTypes = {
 export function clearOrder() {
     return {
         type: ActionTypes.CLEAR_ORDER
+    }
+}
+
+export function clearOrders() {
+    return {
+        type: ActionTypes.CLEAR_ORDERS
     }
 }
 
