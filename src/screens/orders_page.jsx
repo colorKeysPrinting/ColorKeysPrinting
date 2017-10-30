@@ -170,35 +170,9 @@ class OrdersPage extends React.Component {
             }
 
             // this initially sets the "Pending" orders before everything and "Approved" orders at the end
-            if (sortby.column === '') {
-                const re = /manufacturer/;
-                if (re.exec(activeUser.get('type'))) {
-                    data = _.partition(data, ['orderStatus', 'Approved']);
-                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
-                    data = data[0].concat(data[1]);
-
-                    data = _.partition(data, ['orderStatus', 'Pending']);
-                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
-                    data = data[1].concat(data[0]);
-
-                } else {
-                    data = _.partition(data, ['orderStatus', 'Processed']);
-                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
-                    data = data[0].concat(data[1]);
-
-                    data = _.partition(data, ['orderStatus', 'Pending']);
-                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
-                    data = data[0].concat(data[1]);
-
-                    data = _.partition(data, ['orderStatus', 'Approved']);
-                    data[0] = _.orderBy(data[0], ['createdAt'], ['desc']); // sorts orderStatus pending w/ orderDate
-                    data = data[1].concat(data[0]);
-                }
-
-            } else {
+            if (sortby.column !== '') {
                 data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
             }
-
         }
 
         return (
