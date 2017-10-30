@@ -54,11 +54,6 @@ class HeaderBar extends React.Component {
                 this.props.getUsers();
                 this.props.getOrders();
 
-            } else if (nextProps.activeTab === 'orders' && nextProps.activeUser.size === 0) {
-                this.props.getUsers();
-
-            } else if (nextProps.activeTab === 'users' && nextProps.activeUser.size === 0) {
-                this.props.getOrders();
             }
 
             if (!_.isEqual(nextProps.activeUser, activeUser)) {
