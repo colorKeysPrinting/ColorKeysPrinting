@@ -105,7 +105,7 @@ class HeaderBar extends React.Component {
 
                 if (key === 'orders' && (permissions['viewAllOrders'] || permissions['viewAllApprovedAndProcessedOrders'] || permissions['viewFundOrders'])) {
                     activeTabs['orders'] = 'Orders';
-                    if (orders.size > 0) {
+                    if (orders && orders.size > 0) {
                         const orderStatus = (_.includes(activeUser.get('type'), 'manufacturer')) ? 'approved' : 'pending';
 
                         _.each(orders.toJS(), (order) => {
@@ -117,7 +117,7 @@ class HeaderBar extends React.Component {
                 if (key === 'users' && (permissions['manageAllUsers'] || permissions['manageAllFundUsers'] || permissions['manageAllManufacturerUsers'] || permissions['manageSubordinateUsers'])) {
                     activeTabs['users'] = 'Users';
 
-                    if (users.size > 0) {
+                    if (users && users.size > 0) {
                         _.each(users.toJS(), (user) => {
                             pendingUsers = ((user.type).toLowerCase() === 'pending') ? pendingUsers + 1 : pendingUsers;
                         });

@@ -25,7 +25,6 @@ class UsersPage extends React.Component {
             alert: null,
             searchTerm: '',
             sortby: {column: 'status', isAsc: 'desc' },
-            data: [],
             headers: {
                 id: '',
                 name: 'Name',
@@ -57,7 +56,8 @@ class UsersPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        const { history, activeUser, users } = this.props;
+        const { history, activeUser } = this.props;
+        const { spinner } = this.state;
 
         if (!_.isEqual(nextProps.activeUser, activeUser)) {
             const path = (nextProps.activeUser.size > 0) ? `/users` : `/login`;
@@ -67,18 +67,61 @@ class UsersPage extends React.Component {
         if (nextProps.zeroUsers) {
             this.setState({ spinner: false });
         }
+
+        if (nextProps.users && nextProps.users.size > 0) {
+            if (spinner &&
+                activeUser.size > 0) {
+
+                this.setState({ spinner: false });
+            }
+        }
     }
 
-    componentDidUpdate() {
-        const { activeUser, users } = this.props;
-        const { headers, spinner } = this.state;
+    handleAction(type, user) {
+        let dialog;
+        if (type === 'approve') {
+            dialog = <div className="alert-box">
+                <p>Are you sure you want to approve this user?</p>
+                <div className="btn borderless" type="submit" value="Cancel" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
+                <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveUser({ id: user.id }) } >Approve</div>
+            </div>
+        }
 
-        if (spinner &&
-            users.size > 0 &&
+        this.setState({
+            alert: <Overlay type="alert" closeOverlay={()=>{this.setState({ alert: null }) }}>
+                { dialog }
+            </Overlay>
+        });
+    }
+
+    orderBy({ column }) {
+        this.setState((prevState) => {
+            const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc === 'asc') ? 'desc' : 'asc';
+            const sortby = { column, isAsc };
+
+            return { sortby };
+        });
+    }
+
+    focus() {
+        // Explicitly focus the text input using the raw DOM API
+        this.textInput.focus();
+    }
+
+    render() {
+        const { activeUser, zeroUsers, users } = this.props;
+        const { searchTerm, sortby, alert, headers, KEYS_TO_FILTERS, spinner } = this.state;
+        let data = [];
+
+        if (users.size > 0 &&
             activeUser.size > 0) {
             const permissions = activeUser.get('permissions');
 
-            this.setState({ data: users.map((user) => {
+            _.each(headers, (header, key) => {
+                headers[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
+            });
+
+            data = users.map((user) => {
                 const cols = {};
                 _.each(headers, (value, key) => {
                     cols[key] = user.get(key);
@@ -127,52 +170,7 @@ class UsersPage extends React.Component {
                 });
 
                 return cols;
-            }).toJS(), spinner: false });
-        }
-    }
-
-    handleAction(type, user) {
-        let dialog;
-        if (type === 'approve') {
-            dialog = <div className="alert-box">
-                <p>Are you sure you want to approve this user?</p>
-                <div className="btn borderless" type="submit" value="Cancel" onClick={()=> this.setState({ alert: null }) } >Cancel</div>
-                <div className="btn blue" type="submit" value="Approve" onClick={()=> this.props.approveUser({ id: user.id }) } >Approve</div>
-            </div>
-        }
-
-        this.setState({
-            alert: <Overlay type="alert" closeOverlay={()=>{this.setState({ alert: null }) }}>
-                { dialog }
-            </Overlay>
-        });
-    }
-
-    orderBy({ column }) {
-        this.setState((prevState) => {
-            const isAsc = (column === prevState.sortby.column && prevState.sortby.isAsc === 'asc') ? 'desc' : 'asc';
-            const sortby = { column, isAsc };
-
-            return { sortby };
-        });
-    }
-
-    focus() {
-        // Explicitly focus the text input using the raw DOM API
-        this.textInput.focus();
-    }
-
-    render() {
-        const { activeUser, zeroUsers } = this.props;
-        const { searchTerm, sortby, alert, headers, KEYS_TO_FILTERS, spinner } = this.state;
-        let data = this.state.data;
-
-        if (_.size(data) > 0 &&
-            activeUser.size > 0) {
-
-            _.each(headers, (header, key) => {
-                headers[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
-            });
+            }).toJS()
 
             // this initially sets the "Pending" users before everything
             if(searchTerm !== '') {

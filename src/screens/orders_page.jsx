@@ -26,7 +26,6 @@ class OrdersPage extends React.Component {
             alert: null,
             searchTerm: '',
             sortby: { column: '', isAsc: false },
-            data: [],
             headers: {
                 id: '',
                 office: 'PM Office',
@@ -43,9 +42,9 @@ class OrdersPage extends React.Component {
             KEYS_TO_FILTERS: ['propertyId','address','occupied','userId','geOrderNumber','createdAt','totalCost','orderStatus']
         };
 
+        this.orderBy = this.orderBy.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleItem = this.handleItem.bind(this);
-        this.orderBy = this.orderBy.bind(this);
     }
 
     componentWillMount() {
@@ -62,7 +61,8 @@ class OrdersPage extends React.Component {
     }
 
     componentWillUpdate(nextProps) {
-        const { history, activeUser } = this.props;
+        const { history, activeUser, fundProperties, orders } = this.props;
+        const { spinner } = this.state;
 
         if (!_.isEqual(nextProps.activeUser, activeUser)) {
             const path = (nextProps.activeUser.size > 0) ? `/orders` : `/login`;
@@ -72,57 +72,13 @@ class OrdersPage extends React.Component {
         if (nextProps.zeroOrders) {
             this.setState({ spinner: false });
         }
-    }
 
-    componentDidUpdate() {
-        const { activeUser, fundProperties, zeroOrders, orders } = this.props;
-        const { headers, spinner } = this.state;
-
-        if (spinner &&
-            fundProperties.size > 0 &&
-            orders.size > 0 &&
-            activeUser.size > 0) {
-            this.setState({ data: orders.map((order) => {
-                const cols = {};
-                const fundProperty = _.find(fundProperties.toJS(), ['id', order.get('fundPropertyId')]);
-
-                _.each(headers, (value, key) => {
-                    cols[key] = order.get(key);
-
-                    if (key === 'id') {
-                        cols[key] = order.get('id');
-
-                    } else if (key === 'office') {
-                        cols[key] = order.getIn(['pmOffice','name']);
-
-                    } else if (key ==='propertyId') {
-                        cols[key] = fundProperty.propertyUnitId;
-
-                    } else if (key === 'address') {
-                        cols[key] = `${fundProperty['addressLineOne']}, ${(fundProperty['addressLineTwo']) ? `${fundProperty['addressLineTwo']},` : ''} ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
-
-                    } else if (key === 'occupied') {
-                        cols[key] = (order.get(key)) ? 'Occupied' : 'Vacant';
-
-                    } else if (key === 'userId') {
-                        cols[key] = (order.get('user')) ? `${order.getIn(['user','firstName'])} ${order.getIn(['user','lastName'])}` : '';
-
-                    } else if (key === 'createdAt') {
-                        cols[key] = moment(new Date(order.get(key))).format('MMM DD, YYYY');
-
-                    } else if (key === 'action') {
-                        const permissions = activeUser.get('permissions');
-                        if (permissions.get('approveAllOrders') || permissions.get('approveFundOrders')) {
-                            cols[key] = (order.get('orderStatus') === 'Pending') ? 'approve' : '';
-
-                        } else if (permissions.get('processManufacturerOrders')) {
-                            cols[key] = (order.get('orderStatus') === 'Approved') ? 'process' : '';
-                        }
-                    }
-                });
-
-                return cols;
-            }).toJS(), spinner: false });
+        if (nextProps.orders && nextProps.orders.size > 0) {
+            if (spinner &&
+                fundProperties.size > 0 &&
+                activeUser.size > 0) {
+                this.setState({ spinner: false });
+            }
         }
     }
 
@@ -166,14 +122,58 @@ class OrdersPage extends React.Component {
     }
 
     render() {
-        const { zeroOrders } = this.props;
+        const { zeroOrders, orders, activeUser, fundProperties } = this.props;
         const { searchTerm, sortby, alert, headers, KEYS_TO_FILTERS, spinner } = this.state;
-        let data = this.state.data;
+        let data = [];
 
-        if (_.size(data) > 0) {
+        if (orders.size > 0 &&
+            fundProperties.size > 0 &&
+            activeUser.size > 0) {
             _.each(this.state.headers, (header, key) => {
                 headers[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
             });
+
+            data = orders.map((order) => {
+                const cols = {};
+                const fundProperty = _.find(fundProperties.toJS(), ['id', order.get('fundPropertyId')]);
+
+                _.each(headers, (value, key) => {
+                    cols[key] = order.get(key);
+
+                    if (key === 'id') {
+                        cols[key] = order.get('id');
+
+                    } else if (key === 'office') {
+                        cols[key] = order.getIn(['pmOffice','name']);
+
+                    } else if (key ==='propertyId') {
+                        cols[key] = fundProperty.propertyUnitId;
+
+                    } else if (key === 'address') {
+                        cols[key] = `${fundProperty['addressLineOne']}, ${(fundProperty['addressLineTwo']) ? `${fundProperty['addressLineTwo']},` : ''} ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
+
+                    } else if (key === 'occupied') {
+                        cols[key] = (order.get(key)) ? 'Occupied' : 'Vacant';
+
+                    } else if (key === 'userId') {
+                        cols[key] = (order.get('user')) ? `${order.getIn(['user','firstName'])} ${order.getIn(['user','lastName'])}` : '';
+
+                    } else if (key === 'createdAt') {
+                        cols[key] = moment(new Date(order.get(key))).format('MMM DD, YYYY');
+
+                    } else if (key === 'action') {
+                        const permissions = activeUser.get('permissions');
+                        if (permissions.get('approveAllOrders') || permissions.get('approveFundOrders')) {
+                            cols[key] = (order.get('orderStatus') === 'Pending') ? 'approve' : '';
+
+                        } else if (permissions.get('processManufacturerOrders')) {
+                            cols[key] = (order.get('orderStatus') === 'Approved') ? 'process' : '';
+                        }
+                    }
+                });
+
+                return cols;
+            }).toJS();
 
             // this maps the actual cost ammount back to totalCost
             if(searchTerm !== '') {
