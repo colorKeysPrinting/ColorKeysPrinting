@@ -124,13 +124,13 @@ class OrdersPage extends React.Component {
     render() {
         const { zeroOrders, orders, activeUser, fundProperties } = this.props;
         const { searchTerm, sortby, alert, headers, KEYS_TO_FILTERS, spinner } = this.state;
-        let data = [];
+        let data = [], headersObj = {};
 
         if (orders.size > 0 &&
             fundProperties.size > 0 &&
             activeUser.size > 0) {
-            _.each(this.state.headers, (header, key) => {
-                headers[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
+            _.each(headers, (header, key) => {
+                headersObj[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
             });
 
             data = orders.map((order) => {
@@ -205,7 +205,7 @@ class OrdersPage extends React.Component {
                             <MyTable
                                 type="orders"
                                 dataClassName="table-row-clickable"
-                                headers={headers}
+                                headers={headersObj}
                                 data={data}
                                 sortby={(sortby.column !== '') ? sortby : { column: 'orderStatus', isAsc: 'asc' }}
                                 handleAction={this.handleAction}

@@ -110,14 +110,14 @@ class UsersPage extends React.Component {
     render() {
         const { activeUser, zeroUsers, users } = this.props;
         const { searchTerm, sortby, alert, headers, KEYS_TO_FILTERS, spinner } = this.state;
-        let data = [];
+        let data = [], headersObj = {};
 
         if (users.size > 0 &&
             activeUser.size > 0) {
             const permissions = activeUser.get('permissions');
 
             _.each(headers, (header, key) => {
-                headers[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
+                headersObj[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
             });
 
             data = users.map((user) => {

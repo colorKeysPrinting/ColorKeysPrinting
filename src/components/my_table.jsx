@@ -53,8 +53,8 @@ export default class MyTable extends React.Component {
                                         } else {
                                             return (<td className="table-header" key={`table-header-${id}`} >{ header }</td>);
                                         }
-                                    } else if (id !== 'id') {
-                                        return (<td key={`table-header-${id}`} ></td>);
+                                    } else {
+                                        return (<td className="table-header" key={`table-header-${id}`} ></td>);
                                     }
                                 }
                             })
