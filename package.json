@@ -22,6 +22,7 @@
     "axios": "^0.16.2",
     "dateformat": "^3.0.2",
     "del": "^2.2.2",
+    "es6-promise": "^4.1.1",
     "immutable": "^3.8.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
