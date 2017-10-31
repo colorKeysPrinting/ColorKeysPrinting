@@ -8,28 +8,28 @@
                 &:nth-child(1) {
                     width: 9%;
                     @media (min-width: 1599px) {
-                        width: 10%;
+                        width: 8%;
                     }
                 }
                 //Property ID
                 &:nth-child(2) {
                     width: 9%;
                     @media (min-width: 1599px) {
-                        width: 10%;
+                        width: 8%;
                     }
                 }
                 //Property Address
                 &:nth-child(3) {
                     width: 13%;
                     @media (min-width: 1599px) {
-                        width: 25%;
+                        width: 22%;
                     }
                 }
                 //Occupancy
                 &:nth-child(4) {
                     width: 9%;
                     @media (min-width: 1599px) {
-                        width: 6%;
+                        width: 7%;
                     }
                 }
                 //Ordered By
@@ -41,18 +41,18 @@
                 }
                 //GE Order #
                 &:nth-child(6) {
-                    width: 12%;
+                    width: 8%;
                 }
                 //Order Date
                 &:nth-child(7) {
                     width: 12%;
                     @media (min-width: 1599px) {
-                        width: 7%;
+                        width: 8%;
                     }
                 }
                 //Cost
                 &:nth-child(8) {
-                    width: 6%;
+                    width: 7%;
                 }
                 //Status
                 &:nth-child(9) {
