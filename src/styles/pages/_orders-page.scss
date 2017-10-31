@@ -8,59 +8,59 @@
                 &:nth-child(1) {
                     width: 9%;
                     @media (min-width: 1599px) {
-                        width: 6%;
+                        width: 10%;
                     }
                 }
                 //Property ID
                 &:nth-child(2) {
                     width: 9%;
                     @media (min-width: 1599px) {
-                        width: 16%;
+                        width: 10%;
                     }
                 }
                 //Property Address
                 &:nth-child(3) {
                     width: 13%;
                     @media (min-width: 1599px) {
-                        width: 17%;
+                        width: 25%;
                     }
                 }
                 //Occupancy
                 &:nth-child(4) {
                     width: 9%;
                     @media (min-width: 1599px) {
-                        width: 8%;
+                        width: 6%;
                     }
                 }
                 //Ordered By
                 &:nth-child(5) {
                     width: 11%;
                     @media (min-width: 1599px) {
-                        width: 8%;
+                        width: 10%;
                     }
                 }
                 //GE Order #
                 &:nth-child(6) {
-                    width: 10%;
+                    width: 12%;
                 }
                 //Order Date
                 &:nth-child(7) {
                     width: 12%;
                     @media (min-width: 1599px) {
-                        width: 8%;
+                        width: 7%;
                     }
                 }
                 //Cost
                 &:nth-child(8) {
-                    width: 8%;
+                    width: 6%;
                 }
                 //Status
                 &:nth-child(9) {
-                    width: 10%;
+                    width: 7%;
                 }
                 //Approval Column
                 &:nth-child(10) {
-                    width: 9%;
+                    width: 6%;
                 }
             }
         }

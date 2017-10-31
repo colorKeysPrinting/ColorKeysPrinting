@@ -10,6 +10,7 @@ import filter                               from 'libs/filter';
 import assets                               from 'libs/assets';
 
 import { getOrders, approveOrder }          from 'ducks/orders/actions';
+import { getUsers }                         from 'ducks/users/actions';
 import { getFundProperties }                from 'ducks/properties/actions';
 import { setActiveTab }                     from 'ducks/header/actions';
 
@@ -24,7 +25,22 @@ class OrdersPage extends React.Component {
         this.state = {
             alert: null,
             searchTerm: '',
-            sortby: { column: '', isAsc: false }
+            sortby: { column: '', isAsc: false },
+            data: [],
+            headers: {
+                id: '',
+                office: 'PM Office',
+                propertyId: 'Property ID',
+                address: 'Property address',
+                occupied: 'Occupancy',
+                userId: 'Ordered by',
+                geOrderNumber: 'GE Order #',
+                createdAt: 'Order Date',
+                totalCost: 'Cost',
+                orderStatus: 'Status',
+                action: ''
+            },
+            KEYS_TO_FILTERS: ['propertyId','address','occupied','userId','geOrderNumber','createdAt','totalCost','orderStatus']
         };
 
         this.handleAction = this.handleAction.bind(this);
@@ -33,19 +49,80 @@ class OrdersPage extends React.Component {
     }
 
     componentWillMount() {
-        const { activeTab, cookies } = this.props;
+        const { cookies } = this.props;
 
         if (cookies.get('sibi-ge-admin')) {
+            this.setState({ spinner: true });
             this.props.getFundProperties();
+            this.props.getUsers();
+            this.props.getOrders();
         }
 
         this.props.setActiveTab('orders');
     }
 
     componentWillUpdate(nextProps) {
-        if (!_.isEqual(nextProps.activeUser, this.props.activeUser)) {
+        const { history, activeUser } = this.props;
+
+        if (!_.isEqual(nextProps.activeUser, activeUser)) {
             const path = (nextProps.activeUser.size > 0) ? `/orders` : `/login`;
-            this.props.history.push(path);
+            history.push(path);
+        }
+
+        if (nextProps.zeroOrders) {
+            this.setState({ spinner: false });
+        }
+    }
+
+    componentDidUpdate() {
+        const { activeUser, fundProperties, zeroOrders, orders } = this.props;
+        const { headers, spinner } = this.state;
+
+        if (spinner &&
+            fundProperties.size > 0 &&
+            orders.size > 0 &&
+            activeUser.size > 0) {
+            this.setState({ data: orders.map((order) => {
+                const cols = {};
+                const fundProperty = _.find(fundProperties.toJS(), ['id', order.get('fundPropertyId')]);
+
+                _.each(headers, (value, key) => {
+                    cols[key] = order.get(key);
+
+                    if (key === 'id') {
+                        cols[key] = order.get('id');
+
+                    } else if (key === 'office') {
+                        cols[key] = order.getIn(['pmOffice','name']);
+
+                    } else if (key ==='propertyId') {
+                        cols[key] = fundProperty.propertyUnitId;
+
+                    } else if (key === 'address') {
+                        cols[key] = `${fundProperty['addressLineOne']}, ${(fundProperty['addressLineTwo']) ? `${fundProperty['addressLineTwo']},` : ''} ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
+
+                    } else if (key === 'occupied') {
+                        cols[key] = (order.get(key)) ? 'Occupied' : 'Vacant';
+
+                    } else if (key === 'userId') {
+                        cols[key] = (order.get('user')) ? `${order.getIn(['user','firstName'])} ${order.getIn(['user','lastName'])}` : '';
+
+                    } else if (key === 'createdAt') {
+                        cols[key] = moment(new Date(order.get(key))).format('MMM DD, YYYY');
+
+                    } else if (key === 'action') {
+                        const permissions = activeUser.get('permissions');
+                        if (permissions.get('approveAllOrders') || permissions.get('approveFundOrders')) {
+                            cols[key] = (order.get('orderStatus') === 'Pending') ? 'approve' : '';
+
+                        } else if (permissions.get('processManufacturerOrders')) {
+                            cols[key] = (order.get('orderStatus') === 'Approved') ? 'process' : '';
+                        }
+                    }
+                });
+
+                return cols;
+            }).toJS(), spinner: false });
         }
     }
 
@@ -89,73 +166,12 @@ class OrdersPage extends React.Component {
     }
 
     render() {
-        const { cookies, spinner, activeUser, orders, fundProperties, zeroOrders } = this.props;
-        const { searchTerm, sortby, alert } = this.state;
-        let data;
+        const { zeroOrders } = this.props;
+        const { searchTerm, sortby, alert, headers, KEYS_TO_FILTERS, spinner } = this.state;
+        let data = this.state.data;
 
-        const headers = {
-            id: '',
-            office: 'PM Office',
-            propertyId: 'Property ID',
-            address: 'Property address',
-            occupied: 'Occupancy',
-            userId: 'Ordered by',
-            geOrderNumber: 'GE Order #',
-            createdAt: 'Order Date',
-            totalCost: 'Cost',
-            orderStatus: 'Status',
-            action: ''
-        };
-
-        const KEYS_TO_FILTERS = ['propertyId','address','occupied','userId','geOrderNumber','createdAt','totalCost','orderStatus'];
-
-        if (orders.size > 0 &&
-            fundProperties.size > 0 &&
-            activeUser.size > 0) {
-
-            data = _.map(orders.toJS(), (order) => {
-                const cols = {};
-                const fundProperty = _.find(fundProperties.toJS(), ['id', order['fundPropertyId']]);
-
-                _.each(headers, (value, key) => {
-                    cols[key] = order[key];
-
-                    if (key === 'id') {
-                        cols[key] = order.id;
-
-                    } else if (key === 'office') {
-                        cols[key] = order.pmOffice.name;
-
-                    } else if (key ==='propertyId') {
-                        cols[key] = fundProperty.propertyUnitId;
-
-                    } else if (key === 'address') {
-                        cols[key] = `${fundProperty['addressLineOne']}, ${(fundProperty['addressLineTwo']) ? `${fundProperty['addressLineTwo']},` : ''} ${fundProperty['city']}, ${fundProperty['state']}, ${fundProperty['zipcode']}`;
-
-                    } else if (key === 'occupied') {
-                        cols[key] = (order[key]) ? 'Occupied' : 'Vacant';
-
-                    } else if (key === 'userId') {
-                        cols[key] = (order['user']) ? `${order.user.firstName} ${order.user.lastName}` : '';
-
-                    } else if (key === 'createdAt') {
-                        cols[key] = moment(new Date(order[key])).format('MMM DD, YYYY HH:MM');
-
-                    } else if (key === 'action') {
-                        const permissions = activeUser.get('permissions');
-                        if (permissions.get('approveAllOrders') || permissions.get('approveFundOrders')) {
-                            cols[key] = (order['orderStatus'] === 'Pending') ? 'approve' : '';
-
-                        } else if (permissions.get('processManufacturerOrders')) {
-                            cols[key] = (order['orderStatus'] === 'Approved') ? 'process' : '';
-                        }
-                    }
-                });
-
-                return cols;
-            });
-
-            _.each(headers, (header, key) => {
+        if (_.size(data) > 0) {
+            _.each(this.state.headers, (header, key) => {
                 headers[key] =  (key === 'id' || key === 'action') ? <div>{ header }</div> : <div onClick={() => this.orderBy({ column: key })} style={{cursor: 'pointer'}} >{ header }</div>;
             });
 
@@ -169,7 +185,6 @@ class OrdersPage extends React.Component {
                 data = filter(searchTerm, KEYS_TO_FILTERS, data);
             }
 
-            // this initially sets the "Pending" orders before everything and "Approved" orders at the end
             if (sortby.column !== '') {
                 data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
             }
@@ -178,7 +193,7 @@ class OrdersPage extends React.Component {
         return (
             <div>
                 <div id="orders-page" className="container">
-                    { (!zeroOrders && data) ? (
+                    {(spinner) ? <Spinner /> : (!zeroOrders && _.size(data) > 0) ? (
                         <div className="table-card">
                             <div className="card-header">
                                 <h2>Orders</h2>
@@ -198,13 +213,11 @@ class OrdersPage extends React.Component {
                             />
                         </div>
                     ) : (
-                        (zeroOrders) ? (
-                            <div>
-                                <h1>Order Status</h1>
-                                <p>There are currently no orders to display</p>
-                            </div>
-                        ) : <Spinner />
-                    ) }
+                        <div>
+                            <h1>Order Status</h1>
+                            <p>There are currently no orders to display</p>
+                        </div>
+                    )}
                 </div>
                 { alert }
             </div>
@@ -221,6 +234,8 @@ const select = (state) => ({
 });
 
 const actions = {
+    getUsers,
+    getOrders,
     getFundProperties,
     approveOrder,
     setActiveTab

@@ -35,6 +35,8 @@ class HeaderBar extends React.Component {
 
         if (cookies.get('sibi-ge-admin')) {
             this.props.getCurrentUser();
+            this.props.getUsers();
+            this.props.getOrders();
         } else {
             history.push({ pathname: `/login`, prevPath: location.pathname });
         }
@@ -48,15 +50,6 @@ class HeaderBar extends React.Component {
         }
 
         if (cookies.get('sibi-ge-admin')) {
-            if (!_.isEqual(nextProps.activeTab, activeTab) && activeTab !== '') {
-                this.props.getUsers();
-                this.props.getOrders();
-
-            } else if (!orders.size || !users.size) {
-                this.props.getUsers();
-                this.props.getOrders();
-            }
-
             if (!_.isEqual(nextProps.activeUser, activeUser)) {
                 if (nextProps.activeUser.size > 0) {
                     if (location.prevPath && location.prevPath !== '/login') {

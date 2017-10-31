@@ -1,6 +1,7 @@
 'use strict';
 
 import Api                      from 'libs/network';
+import { Cookies }              from 'react-cookie';
 
 // /////////////////////////////////////
 //             ACTION TYPES
@@ -28,7 +29,11 @@ export function clearUsers() {
 // /////////////////////////////////////
 export function getUsers() {
     return (dispatch, getState) => {
-        const type = (getState().activeUser.getIn(['activeUser','type']) === 'superAdmin') ? 'usersForSuperAdmin' : 'usersForFund';
+        const cookies = new Cookies();
+        const userType = cookies.get('sibi-ge-admin').type;
+        const activeUser = getState().activeUser.getIn(['activeUser','type']);
+        const type = (((activeUser) ? activeUser : userType) === 'superAdmin') ? 'usersForSuperAdmin' : 'usersForFund';
+
         return Api({ url : `/${type}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_USERS_SUCCESS , ...payload });

@@ -43,8 +43,6 @@ export function getOrderById({ id }) {
 export function getOrders() {
     return (dispatch, getState) => {
         const cookies = new Cookies();
-        // TODO: need to test to make sure this is working correctly
-        const endPointTypes = {};
         const userType = cookies.get('sibi-ge-admin').type;
         let type;
         switch(getState().activeUser.getIn(['activeUser','type']) || userType) {
