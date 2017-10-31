@@ -226,7 +226,7 @@ class UsersPage extends React.Component {
                             </div>
                             <MyTable
                                 type="users"
-                                headers={headers}
+                                headers={headersObj}
                                 data={data}
                                 sortby={sortby}
                                 handleAction={this.handleAction}
