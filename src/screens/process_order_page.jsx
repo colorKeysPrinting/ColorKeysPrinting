@@ -76,6 +76,7 @@ class ProcessOrderPage extends React.Component {
                 this.setState({ processedBy: `${activeUser.get('firstName')} ${activeUser.get('lastName')}`});
                 this.setState({ installDate: orderNew.get('installDate') });
             }
+
             if (_.size(order) > 0) {
                 if (!_.isEqual(orderNew.get('orderStatus'), order.get('orderStatus'))) {
                     history.push(`/orders`);

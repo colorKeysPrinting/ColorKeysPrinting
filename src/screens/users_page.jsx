@@ -71,7 +71,6 @@ class UsersPage extends React.Component {
         if (nextProps.users && nextProps.users.size > 0) {
             if (spinner &&
                 activeUser.size > 0) {
-
                 this.setState({ spinner: false });
             }
         }
