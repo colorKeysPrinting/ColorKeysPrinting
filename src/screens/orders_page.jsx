@@ -190,7 +190,7 @@ class OrdersPage extends React.Component {
 
             if (sortby.column !== '') {
                 const column = (sortby.column === 'createdAt') ? 'createdAtDate' : sortby.column;
-                data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
+                data = _.orderBy(data, [column], [sortby.isAsc]);
             }
         }
 
