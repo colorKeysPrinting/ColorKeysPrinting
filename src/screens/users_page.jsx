@@ -159,11 +159,11 @@ class UsersPage extends React.Component {
                         />;
 
                     } else if (key === 'status') {
-                        cols[key] = (user['type'] === 'pending') ? 'Pending' : 'Approved';
+                        cols[key] = (user.get('type') === 'pending') ? 'Pending' : 'Approved';
 
                     } else if (key === 'action') {
-                        if ((permissions.get('manageAllUsers') || permissions.get('manageAllFundUsers') || permissions.get('manageAllManufacturerUsers') || permissions.get('manageSubordinateUsers'))) {
-                            cols[key] = (user['type'] === 'pending') ? 'approve' : '';
+                        if (permissions.get('manageAllUsers') || permissions.get('manageAllFundUsers') || permissions.get('manageAllManufacturerUsers') || permissions.get('manageSubordinateUsers')) {
+                            cols[key] = (user.get('type') === 'pending') ? 'approve' : '';
                         }
                     }
                 });
