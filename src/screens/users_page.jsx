@@ -31,6 +31,7 @@ class UsersPage extends React.Component {
                 office: 'PM Office',
                 email: 'Email',
                 phoneNumber: 'Phone',
+                createdAtDate : '',
                 createdAt: 'Account Created',
                 autoApprovedOrders: 'Auto-approve',
                 status: 'Status',
@@ -138,10 +139,12 @@ class UsersPage extends React.Component {
                         cols[key] = (!_.isNull(user.get('email'))) ? user.get('email') : '';
 
                     } else if (key === 'createdAt') {
-                        cols[key] = moment(new Date(user.get(key))).format('MMM DD, YYYY, HH:MM');
+                        const date = new Date(user.get(key));
+                        cols[`${key}Date`] = date;
+                        cols[key] = moment(date).format('MMM DD, YYYY');
 
                     } else if (key === 'autoApprovedOrders') {
-                        const autoApprovedOrders = (user.get('autoApprovedOrders')) ? true : false;
+                        const autoApprovedOrders = (user.get(key)) ? true : false;
 
                         const options = [
                             { label: 'No', value: false },
@@ -178,7 +181,11 @@ class UsersPage extends React.Component {
 
             if (sortby.column !== '') {
                 if(sortby.column !== 'autoApprovedOrders') {
-                    data = _.orderBy(data, [sortby.column, 'createdAt'], [sortby.isAsc, 'desc']);
+                    data = _.orderBy(data, [sortby.column, 'createdAtDate'], [sortby.isAsc, 'desc']);
+
+                } else if (sortby.column === 'createdAt') {
+                    data = _.orderBy(data, ['createdAtDate'], [sortby.isAsc]);
+
                 } else {
                     // convert to sort
                     data = _.map(data, (item) => {

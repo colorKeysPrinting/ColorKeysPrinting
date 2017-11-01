@@ -43,7 +43,7 @@ export default class MyTable extends React.Component {
                         { (title) ? <tr><td className="table-title" colSpan={_.size(headers)}><h4>{ title }</h4></td></tr> : null }
                         <tr>{ (headers) ? (
                             _.map(headers, (header, id) => {
-                                if (id !== 'id') {
+                                if (id !== 'id' && id !== 'createdAtDate') {
                                     if (id !== 'action') {
                                         if (sortby) {
                                             const image = (sortby.isAsc !== 'asc') ? <img className="sort-arrow" src={assets('./images/icons-sort-up.png')} alt="sortArrow" /> : <img className="sort-arrow" src={assets('./images/icons-sort-down.png')} alt="sortArrow" />;
@@ -63,7 +63,7 @@ export default class MyTable extends React.Component {
                     <tbody>
                         { _.map(data, (item, id) => {
                             const col = _.map(item, (col, id) => {
-                                if (id !== 'id') {
+                                if (id !== 'id' && id !== 'createdAtDate') {
                                     if (id === 'action') {
                                         return (col !== '') ? <td key={`table-item-${id}`} className="table-cell approve" onClick={() => this.state.handleAction(col, item)}>{ col }</td> : <td key={`table-item-${id}`} className="table-cell"></td>;
 

@@ -34,6 +34,7 @@ class OrdersPage extends React.Component {
                 occupied: 'Occupancy',
                 userId: 'Ordered by',
                 geOrderNumber: 'GE Order #',
+                createdAtDate : '',
                 createdAt: 'Order Date',
                 totalCost: 'Cost',
                 orderStatus: 'Status',
@@ -159,7 +160,9 @@ class OrdersPage extends React.Component {
                         cols[key] = (order.get('user')) ? `${order.getIn(['user','firstName'])} ${order.getIn(['user','lastName'])}` : '';
 
                     } else if (key === 'createdAt') {
-                        cols[key] = moment(new Date(order.get(key))).format('MMM DD, YYYY');
+                        const date = new Date(order.get(key));
+                        cols[`${key}Date`] = date;
+                        cols[key] = moment(date).format('MMM DD, YYYY');
 
                     } else if (key === 'action') {
                         const permissions = activeUser.get('permissions');
@@ -186,6 +189,7 @@ class OrdersPage extends React.Component {
             }
 
             if (sortby.column !== '') {
+                const column = (sortby.column === 'createdAt') ? 'createdAtDate' : sortby.column;
                 data = _.orderBy(data, [sortby.column], [sortby.isAsc]);
             }
         }
