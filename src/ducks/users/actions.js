@@ -26,7 +26,7 @@ export function clearUsers() {
 // /////////////////////////////////////
 export function getUserById({ id }) {
     return (dispatch) => {
-        return Api({ url : `/user/${id}` })
+        return Api({ url : `/users/${id}` })
             .then(payload => {
                 dispatch({ type: ActionTypes.GET_USER_BY_ID_SUCCESS , ...payload });
             })
