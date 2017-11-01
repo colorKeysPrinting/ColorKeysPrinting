@@ -8,11 +8,8 @@ import { Cookies }              from 'react-cookie';
 // /////////////////////////////////////
 export const ActionTypes = {
     CLEAR_USERS              : 'sibi_ge_admin/users/CLEAR_USERS',
+    GET_USER_BY_ID_SUCCESS   : 'sibi_ge_admin/users/GET_USER_BY_ID_SUCCESS',
     GET_USERS_SUCCESS        : 'sibi_ge_admin/users/GET_USERS_SUCCESS',
-    APPROVE_USER_SUCCESS     : 'sibi_ge_admin/users/APPROVE_USER_SUCCESS',
-    AUTO_APPROVE_USER_ORDERS : 'sibi_ge_admin/users/AUTO_APPROVE_USER_ORDERS',
-    DISABLE_USER_SUCCESS     : 'sibi_ge_admin/users/DISABLE_USER_SUCCESS',
-
 }
 
 // /////////////////////////////////////
@@ -27,6 +24,15 @@ export function clearUsers() {
 // /////////////////////////////////////
 //             ASYNC CALLS
 // /////////////////////////////////////
+export function getUserById({ id }) {
+    return (dispatch) => {
+        return Api({ url : `/order/${id}` })
+            .then(payload => {
+                dispatch({ type: ActionTypes.GET_USER_BY_ID_SUCCESS , ...payload });
+            })
+    }
+}
+
 export function getUsers() {
     return (dispatch, getState) => {
         const cookies = new Cookies();
@@ -48,7 +54,8 @@ export function approveUser({ id }) {
             url     : `/users/${id}/approve`
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.APPROVE_USER_SUCCESS , ...payload });
+                dispatch(getUserById({ id }));
+                dispatch(getUsers());
             })
     }
 }
@@ -64,7 +71,8 @@ export function autoApproveUserOrders( { user, autoApprovedOrders }) {
             }
         })
             .then(payload => {
-                dispatch({ type: ActionTypes.AUTO_APPROVE_USER_ORDERS, ...payload});
+                dispatch(getUserById({ id }));
+                dispatch(getUsers());
             })
     }
 }
@@ -73,7 +81,8 @@ export function disableUser({ id }) {
     return (dispatch) => {
         return Api({ url : `/users/${id}/disable` })
             .then(payload => {
-                dispatch({ type: ActionTypes.DISABLE_USER_SUCCESS , ...payload });
+                dispatch(getUserById({ id }));
+                dispatch(getUsers());
             })
     }
 }
