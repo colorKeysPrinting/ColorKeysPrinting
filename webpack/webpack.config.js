@@ -38,7 +38,9 @@ module.exports = WebpackConfig = (app) => {
             }),
             new CopyWebpackPlugin([
                 { from: '../_redirects', to: `./` },
-                { from: '../robots.txt', to: `./` }
+                { from: '../robots.txt', to: `./` },
+                { from: '../favicon.ico', to: `./` },
+                { from: '../favicon.png', to: `./` },
             ])
         ],
         module: {
