@@ -1,11 +1,11 @@
-## SIBI GE - Admin
+## COLOR KEYS PRINTING
 
 Getting Started
 -----------------------
 
 Make sure to install git, npm before you start then:
 
-1. git clone git@bitbucket.org:sibipro/sibi_ge_admin.git
+1. git clone https://github.com/colorKeysPrinting/colorKeysPrinting_react.git
 
 2. Install packages with
 
@@ -74,5 +74,4 @@ Available run commands
 `hot:` starts up the webpack-dev-server default port 3000, has hot reload enable\
 `build:` builds a production level build found in build/production which can be uploaded to netlify, this also minifies and removes debug capabilies.\
 `build_dev:` builds a dev level build found in build/development\
-`build_dev_uat:` builds a dev level build found in build/development which can be uploaded to netlify\
 `nuke:` wipes out the node_modules directory for the ability to clean install node_modules\
