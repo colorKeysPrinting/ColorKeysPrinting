@@ -2,12 +2,11 @@ import 'babel-polyfill';
 import React                            from 'react';
 import ReactDOM                         from 'react-dom';
 import { Provider }                     from 'react-redux';
-import { CookiesProvider, Cookies }     from 'react-cookie';
+import { CookiesProvider }              from 'react-cookie';
 import injectTapEventPlugin             from 'react-tap-event-plugin';
 import es6Promise                       from 'es6-promise';
 import { PropTypes }                    from 'prop-types';
 import configureStore                   from './configure_store';
-import jwt                              from './libs/loaders/jwt';
 import routes                           from './routes';
 
 import './styles/styles.scss';
@@ -39,14 +38,6 @@ class Root extends React.PureComponent {
 }
 
 const store = configureStore();
-
-let cookie = new Cookies();
-cookie = cookie.get('sibi-ge-admin');
-
-if (cookie) { // Setup JWT refresh
-    jwt({ dispatch: store.dispatch, token: cookie.token });
-}
-
 ReactDOM.render(
     <Root store={store} />,
     document.getElementById('main-app')

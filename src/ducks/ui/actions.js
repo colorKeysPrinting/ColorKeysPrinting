@@ -9,7 +9,6 @@ export const ActionTypes = {
     CHANGE_LANGUAGE : 'sibi_ge_admin/ui/CHANGE_LANGUAGE',
     GO_HOME         : 'sibi_ge_admin/ui/GO_HOME',
     TRIGGER_SPINNER : 'sibi_ge_admin/ui/TRIGGER_SPINNER',
-    SET_TRADE       : 'sibi_ge_admin/ui/SET_TRADE',
 }
 
 // /////////////////////////////////////
@@ -32,13 +31,6 @@ export function triggerSpinner(isActive) {
     return {
         type: ActionTypes.TRIGGER_SPINNER,
         isActive
-    }
-}
-
-export function setTrade({ trade }) {
-    return {
-        type: ActionTypes.SET_TRADE,
-        trade
     }
 }
 

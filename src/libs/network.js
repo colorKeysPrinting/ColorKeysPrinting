@@ -13,8 +13,8 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     (config) => {
-        if (_.size(config.cookies.get('sibi-ge-admin')) > 0) {
-            const token = config.cookies.get('sibi-ge-admin').token;
+        if (_.size(config.cookies.get('color-keys-printing')) > 0) {
+            const token = config.cookies.get('color-keys-printing').token;
             config.headers['x-auth-token'] = token;
         }
         return config

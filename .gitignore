@@ -15,7 +15,6 @@ secrets.js
 .idea/
 *.iml
 .env
-.vscode/
 
 ## Environment normalisation:
 /.bundle

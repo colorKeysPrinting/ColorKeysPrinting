@@ -3,11 +3,10 @@
 @import './pure-responsive-min';
 @import './reset';
 
-@import 'node_modules/rc-tabs/dist/rc-tabs.min';
-@import 'node_modules/react-day-picker/lib/style';
-@import 'node_modules/react-select/scss/default';
-
-// APP STYLES (need to include each file one by one)
+/**********************/
+/*       npm        */
+/**********************/
+// @import "./materialize";
 
 /**********************/
 /*       Theme        */
@@ -26,24 +25,12 @@
 /*      Partials      */
 /**********************/
 @import "partials/accordion";
-@import "partials/slider";
 @import "partials/header-bar";
-@import "partials/details-header";
-@import "partials/profile-overlay";
-@import "partials/select-box";
-@import "partials/overlay-container";
 @import "partials/overlay-component";
-@import "partials/part-overlay";
+@import "partials/select-box";
 @import "partials/spinner";
 
 /**********************/
 /*        Pages       */
 /**********************/
-@import "pages/orders-page";
 @import "pages/users-page";
-@import "pages/edit-add-product-page";
-@import "pages/process-order-page";
-@import "pages/product-page";
-@import "pages/login";
-@import "pages/properties-page";
-@import "pages/property-details-page";

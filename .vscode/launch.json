@@ -1,0 +1,49 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome",
+            "url": "http://localhost:3000",
+            "sourceMaps": true,
+            "webRoot": "${workspaceRoot}",
+            "runtimeArgs": [
+                "--incognito",
+                "--remote-debugging-port=9222"
+            ],
+            "sourceMapPathOverrides": {
+                "webpack:///*": "${workspaceRoot}/src/*"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "attach",
+            "name": "Attach to Chrome",
+            "url": "http://localhost:3000/*",
+            "sourceMaps": true,
+            "port": 9222,
+            "webRoot": "${workspaceRoot}",
+            "sourceMapPathOverrides": {
+                "webpack:///*": "${workspaceRoot}/src/*"
+            }
+        },
+        {
+            "name": "launch Firefox",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "firefoxArgs": [
+                "-start-debugger-server",
+                "-no-remote"
+            ],
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}",
+            "pathMappings":[{
+                "url": "webpack:///",
+                "path": "${workspaceRoot}/src/"
+            }]
+        }
+    ]
+}
