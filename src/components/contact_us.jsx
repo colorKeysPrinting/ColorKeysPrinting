@@ -3,8 +3,9 @@
 import React                    from 'react';
 import Scroll                   from 'react-scroll';
 import { Parallax, Background } from 'react-parallax';
+import { Col, CardPanel, Card, CardTitle } from 'react-materialize';
 import _                        from 'lodash';
-import assets                   from 'libs/assets';
+import assets                   from 'utils/assets';
 
 // This is for the react-scroll to work correctly
 const Element = Scroll.Element;
@@ -45,9 +46,10 @@ export default class ContactUs extends React.Component {
         let contactSection;
 
         const emailCard = (
-            <div className="card large blue-grey lighten-5">
+            <Card
+                className="large blue-grey lighten-5"
+                title="Drop us a line!" >
                 <div className="card-content">
-                    <span className="card-title">Drop us a line!</span>
                     <form onSubmit={(e)=>{e.preventDefault(); this.sendEmail();}}>
                         <div className="row">
                             <div className="input-field col s12">
@@ -75,11 +77,11 @@ export default class ContactUs extends React.Component {
                         </button>
                     </form>
                 </div>
-            </div>
+            </Card>
         );
 
         const contactCard = (
-            <div className="card large blue-grey lighten-5">
+            <Card className="large blue-grey lighten-5">
                 <div className="card-content">
                     <h5>Better yet, see us in person!</h5>
                     <p className="cardFont">Set up an appointment so we can get started on the project in person!</p>
@@ -97,7 +99,7 @@ export default class ContactUs extends React.Component {
                         <li>Sunday: Closed</li>
                     </ul>
                 </div>
-            </div>
+            </Card>
         );
 
         if(this.state.isMobile) {
@@ -110,8 +112,8 @@ export default class ContactUs extends React.Component {
         } else {
             contactSection = (
                 <div>
-                    <div className="col m6">{ emailCard }</div>
-                    <div className="col m6">{ contactCard }</div>
+                    <Col m={6}>{ emailCard }</Col>
+                    <Col m={6}>{ contactCard }</Col>
                 </div>
             );
         }
@@ -125,9 +127,9 @@ export default class ContactUs extends React.Component {
                         </Element>
 
                         <div className="row">
-                            <div className="col s12 cards-container">
+                            <Col s={12} className="cards-container">
                                 { contactSection }
-                            </div>
+                            </Col>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 'use strict';
 
-import Api              from 'libs/network';
+import Api              from 'utils/network';
 
 // /////////////////////////////////////
 //             ACTION TYPES

@@ -2,8 +2,9 @@
 
 import React                    from 'react';
 import Scroll                   from 'react-scroll';
+import { Col, CardPanel, Card, Button } from 'react-materialize';
 import _                        from 'lodash';
-import assets                   from 'libs/assets';
+import assets                   from 'utils/assets';
 
 export default class Navbar extends React.Component {
     constructor(props){
@@ -24,14 +25,14 @@ export default class Navbar extends React.Component {
             <div>
                 <br/>
                 <div className="center">
-                    <a className="btn waves-effect waves-light" onClick={this.scrollToTop}>Back To Top</a>
+                    <Button waves="light" className="waves-effect" onClick={this.scrollToTop}>Back To Top</Button>
                 </div>
                 <footer className="page-footer black">
                     <div className="container">
                         <div className="row">
-                            <div className="col l6 s12">
+                            <Col s={12} m={16} >
                                 <p className="grey-text text-lighten-4">Copyright © 2016 Color Keys Printing - All Rights Reserved.</p>
-                            </div>
+                            </Col>
                         </div>
                     </div>
                     <div className="footer-copyright">

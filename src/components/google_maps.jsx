@@ -1,6 +1,7 @@
 'use strict';
 
 import React                    from 'react';
+import { Col, CardPanel, Card, Button, Icon } from 'react-materialize';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker }    from "react-google-maps";
 import { Element }              from 'react-scroll';
 import _                        from 'lodash';
@@ -44,9 +45,14 @@ class GoogleMapComponent extends React.Component {
         return (
             <div>
                 <Element name="navigation">
-                    <a className="btn waves-effect waves-light" style={{position: 'absolute', margin: '10px'}} name="directions" onClick={(e) => { e.preventDefault(); this.getDirections() }}>Get Directions
-                        <i className="material-icons left" style={{ transform: 'rotate(50deg)' }}>navigation</i>
-                    </a>
+                    <Button
+                        wave="light"
+                        className="waves-effect"
+                        style={{position: 'absolute', margin: '10px'}}
+                        name="directions"
+                        onClick={(e) => { e.preventDefault(); this.getDirections() }}>
+                        <Icon left style={{ transform: 'rotate(50deg)' }}>navigation</Icon>Get Directions
+                    </Button>
                 </Element>
                 <GoogleMap options={mapOptions}>
                     {markers.map((marker, idx) => (

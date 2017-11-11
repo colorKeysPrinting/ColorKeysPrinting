@@ -1,12 +1,13 @@
 'user strict';
 
 import { combineReducers }  from 'redux';
-import header               from 'ducks/header/reducer';
+import { routerReducer }    from 'react-router-redux';
 import ui                   from 'ducks/ui/reducer';
 
+
 const rootReducer = combineReducers({
-    header,
-    ui,
+    router: routerReducer,
+    ui
 });
 
 export default rootReducer;

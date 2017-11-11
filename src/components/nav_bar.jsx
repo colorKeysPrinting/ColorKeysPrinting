@@ -4,7 +4,7 @@ import React                    from 'react';
 import Scroll                   from 'react-scroll';
 import SideNav                  from 'react-simple-sidenav';
 import _                        from 'lodash';
-import assets                   from 'libs/assets';
+import assets                   from 'utils/assets';
 
 // This is for the react-scroll to work correctly
 const Link = Scroll.Link;

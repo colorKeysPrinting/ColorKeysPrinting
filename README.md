@@ -39,7 +39,7 @@ the rules specified in your webpack configuration. Typically, this means that in
 be changed to include a SHA.
 
 First importing the assets:
-  `import assets from '../libs/assets';`
+  `import assets from '../utils/assets';`
 
 Then assign the assest to a variable:
   `const img = assets("./images/profile_pic.jpg");`
