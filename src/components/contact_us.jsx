@@ -1,14 +1,11 @@
 'use strict';
 
 import React                    from 'react';
-import Scroll                   from 'react-scroll';
+import { Element }              from 'react-scroll';
 import { Parallax, Background } from 'react-parallax';
 import { Col, CardPanel, Card, CardTitle } from 'react-materialize';
 import _                        from 'lodash';
 import assets                   from 'utils/assets';
-
-// This is for the react-scroll to work correctly
-const Element = Scroll.Element;
 
 export default class ContactUs extends React.Component {
     constructor(props){

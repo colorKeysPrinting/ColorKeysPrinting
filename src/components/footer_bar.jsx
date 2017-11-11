@@ -1,7 +1,7 @@
 'use strict';
 
 import React                    from 'react';
-import Scroll                   from 'react-scroll';
+import { animateScroll }        from 'react-scroll';
 import { Col, CardPanel, Card, Button } from 'react-materialize';
 import _                        from 'lodash';
 import assets                   from 'utils/assets';
@@ -9,9 +9,8 @@ import assets                   from 'utils/assets';
 export default class Navbar extends React.Component {
     constructor(props){
         super(props)
-        const scroll = Scroll.animateScroll;
 
-        this.state = { scroll }
+        this.state = { scroll: animateScroll }
 
         this.scrollToTop = this.scrollToTop.bind(this)
     }
