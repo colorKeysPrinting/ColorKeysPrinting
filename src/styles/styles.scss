@@ -1,36 +1,18 @@
-// HQ STYLES
-@import './pure-min';
-@import './pure-responsive-min';
-@import './reset';
-
 /**********************/
 /*       npm        */
 /**********************/
-// @import "./materialize";
 
 /**********************/
 /*       Theme        */
 /**********************/
-@import "theme/mixins";
 @import "theme/colors";
-@import "theme/typography";
-@import "theme/button";
-@import "theme/forms";
-@import "theme/layout";
-@import "theme/tables";
-@import "theme/modal";
-@import "theme/box";
 
 /**********************/
 /*      Partials      */
 /**********************/
-@import "partials/accordion";
-@import "partials/header-bar";
-@import "partials/overlay-component";
-@import "partials/select-box";
 @import "partials/spinner";
 
 /**********************/
 /*        Pages       */
 /**********************/
-@import "pages/users-page";
+@import "pages/home-page";
