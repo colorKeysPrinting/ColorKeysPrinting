@@ -1,0 +1,27 @@
+.navbar-fixed {
+    background-color: $black;
+    width: 100%;
+    height: 65px;
+    .logo-image {
+        height: 65px;
+    }
+    .nav-bar-item {
+        width: 100px;
+        a {
+            color: $black;
+            font-weight: bold;
+        }
+    }
+    .brand-logo {
+        height: 65px;
+    }
+    .call-btn {
+        background-color: $logo-blue;
+    }
+    .nav-btn {
+        background-color: $logo-red;
+    }
+    .email-btn {
+        background-color: $logo-yellow;
+    }
+}
