@@ -11,9 +11,9 @@
     "url": "https://github.com/colorKeysPrinting/colorKeysPrinting_react"
   },
   "scripts": {
-    "build": "webpack -p --config ./webpack/webpack.prod.js",
-    "build_dev": "webpack --config ./webpack/webpack.dev.js",
-    "hot": "webpack-dev-server --hot --config ./webpack/webpack.dev.js",
+    "build": "webpack -p",
+    "build:dev": "webpack",
+    "hot": "webpack-dev-server --hot",
     "nuke": "rm -rf node_modules"
   },
   "dependencies": {
@@ -75,6 +75,7 @@
     "url-loader": "^0.6.2",
     "webpack": "^3.8.1",
     "webpack-bundle-analyzer": "^2.9.1",
-    "webpack-dev-server": "^2.9.4"
+    "webpack-dev-server": "^2.9.4",
+    "webpack-dotenv-plugin": "^2.0.2"
   }
 }
