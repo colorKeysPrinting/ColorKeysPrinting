@@ -3,7 +3,7 @@
 import React                    from 'react';
 import { Link, animateScroll }  from 'react-scroll';
 import SideNav                  from 'react-simple-sidenav';
-import { Icon, Navbar, NavItem }from 'react-materialize';
+import { Icon }                 from 'react-materialize';
 import _                        from 'lodash';
 import assets                   from 'utils/assets';
 
@@ -22,17 +22,31 @@ export default class HeaderBar extends React.Component {
     render() {
         const { showNav } = this.state;
         const links = {
-            'call-btn': <NavItem key={'call-btn'} className="nav-bar-item call-btn" href="tel:208-589-7436" divider> Call </NavItem>,
-            'nav-btn': <NavItem key={'nav-btn'} className="nav-bar-item nav-btn" divider><Link to="navigation" spy={true} smooth={true} offset={50} duration={500}> Navigation </Link></NavItem>,
-            'email-btn': <NavItem key={'email-btn'} className="nav-bar-item email-btn" divider><Link to="email" spy={true} smooth={true} offset={50} duration={500}> Email </Link></NavItem>
+            'call-btn'  : <a href="tel:208-589-7436"> Call </a>,
+            'nav-btn'   : <Link to="navigation" spy={true} smooth={true} offset={50} duration={500}> Navigation </Link>,
+            'email-btn' : <Link to="email" spy={true} smooth={true} offset={50} duration={500}> Email </Link>,
         }
 
         return (
-            <Navbar className="navbar-fixed" brand={<img className="logo-image" src={assets('./images/full_logo.png')} alt="" />} right options={links}>
-                <NavItem key={'call-btn'} className="nav-bar-item call-btn" href="tel:208-589-7436" divider> Call </NavItem>
-                <NavItem key={'nav-btn'} className="nav-bar-item nav-btn" divider><Link to="navigation" spy={true} smooth={true} offset={50} duration={500}> Navigation </Link></NavItem>
-                <NavItem key={'email-btn'} className="nav-bar-item email-btn" divider><Link to="email" spy={true} smooth={true} offset={50} duration={500}> Email </Link></NavItem>
-            </Navbar>
+            <nav className="navbar-fixed">
+                <div className="nav-wrapper">
+                    <a href="#!" className="brand-logo"><img className="logo-image" src={assets('./images/full_logo.png')} alt="" /></a>
+                    <div data-activates="mobile-demo" className="button-collapse" onClick={() => this.setState({showNav: (showNav) ? false : true })}><Icon className="material-icons">menu</Icon></div>
+                    <ul className="right hide-on-med-and-down">
+                        {_.map(links, (link, key) => (
+                            <li key={key} className={`nav-bar-item waves-effect ${key}`}>{ link }</li>
+                        ))}
+                    </ul>
+                    <SideNav
+                        id="mobile-demo"
+                        className="side-nav"
+                        showNav={showNav}
+                        onHideNav={() => this.setState({ showNav: false })}
+                        title={<div className="side-nav-title"><img src={assets('./images/full_logo.png')} alt="" /></div>}
+                        items={_.map(links, link => ( link ))}
+                    />
+                </div>
+            </nav>
         );
     }
 }

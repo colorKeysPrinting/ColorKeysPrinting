@@ -85,7 +85,7 @@ export default class Home extends React.Component {
         return (
             <div>
                 <HeaderBar />
-                <div >
+                <div className="content">
                     <div id="index-banner" className="parallax-container" style={{ height:'220px' }}>
                         {/* <img src={assets('./images/color_bar_for_website.png')} alt="" height="220px" style={{ position: 'absolute', top: '25px'}}/> */}
                     </div>
