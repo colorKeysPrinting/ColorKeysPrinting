@@ -80,7 +80,7 @@ export default class ContactUs extends React.Component {
 
         const contactCard = (
             <Card className="large blue-grey lighten-5">
-                <div className="card-content">
+                <div className="card-content" style={{ textAlign: 'center' }}>
                     <h5>Come see us in person!</h5>
                     <p className="cardFont">Set up an appointment so we can get started on the project in person!</p>
 
@@ -110,7 +110,7 @@ export default class ContactUs extends React.Component {
         } else {
             contactSection = (
                 <div>
-                    <Col m={6}>{ contactCard }</Col>
+                    <Col m={12}>{ contactCard }</Col>
                 </div>
             );
         }
