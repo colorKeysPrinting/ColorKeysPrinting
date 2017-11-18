@@ -143,7 +143,7 @@ export default class Home extends React.Component {
                         {/* NOTE: GOOGLE_API_KEY comes from an ENV variable */}
                         <GoogleMapComponent
                             isMobile={ this.detectMobile() }
-                            googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&v=3.exp&libraries=geometry,drawing,places`}
+                            googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}&v=3.exp&libraries=geometry,drawing,places`}
                             loadingElement={<div style={{ width: "100%", height: "100%" }} />}
                             containerElement={<div style={{ width: "100%", height: "100%" }} />}
                             mapElement={<div style={{ width: "100%", height: "100%" }} />}

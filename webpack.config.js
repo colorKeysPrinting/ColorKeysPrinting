@@ -14,7 +14,10 @@ module.exports = WebpackConfig = (app) => {
                 path: '.env'
             }),
             new webpack.DefinePlugin({
-                GOOGLE_API_KEY: JSON.stringify(process.env.GOOGLE_API_KEY)
+                'process.env' : Object.assign({}, {
+                    NODE_ENV: JSON.stringify(process.env.NODE_ENV) || 'development',
+                    GOOGLE_API_KEY: JSON.stringify(process.env.GOOGLE_API_KEY)
+                })
             }),
             new CleanWebpackPlugin(['build'], {root: path.resolve(__dirname, './')}),
             new ExtractTextPlugin((process.env.NODE_ENV === 'development') ? `${process.env.APP_NAME}.css` : `${process.env.APP_NAME}_[hash].css`),
