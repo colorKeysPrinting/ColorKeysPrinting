@@ -40,6 +40,7 @@ export default class ContactUs extends React.Component {
     }
 
     render(){
+        const email = "colorkeys13@gmail.com";
         let contactSection;
 
         const emailCard = (
@@ -80,12 +81,13 @@ export default class ContactUs extends React.Component {
         const contactCard = (
             <Card className="large blue-grey lighten-5">
                 <div className="card-content">
-                    <h5>Better yet, see us in person!</h5>
+                    <h5>Come see us in person!</h5>
                     <p className="cardFont">Set up an appointment so we can get started on the project in person!</p>
 
                     <h5>Color Keys Printing</h5>
                     <p className="cardFont">3342 E 113 N , Idaho Falls, Idaho 83401, United States</p>
                     <p className="cardFont"><a href="tel:208-589-7436"> 208-589-7436 </a> / 208-524-0456 </p>
+                    <p className="cardFont"><a href={`mailto:${email}`}>{ email }</a></p>
 
                     <h5>Hours</h5>
                     <ul className="cardFont">
@@ -102,14 +104,12 @@ export default class ContactUs extends React.Component {
         if(this.state.isMobile) {
             contactSection = (
                 <div>
-                    { emailCard }
                     { contactCard }
                 </div>
             );
         } else {
             contactSection = (
                 <div>
-                    <Col m={6}>{ emailCard }</Col>
                     <Col m={6}>{ contactCard }</Col>
                 </div>
             );
