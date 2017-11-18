@@ -11,7 +11,7 @@
     "url": "https://github.com/colorKeysPrinting/colorKeysPrinting_react"
   },
   "scripts": {
-    "build": "webpack -p",
+    "build": "webpack",
     "build:dev": "webpack",
     "hot": "webpack-dev-server --hot",
     "nuke": "rm -rf node_modules"
