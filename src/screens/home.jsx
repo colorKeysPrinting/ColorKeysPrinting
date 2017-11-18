@@ -90,8 +90,8 @@ export default class Home extends React.Component {
                         <Background>
                             <img src={assets('./images/paint_splatter_portrait.png')} alt="Unsplashed background img 2" height="2500px" width={`${window.width}px`}/>
                         </Background>
-                        <div id="index-banner" className="parallax-container" style={{ height:'350px', width: '75%', margin: '0 auto' }}>
-                            <img src={assets('./images/Christmas_offer.png')} alt="" width="75%" style={{ position: 'absolute', top: '25px', width: '100%' }}/>
+                        <div id="index-banner" className="parallax-container" style={{ height:'500px', width: '75%', margin: '0 auto' }}>
+                            <img src={assets('./images/Christmas_offer_v2.png')} alt="" style={{ position: 'absolute', top: '25px', width: '100%' }}/>
                         </div>
 
                         <div className="section">

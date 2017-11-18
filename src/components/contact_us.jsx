@@ -116,7 +116,7 @@ export default class ContactUs extends React.Component {
         }
 
         return (
-            <div>
+            <div id="contact-us-page">
                 <div className="section">
                     <div className="row">
                         <Element name="email">
