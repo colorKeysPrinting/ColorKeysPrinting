@@ -24,8 +24,9 @@ export default class HeaderBar extends React.Component {
         const links = {
             'call-btn'  : <a href="tel:208-589-7436"> Call </a>,
             'nav-btn'   : <Link to="navigation" spy={true} smooth={true} offset={50} duration={500}> Navigation </Link>,
-            'email-btn' : <Link to="email" spy={true} smooth={true} offset={50} duration={500}> Email </Link>,
+            'email-btn' : <Link to="email" spy={true} smooth={true} offset={50} duration={500}> Contact </Link>,
         }
+        let linkArray = [];
 
         return (
             <nav className="navbar-fixed">
@@ -33,9 +34,10 @@ export default class HeaderBar extends React.Component {
                     <a href="#!" className="brand-logo"><img className="logo-image" src={assets('./images/full_logo.png')} alt="" /></a>
                     <div data-activates="mobile-demo" className="button-collapse" onClick={() => this.setState({showNav: (showNav) ? false : true })}><Icon className="material-icons">menu</Icon></div>
                     <ul className="right hide-on-med-and-down">
-                        {_.map(links, (link, key) => (
-                            <li key={key} className={`nav-bar-item waves-effect ${key}`}>{ link }</li>
-                        ))}
+                        {_.map(links, (link, key) => {
+                            linkArray.push(<li key={key} className={`side-nav-item waves-effect ${key}`}>{ link }</li>);
+                            return <li key={key} className={`nav-bar-item waves-effect ${key}`}>{ link }</li>
+                        })}
                     </ul>
                     <SideNav
                         id="mobile-demo"
@@ -43,7 +45,7 @@ export default class HeaderBar extends React.Component {
                         showNav={showNav}
                         onHideNav={() => this.setState({ showNav: false })}
                         title={<div className="side-nav-title"><img src={assets('./images/full_logo.png')} alt="" /></div>}
-                        items={_.map(links, link => ( link ))}
+                        items={linkArray}
                     />
                 </div>
             </nav>

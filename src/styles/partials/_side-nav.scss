@@ -1,4 +1,11 @@
 .side-nav-title {
     background-color: $black;
-
+    padding: 0;
+}
+li {
+    a {
+        color: #000;
+    }
+    width: 100%;
+    text-align: center;
 }
