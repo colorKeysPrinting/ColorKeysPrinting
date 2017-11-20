@@ -17,6 +17,7 @@ export default class Home extends React.Component {
         super(props);
 
         this.state = {
+            location: { lat:43.597457, lng: -111.965967, addr: '3342+East+113+North,+Idaho+Falls,+ID+83401,+United+States' },
             products: {
                 business: [
                     'business cards',
@@ -71,6 +72,8 @@ export default class Home extends React.Component {
                 ]
             }
         };
+
+        this.getDirections = this.getDirections.bind(this);
     }
 
     detectMobile() {
@@ -78,6 +81,17 @@ export default class Home extends React.Component {
                 navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i))
             ? true
             : false;
+    }
+
+    getDirections() {
+        const { isMobile } = this.props;
+        const { location } = this.state;
+
+        (isMobile)
+            ? (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i))
+                ? window.open(`https://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`)
+                : window.open(`maps://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`)
+            : window.open(`https://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`);
     }
 
     render() {
@@ -157,6 +171,7 @@ export default class Home extends React.Component {
                                 loadingElement={<div style={{ width: "100%", height: "100%" }} />}
                                 containerElement={<div style={{ width: "100%", height: "100%" }} />}
                                 mapElement={<div style={{ width: "100%", height: "100%" }} />}
+                                location={this.state.location}
                                 isMarkerShown
                             />
                         </section>
