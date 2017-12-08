@@ -35,7 +35,7 @@ export default class HeaderBar extends React.Component {
                     <div data-activates="mobile-demo" className="button-collapse" onClick={() => this.setState({showNav: (showNav) ? false : true })}><Icon className="material-icons">menu</Icon></div>
                     <ul className="right hide-on-med-and-down">
                         {_.map(links, (link, key) => {
-                            linkArray.push(<li key={key} className={`side-nav-item waves-effect ${key}`}>{ link }</li>);
+                            linkArray.push(<div><li key={key} className={`side-nav-item waves-effect ${key}`}>{ link }</li></div>);
                             return <li key={key} className={`nav-bar-item waves-effect ${key}`}>{ link }</li>
                         })}
                     </ul>

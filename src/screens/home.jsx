@@ -105,7 +105,7 @@ export default class Home extends React.Component {
                             <img src={assets('./images/paint_splatter_portrait.png')} alt="Unsplashed background img 2" height="2500px" width={`${window.width}px`}/>
                         </Background>
                         <div id="index-banner" className="parallax-container" style={{ height:'500px', width: '75%', margin: '0 auto' }}>
-                            <img src={assets('./images/Christmas_offer_v2.png')} alt="" style={{ position: 'absolute', top: '25px', width: '100%' }}/>
+                            <img src={assets('./images/Christmas_Offer_V2_smaller.png')} alt="" style={{ position: 'absolute', top: '25px', width: '100%' }}/>
                         </div>
 
                         <div className="section">
@@ -120,7 +120,7 @@ export default class Home extends React.Component {
                                     </Col>
                                     <Col m={6}>
                                         <Card className="large">
-                                            <img src={assets('./images/products.png')} alt="" width="100%" height="100%"/>
+                                            <img src={assets('./images/Products_2.png')} alt="" width="100%" height="100%"/>
                                         </Card>
                                     </Col>
                                 </Col>
@@ -140,6 +140,7 @@ export default class Home extends React.Component {
                                             <CardPanel key={`element${key}`} className="blue-grey lighten-5 my-cards">
                                                 <div className="center"><img src={assets('./images/logo.png')} alt="" className="card-icon"/></div>
                                                 <h5 className="center">{key}</h5>
+                                                <h2 className="hidden">{key}</h2>
                                                 <div className="light center cardFont">
                                                     <ul>{product.map((product, key)=>{
                                                         return <li key={`product${key}`}> {product} </li>;
