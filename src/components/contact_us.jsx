@@ -6,6 +6,7 @@ import { Parallax, Background } from 'react-parallax';
 import { Col, CardPanel, Card, CardTitle } from 'react-materialize';
 import _                        from 'lodash';
 import assets                   from 'utils/assets';
+import { generateShareIcon }    from 'react-share';
 
 export default class ContactUs extends React.Component {
     constructor(props){
@@ -40,6 +41,10 @@ export default class ContactUs extends React.Component {
     }
 
     render(){
+        const FacebookIcon = generateShareIcon('facebook');
+        const TwitterIcon = generateShareIcon('twitter');
+        const GooglePlusIcon = generateShareIcon('google');
+
         const email = "colorkeys13@gmail.com";
         let contactSection;
 
@@ -97,6 +102,26 @@ export default class ContactUs extends React.Component {
                         <li>Saturday: Closed</li>
                         <li>Sunday: Closed</li>
                     </ul>
+                    <div className="social-media-section">
+                        <a href="https://www.facebook.com/colorkeysprinting"
+                            className="social-media-button">
+                            <FacebookIcon
+                                size={32}
+                                round />
+                        </a>
+                        <a href="https://twitter.com/colorkeys13"
+                            className="social-media-button">
+                            <TwitterIcon
+                                size={32}
+                                round />
+                        </a>
+                        <a href="https://plus.google.com/u/0/113724115750329359769"
+                            className="social-media-button">
+                            <GooglePlusIcon
+                                size={32}
+                                round />
+                        </a>
+                    </div>
                 </div>
             </Card>
         );

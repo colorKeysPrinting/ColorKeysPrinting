@@ -5,4 +5,15 @@
     .cardFont {
         font-size: 20px;
     }
+    .social-media-section {
+        display: inline-flex;
+        padding-left: 20px;
+    }
+    .social-media-button {
+        cursor: pointer;
+        margin: 2px;
+    }
+    .card.large {
+        height: 540px;
+    }
 }
