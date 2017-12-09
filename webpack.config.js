@@ -32,6 +32,7 @@ module.exports = WebpackConfig = (app) => {
                 { from: 'favicon.ico', to: `./` },
                 { from: 'assets/images/favicon.png', to: `./` },
                 { from: '.htaccess', to: `./` },
+                { from: 'sitemap.xml', to: `./` },
             ])
         ],
         module: {
