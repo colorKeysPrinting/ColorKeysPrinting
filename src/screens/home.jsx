@@ -104,7 +104,7 @@ export default class Home extends React.Component {
                         <Background>
                             <img src={assets('./images/paint_splatter_portrait.png')} alt="Unsplashed background img 2" height="2500px" width={`${window.width}px`}/>
                         </Background>
-                        <div id="index-banner" className="parallax-container" style={{ height:'500px', width: '75%', margin: '0 auto' }}>
+                        <div id="index-banner" className="parallax-container" style={{ height: (window.innerWidth > 1200) ? '500px': '210px', width: (window.innerWidth > 1200) ? '75%': '100%' , margin: '0 auto' }}>
                             <img src={assets('./images/Christmas_offer.png')} alt="" style={{ position: 'absolute', top: '25px', width: '100%', backgroundColor: '#FFF' }}/>
                         </div>
 
@@ -119,7 +119,7 @@ export default class Home extends React.Component {
                                         </CardPanel>
                                     </Col>
                                     <Col m={6}>
-                                        <Card className="large">
+                                        <Card className="large" style={{ height: (window.innerWidth > 600) ? '360px': '280px' }}>
                                             <img src={assets('./images/products.png')} alt="" width="100%" height="100%"/>
                                         </Card>
                                     </Col>

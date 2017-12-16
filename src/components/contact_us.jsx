@@ -84,7 +84,7 @@ export default class ContactUs extends React.Component {
         );
 
         const contactCard = (
-            <Card className="large blue-grey lighten-5" style={{ height: (window.innerWidth < 600) ? '650px': '550px' }}>
+            <Card className="large blue-grey lighten-5" style={{ height: (window.innerWidth < 600) ? '700px': '550px' }}>
                 <div className="card-content" style={{ textAlign: 'center' }}>
                     <h5>Come see us in person!</h5>
                     <p className="cardFont">Set up an appointment so we can get started on the project in person!</p>
