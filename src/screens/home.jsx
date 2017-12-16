@@ -119,7 +119,7 @@ export default class Home extends React.Component {
                                         </CardPanel>
                                     </Col>
                                     <Col m={6}>
-                                        <Card className="large" style={{ height: (window.innerWidth > 600) ? '360px': '280px' }}>
+                                        <Card className="large" style={{ height: (window.innerWidth > 600) ? '670px': '280px' }}>
                                             <img src={assets('./images/products.png')} alt="" width="100%" height="100%"/>
                                         </Card>
                                     </Col>
