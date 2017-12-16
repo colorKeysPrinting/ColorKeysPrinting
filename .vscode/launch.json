@@ -9,6 +9,7 @@
             "url": "http://localhost:3000",
             "sourceMaps": true,
             "webRoot": "${workspaceRoot}",
+            "runtimeExecutable": "/usr/bin/google-chrome-stable",
             "runtimeArgs": [
                 "--incognito",
                 "--remote-debugging-port=9222"
@@ -34,6 +35,7 @@
             "type": "firefox",
             "request": "launch",
             "reAttach": true,
+            "firefoxExecutable": "/usr/bin/firefox-developer-edition",
             "firefoxArgs": [
                 "-start-debugger-server",
                 "-no-remote"

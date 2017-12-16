@@ -31,7 +31,7 @@ export default class HeaderBar extends React.Component {
         return (
             <nav className="navbar-fixed">
                 <div className="nav-wrapper">
-                    <a href="#!" className="brand-logo"><img className="logo-image" src={assets('./images/full_logo.png')} alt="" /></a>
+                    <a href="#!" className="brand-logo"><img className="logo-image" src={assets('./images/full_logo.png')} alt="" style={{ marginLeft: (window.innerWidth > 1000) ? '45px' : '' }}/></a>
                     <div data-activates="mobile-demo" className="button-collapse" onClick={() => this.setState({showNav: (showNav) ? false : true })}><Icon className="material-icons">menu</Icon></div>
                     <ul className="right hide-on-med-and-down">
                         {_.map(links, (link, key) => {
