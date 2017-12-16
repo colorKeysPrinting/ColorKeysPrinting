@@ -127,8 +127,6 @@ export default class Home extends React.Component {
                             </div>
                         </div>
 
-
-
                         <div className="section">
                             <div className="row">
                                 <div className="yellow"><h3 className="header center"> Products </h3></div>
