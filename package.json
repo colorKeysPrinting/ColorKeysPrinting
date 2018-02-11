@@ -40,7 +40,7 @@
     "react-simple-sidenav": "^0.1.6",
     "redux": "3.7.2",
     "redux-thunk": "^2.2.0",
-    "yargs": "^10.0.3"
+    "webpack": "^3.11.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.3",
@@ -72,7 +72,6 @@
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.19.1",
     "url-loader": "^0.6.2",
-    "webpack": "^3.10.0",
     "webpack-bundle-analyzer": "^2.9.1",
     "webpack-dev-server": "^2.9.7",
     "webpack-dotenv-plugin": "^2.0.2"
