@@ -27,4 +27,5 @@ build/
 build/production
 build/development
 
+yarn.lock
 yarn-error.log
