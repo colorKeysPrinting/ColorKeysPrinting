@@ -22,13 +22,13 @@
     "react/forbid-prop-types": 0,
     "react/prop-types": 0,
 
-    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": ["warn", "unix"],
 
     "no-extra-strict": 0,
     "strict": 1,
-    "quotes": ["warn", "single"],
-    "semi": ["warn", "always"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
     "no-nested-ternary": 1
   }
 }

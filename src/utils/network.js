@@ -1,5 +1,5 @@
-import axios        from 'axios';
-import { Cookies }  from 'react-cookie';
+import axios from 'axios';
+import { Cookies } from 'react-cookie';
 
 const cookies = new Cookies();
 const instance = axios.create({
@@ -8,27 +8,28 @@ const instance = axios.create({
   headers: {
     'content-type': 'application/json; charset=UTF-8',
   },
-  cookies
+  cookies,
 });
 
-instance.interceptors.request.use(
-  (config) => {
-    if (_.size(config.cookies.get('color-keys-printing')) > 0) {
-      const token = config.cookies.get('color-keys-printing').token;
-      config.headers['x-auth-token'] = token;
+instance.interceptors.request.use(config => {
+  if (_.size(config.cookies.get('color-keys-printing')) > 0) {
+    const token = config.cookies.get('color-keys-printing').token;
+    config.headers['x-auth-token'] = token;
+  }
+  return config;
+});
+
+instance.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    if (error.response) {
+      alert(`Error: ${error.response.data.message}`);
+      throw error;
+      return Promise.reject(error);
     }
-    return config;
   }
 );
-
-instance.interceptors.response.use((response)=>{
-  return response;
-},(error) => {
-  if (error.response) {
-    alert(`Error: ${error.response.data.message}`);
-    throw(error);
-    return Promise.reject(error);
-  }
-});
 
 export default instance;
