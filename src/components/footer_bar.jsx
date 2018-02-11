@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import { animateScroll } from 'react-scroll';
 import { Col, CardPanel, Card, Button } from 'react-materialize';

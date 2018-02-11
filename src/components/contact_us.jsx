@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import { Element } from 'react-scroll';
 import { Parallax, Background } from 'react-parallax';

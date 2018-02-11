@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import { Col, CardPanel, Card } from 'react-materialize';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';

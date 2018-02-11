@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import { Link, animateScroll } from 'react-scroll';
 import SideNav from 'react-simple-sidenav';
