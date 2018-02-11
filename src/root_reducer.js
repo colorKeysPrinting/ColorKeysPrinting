@@ -6,8 +6,8 @@ import ui                   from 'ducks/ui/reducer';
 
 
 const rootReducer = combineReducers({
-    router: routerReducer,
-    ui
+  router: routerReducer,
+  ui
 });
 
 export default rootReducer;

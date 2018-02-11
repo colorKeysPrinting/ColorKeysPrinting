@@ -5,11 +5,11 @@ import rootReducer                          from './root_reducer';
 import { routerMiddleware }                 from 'react-router-redux';
 
 export default (history) => {
-    return createStore(
-        rootReducer,
-        applyMiddleware(
-            thunk,
-            routerMiddleware(history)
-        )
-    );
-}
+  return createStore(
+    rootReducer,
+    applyMiddleware(
+      thunk,
+      routerMiddleware(history)
+    )
+  );
+};

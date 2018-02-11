@@ -1,4 +1,4 @@
-'use strict';
+
 
 import _                        from 'lodash';
 import Immutable                from 'immutable';
@@ -9,19 +9,19 @@ import { ActionTypes }          from './actions';
 //             REDUCER
 // /////////////////////////////////////
 const initialState = Immutable.fromJS({
-    activeTab: ''
+  activeTab: ''
 });
 
 export default (state = initialState, action) => {
    
-    switch (action.type) {
+  switch (action.type) {
     case ActionTypes.SET_ACTIVE_TAB:
-        console.log('activeTab', action.activeTab);
-        state = state.set('activeTab', action.activeTab);
-        break;
+      console.log('activeTab', action.activeTab);
+      state = state.set('activeTab', action.activeTab);
+      break;
     
     default: 
-        return state;
-    }
-    return state;
+      return state;
+  }
+  return state;
 };
