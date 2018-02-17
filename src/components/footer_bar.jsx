@@ -1,22 +1,18 @@
 import React from 'react';
 import { animateScroll } from 'react-scroll';
-import { Col, CardPanel, Card, Button } from 'react-materialize';
+import { Col, Button } from 'react-materialize';
 import _ from 'lodash';
 import { ShareButtons, generateShareIcon } from 'react-share';
 import assets from 'utils/assets';
 
+import { FooterHeading, SocialMedia, SocialMediaNetworks, SocialMediaBtn } from 'styles/common';
+
 export default class Navbar extends React.Component {
-  constructor(props) {
-    super(props);
+  state = { scroll: animateScroll };
 
-    this.state = { scroll: animateScroll };
-
-    this.scrollToTop = this.scrollToTop.bind(this);
-  }
-
-  scrollToTop() {
+  scrollToTop = () => {
     this.state.scroll.scrollToTop();
-  }
+  };
 
   render() {
     const {
@@ -49,64 +45,72 @@ export default class Navbar extends React.Component {
           </Button>
         </div>
         <footer className="page-footer black">
-          <div className="heading">Tell about us on:</div>
-          <div className="social-media-section">
-            <div className="social-media-networks">
-              <FacebookShareButton url={shareUrl} quote={title} className="social-media-butto">
-                <FacebookIcon size={32} round />
-              </FacebookShareButton>
-            </div>
+          <FooterHeading>Tell about us on:</FooterHeading>
+          <SocialMedia>
+            <SocialMediaNetworks>
+              <SocialMediaBtn>
+                <FacebookShareButton url={shareUrl} quote={title}>
+                  <FacebookIcon size={32} round />
+                </FacebookShareButton>
+              </SocialMediaBtn>
+            </SocialMediaNetworks>
 
-            <div className="social-media-networks">
-              <TwitterShareButton url={shareUrl} title={title} className="social-media-butto">
-                <TwitterIcon size={32} round />
-              </TwitterShareButton>
-            </div>
+            <SocialMediaNetworks>
+              <SocialMediaBtn>
+                <TwitterShareButton url={shareUrl} title={title}>
+                  <TwitterIcon size={32} round />
+                </TwitterShareButton>
+              </SocialMediaBtn>
+            </SocialMediaNetworks>
 
-            <div className="social-media-networks">
-              <TelegramShareButton url={shareUrl} title={title} className="social-media-butto">
-                <TelegramIcon size={32} round />
-              </TelegramShareButton>
-            </div>
+            <SocialMediaNetworks>
+              <SocialMediaBtn>
+                <TelegramShareButton url={shareUrl} title={title}>
+                  <TelegramIcon size={32} round />
+                </TelegramShareButton>
+              </SocialMediaBtn>
+            </SocialMediaNetworks>
 
-            <div className="social-media-networks">
-              <WhatsappShareButton
-                url={shareUrl}
-                title={title}
-                separator=":: "
-                className="social-media-butto">
-                <WhatsappIcon size={32} round />
-              </WhatsappShareButton>
-            </div>
+            <SocialMediaNetworks>
+              <SocialMediaBtn>
+                <WhatsappShareButton url={shareUrl} title={title} separator=":: ">
+                  <WhatsappIcon size={32} round />
+                </WhatsappShareButton>
+              </SocialMediaBtn>
+            </SocialMediaNetworks>
 
-            <div className="social-media-networks">
-              <GooglePlusShareButton url={shareUrl} className="social-media-butto">
-                <GooglePlusIcon size={32} round />
-              </GooglePlusShareButton>
-            </div>
+            <SocialMediaNetworks>
+              <SocialMediaBtn>
+                <GooglePlusShareButton url={shareUrl}>
+                  <GooglePlusIcon size={32} round />
+                </GooglePlusShareButton>
+              </SocialMediaBtn>
+            </SocialMediaNetworks>
 
-            <div className="social-media-networks">
-              <RedditShareButton
-                url={shareUrl}
-                title={title}
-                windowWidth={660}
-                windowHeight={460}
-                className="social-media-butto">
-                <RedditIcon size={32} round />
-              </RedditShareButton>
-            </div>
+            <SocialMediaNetworks>
+              <SocialMediaBtn>
+                <RedditShareButton
+                  url={shareUrl}
+                  title={title}
+                  windowWidth={660}
+                  windowHeight={460}>
+                  <RedditIcon size={32} round />
+                </RedditShareButton>
+              </SocialMediaBtn>
+            </SocialMediaNetworks>
 
-            <div className="social-media-networks">
-              <TumblrShareButton
-                url={shareUrl}
-                title={title}
-                windowWidth={660}
-                windowHeight={460}
-                className="social-media-butto">
-                <TumblrIcon size={32} round />
-              </TumblrShareButton>
-            </div>
-          </div>
+            <SocialMediaNetworks>
+              <SocialMediaBtn>
+                <TumblrShareButton
+                  url={shareUrl}
+                  title={title}
+                  windowWidth={660}
+                  windowHeight={460}>
+                  <TumblrIcon size={32} round />
+                </TumblrShareButton>
+              </SocialMediaBtn>
+            </SocialMediaNetworks>
+          </SocialMedia>
           <div className="container">
             <div className="row">
               <Col s={12} m={16}>

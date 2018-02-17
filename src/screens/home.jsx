@@ -4,6 +4,7 @@ import { Parallax, Background } from 'react-parallax';
 import { Element } from 'react-scroll';
 import { Col, CardPanel, Card, Button, Icon } from 'react-materialize';
 import assets from 'utils/assets';
+import { Html, Hidden, CardIcon } from 'styles/common';
 
 import HeaderBar from 'components/header_bar';
 import ContactUs from 'components/contact_us';
@@ -11,67 +12,61 @@ import GoogleMapComponent from 'components/google_maps';
 import Footerbar from 'components/footer_bar';
 
 export default class Home extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    location: {
+      lat: 43.597457,
+      lng: -111.965967,
+      addr: '3342+East+113+North,+Idaho+Falls,+ID+83401,+United+States',
+    },
+    products: {
+      business: [
+        'business cards',
+        'appointment cards',
+        'brochures',
+        'letterhead',
+        'envelopes',
+        'carbonless forms',
+        'flyers',
+        'labels',
+        'newsletters',
+        'notepads',
+        'numbered forms',
+        'postcards',
+        'thank you cards',
+      ],
+      general: [
+        'announcements',
+        'booklets',
+        'flyers',
+        'giclee art prints',
+        'greeting cards',
+        'labels',
+        'large format prints',
+        'postcards',
+        'posters',
+        'programs',
+        'thank you cards',
+        'tickets',
+        'wedding invitations',
+      ],
+      services: [
+        'numbering',
+        'laminating',
+        'color copies',
+        'vinyl lettering',
+        'graphic design',
+        'spiral binding',
+        'padding',
+        'canvas wraps',
+        'direct mail',
+        'fulfillment',
+        'free delivery',
+      ],
+      promotional: ['flyers', 'posters', 'banners', 'tickets', 'calendars', 'magnets'],
+    },
+  };
 
-    this.state = {
-      location: {
-        lat: 43.597457,
-        lng: -111.965967,
-        addr: '3342+East+113+North,+Idaho+Falls,+ID+83401,+United+States',
-      },
-      products: {
-        business: [
-          'business cards',
-          'appointment cards',
-          'brochures',
-          'letterhead',
-          'envelopes',
-          'carbonless forms',
-          'flyers',
-          'labels',
-          'newsletters',
-          'notepads',
-          'numbered forms',
-          'postcards',
-          'thank you cards',
-        ],
-        general: [
-          'announcements',
-          'booklets',
-          'flyers',
-          'giclee art prints',
-          'greeting cards',
-          'labels',
-          'large format prints',
-          'postcards',
-          'posters',
-          'programs',
-          'thank you cards',
-          'tickets',
-          'wedding invitations',
-        ],
-        services: [
-          'numbering',
-          'laminating',
-          'color copies',
-          'vinyl lettering',
-          'graphic design',
-          'spiral binding',
-          'padding',
-          'canvas wraps',
-          'direct mail',
-          'fulfillment',
-          'free delivery',
-        ],
-        promotional: ['flyers', 'posters', 'banners', 'tickets', 'calendars', 'magnets'],
-      },
-    };
-
-    this.getDirections = this.getDirections.bind(this);
-  }
-
-  detectMobile() {
+  detectMobile = () => {
     return navigator.userAgent.match(/Android/i) ||
       navigator.userAgent.match(/webOS/i) ||
       navigator.userAgent.match(/iPhone/i) ||
@@ -81,25 +76,27 @@ export default class Home extends React.Component {
       navigator.userAgent.match(/Windows Phone/i)
       ? true
       : false;
-  }
+  };
 
-  getDirections() {
+  getDirections = () => {
     const { isMobile } = this.props;
     const { location } = this.state;
 
-    isMobile
-      ? navigator.userAgent.match(/iPhone/i) ||
-        navigator.userAgent.match(/iPad/i) ||
-        navigator.userAgent.match(/iPod/i)
+    if (isMobile) {
+      navigator.userAgent.match(/iPhone/i) ||
+      navigator.userAgent.match(/iPad/i) ||
+      navigator.userAgent.match(/iPod/i)
         ? window.open(`https://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`)
-        : window.open(`maps://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`)
-      : window.open(`https://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`);
-  }
+        : window.open(`maps://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`);
+    } else {
+      window.open(`https://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`);
+    }
+  };
 
   render() {
     const { products } = this.state;
     return (
-      <div>
+      <Html>
         <HeaderBar />
         <div className="content">
           <Parallax strength={300}>
@@ -172,10 +169,10 @@ export default class Home extends React.Component {
                     const element = (
                       <CardPanel key={`element${key}`} className="blue-grey lighten-5 my-cards">
                         <div className="center">
-                          <img src={assets('./images/logo.png')} alt="" className="card-icon" />
+                          <CardIcon src={assets('./images/logo.png')} alt="" />
                         </div>
                         <h5 className="center">{key}</h5>
-                        <h2 className="hidden">{key}</h2>
+                        <Hidden>{key}</Hidden>
                         <div className="light center cardFont">
                           <ul>
                             {product.map((product, key) => {
@@ -229,7 +226,7 @@ export default class Home extends React.Component {
             <Footerbar />
           </Parallax>
         </div>
-      </div>
+      </Html>
     );
   }
 }

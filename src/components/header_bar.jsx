@@ -4,30 +4,36 @@ import SideNav from 'react-simple-sidenav';
 import { Icon } from 'react-materialize';
 import _ from 'lodash';
 import assets from 'utils/assets';
+import {
+  NavBar,
+  NavBtn,
+  NavBarItem,
+  NavBarItemLink,
+  SideNavTitle,
+  SideNavItem,
+  LogoImg,
+  BrandLogo,
+} from 'styles/common';
+import { LOGO_BLUE, LOGO_RED, LOGO_YELLOW } from 'styles/colors';
 
 export default class HeaderBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { scroll: animateScroll, showNav: false };
+  state = { scroll: animateScroll, showNav: false };
 
-    this.scrollTo = this.scrollTo.bind(this);
-  }
-
-  scrollTo(place) {
+  scrollTo = place => {
     this.state.scroll.scrollTo(place);
-  }
+  };
 
   render() {
     const { showNav } = this.state;
     const links = {
-      'call-btn': <a href="tel:208-589-7436"> Call </a>,
-      'nav-btn': (
+      [`${LOGO_BLUE}`]: <a href="tel:208-589-7436"> Call </a>,
+      [`${LOGO_RED}`]: (
         <Link to="navigation" spy={true} smooth={true} offset={50} duration={500}>
           {' '}
           Navigation{' '}
         </Link>
       ),
-      'email-btn': (
+      [`${LOGO_YELLOW}`]: (
         <Link to="email" spy={true} smooth={true} offset={50} duration={500}>
           {' '}
           Contact{' '}
@@ -37,16 +43,15 @@ export default class HeaderBar extends React.Component {
     let linkArray = [];
 
     return (
-      <nav className="navbar-fixed">
+      <NavBar>
         <div className="nav-wrapper">
-          <a href="#!" className="brand-logo">
-            <img
-              className="logo-image"
+          <BrandLogo href="#!">
+            <LogoImg
               src={assets('./images/full_logo.png')}
               alt=""
               style={{ marginLeft: window.innerWidth > 1000 ? '45px' : '' }}
             />
-          </a>
+          </BrandLogo>
           <div
             data-activates="mobile-demo"
             className="button-collapse"
@@ -56,16 +61,14 @@ export default class HeaderBar extends React.Component {
           <ul className="right hide-on-med-and-down">
             {_.map(links, (link, key) => {
               linkArray.push(
-                <div>
-                  <li key={key} className={`side-nav-item waves-effect ${key}`}>
-                    {link}
-                  </li>
-                </div>
+                <SideNavItem key={key} color={key} className={'waves-effect'}>
+                  {link}
+                </SideNavItem>
               );
               return (
-                <li key={key} className={`nav-bar-item waves-effect ${key}`}>
-                  {link}
-                </li>
+                <NavBarItem key={key} color={key} className={'waves-effect'}>
+                  <NavBarItemLink>{link}</NavBarItemLink>
+                </NavBarItem>
               );
             })}
           </ul>
@@ -75,14 +78,14 @@ export default class HeaderBar extends React.Component {
             showNav={showNav}
             onHideNav={() => this.setState({ showNav: false })}
             title={
-              <div className="side-nav-title">
+              <SideNavTitle>
                 <img src={assets('./images/full_logo.png')} alt="" />
-              </div>
+              </SideNavTitle>
             }
             items={linkArray}
           />
         </div>
-      </nav>
+      </NavBar>
     );
   }
 }

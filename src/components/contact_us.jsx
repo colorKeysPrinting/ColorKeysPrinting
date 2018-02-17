@@ -1,19 +1,15 @@
 import React from 'react';
 import { Element } from 'react-scroll';
-import { Parallax, Background } from 'react-parallax';
-import { Col, CardPanel, Card, CardTitle } from 'react-materialize';
-import _ from 'lodash';
-import assets from 'utils/assets';
+import { Col, Card } from 'react-materialize';
 import { generateShareIcon } from 'react-share';
+import assets from 'utils/assets';
+
+import { Header, CardFont, SocialMedia, SocialMediaBtn } from 'styles/common';
 
 export default class ContactUs extends React.Component {
   constructor(props) {
     super(props);
-
-    const isMobile = this.props.isMobile;
-
-    this.state = { isMobile };
-    this.sendEmail = this.sendEmail.bind(this);
+    this.state = { isMobile: this.props.isMobile };
   }
 
   componentWillMount() {
@@ -24,7 +20,7 @@ export default class ContactUs extends React.Component {
     });
   }
 
-  sendEmail() {
+  sendEmail = () => {
     const subject = 'Color Keys Printing Website';
     let body = 'Hello my name is ' + this.refs['name'].value + '\n\n';
     body += this.refs['message'].value;
@@ -36,7 +32,7 @@ export default class ContactUs extends React.Component {
     uri += '&body=';
     uri += encodeURIComponent(body);
     window.window.location.href = uri;
-  }
+  };
 
   render() {
     const FacebookIcon = generateShareIcon('facebook');
@@ -90,41 +86,37 @@ export default class ContactUs extends React.Component {
         className="large blue-grey lighten-5"
         style={{ height: window.innerWidth < 600 ? '700px' : '550px' }}>
         <div className="card-content" style={{ textAlign: 'center' }}>
-          <h5>Come see us in person!</h5>
-          <p className="cardFont">
-            Set up an appointment so we can get started on the project in person!
-          </p>
+          <Header>Come see us in person!</Header>
+          <CardFont>Set up an appointment so we can get started on the project in person!</CardFont>
 
-          <h5>Color Keys Printing</h5>
-          <p className="cardFont">3342 E 113 N , Idaho Falls, Idaho 83401, United States</p>
-          <p className="cardFont">
+          <Header>Color Keys Printing</Header>
+          <CardFont>3342 E 113 N , Idaho Falls, Idaho 83401, United States</CardFont>
+          <CardFont>
             <a href="tel:208-589-7436"> 208-589-7436 </a> / 208-524-0456{' '}
-          </p>
-          <p className="cardFont">
+          </CardFont>
+          <CardFont>
             <a href={`mailto:${email}`}>{email}</a>
-          </p>
+          </CardFont>
 
-          <h5>Hours</h5>
-          <ul className="cardFont">
+          <Header>Hours</Header>
+          <ul>
             <li>By Appointment</li>
             <li>Monday - Thursday: 8:30am - 5pm</li>
             <li>Friday: 8:30am - 12:00pm</li>
             <li>Saturday: Closed</li>
             <li>Sunday: Closed</li>
           </ul>
-          <div className="social-media-section">
-            <a href="https://www.facebook.com/colorkeysprinting" className="social-media-button">
+          <SocialMedia>
+            <SocialMediaBtn href="https://www.facebook.com/colorkeysprinting">
               <FacebookIcon size={32} round />
-            </a>
-            <a href="https://twitter.com/colorkeys13" className="social-media-button">
+            </SocialMediaBtn>
+            <SocialMediaBtn href="https://twitter.com/colorkeys13">
               <TwitterIcon size={32} round />
-            </a>
-            <a
-              href="https://plus.google.com/u/0/113724115750329359769"
-              className="social-media-button">
+            </SocialMediaBtn>
+            <SocialMediaBtn href="https://plus.google.com/u/0/113724115750329359769">
               <GooglePlusIcon size={32} round />
-            </a>
-          </div>
+            </SocialMediaBtn>
+          </SocialMedia>
         </div>
       </Card>
     );
@@ -140,7 +132,7 @@ export default class ContactUs extends React.Component {
     }
 
     return (
-      <div id="contact-us-page">
+      <div>
         <div className="section">
           <div className="row">
             <Element name="email">
