@@ -2,7 +2,22 @@ import React from 'react';
 import { animateScroll } from 'react-scroll';
 import { Col, Button } from 'react-materialize';
 import _ from 'lodash';
-import { ShareButtons, generateShareIcon } from 'react-share';
+import {
+  FacebookShareButton,
+  GooglePlusShareButton,
+  TwitterShareButton,
+  TelegramShareButton,
+  WhatsappShareButton,
+  RedditShareButton,
+  TumblrShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  GooglePlusIcon,
+  TelegramIcon,
+  WhatsappIcon,
+  RedditIcon,
+  TumblrIcon
+} from 'react-share';
 import assets from 'utils/assets';
 
 import { FooterHeading, SocialMedia, SocialMediaNetworks, SocialMediaBtn } from 'styles/common';
@@ -15,24 +30,6 @@ export default class Navbar extends React.Component {
   };
 
   render() {
-    const {
-      FacebookShareButton,
-      GooglePlusShareButton,
-      TwitterShareButton,
-      TelegramShareButton,
-      WhatsappShareButton,
-      RedditShareButton,
-      TumblrShareButton,
-    } = ShareButtons;
-
-    const FacebookIcon = generateShareIcon('facebook');
-    const TwitterIcon = generateShareIcon('twitter');
-    const TelegramIcon = generateShareIcon('telegram');
-    const WhatsappIcon = generateShareIcon('whatsapp');
-    const GooglePlusIcon = generateShareIcon('google');
-    const RedditIcon = generateShareIcon('reddit');
-    const TumblrIcon = generateShareIcon('tumblr');
-
     const shareUrl = 'https://www.colorkeysprinting.com/home';
     const title = 'Color Keys Printing';
 

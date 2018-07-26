@@ -1,7 +1,7 @@
 import React from 'react';
 import { Element } from 'react-scroll';
 import { Col, Card } from 'react-materialize';
-import { generateShareIcon } from 'react-share';
+import { FacebookIcon, TwitterIcon, GooglePlusIcon } from 'react-share';
 import assets from 'utils/assets';
 
 import { Header, CardFont, SocialMedia, SocialMediaBtn } from 'styles/common';
@@ -35,10 +35,6 @@ export default class ContactUs extends React.Component {
   };
 
   render() {
-    const FacebookIcon = generateShareIcon('facebook');
-    const TwitterIcon = generateShareIcon('twitter');
-    const GooglePlusIcon = generateShareIcon('google');
-
     const email = 'colorkeys13@gmail.com';
     let contactSection;
 

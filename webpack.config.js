@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const DotenvPlugin = require('webpack-dotenv-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
@@ -23,11 +23,11 @@ module.exports = WebpackConfig = app => {
         ),
       }),
       new CleanWebpackPlugin(['build'], { root: path.resolve(__dirname, './') }),
-      new ExtractTextPlugin(
-        process.env.NODE_ENV === 'development'
+      new MiniCssExtractPlugin({
+        filename: process.env.NODE_ENV === 'development'
           ? `${process.env.APP_NAME}.css`
-          : `${process.env.APP_NAME}_[hash].css`
-      ),
+          : `${process.env.APP_NAME}_[hash].css`,
+      }),
       new HtmlWebpackPlugin({
         title: `"${process.env.APP_NAME}"`,
         filename: 'index.html',
