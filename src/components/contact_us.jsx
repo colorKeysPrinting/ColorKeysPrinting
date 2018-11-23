@@ -2,7 +2,6 @@ import React from 'react';
 import { Element } from 'react-scroll';
 import { Col, Card } from 'react-materialize';
 import { FacebookIcon, TwitterIcon, GooglePlusIcon } from 'react-share';
-import assets from 'utils/assets';
 
 import { Header, CardFont, SocialMedia, SocialMediaBtn } from 'styles/common';
 

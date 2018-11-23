@@ -6,7 +6,6 @@ import _ from 'lodash';
 import assets from 'utils/assets';
 import {
   NavBar,
-  NavBtn,
   NavBarItem,
   NavBarItemLink,
   SideNavTitle,

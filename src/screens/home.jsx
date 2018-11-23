@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
 import { Parallax, Background } from 'react-parallax';
-import { Element } from 'react-scroll';
 import { Col, CardPanel, Card, Button, Icon } from 'react-materialize';
 import assets from 'utils/assets';
 import { Html, Hidden, CardIcon } from 'styles/common';
@@ -99,15 +98,11 @@ export default class Home extends React.Component {
       <Html>
         <HeaderBar />
         <div className="content">
-          <Parallax strength={300}>
-            <Background>
-              <img
-                src={assets('./images/paint_splatter_large.png')}
-                alt="Unsplashed background img 2"
-                height="2500px"
-                width={`${window.width}px`}
-              />
-            </Background>
+          <Parallax
+            blur={5}
+            bgImage={assets('./images/paint_splatter_large.png')}
+            bgImageAlt="Unsplashed background img 2"
+            strength={800}>
             {/* <div id="index-banner" className="parallax-container" style={{ height: (window.innerWidth > 1200) ? '500px': '210px', width: (window.innerWidth > 1200) ? '75%': '100%' , margin: '0 auto' }}>
                             <img src={assets('./images/Christmas_offer.png')} alt="" style={{ position: 'absolute', top: '25px', width: '100%', backgroundColor: '#FFF' }}/>
                         </div> */}

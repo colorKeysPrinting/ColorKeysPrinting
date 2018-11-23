@@ -18,7 +18,6 @@ import {
   RedditIcon,
   TumblrIcon
 } from 'react-share';
-import assets from 'utils/assets';
 
 import { FooterHeading, SocialMedia, SocialMediaNetworks, SocialMediaBtn } from 'styles/common';
 
