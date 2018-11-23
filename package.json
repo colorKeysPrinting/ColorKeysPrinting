@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "webpack -p --mode=production",
-    "build:dev": "webpack",
+    "build:dev": "webpack --mode=development",
     "hot": "webpack-dev-server --hot --mode=development",
     "nuke": "rm -rf node_modules"
   },
