@@ -1,14 +1,14 @@
-import React from 'react';
-import { Element } from 'react-scroll';
-import { Col, Card } from 'react-materialize';
-import { FacebookIcon, TwitterIcon, GooglePlusIcon } from 'react-share';
+import React, { Component } from 'react'
+import { Element }          from 'react-scroll'
+import { Col, Card }        from 'react-materialize'
+import { FacebookIcon, TwitterIcon, GooglePlusIcon } from 'react-share'
 
-import { Header, CardFont, SocialMedia, SocialMediaBtn } from 'styles/common';
+import { Header, CardFont, SocialMedia, SocialMediaBtn } from '../styles/common'
 
-export default class ContactUs extends React.Component {
+export default class ContactUs extends Component {
   constructor(props) {
-    super(props);
-    this.state = { isMobile: this.props.isMobile };
+    super(props)
+    this.state = { isMobile: this.props.isMobile }
   }
 
   componentWillMount() {
@@ -16,65 +16,65 @@ export default class ContactUs extends React.Component {
       name: this.refs['name'],
       email: this.refs['email'],
       message: this.refs['message'],
-    });
+    })
   }
 
   sendEmail = () => {
-    const subject = 'Color Keys Printing Website';
-    let body = 'Hello my name is ' + this.refs['name'].value + '\n\n';
-    body += this.refs['message'].value;
-    body += '\n\nMy email is: ' + this.refs['email'].value + '\n\n';
-    body += 'Thank you !\n\n I hope to hear from you soon\n\n' + this.refs['name'].value;
+    const subject = 'Color Keys Printing Website'
+    let body = 'Hello my name is ' + this.refs['name'].value + '\n\n'
+    body += this.refs['message'].value
+    body += '\n\nMy email is: ' + this.refs['email'].value + '\n\n'
+    body += 'Thank you !\n\n I hope to hear from you soon\n\n' + this.refs['name'].value
 
-    let uri = 'mailto:colorkeys13@gmail.com?subject=';
-    uri += encodeURIComponent(subject);
-    uri += '&body=';
-    uri += encodeURIComponent(body);
-    window.window.location.href = uri;
-  };
+    let uri = 'mailto:colorkeys13@gmail.com?subject='
+    uri += encodeURIComponent(subject)
+    uri += '&body='
+    uri += encodeURIComponent(body)
+    window.window.location.href = uri
+  }
 
   render() {
-    const email = 'colorkeys13@gmail.com';
-    let contactSection;
+    const email = 'colorkeys13@gmail.com'
+    let contactSection
 
-    const emailCard = (
-      <Card className="large blue-grey lighten-5" title="Drop us a line!">
-        <div className="card-content">
-          <form
-            onSubmit={e => {
-              e.preventDefault();
-              this.sendEmail();
-            }}>
-            <div className="row">
-              <div className="input-field col s12">
-                <input ref="name" id="first_name" type="text" className="validate" required />
-                <label htmlFor="first_name">Name</label>
-              </div>
-            </div>
+    // const emailCard = (
+    //   <Card className="large blue-grey lighten-5" title="Drop us a line!">
+    //     <div className="card-content">
+    //       <form
+    //         onSubmit={e => {
+    //           e.preventDefault()
+    //           this.sendEmail()
+    //         }}>
+    //         <div className="row">
+    //           <div className="input-field col s12">
+    //             <input ref="name" id="first_name" type="text" className="validate" required />
+    //             <label htmlFor="first_name">Name</label>
+    //           </div>
+    //         </div>
 
-            <div className="row">
-              <div className="input-field col s12">
-                <input ref="email" id="email" type="email" className="validate" required />
-                <label htmlFor="email">Email</label>
-              </div>
-            </div>
+    //         <div className="row">
+    //           <div className="input-field col s12">
+    //             <input ref="email" id="email" type="email" className="validate" required />
+    //             <label htmlFor="email">Email</label>
+    //           </div>
+    //         </div>
 
-            <div className="row">
-              <div className="input-field col s12">
-                <textarea ref="message" id="textarea1" className="materialize-textarea" required />
-                <label htmlFor="textarea1">Message</label>
-              </div>
-            </div>
+    //         <div className="row">
+    //           <div className="input-field col s12">
+    //             <textarea ref="message" id="textarea1" className="materialize-textarea" required />
+    //             <label htmlFor="textarea1">Message</label>
+    //           </div>
+    //         </div>
 
-            <button className="btn waves-effect waves-light" type="submit" name="action">
-              {' '}
-              Submit
-              <i className="material-icons right">send</i>
-            </button>
-          </form>
-        </div>
-      </Card>
-    );
+    //         <button className="btn waves-effect waves-light" type="submit" name="action">
+    //           {' '}
+    //           Submit
+    //           <i className="material-icons right">send</i>
+    //         </button>
+    //       </form>
+    //     </div>
+    //   </Card>
+    // )
 
     const contactCard = (
       <Card
@@ -114,16 +114,16 @@ export default class ContactUs extends React.Component {
           </SocialMedia>
         </div>
       </Card>
-    );
+    )
 
     if (this.state.isMobile) {
-      contactSection = <div>{contactCard}</div>;
+      contactSection = <div>{contactCard}</div>
     } else {
       contactSection = (
         <div>
           <Col m={12}>{contactCard}</Col>
         </div>
-      );
+      )
     }
 
     return (
@@ -145,6 +145,6 @@ export default class ContactUs extends React.Component {
         </div>
         <br />
       </div>
-    );
+    )
   }
 }

@@ -28,7 +28,7 @@
     "no-extra-strict": 0,
     "strict": 1,
     "quotes": ["error", "single"],
-    "semi": ["error", "always"],
+    "semi": ["error", "never"],
     "no-nested-ternary": 1
   },
   "settings": {

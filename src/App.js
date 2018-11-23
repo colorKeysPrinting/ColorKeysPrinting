@@ -1,16 +1,16 @@
-import _ from 'lodash';
-import React from 'react';
-import { Parallax } from 'react-parallax';
-import { Col, CardPanel, Card, Button, Icon } from 'react-materialize';
-import assets from 'utils/assets';
-import { Html, Hidden, CardIcon } from 'styles/common';
+import React, { Component }       from 'react'
+import { Parallax }               from 'react-parallax'
+import _                          from 'lodash'
+import { Col, CardPanel, Card, Button, Icon } from 'react-materialize'
+import assets                     from './utils/assets'
+import { Html, Hidden, CardIcon } from './styles/common'
 
-import HeaderBar from 'components/header_bar';
-import ContactUs from 'components/contact_us';
-import GoogleMapComponent from 'components/google_maps';
-import Footerbar from 'components/footer_bar';
+import HeaderBar          from './components/header_bar'
+import ContactUs          from './components/contact_us'
+import GoogleMapComponent from './components/google_maps'
+import Footerbar          from './components/footer_bar'
 
-export default class Home extends React.Component {
+export default class Home extends Component {
   state = {
     location: {
       lat: 43.597457,
@@ -63,7 +63,7 @@ export default class Home extends React.Component {
       ],
       promotional: ['flyers', 'posters', 'banners', 'tickets', 'calendars', 'magnets'],
     },
-  };
+  }
 
   detectMobile = () => {
     return navigator.userAgent.match(/Android/i) ||
@@ -74,26 +74,26 @@ export default class Home extends React.Component {
       navigator.userAgent.match(/BlackBerry/i) ||
       navigator.userAgent.match(/Windows Phone/i)
       ? true
-      : false;
-  };
+      : false
+  }
 
   getDirections = () => {
-    const { isMobile } = this.props;
-    const { location } = this.state;
+    const { isMobile } = this.props
+    const { location } = this.state
 
     if (isMobile) {
       navigator.userAgent.match(/iPhone/i) ||
       navigator.userAgent.match(/iPad/i) ||
       navigator.userAgent.match(/iPod/i)
-        ? window.open(`https://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`)
-        : window.open(`maps://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`);
+        ? window.open(`https://maps.google.com/maps?daddr=${location.addr}&amp&z=17ll=`)
+        : window.open(`maps://maps.google.com/maps?daddr=${location.addr}&amp&z=17ll=`)
     } else {
-      window.open(`https://maps.google.com/maps?daddr=${location.addr}&amp&z=17;ll=`);
+      window.open(`https://maps.google.com/maps?daddr=${location.addr}&amp&z=17ll=`)
     }
-  };
+  }
 
   render() {
-    const { products } = this.state;
+    const { products } = this.state
     return (
       <Html>
         <HeaderBar />
@@ -102,7 +102,7 @@ export default class Home extends React.Component {
             blur={5}
             bgImage={assets('./images/paint_splatter_large_1920_1080.jpg')}
             bgImageAlt="Unsplashed background img 2"
-            strength={300}>
+            strength={500}>
             {/* <div id="index-banner" className="parallax-container" style={{ height: (window.innerWidth > 1200) ? '500px': '210px', width: (window.innerWidth > 1200) ? '75%': '100%' , margin: '0 auto' }}>
                             <img src={assets('./images/Christmas_offer.png')} alt="" style={{ position: 'absolute', top: '25px', width: '100%', backgroundColor: '#FFF' }}/>
                         </div> */}
@@ -171,12 +171,12 @@ export default class Home extends React.Component {
                         <div className="light center cardFont">
                           <ul>
                             {product.map((product, key) => {
-                              return <li key={`product${key}`}> {product} </li>;
+                              return <li key={`product${key}`}> {product} </li>
                             })}
                           </ul>
                         </div>
                       </CardPanel>
-                    );
+                    )
 
                     return this.detectMobile() ? (
                       <div key={`cardObj${key}`}>{element}</div>
@@ -184,7 +184,7 @@ export default class Home extends React.Component {
                       <Col key={`cardObj${key}`} m={3}>
                         {element}
                       </Col>
-                    );
+                    )
                   })}
                 </Col>
               </div>
@@ -198,8 +198,8 @@ export default class Home extends React.Component {
                 style={{ position: 'absolute', margin: '10px' }}
                 name="directions"
                 onClick={e => {
-                  e.preventDefault();
-                  this.getDirections();
+                  e.preventDefault()
+                  this.getDirections()
                 }}>
                 <Icon left style={{ transform: 'rotate(50deg)' }}>
                   navigation
@@ -209,7 +209,7 @@ export default class Home extends React.Component {
               <GoogleMapComponent
                 isMobile={this.detectMobile()}
                 googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${
-                  process.env.GOOGLE_API_KEY
+                  process.env.REACT_APP_GOOGLE_API_KEY
                 }&v=3.exp&libraries=geometry,drawing,places`}
                 loadingElement={<div style={{ width: '100%', height: '100%' }} />}
                 containerElement={<div style={{ width: '100%', height: '100%' }} />}
@@ -222,6 +222,6 @@ export default class Home extends React.Component {
           </Parallax>
         </div>
       </Html>
-    );
+    )
   }
 }

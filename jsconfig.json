@@ -11,6 +11,6 @@
         "build/*"
     ],
     "include": [
-        "client/**/*"
+        "src/**/*"
     ]
 }

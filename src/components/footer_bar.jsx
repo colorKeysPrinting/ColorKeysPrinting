@@ -1,7 +1,6 @@
-import React from 'react';
-import { animateScroll } from 'react-scroll';
-import { Col, Button } from 'react-materialize';
-import _ from 'lodash';
+import React, { Component } from 'react'
+import { animateScroll }    from 'react-scroll'
+import { Col, Button }      from 'react-materialize'
 import {
   FacebookShareButton,
   GooglePlusShareButton,
@@ -17,20 +16,20 @@ import {
   WhatsappIcon,
   RedditIcon,
   TumblrIcon
-} from 'react-share';
+} from 'react-share'
 
-import { FooterHeading, SocialMedia, SocialMediaNetworks, SocialMediaBtn } from 'styles/common';
+import { FooterHeading, SocialMedia, SocialMediaNetworks, SocialMediaBtn } from '../styles/common'
 
-export default class Navbar extends React.Component {
-  state = { scroll: animateScroll };
+export default class Navbar extends Component {
+  state = { scroll: animateScroll }
 
   scrollToTop = () => {
-    this.state.scroll.scrollToTop();
-  };
+    this.state.scroll.scrollToTop()
+  }
 
   render() {
-    const shareUrl = 'https://www.colorkeysprinting.com/home';
-    const title = 'Color Keys Printing';
+    const shareUrl = 'https://www.colorkeysprinting.com/home'
+    const title = 'Color Keys Printing'
 
     return (
       <div>
@@ -124,6 +123,6 @@ export default class Navbar extends React.Component {
           </div>
         </footer>
       </div>
-    );
+    )
   }
 }

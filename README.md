@@ -1,72 +1,44 @@
-## COLOR KEYS PRINTING
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Getting Started
+## Available Scripts
 
-Make sure to install git, npm before you start then:
+In the project directory, you can run:
 
-1. git clone https://github.com/colorKeysPrinting/colorKeysPrinting_react.git
+### `npm start`
 
-2. Install packages with
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-   `npm install`
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
 
-3. Start server with:
+### `npm test`
 
-   `npm run hot`
+Launches the test runner in the interactive watch mode.<br>
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-then visit `http://localhost:3000`
+### `npm run build`
 
-Note: This is using webpack-dev-server it will auto refresh the page each time a file is saved.\
-Also if want/need to change the url and port for dev builds you can do so by modifing the `HOST` & `PORT` lines in `webpack/webpack.dev.js`
+Builds the app for production to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-## React.js
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
 
----
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-React code can be found in `src/`.
+### `npm run eject`
 
-## Assets
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
----
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Any files added to the assets directory can be used in code and assigned to a variable. This
-allows for referring to assets using dynamically generated strings. The assets will be built according to
-the rules specified in your webpack configuration. Typically, this means that in production the names will
-be changed to include a SHA.
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-First importing the assets:
-`import assets from '../utils/assets';`
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-Then assign the assest to a variable:
-`const img = assets("./images/profile_pic.jpg");`
+## Learn More
 
-The value can then be used when rendering:
-`render(){ const img = assets("./images/profile_pic.jpg"); return<div> <img src={img} /> </div>; }`
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-## Styling
-
----
-
-all styles can be found in src/styles.
-anytime you add a new stylesheet to the project you need to import it in src/styles/styles.scss
-this is the main point of entry for the app to look into the styles.
-
-You can also import stylesheets from node_modules by `node_modules/< module name >/path/to/stylesheet`
-
-## Production
-
----
-
-to build the project for production update the `API_URL` key in webpack/webpack.prod.js to the appropriate url
-run `npm run build_prod` this will output the prod build into a `build/production` where you can updload the folder to s3 or netlify
-
-## License and attribution
-
-MIT
-
-## Available run commands
-
-`hot:` starts up the webpack-dev-server default port 3000, has hot reload enable\
-`build:` builds a production level build found in build/production which can be uploaded to netlify, this also minifies and removes debug capabilies.\
-`build_dev:` builds a dev level build found in build/development\
-`nuke:` wipes out the node_modules directory for the ability to clean install node_modules\
+To learn React, check out the [React documentation](https://reactjs.org/).

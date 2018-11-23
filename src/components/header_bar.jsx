@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link, animateScroll } from 'react-scroll';
-import SideNav from 'react-simple-sidenav';
-import { Icon } from 'react-materialize';
-import _ from 'lodash';
-import assets from 'utils/assets';
+import React, { Component }     from 'react'
+import { Link, animateScroll }  from 'react-scroll'
+import SideNav                  from 'react-simple-sidenav'
+import { Icon }                 from 'react-materialize'
+import _                        from 'lodash'
+import assets                   from '../utils/assets'
 import {
   NavBar,
   NavBarItem,
@@ -12,18 +12,18 @@ import {
   SideNavItem,
   LogoImg,
   BrandLogo,
-} from 'styles/common';
-import { LOGO_BLUE, LOGO_RED, LOGO_YELLOW } from 'styles/colors';
+} from '../styles/common'
+import { LOGO_BLUE, LOGO_RED, LOGO_YELLOW } from '../styles/colors'
 
-export default class HeaderBar extends React.Component {
-  state = { scroll: animateScroll, showNav: false };
+export default class HeaderBar extends Component {
+  state = { scroll: animateScroll, showNav: false }
 
   scrollTo = place => {
-    this.state.scroll.scrollTo(place);
-  };
+    this.state.scroll.scrollTo(place)
+  }
 
   render() {
-    const { showNav } = this.state;
+    const { showNav } = this.state
     const links = {
       [`${LOGO_BLUE}`]: <a href="tel:208-589-7436"> Call </a>,
       [`${LOGO_RED}`]: (
@@ -38,8 +38,8 @@ export default class HeaderBar extends React.Component {
           Contact{' '}
         </Link>
       ),
-    };
-    let linkArray = [];
+    }
+    let linkArray = []
 
     return (
       <NavBar>
@@ -63,12 +63,12 @@ export default class HeaderBar extends React.Component {
                 <SideNavItem key={key} color={key} className={'waves-effect'}>
                   {link}
                 </SideNavItem>
-              );
+              )
               return (
                 <NavBarItem key={key} color={key} className={'waves-effect'}>
                   <NavBarItemLink>{link}</NavBarItemLink>
                 </NavBarItem>
-              );
+              )
             })}
           </ul>
           <SideNav
@@ -85,6 +85,6 @@ export default class HeaderBar extends React.Component {
           />
         </div>
       </NavBar>
-    );
+    )
   }
 }

@@ -1,7 +1,6 @@
 {
-  "name": "color_keys_printing",
-  "version": "2.0.0",
-  "description": "COLOR KEYS PRINTING",
+  "name": "colorkeys_printing",
+  "version": "3.0.0",
   "author": "Seth Bertlshofer",
   "license": "MIT",
   "private": true,
@@ -10,64 +9,35 @@
     "type": "git",
     "url": "https://github.com/colorKeysPrinting/colorKeysPrinting_react"
   },
-  "scripts": {
-    "build": "webpack -p --mode=production",
-    "build:dev": "webpack --mode=development",
-    "hot": "webpack-dev-server --hot --mode=development",
-    "nuke": "rm -rf node_modules"
-  },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "dotenv-webpack": "^1.5.7",
     "lodash.map": "^4.6.0",
     "lodash.size": "^4.2.0",
     "react": "^16.6.3",
-    "react-cookie": "^3.0.4",
     "react-dom": "^16.6.3",
     "react-google-maps": "^9.4.5",
     "react-materialize": "^2.5.0",
     "react-parallax": "^2.0.1",
+    "react-scripts": "2.1.1",
     "react-scroll": "^1.7.10",
     "react-share": "^2.3.1",
     "react-simple-sidenav": "^1.0.1",
     "styled-components": "^4.1.1"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/core": "^7.1.6",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/preset-env": "^7.1.6",
-    "@babel/preset-react": "^7.0.0",
-    "autoprefixer": "^9.3.1",
-    "babel-eslint": "8",
-    "babel-loader": "^8.0.4",
-    "clean-webpack-plugin": "^1.0.0",
-    "copy-webpack-plugin": "^4.6.0",
-    "eslint": "^5.9.0",
-    "eslint-loader": "^2.1.1",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
-    "file-loader": "^2.0.0",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "imports-loader": "^0.8.0",
-    "mini-css-extract-plugin": "^0.4.5",
-    "source-map-loader": "^0.2.4",
-    "uglifyjs-webpack-plugin": "^2.0.1",
-    "url-loader": "^1.1.2",
-    "webpack": "^4.26.0",
-    "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
-  "babel": {
-    "presets": [
-      "@babel/env",
-      "@babel/react"
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-class-properties"
-    ]
-  }
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
