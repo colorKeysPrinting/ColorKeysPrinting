@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import { Parallax, Background } from 'react-parallax';
+import { Parallax } from 'react-parallax';
 import { Col, CardPanel, Card, Button, Icon } from 'react-materialize';
 import assets from 'utils/assets';
 import { Html, Hidden, CardIcon } from 'styles/common';
@@ -100,7 +100,7 @@ export default class Home extends React.Component {
         <div className="content">
           <Parallax
             blur={5}
-            bgImage={assets('./images/paint_splatter_large.png')}
+            bgImage={assets('./images/paint_splatter_large.jpeg')}
             bgImageAlt="Unsplashed background img 2"
             strength={800}>
             {/* <div id="index-banner" className="parallax-container" style={{ height: (window.innerWidth > 1200) ? '500px': '210px', width: (window.innerWidth > 1200) ? '75%': '100%' , margin: '0 auto' }}>
@@ -141,7 +141,7 @@ export default class Home extends React.Component {
                         height: window.innerWidth > 600 ? '670px' : '280px',
                       }}>
                       <img
-                        src={assets('./images/products.png')}
+                        src={assets('./images/products.jpeg')}
                         alt=""
                         width="100%"
                         height="100%"
