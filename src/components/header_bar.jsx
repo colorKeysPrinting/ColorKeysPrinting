@@ -18,8 +18,6 @@ const styles = {
     flexGrow: 1,
   },
   menuButton: {
-    lineHeight: '2',
-    height: '40px',
     width: '115px',
     color: '#000'
   },
@@ -90,6 +88,7 @@ class HeaderBar extends Component {
                     href={item.href ? item.href : null}
                     className={classes.menuButton}
                     style={{ backgroundColor: key }}
+                    size="large"
                     fullWidth
                   >
                     {item.element}
@@ -102,6 +101,7 @@ class HeaderBar extends Component {
                     href={item.href ? item.href : null}
                     className={classes.menuButton}
                     style={{ margin: '0 2px', backgroundColor: key }}
+                    size="large"
                   >
                     {item.element}
                   </Button>
