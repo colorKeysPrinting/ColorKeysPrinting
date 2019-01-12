@@ -4,6 +4,7 @@ import { Element }          from 'react-scroll'
 import { Paper, Grid, Card, CardContent } from '@material-ui/core'
 import { withStyles }       from '@material-ui/core/styles'
 import { FacebookIcon, TwitterIcon, GooglePlusIcon } from 'react-share'
+import { LOGO_YELLOW }      from '../styles/colors'
 
 import { Header, CardFont, SocialMedia, SocialMediaBtn, Li } from '../styles/common'
 
@@ -17,7 +18,7 @@ const styles = theme => ({
     fontSize: '20px'
   },
   sectionTitle: {
-    backgroundColor: '#FFEB3B',
+    backgroundColor: LOGO_YELLOW,
     textAlign: 'center',
     margin: '20px 0',
     fontSize: '24px',

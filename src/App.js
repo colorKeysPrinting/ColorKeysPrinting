@@ -7,7 +7,7 @@ import { withStyles }             from '@material-ui/core/styles'
 import { Navigation }             from '@material-ui/icons'
 import assets                     from './utils/assets'
 import { Html, CardIcon, Li }     from './styles/common'
-import { LOGO_BLUE }              from './styles/colors'
+import { LOGO_BLUE, LOGO_YELLOW } from './styles/colors'
 
 import withRoot           from './withRoot'
 
@@ -38,7 +38,7 @@ const styles = theme => ({
     fontSize: '20px'
   },
   sectionTitle: {
-    backgroundColor: '#FFEB3B',
+    backgroundColor: LOGO_YELLOW,
     textAlign: 'center',
     margin: '20px 0',
     fontSize: '24px',

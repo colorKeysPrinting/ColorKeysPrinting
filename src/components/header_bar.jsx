@@ -128,6 +128,6 @@ class HeaderBar extends Component {
 
 HeaderBar.propTypes = {
   classes: PropTypes.object.isRequired,
-};
+}
 
-export default withStyles(styles)(HeaderBar);
+export default withStyles(styles)(HeaderBar)
