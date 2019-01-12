@@ -1,16 +1,40 @@
 import React, { Component }       from 'react'
+import PropTypes                  from 'prop-types'
 import { Parallax }               from 'react-parallax'
 import _                          from 'lodash'
-import { Col, CardPanel, Card, Button, Icon } from 'react-materialize'
+import { Icon } from 'react-materialize'
+import { Grid, Card, Paper, CardContent, Button } from '@material-ui/core'
+import { withStyles }             from '@material-ui/core/styles'
 import assets                     from './utils/assets'
-import { Html, Hidden, CardIcon } from './styles/common'
+import { Html, CardIcon } from './styles/common'
+
+import withRoot           from './withRoot'
 
 import HeaderBar          from './components/header_bar'
 import ContactUs          from './components/contact_us'
 import GoogleMapComponent from './components/google_maps'
 import Footerbar          from './components/footer_bar'
 
-export default class Home extends Component {
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    margin: '10px'
+  },
+  card: {
+    textAlign: 'center',
+    fontSize: '20px'
+  },
+  sectionTitle: {
+    backgroundColor: '#FFEB3B',
+    textAlign: 'center',
+    margin: '20px 0',
+    fontSize: '24px',
+    padding: '10px',
+    fontWeight: 'bold'
+  }
+})
+
+class Home extends Component {
   state = {
     location: {
       lat: 43.597457,
@@ -73,15 +97,13 @@ export default class Home extends Component {
       navigator.userAgent.match(/iPod/i) ||
       navigator.userAgent.match(/BlackBerry/i) ||
       navigator.userAgent.match(/Windows Phone/i)
-      ? true
-      : false
   }
 
-  getDirections = () => {
-    const { isMobile } = this.props
+  getDirections = e => {
+    e.preventDefault()
     const { location } = this.state
 
-    if (isMobile) {
+    if (this.detectMobile) {
       navigator.userAgent.match(/iPhone/i) ||
       navigator.userAgent.match(/iPad/i) ||
       navigator.userAgent.match(/iPod/i)
@@ -93,135 +115,124 @@ export default class Home extends Component {
   }
 
   render() {
+    const { classes } = this.props
     const { products } = this.state
+
     return (
       <Html>
         <HeaderBar />
-        <div className="content">
-          <Parallax
-            blur={5}
-            bgImage={assets('./images/paint_splatter_large_1920_1080.jpg')}
-            bgImageAlt="Unsplashed background img 2"
-            strength={500}>
-            {/* <div id="index-banner" className="parallax-container" style={{ height: (window.innerWidth > 1200) ? '500px': '210px', width: (window.innerWidth > 1200) ? '75%': '100%' , margin: '0 auto' }}>
-                            <img src={assets('./images/Christmas_offer.png')} alt="" style={{ position: 'absolute', top: '25px', width: '100%', backgroundColor: '#FFF' }}/>
-                        </div> */}
+        <Parallax
+          blur={5}
+          bgImage={assets('./images/paint_splatter_large_1920_1080.jpg')}
+          bgImageAlt="Unsplashed background img 2"
+          strength={500}>
+          {/* <div id="index-banner" className="parallax-container" style={{ height: (window.innerWidth > 1200) ? '500px': '210px', width: (window.innerWidth > 1200) ? '75%': '100%' , margin: '0 auto' }}>
+                          <img src={assets('./images/Christmas_offer.png')} alt="" style={{ position: 'absolute', top: '25px', width: '100%', backgroundColor: '#FFF' }}/>
+                      </div> */}
 
-            <div className="section">
-              <div className="row">
-                <Col s={12} className="cards-container">
-                  <Col m={6}>
-                    <CardPanel className="blue-grey lighten-5" style={{ fontSize: '20px' }}>
-                      <p>
-                        {' '}
-                        We specialize in producing high quality products with a personal touch to
-                        ensure the final product has the best presentation. We offer small quantity
-                        full color and black and white printing from business cards to posters and
-                        anything in between!{' '}
-                      </p>
-                      <p>
-                        {' '}
-                        You don't need to order thousands to get a great price, and everything is
-                        printed in-house so you are not waiting weeks for your product.{' '}
-                      </p>
-                      <p>
-                        {' '}
-                        Our creative team will work with you on your project from start to finish to
-                        ensure you get a quality final product. With over 20 years of experience and
-                        knowledge we are confident we can help with your project. You can also send
-                        us your designs to have printed. Give us a call today to see how we can help
-                        with your printing needs.{' '}
-                      </p>
-                    </CardPanel>
-                  </Col>
-                  <Col m={6}>
-                    <Card
-                      className="large"
-                      style={{
-                        height: window.innerWidth > 600 ? '670px' : '280px',
-                      }}>
-                      <img
-                        src={assets('./images/products.jpeg')}
-                        alt=""
-                        width="100%"
-                        height="100%"
-                      />
-                    </Card>
-                  </Col>
-                </Col>
-              </div>
-            </div>
+          <div className={classes.root} >
+            <Grid container spacing={24}>
+              <Grid item xs={12} sm={6}>
+                <Card
+                  raised
+                  className={classes.card}
+                >
+                  <CardContent>
+                    <p>
+                      We specialize in producing high quality products with a personal touch to
+                      ensure the final product has the best presentation. We offer small quantity
+                      full color and black and white printing from business cards to posters and
+                      anything in between!
+                    </p>
+                    <p>
+                      You don't need to order thousands to get a great price, and everything is
+                      printed in-house so you are not waiting weeks for your product.
+                    </p>
+                    <p>
+                      Our creative team will work with you on your project from start to finish to
+                      ensure you get a quality final product. With over 20 years of experience and
+                      knowledge we are confident we can help with your project. You can also send
+                      us your designs to have printed. Give us a call today to see how we can help
+                      with your printing needs.
+                    </p>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Paper
+                  style={{
+                    backgroundColor: '#000'
+                  }}
+                >
+                  <img
+                    src={assets('./images/products.jpeg')}
+                    alt=""
+                    width="100%"
+                    height="100%"
+                  />
+                </Paper>
+              </Grid>
+            </Grid>
+          </div>
 
-            <div className="section">
-              <div className="row">
-                <div className="yellow">
-                  <h3 className="header center"> Products </h3>
-                </div>
-              </div>
-              <div className="row">
-                <Col s={12} className="cards-container">
-                  {_.map(products, (product, key) => {
-                    const element = (
-                      <CardPanel key={`element${key}`} className="blue-grey lighten-5 my-cards">
-                        <div className="center">
-                          <CardIcon src={assets('./images/logo.png')} alt="" />
-                        </div>
-                        <h5 className="center">{key}</h5>
-                        <Hidden>{key}</Hidden>
-                        <div className="light center cardFont">
-                          <ul>
-                            {product.map((product, key) => {
-                              return <li key={`product${key}`}> {product} </li>
-                            })}
-                          </ul>
-                        </div>
-                      </CardPanel>
-                    )
+          <div className={classes.root} >
+            <Paper className={classes.sectionTitle}>
+              Products
+            </Paper>
+            <Grid container direction="row" spacing={16}>
+              {_.map(products, (product, key) => (
+                <Grid key={`element${key}`} item xs={12} sm={3}>
+                  <Card className={classes.card}>
+                    <CardContent>
+                      <CardIcon src={assets('./images/logo.png')} alt="" />
+                      <h5>{key}</h5>
+                      <ul>
+                        {product.map((product, key) => (
+                          <li key={`product${key}`} style={{ listStyleType: 'none', marginLeft: '-40px' }}>
+                            {product}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </div>
 
-                    return this.detectMobile() ? (
-                      <div key={`cardObj${key}`}>{element}</div>
-                    ) : (
-                      <Col key={`cardObj${key}`} m={3}>
-                        {element}
-                      </Col>
-                    )
-                  })}
-                </Col>
-              </div>
-            </div>
-            <ContactUs isMobile={this.detectMobile()} />
+          <ContactUs isMobile={this.detectMobile} />
 
-            <section style={{ height: this.detectMobile() ? '300px' : '450px' }}>
-              <Button
-                wave="light"
-                className="waves-effect"
-                style={{ position: 'absolute', margin: '10px' }}
-                name="directions"
-                onClick={e => {
-                  e.preventDefault()
-                  this.getDirections()
-                }}>
-                <Icon left style={{ transform: 'rotate(50deg)' }}>
-                  navigation
-                </Icon>Get Directions
-              </Button>
-              {/* NOTE: GOOGLE_API_KEY comes from an ENV variable */}
-              <GoogleMapComponent
-                isMobile={this.detectMobile()}
-                googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${
-                  process.env.REACT_APP_GOOGLE_API_KEY
-                }&v=3.exp&libraries=geometry,drawing,places`}
-                loadingElement={<div style={{ width: '100%', height: '100%' }} />}
-                containerElement={<div style={{ width: '100%', height: '100%' }} />}
-                mapElement={<div style={{ width: '100%', height: '100%' }} />}
-                location={this.state.location}
-                isMarkerShown
-              />
-            </section>
-            <Footerbar />
-          </Parallax>
-        </div>
+          <section style={{ height: this.detectMobile ? '300px' : '450px' }}>
+            <Button
+              style={{ position: 'absolute', margin: '10px' }}
+              name="directions"
+              onClick={this.getDirections}>
+              <Icon left style={{ transform: 'rotate(50deg)' }}>
+                navigation
+              </Icon>Get Directions
+            </Button>
+            {/* NOTE: GOOGLE_API_KEY comes from an ENV variable */}
+            <GoogleMapComponent
+              isMobile={this.detectMobile}
+              googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${
+                process.env.REACT_APP_GOOGLE_API_KEY
+              }&v=3.exp&libraries=geometry,drawing,places`}
+              loadingElement={<div style={{ width: '100%', height: '100%' }} />}
+              containerElement={<div style={{ width: '100%', height: '100%' }} />}
+              mapElement={<div style={{ width: '100%', height: '100%' }} />}
+              location={this.state.location}
+              isMarkerShown
+            />
+          </section>
+          <Footerbar />
+        </Parallax>
       </Html>
     )
   }
 }
+
+Home.propTypes = {
+  classes: PropTypes.object.isRequired,
+}
+
+export default withRoot(withStyles(styles)(Home))
