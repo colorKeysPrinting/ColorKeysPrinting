@@ -1,11 +1,32 @@
 import React, { Component } from 'react'
+import PropTypes            from 'prop-types'
 import { Element }          from 'react-scroll'
-import { Col, Card }        from 'react-materialize'
+import { Paper, Grid, Card, CardContent } from '@material-ui/core'
+import { withStyles }       from '@material-ui/core/styles'
 import { FacebookIcon, TwitterIcon, GooglePlusIcon } from 'react-share'
 
-import { Header, CardFont, SocialMedia, SocialMediaBtn } from '../styles/common'
+import { Header, CardFont, SocialMedia, SocialMediaBtn, Li } from '../styles/common'
 
-export default class ContactUs extends Component {
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    margin: '10px'
+  },
+  card: {
+    textAlign: 'center',
+    fontSize: '20px'
+  },
+  sectionTitle: {
+    backgroundColor: '#FFEB3B',
+    textAlign: 'center',
+    margin: '20px 0',
+    fontSize: '24px',
+    padding: '10px',
+    fontWeight: 'bold'
+  }
+})
+
+class ContactUs extends Component {
   constructor(props) {
     super(props)
     this.state = { isMobile: this.props.isMobile }
@@ -34,8 +55,8 @@ export default class ContactUs extends Component {
   }
 
   render() {
+    const { classes } = this.props
     const email = 'colorkeys13@gmail.com'
-    let contactSection
 
     // const emailCard = (
     //   <Card className="large blue-grey lighten-5" title="Drop us a line!">
@@ -67,7 +88,6 @@ export default class ContactUs extends Component {
     //         </div>
 
     //         <button className="btn waves-effect waves-light" type="submit" name="action">
-    //           {' '}
     //           Submit
     //           <i className="material-icons right">send</i>
     //         </button>
@@ -76,75 +96,58 @@ export default class ContactUs extends Component {
     //   </Card>
     // )
 
-    const contactCard = (
-      <Card
-        className="large blue-grey lighten-5"
-        style={{ height: window.innerWidth < 600 ? '700px' : '550px' }}>
-        <div className="card-content" style={{ textAlign: 'center' }}>
-          <Header>Come see us in person!</Header>
-          <CardFont>Set up an appointment so we can get started on the project in person!</CardFont>
-
-          <Header>Color Keys Printing</Header>
-          <CardFont>3342 E 113 N , Idaho Falls, Idaho 83401, United States</CardFont>
-          <CardFont>
-            <a href="tel:208-589-7436"> 208-589-7436 </a> / 208-524-0456{' '}
-          </CardFont>
-          <CardFont>
-            <a href={`mailto:${email}`}>{email}</a>
-          </CardFont>
-
-          <Header>Hours</Header>
-          <ul>
-            <li>By Appointment</li>
-            <li>Monday - Thursday: 8:30am - 5pm</li>
-            <li>Friday: 8:30am - 12:00pm</li>
-            <li>Saturday: Closed</li>
-            <li>Sunday: Closed</li>
-          </ul>
-          <SocialMedia>
-            <SocialMediaBtn href="https://www.facebook.com/colorkeysprinting">
-              <FacebookIcon size={32} round />
-            </SocialMediaBtn>
-            <SocialMediaBtn href="https://twitter.com/colorkeys13">
-              <TwitterIcon size={32} round />
-            </SocialMediaBtn>
-            <SocialMediaBtn href="https://plus.google.com/u/0/113724115750329359769">
-              <GooglePlusIcon size={32} round />
-            </SocialMediaBtn>
-          </SocialMedia>
-        </div>
-      </Card>
-    )
-
-    if (this.state.isMobile) {
-      contactSection = <div>{contactCard}</div>
-    } else {
-      contactSection = (
-        <div>
-          <Col m={12}>{contactCard}</Col>
-        </div>
-      )
-    }
-
     return (
-      <div>
-        <div className="section">
-          <div className="row">
-            <Element name="email">
-              <div className="yellow">
-                <h3 className="header center"> Contact Us </h3>
-              </div>
-            </Element>
+      <div className={classes.root} >
+        <Element name="email">
+          <Paper className={classes.sectionTitle}>
+            Contact Us
+          </Paper>
+        </Element>
+        <Grid container direction="row">
+          <Grid item xs={12} >
+            <Card className={classes.card}>
+              <CardContent>
+                <h2>Come see us in person!</h2>
+                <CardFont>Set up an appointment so we can get started on the project in person!</CardFont>
+                <h2>Color Keys Printing</h2>
+                <CardFont>3342 E 113 N<br/>Idaho Falls, Idaho 83401<br/>United States</CardFont>
+                <CardFont>
+                  <a href="tel:208-589-7436"> 208-589-7436 </a> / 208-524-0456
+                </CardFont>
+                <CardFont>
+                  <a href={`mailto:${email}`}>{email}</a>
+                </CardFont>
 
-            <div className="row">
-              <Col s={12} className="cards-container">
-                {contactSection}
-              </Col>
-            </div>
-          </div>
-        </div>
-        <br />
+                <Header>Hours</Header>
+                <ul>
+                  <Li>By Appointment</Li>
+                  <Li>Monday - Thursday: 8:30am - 5pm</Li>
+                  <Li>Friday: 8:30am - 12:00pm</Li>
+                  <Li>Saturday: Closed</Li>
+                  <Li>Sunday: Closed</Li>
+                </ul>
+                <SocialMedia>
+                  <SocialMediaBtn href="https://www.facebook.com/colorkeysprinting">
+                    <FacebookIcon size={32} round />
+                  </SocialMediaBtn>
+                  <SocialMediaBtn href="https://twitter.com/colorkeys13">
+                    <TwitterIcon size={32} round />
+                  </SocialMediaBtn>
+                  <SocialMediaBtn href="https://plus.google.com/u/0/113724115750329359769">
+                    <GooglePlusIcon size={32} round />
+                  </SocialMediaBtn>
+                </SocialMedia>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </div>
     )
   }
 }
+
+ContactUs.propTypes = {
+  classes: PropTypes.object.isRequired,
+}
+
+export default withStyles(styles)(ContactUs)

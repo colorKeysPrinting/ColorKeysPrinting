@@ -6,7 +6,7 @@ import { Icon } from 'react-materialize'
 import { Grid, Card, Paper, CardContent, Button } from '@material-ui/core'
 import { withStyles }             from '@material-ui/core/styles'
 import assets                     from './utils/assets'
-import { Html, CardIcon } from './styles/common'
+import { Html, CardIcon, Li }     from './styles/common'
 
 import withRoot           from './withRoot'
 
@@ -188,9 +188,9 @@ class Home extends Component {
                       <h5>{key}</h5>
                       <ul>
                         {product.map((product, key) => (
-                          <li key={`product${key}`} style={{ listStyleType: 'none', marginLeft: '-40px' }}>
+                          <Li key={`product${key}`}>
                             {product}
-                          </li>
+                          </Li>
                         ))}
                       </ul>
                     </CardContent>

@@ -114,7 +114,7 @@ export default class Navbar extends Component {
                 </p>
               </Col>
               <Col s={12} m={16}>
-                Made with{' '}
+                Made with
                 <a className="brown-text text-lighten-3" href="http://materializecss.com">
                   Materialize
                 </a>
