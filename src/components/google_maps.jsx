@@ -19,13 +19,11 @@ class GoogleMapComponent extends Component {
     const { mapOptions, markers } = this.state
 
     return (
-      <div>
-        <Element name="navigation">
-          <GoogleMap options={mapOptions}>
-            {markers.map((marker, idx) => <Marker key={`marker${idx}`} {...marker} />)}
-          </GoogleMap>
-        </Element>
-      </div>
+      <Element name="navigation">
+        <GoogleMap options={mapOptions}>
+          {markers.map((marker, idx) => <Marker key={`marker${idx}`} {...marker} />)}
+        </GoogleMap>
+      </Element>
     )
   }
 }
