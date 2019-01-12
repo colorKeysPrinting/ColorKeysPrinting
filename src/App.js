@@ -2,11 +2,12 @@ import React, { Component }       from 'react'
 import PropTypes                  from 'prop-types'
 import { Parallax }               from 'react-parallax'
 import _                          from 'lodash'
-import { Icon } from 'react-materialize'
-import { Grid, Card, Paper, CardContent, Button } from '@material-ui/core'
+import { Grid, Card, Paper, CardContent, Fab } from '@material-ui/core'
 import { withStyles }             from '@material-ui/core/styles'
+import { Navigation }             from '@material-ui/icons'
 import assets                     from './utils/assets'
 import { Html, CardIcon, Li }     from './styles/common'
+import { LOGO_BLUE }              from './styles/colors'
 
 import withRoot           from './withRoot'
 
@@ -19,6 +20,18 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     margin: '10px'
+  },
+  fab: {
+    margin: theme.spacing.unit,
+    position: 'absolute',
+    top: theme.spacing.unit * 2,
+    left: theme.spacing.unit * 2,
+    zIndex: '9999',
+    backgroundColor: LOGO_BLUE,
+    color: '#FFF',
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit,
   },
   card: {
     textAlign: 'center',
@@ -116,7 +129,7 @@ class Home extends Component {
 
   render() {
     const { classes } = this.props
-    const { products } = this.state
+    const { products, location } = this.state
 
     return (
       <Html>
@@ -202,28 +215,42 @@ class Home extends Component {
 
           <ContactUs isMobile={this.detectMobile} />
 
-          <section style={{ height: this.detectMobile ? '300px' : '450px' }}>
-            <Button
-              style={{ position: 'absolute', margin: '10px' }}
-              name="directions"
-              onClick={this.getDirections}>
-              <Icon left style={{ transform: 'rotate(50deg)' }}>
-                navigation
-              </Icon>Get Directions
-            </Button>
-            {/* NOTE: GOOGLE_API_KEY comes from an ENV variable */}
-            <GoogleMapComponent
-              isMobile={this.detectMobile}
-              googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${
-                process.env.REACT_APP_GOOGLE_API_KEY
-              }&v=3.exp&libraries=geometry,drawing,places`}
-              loadingElement={<div style={{ width: '100%', height: '100%' }} />}
-              containerElement={<div style={{ width: '100%', height: '100%' }} />}
-              mapElement={<div style={{ width: '100%', height: '100%' }} />}
-              location={this.state.location}
-              isMarkerShown
-            />
-          </section>
+          <div className={classes.root} >
+            <Grid container spacing={24}>
+              <Grid item xs={12}>
+                <Paper
+                  style={{
+                    backgroundColor: '#000',
+                    position: 'relative',
+                    height: this.detectMobile ? '300px' : '450px'
+                  }}
+                >
+                  <Fab
+                    variant="extended"
+                    aria-label="directions"
+                    className={classes.fab}
+                    name="directions"
+                    onClick={this.getDirections}
+                  >
+                    <Navigation className={classes.extendedIcon} />
+                    Get Directions
+                  </Fab>
+                  <GoogleMapComponent
+                    isMobile={this.detectMobile}
+                    googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${
+                      process.env.REACT_APP_GOOGLE_API_KEY
+                    }&v=3.exp&libraries=geometry,drawing,places`}
+                    loadingElement={<div style={{ width: '100%', height: '100%' }} />}
+                    containerElement={<div style={{ width: '100%', height: '100%' }} />}
+                    mapElement={<div style={{ width: '100%', height: '100%' }} />}
+                    location={location}
+                    isMarkerShown
+                  />
+                </Paper>
+              </Grid>
+            </Grid>
+          </div>
+
           <Footerbar />
         </Parallax>
       </Html>
