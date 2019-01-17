@@ -154,7 +154,6 @@ class Home extends Component {
           blur={5}
           bgImage={assets('./images/paint_splatter_large_1920_1080.jpg')}
           bgImageAlt="Unsplashed background img 2"
-          strength={500}
         >
           <BodyScroll height={`${window.innerHeight - 75}px`}>
             {/* <div id="index-banner" className="parallax-container" style={{ height: (window.innerWidth > 1200) ? '500px': '210px', width: (window.innerWidth > 1200) ? '75%': '100%' , margin: '0 auto' }}>
