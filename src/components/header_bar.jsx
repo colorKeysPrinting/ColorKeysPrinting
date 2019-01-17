@@ -1,13 +1,12 @@
 import React, { Component }     from 'react'
 import PropTypes                from 'prop-types'
-import { Link, animateScroll }  from 'react-scroll'
 import SideNav                  from 'react-simple-sidenav'
 import { AppBar, Toolbar, Button, IconButton } from '@material-ui/core'
 import { Menu }                 from '@material-ui/icons'
 import { withStyles }           from '@material-ui/core/styles'
 import _                        from 'lodash'
 import assets                   from '../utils/assets'
-import { SideNavTitle, LogoImg, MenuButton, NavButtons } from '../styles/common'
+import { SideNavTitle, LogoImg, MenuButton, NavButtons, SideNavLogo, SideNavBackground } from '../styles/common'
 import { LOGO_BLUE, LOGO_RED, LOGO_YELLOW } from '../styles/colors'
 
 const styles = {
@@ -24,17 +23,18 @@ const styles = {
 }
 
 class HeaderBar extends Component {
-  state = { scroll: animateScroll, showNav: false }
-
-  scrollTo = place => {
-    this.state.scroll.scrollTo(place)
-  }
+  state = { showNav: false }
 
   toggleSideNav = key => () => {
     this.setState(prevState => {
       const value = !prevState[key]
       return { [key]: value }
     })
+  }
+
+  scrollTo = link => {
+    this.setState({ showNav : false })
+    window.location.hash = link
   }
 
   render() {
@@ -46,14 +46,14 @@ class HeaderBar extends Component {
         element: 'Call'
       },
       [`${LOGO_RED}`]: {
-        element: <Link className={classes.menuButton} to="navigation" spy={true} smooth={true} offset={50} duration={500}>
-          Navigation
-        </Link>
+        href: '#navigation-tag',
+        onClick: this.scrollTo,
+        element: 'Navigation'
       },
       [`${LOGO_YELLOW}`]: {
-        element: <Link className={classes.menuButton} to="email" spy={true} smooth={true} offset={50} duration={500}>
-          Contact
-        </Link>
+        href: '#email-tag',
+        onClick: this.scrollTo,
+        element: 'Contact'
       }
     }
     let linkArray = []
@@ -68,10 +68,7 @@ class HeaderBar extends Component {
               </IconButton>
             </MenuButton>
             <div className={classes.grow}>
-              <Button
-                varient="flat"
-                href="#!"
-              >
+              <Button varient="flat">
                 <LogoImg
                   src={assets('./images/full_logo.png')}
                   alt=""
@@ -85,11 +82,16 @@ class HeaderBar extends Component {
                   <Button
                     key={key}
                     varient="flat"
-                    href={item.href ? item.href : null}
+                    href={!item.onClick && item.href ? item.href : null}
+                    onClick={item.onClick ? () => item.onClick(item.href) : null}
                     className={classes.menuButton}
-                    style={{ backgroundColor: key }}
-                    size="large"
-                    fullWidth
+                    style={{
+                      backgroundColor: key,
+                      width: '95%',
+                      height: '80px',
+                      fontSize: '24px',
+                      margin: '10px',
+                    }}
                   >
                     {item.element}
                   </Button>
@@ -102,6 +104,7 @@ class HeaderBar extends Component {
                     className={classes.menuButton}
                     style={{ margin: '0 2px', backgroundColor: key }}
                     size="large"
+                    fullWidth
                   >
                     {item.element}
                   </Button>
@@ -113,13 +116,14 @@ class HeaderBar extends Component {
             id="mobile-demo"
             showNav={showNav}
             onHideNav={this.toggleSideNav('showNav')}
-            title={
+          >
+            <SideNavBackground>
               <SideNavTitle>
-                <img src={assets('./images/full_logo.png')} alt="" />
+                <SideNavLogo src={assets('./images/full_logo.png')} alt="" />
               </SideNavTitle>
-            }
-            items={linkArray}
-          />
+              {linkArray}
+            </SideNavBackground>
+          </SideNav>
         </AppBar>
       </div>
     )

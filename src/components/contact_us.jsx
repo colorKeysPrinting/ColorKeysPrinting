@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes            from 'prop-types'
-import { Element }          from 'react-scroll'
 import { Paper, Grid, Card, CardContent } from '@material-ui/core'
 import { withStyles }       from '@material-ui/core/styles'
 import { FacebookIcon, TwitterIcon, GooglePlusIcon } from 'react-share'
@@ -101,11 +100,9 @@ class ContactUs extends Component {
 
     return (
       <div className={classes.root} >
-        <Element name="email">
-          <Paper className={classes.sectionTitle}>
-            Contact Us
-          </Paper>
-        </Element>
+        <Paper id="email-tag" className={classes.sectionTitle}>
+          Contact Us
+        </Paper>
         <Grid container direction="row">
           <Grid item xs={12} >
             <Card className={classes.card}>

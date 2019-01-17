@@ -46,7 +46,19 @@ export const FooterHeading = styled.div`
 
 export const SideNavTitle = styled.div`
   background-color: ${BLACK};
-  padding: 0;
+  text-align: center;
+`
+
+export const SideNavLogo = styled.img`
+  margin-top: 15px;
+  height: 100px;
+  width: auto;
+`
+
+export const SideNavBackground = styled.div`
+  background-color: ${BLACK};
+  height: 100%;
+  width: 100%;
 `
 
 export const LogoImg = styled.img`
@@ -70,4 +82,10 @@ export const NavButtons = styled.div`
 export const Li = styled.li`
   list-style-type: none;
   margin-left: -40px;
+`
+
+export const BodyScroll = styled.div`
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: ${props => props.height || ''};
 `

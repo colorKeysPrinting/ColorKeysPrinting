@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps'
-import { Element }          from 'react-scroll'
 
 class GoogleMapComponent extends Component {
   state = {
@@ -19,11 +18,11 @@ class GoogleMapComponent extends Component {
     const { mapOptions, markers } = this.state
 
     return (
-      <Element name="navigation">
+      <div id="navigation-tag">
         <GoogleMap options={mapOptions}>
           {markers.map((marker, idx) => <Marker key={`marker${idx}`} {...marker} />)}
         </GoogleMap>
-      </Element>
+      </div>
     )
   }
 }
