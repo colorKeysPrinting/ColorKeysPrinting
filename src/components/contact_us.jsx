@@ -15,7 +15,9 @@ const styles = theme => ({
   },
   card: {
     textAlign: 'center',
-    fontSize: '20px'
+    fontSize: '20px',
+    maxWidth: '760px',
+    margin: 'auto',
   },
   sectionTitle: {
     backgroundColor: LOGO_YELLOW,
