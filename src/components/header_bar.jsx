@@ -34,7 +34,7 @@ class HeaderBar extends Component {
 
   scrollTo = link => {
     this.setState({ showNav : false })
-    window.location.hash = link
+    this.props.scrollTo(link)
   }
 
   render() {
@@ -46,12 +46,12 @@ class HeaderBar extends Component {
         element: 'Call'
       },
       [`${LOGO_RED}`]: {
-        href: '#navigation-tag',
+        href: 'navigation',
         onClick: this.scrollTo,
         element: 'Navigation'
       },
       [`${LOGO_YELLOW}`]: {
-        href: '#email-tag',
+        href: 'contact',
         onClick: this.scrollTo,
         element: 'Contact'
       }
@@ -100,7 +100,8 @@ class HeaderBar extends Component {
                   <Button
                     key={key}
                     varient="flat"
-                    href={item.href ? item.href : null}
+                    href={!item.onClick && item.href ? item.href : null}
+                    onClick={item.onClick ? () => item.onClick(item.href) : null}
                     className={classes.menuButton}
                     style={{ margin: '0 2px', backgroundColor: key }}
                     size="large"
@@ -132,6 +133,7 @@ class HeaderBar extends Component {
 
 HeaderBar.propTypes = {
   classes: PropTypes.object.isRequired,
+  scrollTo: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(HeaderBar)

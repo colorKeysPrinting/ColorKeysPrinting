@@ -97,10 +97,12 @@ class ContactUs extends Component {
     //     </div>
     //   </Card>
     // )
-
     return (
-      <div className={classes.root} >
-        <Paper id="email-tag" className={classes.sectionTitle}>
+      <div className={classes.root} refs={this.props.ref}>
+        <Paper
+          id="email-tag"
+          className={classes.sectionTitle}
+        >
           Contact Us
         </Paper>
         <Grid container direction="row">

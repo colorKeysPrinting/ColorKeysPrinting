@@ -1,4 +1,5 @@
 import React, { Component }       from 'react'
+import ReactDOM                   from 'react-dom'
 import PropTypes                  from 'prop-types'
 import { Parallax }               from 'react-parallax'
 import _                          from 'lodash'
@@ -48,58 +49,63 @@ const styles = theme => ({
 })
 
 class Home extends Component {
-  state = {
-    location: {
-      lat: 43.597457,
-      lng: -111.965967,
-      addr: '3342+East+113+North,+Idaho+Falls,+ID+83401,+United+States',
-    },
-    products: {
-      business: [
-        'business cards',
-        'appointment cards',
-        'brochures',
-        'letterhead',
-        'envelopes',
-        'carbonless forms',
-        'flyers',
-        'labels',
-        'newsletters',
-        'notepads',
-        'numbered forms',
-        'postcards',
-        'thank you cards',
-      ],
-      general: [
-        'announcements',
-        'booklets',
-        'flyers',
-        'giclee art prints',
-        'greeting cards',
-        'labels',
-        'large format prints',
-        'postcards',
-        'posters',
-        'programs',
-        'thank you cards',
-        'tickets',
-        'wedding invitations',
-      ],
-      services: [
-        'numbering',
-        'laminating',
-        'color copies',
-        'vinyl lettering',
-        'graphic design',
-        'spiral binding',
-        'padding',
-        'canvas wraps',
-        'direct mail',
-        'fulfillment',
-        'free delivery',
-      ],
-      promotional: ['flyers', 'posters', 'banners', 'tickets', 'calendars', 'magnets'],
-    },
+  constructor(props) {
+    super(props)
+
+    this._nodes = new Map()
+    this.state = {
+      location: {
+        lat: 43.597457,
+        lng: -111.965967,
+        addr: '3342+East+113+North,+Idaho+Falls,+ID+83401,+United+States',
+      },
+      products: {
+        business: [
+          'business cards',
+          'appointment cards',
+          'brochures',
+          'letterhead',
+          'envelopes',
+          'carbonless forms',
+          'flyers',
+          'labels',
+          'newsletters',
+          'notepads',
+          'numbered forms',
+          'postcards',
+          'thank you cards',
+        ],
+        general: [
+          'announcements',
+          'booklets',
+          'flyers',
+          'giclee art prints',
+          'greeting cards',
+          'labels',
+          'large format prints',
+          'postcards',
+          'posters',
+          'programs',
+          'thank you cards',
+          'tickets',
+          'wedding invitations',
+        ],
+        services: [
+          'numbering',
+          'laminating',
+          'color copies',
+          'vinyl lettering',
+          'graphic design',
+          'spiral binding',
+          'padding',
+          'canvas wraps',
+          'direct mail',
+          'fulfillment',
+          'free delivery',
+        ],
+        promotional: ['flyers', 'posters', 'banners', 'tickets', 'calendars', 'magnets'],
+      },
+    }
   }
 
   detectMobile = () => {
@@ -127,13 +133,23 @@ class Home extends Component {
     }
   }
 
+  scrollTo = element => {
+    const node = this._nodes.get(element)
+    if (node) {
+      ReactDOM.findDOMNode(node).scrollIntoView({block: 'end', behavior: 'smooth'})
+    }
+  }
+
   render() {
     const { classes } = this.props
     const { products, location } = this.state
 
     return (
       <Html>
-        <HeaderBar />
+        <HeaderBar
+          scrollTo={this.scrollTo}
+          nodes={this._nodes}
+        />
         <Parallax
           blur={5}
           bgImage={assets('./images/paint_splatter_large_1920_1080.jpg')}
@@ -191,7 +207,7 @@ class Home extends Component {
             </div>
 
             <div className={classes.root} >
-              <Paper className={classes.sectionTitle}>
+              <Paper className={classes.sectionTitle} >
                 Products
               </Paper>
               <Grid container direction="row" spacing={16}>
@@ -215,7 +231,10 @@ class Home extends Component {
               </Grid>
             </div>
 
-            <ContactUs isMobile={this.detectMobile} />
+            <ContactUs
+              isMobile={this.detectMobile}
+              ref={element => this._nodes.set('contact', element)}
+            />
 
             <div className={classes.root} >
               <Grid container spacing={24}>
@@ -226,6 +245,7 @@ class Home extends Component {
                       position: 'relative',
                       height: this.detectMobile ? '300px' : '450px'
                     }}
+                    ref={element => this._nodes.set('navigation', element)}
                   >
                     <Fab
                       variant="extended"
