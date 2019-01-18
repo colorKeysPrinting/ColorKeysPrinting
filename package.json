@@ -13,7 +13,7 @@
     "@babel/polyfill": "^7.2.5",
     "@material-ui/core": "^3.9.0",
     "@material-ui/icons": "^3.0.2",
-    "dotenv-webpack": "^1.6.0",
+    "dotenv-webpack": "^1.7.0",
     "lodash.map": "^4.6.0",
     "lodash.size": "^4.2.0",
     "prop-types": "^15.6.2",
